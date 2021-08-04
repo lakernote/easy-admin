@@ -1,0 +1,61 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      initial-size: 1
+      min-idle: 20
+      max-active: 300
+      test-on-borrow: true
+      validation-query: select 1
+  # sa-token配置
+  sa-token:
+    # token名称 (同时也是cookie名称)
+    token-name: LakerToken
+    # token有效期，单位s 默认30天, -1代表永不过期
+    #    timeout: 1800
+    # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+    #    activity-timeout: 3000
+    # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+    allow-concurrent-login: true
+    # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+    is-share: false
+    # token风格
+    token-style: simple-uuid
+  profiles:
+    active: dev
+  task:
+    execution:
+      pool:
+        max-size: 10
+        queue-capacity: 1
+      thread-name-prefix: laker-
+  freemarker:
+    suffix: .ftl
+logging:
+  file:
+    max-size: 10MB
+    max-history: 50
+    name: lakermap.log
+    path: ./
+
+knife4j:
+  # 开启增强
+  enable: true
+wx:
+  mp:
+    app-id: wx042bdaa99f8b355a
+    secret: fb49ce5524854a6d92c0963cbff6ce14
+    token: laker
+    aes-key:
+javamelody:
+  enabled: false
+video:
+  url: http://1.1.1.1
+laker:
+  name: 大肥龙
+  port: 111
