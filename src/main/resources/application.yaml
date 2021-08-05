@@ -56,6 +56,6 @@ javamelody:
   enabled: false
 video:
   url: http://1.1.1.1
-laker:
+admin:
   name: 大肥龙
   port: 111

@@ -17,10 +17,10 @@ import java.util.Scanner;
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
     // 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名
-    private static final String PARENT_PACKAGE = "com.laker.map";
+    private static final String PARENT_PACKAGE = "com.laker.admin";
     // 生成文件的输出目录 System.getProperty("user.dir") + OUT_FILE_PATH + "/src/main/java"
     // 如果是多moudle，则为：/moudle,不是多moudle，则为：空串
-    private static final String OUT_FILE_PATH = "/map";
+    private static final String OUT_FILE_PATH = "";
     public static final String MYSQL_URL = "localhost:3306/laker";
     public static final String MYSQL_PWD = "123456";
 

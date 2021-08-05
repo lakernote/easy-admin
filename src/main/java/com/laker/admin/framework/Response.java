@@ -1,5 +1,6 @@
 package com.laker.admin.framework;
 
+import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -24,10 +25,14 @@ public class Response<T> {
     @ApiModelProperty(notes = "请求id")
     private final String requestId;
 
+    @ApiModelProperty(notes = "请求id")
+    private final Boolean success;
+
     public Response(String code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
+        this.success = StrUtil.equals("0", code);
         this.requestId = MDC.get("requestId");
     }
 

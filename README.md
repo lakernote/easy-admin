@@ -4,7 +4,7 @@
 easy，easy，easy，打造一个简单、轻量级的后台管理系统脚手架。
 
 #### 软件架构
-软件架构说明
+前端：https://gitee.com/zhongshaofa/layuimini
 
 
 #### 安装教程
