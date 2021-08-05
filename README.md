@@ -4,7 +4,9 @@
 easy，easy，easy，打造一个简单、轻量级的后台管理系统脚手架。
 
 #### 软件架构
-前端：https://gitee.com/zhongshaofa/layuimini
+前端：
+- https://gitee.com/zhongshaofa/layuimini
+- https://gitee.com/pear-admin/Pear-Admin-Layui
 
 
 #### 安装教程
