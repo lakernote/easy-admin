@@ -25,8 +25,8 @@ public class SysMenu implements Serializable {
     /**
      * ID
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "menu_id", type = IdType.AUTO)
+    private Long menuId;
 
     /**
      * 父ID
@@ -51,7 +51,7 @@ public class SysMenu implements Serializable {
     /**
      * 链接打开方式
      */
-    private String target;
+    private String openType;
 
     /**
      * 菜单排序
@@ -61,27 +61,20 @@ public class SysMenu implements Serializable {
     /**
      * 状态(0:禁用,1:启用)
      */
-    private Boolean status;
+    private Boolean enable;
 
     /**
      * 备注信息
      */
     private String remark;
 
+    private Integer type;
+
+    private String powerCode;
     /**
      * 创建时间
      */
-    private LocalDateTime createAt;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateAt;
-
-    /**
-     * 删除时间
-     */
-    private LocalDateTime deleteAt;
+    private LocalDateTime createTime;
 
 
 }

@@ -19,10 +19,10 @@ public class TreeUtil {
     private static MenuVo findChildren(MenuVo parent, List<MenuVo> treeList) {
         for (MenuVo child : treeList) {
             if (parent.getId().equals(child.getPid())) {
-                if (parent.getChild() == null) {
-                    parent.setChild(new ArrayList<>());
+                if (parent.getChildren() == null) {
+                    parent.setChildren(new ArrayList<>());
                 }
-                parent.getChild().add(findChildren(child, treeList));
+                parent.getChildren().add(findChildren(child, treeList));
             }
         }
         return parent;

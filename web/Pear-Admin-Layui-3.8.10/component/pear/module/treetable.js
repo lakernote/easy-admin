@@ -130,7 +130,9 @@ layui.define(['layer', 'table'], function (exports) {
         },
 		// 表格重载
 		reload: function(elem) {
+
 			instances.forEach(function(item){
+
 				if(item.key === elem) {
 					// 清空
 					$(elem).next().remove();

@@ -1,27 +1,28 @@
 package com.laker.admin.module.sys.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.laker.admin.module.sys.entity.SysMenu;
-import com.laker.admin.module.sys.service.ISysMenuService;
-import org.springframework.web.bind.annotation.RestController;
-import com.laker.admin.framework.Response;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.laker.admin.framework.Response;
+import com.laker.admin.module.sys.entity.SysMenu;
+import com.laker.admin.module.sys.pojo.MenuVo;
+import com.laker.admin.module.sys.service.ISysMenuService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
-* <p>
-    * 系统菜单表 前端控制器
-    * </p>
-*
-* @author laker
-* @since 2021-08-04
-*/
+ * <p>
+ * 系统菜单表 前端控制器
+ * </p>
+ *
+ * @author laker
+ * @since 2021-08-04
+ */
 @RestController
-@RequestMapping("/module.sys/sys-menu")
+@RequestMapping("/sys/menu")
 public class SysMenuController {
     @Autowired
     ISysMenuService sysMenuService;
@@ -36,9 +37,17 @@ public class SysMenuController {
         return Response.ok(pageList);
     }
 
+
+    @GetMapping("/list")
+    @ApiOperation(value = "系统菜单表分页查询")
+    public Response list() {
+        List<SysMenu> list = sysMenuService.list();
+        return Response.ok(list);
+    }
+
     @PostMapping
     @ApiOperation(value = "新增或者更新系统菜单表")
-    public Response saveOrUpdate(SysMenu param) {
+    public Response saveOrUpdate(@RequestBody SysMenu param) {
         return Response.ok(sysMenuService.saveOrUpdate(param));
     }
 
@@ -46,6 +55,21 @@ public class SysMenuController {
     @ApiOperation(value = "根据id查询系统菜单表")
     public Response get(@PathVariable Long id) {
         return Response.ok(sysMenuService.getById(id));
+    }
+
+
+    @GetMapping("/tree")
+    @ApiOperation(value = "菜单树")
+    public List<MenuVo> tree() {
+        return sysMenuService.menu();
+    }
+
+
+    @GetMapping("/selectTree")
+    @ApiOperation(value = "菜单树")
+    public Response selectTree() {
+        List<MenuVo> menuVos = sysMenuService.menu();
+        return Response.ok(menuVos);
     }
 
     @DeleteMapping("/{id}")

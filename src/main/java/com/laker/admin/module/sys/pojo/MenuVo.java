@@ -18,7 +18,9 @@ public class MenuVo {
 
     private String href;
 
-    private String target;
+    private String openType;
 
-    private List<MenuVo> child;
+    private Integer type;
+
+    private List<MenuVo> children;
 }
