@@ -42,7 +42,8 @@ logging:
     max-history: 50
     name: lakermap.log
     path: ./
-
+mybatis-plus:
+  type-aliases-package: org.snaker.engine.entity
 knife4j:
   # 开启增强
   enable: true

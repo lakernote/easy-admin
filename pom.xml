@@ -135,6 +135,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
+        <!-- 国产工作流引擎 -->
+        <dependency>
+            <groupId>com.github.snakerflow-starter</groupId>
+            <artifactId>snakerflow-spring-boot-starter</artifactId>
+            <version>1.0.6</version>
+        </dependency>
     </dependencies>
 
     <build>

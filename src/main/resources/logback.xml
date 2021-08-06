@@ -49,6 +49,8 @@
     <logger name="com.test.demo" level="DEBUG">
         <appender-ref ref="DEFAULT"/>
     </logger>
+    <!---->
+    <logger name="org.snaker.engine" level="ERROR"/>
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="DEFAULT"/>
