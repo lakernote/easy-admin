@@ -160,7 +160,7 @@ public class SnakerEngineFacetsTest {
         Order dm = snakerEngineFacets.startInstanceById(process.getId(), "张三", Dict.create()
                 .set("user1", "张三排")
                 .set("user2", "组长")
-                .set("approveBoss.operator", "部门经理"));
+                .set("approveBoss.operator", "老板"));
         Console.log("张三开启请假单流程：{}", dm);
         //
         List<Task> activeTasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOperator("张三排"));
@@ -171,6 +171,17 @@ public class SnakerEngineFacetsTest {
         Console.log("张三排第二次看待办请假单：{}", activeTasks);
         activeTasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOperator("组长"));
         Console.log("组长第一次看待办请假单：{}", activeTasks);
+        Console.log("组长处理请假单，并设置参数 day = 3, 修改 approveBoss.operator = 老板娘");
+        snakerEngineFacets.execute(activeTasks.get(0).getId(), "组长", Dict.create()
+                .set("day", 3)
+                .set("approveBoss.operator", "老板娘"));
+
+        activeTasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOperator("老板娘"));
+        Console.log("老板娘第一次看待办请假单：{}", activeTasks);
+        Console.log("老板娘处理请假单");
+        snakerEngineFacets.execute(activeTasks.get(0).getId(), "老板娘", null);
+        activeTasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOperator("老板娘"));
+        Console.log("老板娘第二次看待办请假单：{}", activeTasks);
 
     }
 
