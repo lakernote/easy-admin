@@ -47,14 +47,8 @@ mybatis-plus:
 knife4j:
   # 开启增强
   enable: true
-wx:
-  mp:
-    app-id: wx042bdaa99f8b355a
-    secret: fb49ce5524854a6d92c0963cbff6ce14
-    token: laker
-    aes-key:
 javamelody:
-  enabled: false
+  enabled: true
 video:
   url: http://1.1.1.1
 admin:

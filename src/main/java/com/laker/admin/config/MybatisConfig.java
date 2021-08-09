@@ -10,6 +10,7 @@ import com.laker.admin.framework.ext.mybatis.PerformanceInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @MapperScan("com.laker.admin.**.mapper")
@@ -47,6 +48,7 @@ public class MybatisConfig {
      * @return
      */
     @Bean
+    @Profile("test")
     public PerformanceInterceptor performanceInterceptor() {
         PerformanceInterceptor interceptor = new PerformanceInterceptor();
         // sql美化打印

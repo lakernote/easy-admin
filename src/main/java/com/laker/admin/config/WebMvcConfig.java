@@ -1,12 +1,16 @@
 package com.laker.admin.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
+
 @Configuration
+@Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -27,8 +31,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/laker1/**")
-                .addResourceLocations("classpath:/static/", "file:d://laker.json");
+        File file = new File("web");
+        log.info(file.getAbsolutePath());
+        registry.addResourceHandler("/admin/**")
+                .addResourceLocations("file:" + file.getAbsolutePath() + "\\admin\\");
     }
 
 }
