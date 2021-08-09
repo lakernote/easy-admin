@@ -87,12 +87,13 @@
         var convert = layui.convert;
         var popup = layui.popup;
 
+        // 在登录的时候塞入的值
         var user = layui.data('user');
+        // 用于判断未登录跳转到登录页
         if (JSON.stringify(user) == "{}") {
             location.href = "login.html";
         }
-        console.log(user)
-        admin.setAvatar("admin/images/avatar.jpg", "就眠仪式");
+        admin.setAvatar("admin/images/avatar.jpg", "laker");
 
         admin.setConfigType("yml");
         admin.setConfigPath("config/pear.config.yml");
@@ -105,6 +106,9 @@
             success: function () {
             },
             error: function () {
+                // 用于验证前端信息 对应到不对的会话情况
+                // 清空本地存储
+                layui.data('user', null);
                 location.href = "login.html";
             }
         });
@@ -113,7 +117,13 @@
 
         // 登出逻辑
         admin.logout(function () {
+
+            $.get(EasyAdminContext.url + "/api/v1/loginOut");
+
+
             popup.success("注销成功", function () {
+                // 清空本地存储
+                layui.data('user', null);
                 location.href = "login.html";
             })
             // 注销逻辑 返回 true / false

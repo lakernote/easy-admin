@@ -1,7 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -40,7 +39,7 @@ public class LoginController {
         if (sysUser == null) {
             return Response.error("5001", "用户名或密码不正确");
         }
-        StpUtil.login(1);
+        StpUtil.login(sysUser.getUserName());
         return Response.ok(StpUtil.getTokenInfo());
     }
 
@@ -49,12 +48,11 @@ public class LoginController {
     @GetMapping("/api/v1/tokenInfo")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前会话的token信息")
-    @SaCheckPermission({"admin"})
     public Response tokenInfo(String name) {
         return Response.ok(StpUtil.getTokenInfo());
     }
 
-    @PostMapping("/api/v1/loginOut")
+    @GetMapping("/api/v1/loginOut")
     @ApiOperationSupport(order = 3)
     @ApiOperation(value = "登出")
     @SaCheckLogin
@@ -65,6 +63,7 @@ public class LoginController {
         //   3. 尝试从header里读取
         //   4. 尝试从cookie里读取
         // 删除cookie
+        log.info(StpUtil.getLoginIdAsString());
         StpUtil.logout();
         return Response.ok();
     }
