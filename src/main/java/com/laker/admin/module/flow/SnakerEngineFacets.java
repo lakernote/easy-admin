@@ -5,6 +5,7 @@ import org.snaker.engine.access.QueryFilter;
 import org.snaker.engine.entity.Order;
 import org.snaker.engine.entity.Process;
 import org.snaker.engine.entity.Task;
+import org.snaker.engine.model.TaskModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -181,5 +182,31 @@ public class SnakerEngineFacets {
      */
     public List<Task> getTasks(String orderId) {
         return engine.query().getActiveTasks(new QueryFilter().setOrderId(orderId));
+    }
+
+    /**
+     * 转办 主办
+     * @param taskId
+     * @param operator
+     * @param actors
+     * @return
+     */
+    public List<Task> transferMajor(String taskId, String operator, String... actors) {
+        List<Task> tasks = engine.task().createNewTask(taskId, TaskModel.TaskType.Major.ordinal(), actors);
+        engine.task().complete(taskId, operator);
+        return tasks;
+    }
+
+    /**
+     * 转办 协办
+     * @param taskId
+     * @param operator
+     * @param actors
+     * @return
+     */
+    public List<Task> transferAidant(String taskId, String operator, String... actors) {
+        List<Task> tasks = engine.task().createNewTask(taskId, TaskModel.TaskType.Aidant.ordinal(), actors);
+        engine.task().complete(taskId, operator);
+        return tasks;
     }
 }
