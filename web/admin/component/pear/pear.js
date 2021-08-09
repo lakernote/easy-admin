@@ -3,8 +3,7 @@ window.rootPath = (function (src) {
     return src.substring(0, src.lastIndexOf("/") + 1);
 })();
 const EasyAdminContext = {
-    url: "http://localhost:8080",
-    b: 2
+    url: "http://localhost:8080"
 };
 layui.config({
     base: rootPath + "module/",
