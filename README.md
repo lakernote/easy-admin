@@ -57,7 +57,15 @@ spring:
 
 **前端**
 
-纯静态的，可直接在浏览器运行，修改配置`web/Pear.../componet/pear/pear.js`
+2种方式部署
+
+**一、Spring Boot虚拟磁盘模式**
+
+什么都不用做，直接访问`http://localhost:8080/admin`
+
+**二、纯静态模式**
+
+纯静态的，可直接在浏览器运行，修改配置`web/admin/componet/pear/pear.js`
 
 ```javascript
 const EasyAdminContext = {
@@ -65,7 +73,7 @@ const EasyAdminContext = {
 };
 ```
 
-直接在浏览器访问`web/Pear.../index.html`
+直接在浏览器访问`web/admin/index.html`
 
 
 

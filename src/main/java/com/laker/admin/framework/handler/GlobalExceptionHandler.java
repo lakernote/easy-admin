@@ -3,8 +3,8 @@ package com.laker.admin.framework.handler;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.hutool.core.lang.Dict;
-import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
@@ -134,7 +134,7 @@ public class GlobalExceptionHandler {
     public Response handleMaxSizeException(NotLoginException e, HttpServletResponse response) throws IOException {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        response.sendRedirect("/index.html");
+        response.sendRedirect("/admin/login.html");
         return Response.error("401", e.getMessage());
     }
 

@@ -87,13 +87,28 @@
         var convert = layui.convert;
         var popup = layui.popup;
 
+        var user = layui.data('user');
+        if (JSON.stringify(user) == "{}") {
+            location.href = "login.html";
+        }
+        console.log(user)
         admin.setAvatar("admin/images/avatar.jpg", "就眠仪式");
 
         admin.setConfigType("yml");
         admin.setConfigPath("config/pear.config.yml");
         console.log(admin.readConfig());
         let readConfig = admin.readConfig();
-        readConfig.menu.data = EasyAdminContext.url + "/sys/menu/tree"
+        const menuUrl = EasyAdminContext.url + "/sys/menu/tree";
+        $.ajax({
+            url: menuUrl,
+            dataType: 'json',
+            success: function () {
+            },
+            error: function () {
+                location.href = "login.html";
+            }
+        });
+        readConfig.menu.data = menuUrl;
         admin.render(readConfig);
 
         // 登出逻辑

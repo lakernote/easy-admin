@@ -40,7 +40,7 @@ public class LoginController {
         if (sysUser == null) {
             return Response.error("5001", "用户名或密码不正确");
         }
-        StpUtil.setLoginId(1);
+        StpUtil.login(1);
         return Response.ok(StpUtil.getTokenInfo());
     }
 
