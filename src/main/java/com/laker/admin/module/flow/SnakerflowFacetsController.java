@@ -149,11 +149,11 @@ public class SnakerflowFacetsController {
      */
     @GetMapping("/task/todoList")
     @ApiOperation(value = "根据当前用户查询待办任务列表", tags = "流程引擎-任务")
-    public Response userTaskTodoList() {
+    public PageResponse userTaskTodoList() {
         Page<WorkItem> page = new Page<>(30);
         snakerEngineFacets.getEngine().query().getWorkItems(page,
                 new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
-        return Response.ok(page);
+        return PageResponse.ok(page.getResult(), page.getTotalCount());
     }
 
     /**
@@ -161,11 +161,11 @@ public class SnakerflowFacetsController {
      */
     @GetMapping("/task/doneList")
     @ApiOperation(value = "根据当前用户查询已办任务列表", tags = "流程引擎-任务")
-    public Response userTaskdoneList() {
+    public PageResponse userTaskdoneList() {
         Page<WorkItem> page = new Page<>(30);
         snakerEngineFacets.getEngine().query().getHistoryWorkItems(page,
                 new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
-        return Response.ok(page);
+        return PageResponse.ok(page.getResult(), page.getTotalCount());
     }
 
     @GetMapping("/task/actor/add")
@@ -236,7 +236,7 @@ public class SnakerflowFacetsController {
         return Response.ok();
     }
 
-    @RequestMapping(value = "/task/approval", method = RequestMethod.POST)
+    @RequestMapping(value = "/task/approval", method = RequestMethod.GET)
     @ApiOperation(value = "【审批任务】同意", tags = "流程引擎-任务")
     public Response doApproval(String taskId, String reason) {
         snakerEngineFacets.execute(taskId, StpUtil.getLoginIdAsString(), null);
@@ -266,6 +266,9 @@ public class SnakerflowFacetsController {
 
 
     /**
+     *   ------------------ 流程
+     */
+    /**
      * 流程实例管理
      */
     @ApiOperation(value = "流程分页查询", tags = "流程引擎-流程实例")
@@ -279,5 +282,27 @@ public class SnakerflowFacetsController {
         snakerEngineFacets.getEngine().query().getHistoryOrders(page, filter);
 
         return PageResponse.ok(JSONUtil.parse(page.getResult()), page.getTotalCount());
+    }
+
+
+    /**
+     * @param name
+     * @param version
+     * @param args
+     * @return
+     */
+    @ApiOperation("模拟 相关参数和 流程")
+    @PostMapping("/startAndExecute")
+    public Response startAndExecute(String name, Integer version, @RequestBody Map args) {
+        args.put("user1", StpUtil.getLoginIdAsString());
+        args.put("user2", "yang");
+        args.put("user3", "zhang");
+        Object day = args.get("day");
+        if (day != null) {
+            args.put("day", Integer.valueOf((String) day));
+        }
+
+        snakerEngineFacets.startAndExecute(name, version, StpUtil.getLoginIdAsString(), args);
+        return Response.ok();
     }
 }

@@ -93,17 +93,12 @@
         if (JSON.stringify(user) == "{}") {
             location.href = "login.html";
         }
-        admin.setAvatar("admin/images/avatar.jpg", "laker");
 
-        admin.setConfigType("yml");
-        admin.setConfigPath("config/pear.config.yml");
-        console.log(admin.readConfig());
-        let readConfig = admin.readConfig();
-        const menuUrl = EasyAdminContext.url + "/sys/menu/tree";
         $.ajax({
-            url: menuUrl,
+            url: EasyAdminContext.url+"/api/v1/tokenInfo",
             dataType: 'json',
-            success: function () {
+            success: function (data) {
+                admin.setAvatar("admin/images/avatar.jpg", data.data.loginId);
             },
             error: function () {
                 // 用于验证前端信息 对应到不对的会话情况
@@ -112,6 +107,15 @@
                 location.href = "login.html";
             }
         });
+
+
+
+        admin.setConfigType("yml");
+        admin.setConfigPath("config/pear.config.yml");
+        console.log(admin.readConfig());
+        let readConfig = admin.readConfig();
+        const menuUrl = EasyAdminContext.url + "/sys/menu/tree";
+
         readConfig.menu.data = menuUrl;
         admin.render(readConfig);
 

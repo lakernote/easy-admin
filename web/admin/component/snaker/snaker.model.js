@@ -112,13 +112,20 @@
                         return new snakerflow.editors.inputEditor();
                     }
                 },
-                assignee: {name: 'assignee', value: ''},
-                assigneeDisplay: {
-                    name: 'assigneeDisplay', label: '参与者', value: '', editor: function () {
-                        // return new snakerflow.editors.assigneeEditor('/dialogs/selectDialog.jsp?type=orgUserTree');
+                // assignee: {name: 'assignee', value: ''},
+                assignee: {
+                    name: 'assignee', label: '参与者', value: '', editor: function () {
                         return new snakerflow.editors.inputEditor();
                     }
-                },
+                }
+                // ,
+                // assigneeDisplay: {
+                //     name: 'assigneeDisplay', label: '参与者', value: '', editor: function () {
+                //         // return new snakerflow.editors.assigneeEditor('/dialogs/selectDialog.jsp?type=orgUserTree');
+                //         return new snakerflow.editors.inputEditor();
+                //     }
+                // }
+                ,
                 assignmentHandler: {
                     name: 'assignmentHandler', label: '参与者处理类', value: '', editor: function () {
                         return new snakerflow.editors.inputEditor();
