@@ -20,7 +20,7 @@ import java.time.Instant;
  * Bean的优先级设置为最高
  */
 @Aspect
-@Component
+//@Component
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MetricsAspect {
