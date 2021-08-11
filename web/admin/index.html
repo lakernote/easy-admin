@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title> Pear Admin Layui </title>
+    <title> Easy Admin</title>
     <!-- 依 赖 样 式 -->
     <link rel="stylesheet" href="component/pear/css/pear.css"/>
     <!-- 加 载 样 式-->
@@ -94,8 +94,9 @@
             location.href = "login.html";
         }
 
+        // 获取用户信息，用户名、昵称、头像等
         $.ajax({
-            url: EasyAdminContext.url+"/api/v1/tokenInfo",
+            url: EasyAdminContext.url + "/api/v1/tokenInfo",
             dataType: 'json',
             success: function (data) {
                 admin.setAvatar("admin/images/avatar.jpg", data.data.loginId);
@@ -108,15 +109,14 @@
             }
         });
 
-
-
+        // 读取配置文件yml、json2种方式
         admin.setConfigType("yml");
         admin.setConfigPath("config/pear.config.yml");
-        console.log(admin.readConfig());
+        // 动态设置配置文件中菜单树接口地址
         let readConfig = admin.readConfig();
         const menuUrl = EasyAdminContext.url + "/sys/menu/tree";
-
         readConfig.menu.data = menuUrl;
+        // 渲染
         admin.render(readConfig);
 
         // 登出逻辑

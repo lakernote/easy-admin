@@ -3,7 +3,6 @@ package com.laker.admin.module.sys.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,37 +15,44 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author laker
- * @since 2021-08-05
+ * @since 2021-08-11
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysUser implements Serializable {
+public class SysRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "user_id", type = IdType.AUTO)
-    private Long userId;
+    @TableId(value = "role_id", type = IdType.AUTO)
+    private Long roleId;
 
-    private String userName;
+    /**
+     * 角色名
+     */
+    private String roleName;
 
-    private String password;
+    /**
+     * Key值
+     */
+    private String roleCode;
 
-    private String nickName;
+    /**
+     * 描述
+     */
+    private String details;
 
-    private Integer sex;
+    /**
+     * 是否可用
+     */
+    private Boolean enable;
 
-    private String phone;
-
-    private Integer enable;
-
-    private String email;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 
-
+    /**
+     * 提供前端 显示
+     */
     @TableField(exist = false)
-    private String roleIds;
+    private boolean checked = false;
 
 
 }

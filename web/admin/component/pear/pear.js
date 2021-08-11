@@ -3,8 +3,16 @@ window.rootPath = (function (src) {
     return src.substring(0, src.lastIndexOf("/") + 1);
 })();
 const EasyAdminContext = {
-    url: "http://localhost:8080"
+    url: "http://localhost:8080",
+    getQueryString: function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r !== null)
+            return unescape(r[2]);
+        return "";
+    }
 };
+
 layui.config({
     base: rootPath + "module/",
     version: "3.8.10"
