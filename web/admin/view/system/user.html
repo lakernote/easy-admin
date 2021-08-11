@@ -16,18 +16,14 @@
                         <input type="text" name="realName" placeholder="" class="layui-input">
                     </div>
                 </div>
+
                 <div class="layui-form-item layui-inline">
-                    <label class="layui-form-label">性别</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name=" " placeholder="" class="layui-input">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block" >
+                        <ul id="selectParent" name="deptId" class="dtree" data-id="0"></ul>
                     </div>
                 </div>
-                <div class="layui-form-item layui-inline">
-                    <label class="layui-form-label">邮箱</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="realName" placeholder="" class="layui-input">
-                    </div>
-                </div>
+
                 <div class="layui-form-item layui-inline">
                     <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
                         <i class="layui-icon layui-icon-search"></i>
@@ -95,12 +91,12 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'common'], function () {
+    layui.use(['table', 'form', 'jquery', 'common', 'dtree'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let common = layui.common;
-
+        let dtree = layui.dtree;
         let MODULE_PATH = "user/";
 
         let cols = [
@@ -149,6 +145,17 @@
                 }
             ]
         ]
+
+        dtree.renderSelect({
+            elem: "#selectParent",
+            url: EasyAdminContext.url + "/sys/dept/tree",
+            method: 'get',
+            selectInputName: {nodeId: "deptId", context: "deptName"},
+            // skin: "layui",
+            dataFormat: "list",
+            response: {treeId: "deptId", parentId: "pid", title: "deptName"},
+            selectInitVal: "1"
+        });
 
         table.render({
             elem: '#user-table',

@@ -52,7 +52,12 @@
                         <input type="radio" name="sex" value="2" title="女">
                     </div>
                 </div>
-
+                <div class="layui-form-item">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <ul id="selectParent" name="deptId" class="dtree" data-id="0"></ul>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">角色</label>
                     <div id="view11" class="layui-input-block">
@@ -87,10 +92,14 @@
 </script>
 
 <script>
-    layui.use(['form', 'jquery'], function () {
+    layui.use(['form', 'jquery', 'dtree'], function () {
         let form = layui.form;
         let $ = layui.jquery;
         var id;
+
+        let dtree = layui.dtree;
+
+
         form.on('submit(user-save)', function (data) {
             let roleIds = "";
             $('input[type=checkbox]:checked').each(function () {
@@ -143,6 +152,16 @@
                 if (result.success) {
                     //表单数据回显
                     form.val("edit", result.data);
+                    dtree.renderSelect({
+                        elem: "#selectParent",
+                        url: EasyAdminContext.url + "/sys/dept/tree",
+                        method: 'get',
+                        selectInputName: {nodeId: "deptId", context: "deptName"},
+                        // skin: "layui",
+                        dataFormat: "list",
+                        response: {treeId: "deptId", parentId: "pid", title: "deptName"},
+                        selectInitVal: result.data.deptId + ''
+                    });
                 } else {
                     layer.msg(result.msg, {icon: 2, time: 1000});
                 }

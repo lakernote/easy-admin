@@ -11,11 +11,32 @@
  Target Server Version : 50528
  File Encoding         : 65001
 
- Date: 10/08/2021 14:21:49
+ Date: 11/08/2021 19:02:40
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for sys_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dept`;
+CREATE TABLE `sys_dept`  (
+  `dept_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `dept_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `pid` bigint(11) NOT NULL DEFAULT 0,
+  `status` tinyint(1) DEFAULT NULL,
+  `sort` int(255) DEFAULT NULL,
+  PRIMARY KEY (`dept_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_dept
+-- ----------------------------
+INSERT INTO `sys_dept` VALUES (4, '研发部', '', 0, 1, 1);
+INSERT INTO `sys_dept` VALUES (5, '测试部', '', 0, 1, 1);
+INSERT INTO `sys_dept` VALUES (6, '研发一部-1', '今天天气如何', 4, 1, 2);
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -37,7 +58,7 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`menu_id`) USING BTREE,
   INDEX `title`(`title`) USING BTREE,
   INDEX `href`(`href`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 271 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -45,7 +66,7 @@ CREATE TABLE `sys_menu`  (
 INSERT INTO `sys_menu` VALUES (1, 0, '工作空间', 'layui-icon layui-icon-console', '', '', 0, 1, NULL, NULL, 0, NULL);
 INSERT INTO `sys_menu` VALUES (250, 1, '控制后台', 'layui-icon layui-icon-console', 'view/console/console1.html', '_iframe', 0, 1, NULL, NULL, 1, NULL);
 INSERT INTO `sys_menu` VALUES (251, 0, '系统管理', 'layui-icon layui-icon-set-fill', '', '', 0, 1, NULL, NULL, 0, NULL);
-INSERT INTO `sys_menu` VALUES (252, 251, '权限管理', 'layui-icon layui-icon-face-cry', 'view/system/power.html', '_iframe', 0, 1, NULL, NULL, 1, NULL);
+INSERT INTO `sys_menu` VALUES (252, 251, '权限管理', 'layui-icon layui-icon layui-icon-face-cry', 'view/system/power.html', '_iframe', 11, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (258, 251, '用户管理', 'layui-icon layui-icon-user', 'view/system/user.html', '_iframe', 1, 1, NULL, NULL, 1, 'user');
 INSERT INTO `sys_menu` VALUES (259, 0, '常用组件', 'layui-icon layui-icon-rate-solid', '', '', 2, 1, NULL, NULL, 0, '');
 INSERT INTO `sys_menu` VALUES (260, 259, '基础组件', 'layui-icon ', '', '', 1, 1, NULL, NULL, 0, '');
@@ -58,6 +79,46 @@ INSERT INTO `sys_menu` VALUES (266, 1, '应用监控', 'layui-icon ', '/monitori
 INSERT INTO `sys_menu` VALUES (268, 251, '接口文档', 'layui-icon ', '/doc.html', '_iframe', 3, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (269, 1, '任务列表', 'layui-icon ', 'view/flow/taskList.html', '_iframe', 1, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (270, 1, '请假申请', 'layui-icon ', 'view/flow/process/leave.html', '_iframe', 4, 1, NULL, NULL, 1, '');
+INSERT INTO `sys_menu` VALUES (280, 251, '角色管理', 'layui-icon ', 'view/system/role.html', '_iframe', 2, 1, NULL, NULL, 1, '');
+INSERT INTO `sys_menu` VALUES (281, 251, '部门管理', 'layui-icon ', 'view/system/deptment.html', '_iframe', 11, 1, NULL, NULL, 1, '');
+
+-- ----------------------------
+-- Table structure for sys_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role`  (
+  `role_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '角色名',
+  `role_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Key值',
+  `details` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '描述',
+  `enable` tinyint(1) DEFAULT NULL COMMENT '是否可用',
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`role_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+INSERT INTO `sys_role` VALUES (2, '超级管理员', 'admin', '超级管理员很牛逼', 1, NULL);
+INSERT INTO `sys_role` VALUES (3, '普通员工', 'general ', '普通员工2', 0, NULL);
+
+-- ----------------------------
+-- Table structure for sys_role_power
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_power`;
+CREATE TABLE `sys_role_power`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role_id` bigint(20) DEFAULT NULL,
+  `power_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_role_power
+-- ----------------------------
+INSERT INTO `sys_role_power` VALUES (1, 2, 1);
+INSERT INTO `sys_role_power` VALUES (2, 2, 250);
+INSERT INTO `sys_role_power` VALUES (3, 2, 269);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -68,20 +129,48 @@ CREATE TABLE `sys_user`  (
   `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `nick_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `dept_id` bigint(20) DEFAULT NULL,
   `sex` int(2) DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `enable` int(2) DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (16, 'laker', '123456', '老李', 1, '', 1, '', '2021-08-09 18:25:32');
-INSERT INTO `sys_user` VALUES (17, 'yang', '123456', '陈阳', 1, '', 1, '', '2021-08-10 10:24:23');
-INSERT INTO `sys_user` VALUES (18, 'zhang', '123456', '张总', 1, '', 1, '', '2021-08-10 10:24:38');
+INSERT INTO `sys_user` VALUES (16, 'laker', '123456', '老李', 4, 1, '1', 1, '', '2021-08-09 18:25:32');
+INSERT INTO `sys_user` VALUES (17, 'yang', '123456', '陈阳', 6, 1, '', 1, '', '2021-08-10 10:24:23');
+INSERT INTO `sys_user` VALUES (18, 'zhang', '123456', '张总', 5, 1, '', 1, '', '2021-08-10 10:24:38');
+INSERT INTO `sys_user` VALUES (22, '854085467', '*******', '', 4, 1, '15555555555', 1, '854085467@qq.com', '2021-08-11 18:19:10');
+
+-- ----------------------------
+-- Table structure for sys_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) DEFAULT NULL,
+  `role_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
+INSERT INTO `sys_user_role` VALUES (7, NULL, 2);
+INSERT INTO `sys_user_role` VALUES (9, 16, 2);
+INSERT INTO `sys_user_role` VALUES (10, 16, 3);
+INSERT INTO `sys_user_role` VALUES (13, 18, 2);
+INSERT INTO `sys_user_role` VALUES (14, 18, 3);
+INSERT INTO `sys_user_role` VALUES (16, 19, 3);
+INSERT INTO `sys_user_role` VALUES (17, NULL, 2);
+INSERT INTO `sys_user_role` VALUES (18, 17, 2);
+INSERT INTO `sys_user_role` VALUES (19, NULL, 2);
+INSERT INTO `sys_user_role` VALUES (24, 22, 2);
+INSERT INTO `sys_user_role` VALUES (25, 22, 3);
 
 -- ----------------------------
 -- Table structure for wf_hist_order
@@ -108,6 +197,7 @@ CREATE TABLE `wf_hist_order`  (
 -- Records of wf_hist_order
 -- ----------------------------
 INSERT INTO `wf_hist_order` VALUES ('031de35d015a4dbf98ebabf36091b4e7', '0058e0887d3046148d2f9391ec92ed4f', 0, 'laker', '2021-08-10 11:02:46', '2021-08-10 14:19:06', NULL, NULL, NULL, '20210810-11:02:46-447-572', '{\"day\":4,\"leaveReason\":\"3\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
+INSERT INTO `wf_hist_order` VALUES ('50bd89c380cd4e1188e6009415c19be6', '0058e0887d3046148d2f9391ec92ed4f', 1, 'laker', '2021-08-11 16:35:43', NULL, NULL, NULL, NULL, '20210811-16:35:44-001-625', '{\"day\":12,\"leaveReason\":\"2\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
 INSERT INTO `wf_hist_order` VALUES ('5d29bef9d0af45758d527263623c8836', '80cf99f6c93a48178472922150574b72', 0, '张三', '2021-08-07 00:30:47', '2021-08-07 00:34:30', NULL, NULL, NULL, '20210807-00:30:47-716-183', '{\"user1\":\"张三排\",\"user2\":\"组长\",\"approveBoss.operator\":\"老板\"}');
 INSERT INTO `wf_hist_order` VALUES ('6f14ff72235a42369d32ff642514c8df', '809686f2e32c4b0cb0c03d40870ef420', 0, '张三', '2021-08-07 00:21:16', '2021-08-07 00:22:19', NULL, NULL, NULL, '20210807-00:21:16-356-835', '{\"user1\":\"张三排\",\"user2\":\"组长\",\"approveBoss.operator\":\"老板\"}');
 INSERT INTO `wf_hist_order` VALUES ('761d29459af64ad98f5efe36bed75dde', '8088934cbc9a4ed582110ca8b2032141', 0, '张三', '2021-08-09 13:13:12', '2021-08-09 13:13:13', NULL, NULL, NULL, '20210809-13:13:12-954-226', '{\"user1\":\"张三排\",\"user2\":\"组长\",\"approveBoss.operator\":\"老板\"}');
@@ -170,6 +260,7 @@ INSERT INTO `wf_hist_task` VALUES ('76fcbd89f73b401f9077b458ea217464', '9ef1cbdc
 INSERT INTO `wf_hist_task` VALUES ('7c2c388b13c2431abd0a08a46f4a1839', '5d29bef9d0af45758d527263623c8836', 'approveDept', '部门经理审批', 0, 0, 0, '组长', '2021-08-07 00:31:54', '2021-08-07 00:32:05', NULL, '', '74a9f727b3884a67898853f2017f9bb0', '{\"day\":3,\"approveBoss.operator\":\"老板娘\"}');
 INSERT INTO `wf_hist_task` VALUES ('7d4c57300d684d35a382e34c5b7f789c', '9edc37d3e52a4b98be417f1273f5696c', 'approveDept', '部门经理审批', 0, 0, 0, '组长', '2021-08-09 13:16:01', '2021-08-09 13:16:01', NULL, '', 'ed06fd2157cf47fd907a2677045b4cdc', '{\"day\":1,\"approveBoss.operator\":\"老板娘\"}');
 INSERT INTO `wf_hist_task` VALUES ('86e7f4b8b15248a2a2ab70dad1582861', 'ae26506a316046ad87155fbd200a99f2', 'approveDept', '部门经理审批', 0, 0, 0, 'yang', '2021-08-10 10:24:56', '2021-08-10 10:49:54', NULL, '', '02ec31185bfc46d7a3e4933ff01ce200', '{}');
+INSERT INTO `wf_hist_task` VALUES ('89fd07efb4904a67b1d4aee823ebd7fa', '50bd89c380cd4e1188e6009415c19be6', 'apply', '请假申请', 0, 0, 0, 'laker', '2021-08-11 16:35:44', '2021-08-11 16:35:44', NULL, '', 'start', '{\"day\":12,\"leaveReason\":\"2\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"laker\"}');
 INSERT INTO `wf_hist_task` VALUES ('8a1d2e2e96744b4db0b21089d18f6c6a', 'a94b8cbedd824b759106e79e90c7c8a2', 'approveDept', '部门经理审批', 0, 0, 0, '组长', '2021-08-09 13:17:06', '2021-08-09 13:17:06', NULL, '', '6733583dc3fe437a902e8b05abb4a9fc', '{\"day\":3,\"approveBoss.operator\":\"老板娘\"}');
 INSERT INTO `wf_hist_task` VALUES ('92a6025e3a274564bdfb7ea82306628b', '031de35d015a4dbf98ebabf36091b4e7', 'approveDept', '部门经理审批', 0, 0, 0, 'yang', '2021-08-10 11:08:35', '2021-08-10 11:10:27', NULL, '', '724e812e43824109afdad955bb6558fc', '{}');
 INSERT INTO `wf_hist_task` VALUES ('a46be0e8e0404681b9114c1606dc3b25', 'dd2d7f3f64bc4066a1efa065dcab5828', 'approveDept', '部门经理审批', 0, 0, 0, '组长', '2021-08-07 00:41:01', '2021-08-07 00:41:02', NULL, '', '2132a03c35ca491fadee378515ab8472', '{\"day\":3,\"approveBoss.operator\":\"老板娘\"}');
@@ -218,6 +309,7 @@ INSERT INTO `wf_hist_task_actor` VALUES ('50148943425b4aa8a760845a894005d5', 'ya
 INSERT INTO `wf_hist_task_actor` VALUES ('3bd2418b77854fe8af686068cf8a628c', 'zhang');
 INSERT INTO `wf_hist_task_actor` VALUES ('92a6025e3a274564bdfb7ea82306628b', 'yang');
 INSERT INTO `wf_hist_task_actor` VALUES ('ccd8fc86cac147218fec1f9eb0080cc0', 'zhang');
+INSERT INTO `wf_hist_task_actor` VALUES ('89fd07efb4904a67b1d4aee823ebd7fa', 'laker');
 
 -- ----------------------------
 -- Table structure for wf_order
@@ -245,6 +337,7 @@ CREATE TABLE `wf_order`  (
 -- ----------------------------
 -- Records of wf_order
 -- ----------------------------
+INSERT INTO `wf_order` VALUES ('50bd89c380cd4e1188e6009415c19be6', NULL, '0058e0887d3046148d2f9391ec92ed4f', 'laker', '2021-08-11 16:35:43', NULL, '2021-08-11 16:35:44', 'laker', NULL, NULL, '20210811-16:35:44-001-625', '{\"day\":12,\"leaveReason\":\"2\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 1);
 INSERT INTO `wf_order` VALUES ('a94b8cbedd824b759106e79e90c7c8a2', NULL, '0058e0887d3046148d2f9391ec92ed4f', '张三', '2021-08-09 13:17:06', NULL, '2021-08-09 13:17:06', '组长', NULL, NULL, '20210809-13:17:06-345-949', '{\"user1\":\"张三排\",\"user2\":\"组长\",\"approveBoss.operator\":\"老板\"}', 2);
 INSERT INTO `wf_order` VALUES ('b307f9cb2044409a9713554e26d22d81', NULL, '0058e0887d3046148d2f9391ec92ed4f', 'laker', '2021-08-10 09:51:35', NULL, '2021-08-10 09:51:35', 'laker', NULL, NULL, '20210810-09:51:35-516-17', '{\"userName\":\"2\",\"nickName\":\"沙发大法\"}', 0);
 INSERT INTO `wf_order` VALUES ('f36e0864d1b947f9a5c3d215eef11f06', NULL, '0058e0887d3046148d2f9391ec92ed4f', 'laker', '2021-08-10 10:57:23', NULL, '2021-08-10 10:57:23', 'laker', NULL, NULL, '20210810-10:57:23-234-395', '{\"day\":\"4\",\"leaveReason\":\"affafadfdaf\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 1);
@@ -301,6 +394,11 @@ CREATE TABLE `wf_task`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '任务表' ROW_FORMAT = Compact;
 
 -- ----------------------------
+-- Records of wf_task
+-- ----------------------------
+INSERT INTO `wf_task` VALUES ('1efbc902092f458199ab24bd64e36ec8', '50bd89c380cd4e1188e6009415c19be6', 'approveDept', '部门经理审批', 0, 0, NULL, '2021-08-11 16:35:44', NULL, NULL, '', '89fd07efb4904a67b1d4aee823ebd7fa', '{\"day\":12,\"leaveReason\":\"2\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"yang\"}', 0);
+
+-- ----------------------------
 -- Table structure for wf_task_actor
 -- ----------------------------
 DROP TABLE IF EXISTS `wf_task_actor`;
@@ -316,5 +414,6 @@ CREATE TABLE `wf_task_actor`  (
 INSERT INTO `wf_task_actor` VALUES ('ba3443374e3b4aeeb61fdbf7b2876582', '老板娘');
 INSERT INTO `wf_task_actor` VALUES ('31d42833aad74561aeeb88ff7b4fcde9', 'user1');
 INSERT INTO `wf_task_actor` VALUES ('2e67e87d27794d5d9ef5e8d36c986c27', 'yang');
+INSERT INTO `wf_task_actor` VALUES ('1efbc902092f458199ab24bd64e36ec8', 'yang');
 
 SET FOREIGN_KEY_CHECKS = 1;

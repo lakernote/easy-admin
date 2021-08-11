@@ -59,6 +59,12 @@
                         <input type="radio" name="enable" value="0" title="否">
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <ul id="selectParent" name="deptId" class="dtree" data-id="0"></ul>
+                    </div>
+                </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">角色</label>
@@ -96,9 +102,10 @@
 
 
 <script>
-    layui.use(['form', 'jquery', 'laytpl'], function () {
+    layui.use(['form', 'jquery', 'laytpl', 'dtree'], function () {
         let form = layui.form;
         let $ = layui.jquery;
+        let dtree = layui.dtree;
         var laytpl = layui.laytpl;
 
         $.get(EasyAdminContext.url + "/sys/user/getRoles", function (result) {
@@ -111,6 +118,18 @@
             form.render();
         });
 
+
+        dtree.renderSelect({
+            elem: "#selectParent",
+            url: EasyAdminContext.url + "/sys/dept/tree",
+            method: 'get',
+            selectInputName: {nodeId: "deptId", context: "deptName"},
+            // skin: "layui",
+            dataFormat: "list",
+            response: {treeId: "deptId", parentId: "pid", title: "deptName"},
+            selectInitVal: "1"
+        });
+
         form.on('submit(user-save)', function (data) {
             let roleIds = "";
             $('input[type=checkbox]:checked').each(function () {
@@ -118,6 +137,8 @@
             });
             roleIds = roleIds.substr(0, roleIds.length - 1);
             data.field.roleIds = roleIds;
+            alert(roleIds)
+            console.log(data);
             $.ajax({
                 url: EasyAdminContext.url + '/sys/user',
                 data: JSON.stringify(data.field),

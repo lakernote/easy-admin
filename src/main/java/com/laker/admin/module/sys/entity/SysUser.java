@@ -33,6 +33,8 @@ public class SysUser implements Serializable {
 
     private String nickName;
 
+    private Long deptId;
+
     private Integer sex;
 
     private String phone;

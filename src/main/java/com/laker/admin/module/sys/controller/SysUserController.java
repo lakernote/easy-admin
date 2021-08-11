@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -42,10 +43,12 @@ public class SysUserController {
 
     @GetMapping
     @ApiOperation(value = "分页查询")
-    public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long current,
-                                @RequestParam(required = false, defaultValue = "10") long size) {
-        Page roadPage = new Page<>(current, size);
+    public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
+                                @RequestParam(required = false, defaultValue = "10") long limit,
+                                Long deptId) {
+        Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<SysUser> queryWrapper = new QueryWrapper().lambda();
+        queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId);
         Page pageList = sysUserService.page(roadPage, queryWrapper);
 
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
@@ -55,9 +58,18 @@ public class SysUserController {
     @ApiOperation(value = "新增或者更新")
     @Transactional
     public Response saveOrUpdate(@RequestBody SysUser param) {
-        this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+
         if (param.getUserId() == null) {
             param.setCreateTime(LocalDateTime.now());
+            sysUserService.save(param);
+            if (StrUtil.isNotBlank(param.getRoleIds())) {
+                this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+            }
+        } else {
+            sysUserService.saveOrUpdate(param);
+            if (StrUtil.isNotBlank(param.getRoleIds())) {
+                this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+            }
         }
         return Response.ok(sysUserService.saveOrUpdate(param));
     }
