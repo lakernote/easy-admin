@@ -1,289 +1,217 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>部门管理</title>
-		<link rel="stylesheet" href="../../component/pear/css/pear.css" />
-		<link rel="stylesheet" href="../../admin/css/other/department.css"/>
-	</head>
-	<body class="pear-container">
-		<div class="layui-card">
-			<div class="layui-card-body">
-				<form class="layui-form" action="">
-					<div class="layui-form-item">
-						<div class="layui-form-item layui-inline">
-							<label class="layui-form-label">用户名</label>
-							<div class="layui-input-inline">
-								<input type="text" name="realName" placeholder="" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item layui-inline">
-							<label class="layui-form-label">性别</label>
-							<div class="layui-input-inline">
-								<input type="text" name="realName" placeholder="" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item layui-inline">
-							<label class="layui-form-label">邮箱</label>
-							<div class="layui-input-inline">
-								<input type="text" name="realName" placeholder="" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item layui-inline">
-							<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
-								<i class="layui-icon layui-icon-search"></i>
-								查询
-							</button>
-							<button type="reset" class="pear-btn pear-btn-md">
-								<i class="layui-icon layui-icon-refresh"></i>
-								重置
-							</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<div class="layui-row layui-col-space15">
-			<div class="layui-col-md3">
-				<div class="layui-card">
-					<div class="layui-card-body">
-						<div id="organizationTreeContent" style="overflow: auto">
-							<ul id="organizationTree" class="dtree organizationTree" data-id="9527"></ul>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="layui-col-md9">
-				<div class="layui-card">
-					<div class="layui-card-body">
-						<table id="organization-table" lay-filter="organization-table"></table>
-					</div>
-				</div>
-			</div>
-		</div>
+<head>
+    <meta charset="utf-8">
+    <title>部门管理</title>
+    <link rel="stylesheet" href="../../component/pear/css/pear.css"/>
+    <link rel="stylesheet" href="../../admin/css/other/department.css"/>
+</head>
+<body class="pear-container">
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="deptName" placeholder="" class="layui-input">
+                </div>
+                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="dept-query">
+                    <i class="layui-icon layui-icon-search"></i>
+                    查询
+                </button>
+                <button type="reset" class="pear-btn pear-btn-md">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-		<script type="text/html" id="organization-toolbar">
-			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
-			<i class="layui-icon layui-icon-add-1"></i>
-			新增
-		</button>
-		<button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
-			<i class="layui-icon layui-icon-delete"></i>
-			删除
-		</button>
-	</script>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="dept-table" lay-filter="dept-table"></table>
+    </div>
+</div>
 
-		<script type="text/html" id="organization-bar">
-			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i
-				class="layui-icon layui-icon-edit"></i></button>
-		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i
-				class="layui-icon layui-icon-delete"></i></button>
-	    </script>
-		<script src="../../component/layui/layui.js"></script>
-		<script src="../../component/pear/pear.js"></script>
-		<script>
-			layui.use(['table', 'form', 'jquery', 'dtree'], function() {
-				let table = layui.table;
-				let form = layui.form;
-				let $ = layui.jquery;
-				let dtree = layui.dtree;
+<script type="text/html" id="dept-toolbar">
+    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </button>
+    <button class="pear-btn pear-btn-md" lay-event="batchRemove">
+        <i class="layui-icon layui-icon-delete"></i>
+        删除
+    </button>
+</script>
 
-				let MODULE_PATH = "operate/";
+<script type="text/html" id="dept-bar">
+    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i>
+    </button>
+</script>
 
-				let cols = [
-					[{
-							type: 'checkbox'
-						},
-						{
-							title: '名称',
-							field: 'name',
-							align: 'center'
-						},
-						{
-							title: '人数',
-							field: 'userCount',
-							align: 'center'
-						},
-						{
-							title: '位置',
-							field: 'location',
-							align: 'center'
-						},
-						{
-							title: '负责人',
-							field: 'leader',
-							align: 'center'
-						},
-						{
-							title: '操作',
-							toolbar: '#organization-bar',
-							align: 'center',
-							width: 130
-						}
-					]
-				]
+<script type="text/html" id="dept-status">
+    <input type="checkbox" name="enable" value="{{d.deptId}}" lay-skin="switch" lay-text="启用|禁用"
+           lay-filter="dept-enable" {{ d.status ? 'checked' : '' }}>
+</script>
 
-				var DTree = dtree.render({
-					elem: "#organizationTree",
-					//data: data,
-					initLevel: "2", //默认展开层级为1
-					line: true, // 有线树
-					ficon: ["1", "-1"], // 设定一级图标样式。0表示方形加减图标，8表示小圆点图标
-					icon: ["0", "2"], // 设定二级图标样式。0表示文件夹图标，5表示叶子图标
-					method: 'get',
-					url: "../../admin/data/organizationtree.json"
-				});
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/pear/pear.js"></script>
+<script>
+    layui.use(['table', 'form', 'jquery', 'treetable', 'popup'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let treetable = layui.treetable;
+        let popup = layui.popup;
 
-				table.render({
-					elem: '#organization-table',
-					url: '../../admin/data/organization.json',
-					height: 'full-150',
-					page: true,
-					cols: cols,
-					skin: 'line',
-					toolbar: '#organization-toolbar',
-					defaultToolbar: [{
-						title: '刷新',
-						layEvent: 'refresh',
-						icon: 'layui-icon-refresh',
-					}, 'filter', 'print', 'exports']
-				});
+        let MODULE_PATH = "dept/";
+        window.render = function () {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'deptId',
+                treePidName: 'pid',
+                skin: 'line',
+                method: 'get',
+                treeDefaultClose: true,
+                toolbar: '#dept-toolbar',
+                elem: '#dept-table',
+                url: EasyAdminContext.url + '/sys/dept/data',
+                page: false,
+                defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'],
+                cols: [
+                    [
+                        {type: 'checkbox'},
+                        {field: 'deptName', minWidth: 200, title: '部门名称'},
+                        {field: 'address', title: '详细地址'},
+                        {field: 'status', title: '状态', templet: '#dept-status'},
+                        {field: 'sort', title: '排序', width: 100},
+                        {title: '操作', templet: '#dept-bar', width: 120, align: 'center'}
+                    ]
+                ]
+            });
+        }
+        render();
+        form.on('submit(dept-query)', function (data) {
+            var keyword = data.field.deptName;
+            var $tds = $('#dept-table').next('.treeTable').find('.layui-table-body tbody tr td');
+            if (!keyword) {
+                $tds.css('background-color', 'transparent');
+                layer.msg("请输入关键字", {icon: 5});
+                return;
+            }
+            var searchCount = 0;
+            $tds.each(function () {
+                $(this).css('background-color', 'transparent');
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        $('body,html').stop(true);
+                        $('body,html').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            } else {
+                treetable.expandAll('#dept-table');
+            }
+            return false;
+        });
 
-				// 绑定节点点击事件
-				dtree.on("node(organizationTree)", function(obj) {
-					if (!obj.param.leaf) {
-						var $div = obj.dom;
-						DTree.clickSpread($div); //调用内置函数展开节点
-					} else {
-						layer.msg("叶子节点就不展开了,刷新右侧列表");
-						table.reload("organization-table");
-					}
-				});
+        table.on('tool(dept-table)', function (obj) {
+            if (obj.event === 'remove') {
+                window.remove(obj);
+            } else if (obj.event === 'edit') {
+                window.edit(obj);
+            }
+        })
 
-				table.on('tool(organization-table)', function(obj) {
-					if (obj.event === 'remove') {
-						window.remove(obj);
-					} else if (obj.event === 'edit') {
-						window.edit(obj);
-					}
-				});
+        table.on('toolbar(dept-table)', function (obj) {
+            if (obj.event === 'add') {
+                window.add();
+            } else if (obj.event === 'refresh') {
+                window.refresh();
+            } else if (obj.event === 'batchRemove') {
+                window.batchRemove(obj);
+            }
+        });
 
-				table.on('toolbar(organization-table)', function(obj) {
-					if (obj.event === 'add') {
-						window.add();
-					} else if (obj.event === 'refresh') {
-						window.refresh();
-					} else if (obj.event === 'batchRemove') {
-						window.batchRemove(obj);
-					}
-				});
+        form.on('switch(dept-enable)', function (obj) {
+            let operate;
+            if (obj.elem.checked) {
+                operate = "enable";
+            } else {
+                operate = "disable";
+            }
+            let loading = layer.load();
+            $.ajax({
+                url: '/system/dept/' + operate,
+                data: JSON.stringify({deptId: this.value}),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'put',
+                success: function (result) {
+                    layer.close(loading);
+                    if (result.success) {
+                        popup.success(result.msg);
+                    } else {
+                        popup.failure(result.msg);
+                    }
+                }
+            })
+        });
 
-				form.on('submit(organization-query)', function(data) {
-					table.reload('organization-table', {
-						where: data.field
-					})
-					return false;
-				});
+        window.add = function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shade: 0.1,
+                area: ['450px', '500px'],
+                content: MODULE_PATH + 'add.html'
+            });
+        }
 
-				window.add = function() {
-					layer.open({
-						type: 2,
-						title: '新增',
-						shade: 0.1,
-						area: ['500px', '400px'],
-						content: MODULE_PATH + 'add.html'
-					});
-				}
+        window.edit = function (obj) {
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: ['450px', '500px'],
+                content: MODULE_PATH + 'edit.html?deptId=' + obj.data['deptId']
+            });
+        }
 
-				window.edit = function(obj) {
-					layer.open({
-						type: 2,
-						title: '修改',
-						shade: 0.1,
-						area: ['500px', '400px'],
-						content: MODULE_PATH + 'edit.html'
-					});
-				}
+        window.remove = function (obj) {
+            layer.confirm('确定要删除该部门', {icon: 3, title: '提示'}, function (index) {
+                layer.close(index);
+                let loading = layer.load();
+                $.ajax({
+                    url: EasyAdminContext.url + "/sys/dept/" + obj.data['deptId'],
+                    dataType: 'json',
+                    type: 'delete',
+                    success: function (result) {
+                        layer.close(loading);
+                        if (result.success) {
+                            popup.success(result.msg, function () {
+                                obj.del();
+                            });
+                        } else {
+                            popup.failure(result.msg);
+                        }
+                    }
+                })
+            });
+        }
 
-				window.remove = function(obj) {
-					layer.confirm('确定要删除该用户', {
-						icon: 3,
-						title: '提示'
-					}, function(index) {
-						layer.close(index);
-						let loading = layer.load();
-						$.ajax({
-							url: MODULE_PATH + "remove/" + obj.data['organizationId'],
-							dataType: 'json',
-							type: 'delete',
-							success: function(result) {
-								layer.close(loading);
-								if (result.success) {
-									layer.msg(result.msg, {
-										icon: 1,
-										time: 1000
-									}, function() {
-										obj.del();
-									});
-								} else {
-									layer.msg(result.msg, {
-										icon: 2,
-										time: 1000
-									});
-								}
-							}
-						})
-					});
-				}
-
-				window.batchRemove = function(obj) {
-					let data = table.checkStatus(obj.config.id).data;
-					if (data.length === 0) {
-						layer.msg("未选中数据", {
-							icon: 3,
-							time: 1000
-						});
-						return false;
-					}
-					let ids = "";
-					for (let i = 0; i < data.length; i++) {
-						ids += data[i].organizationId + ",";
-					}
-					ids = ids.substr(0, ids.length - 1);
-					layer.confirm('确定要删除这些用户', {
-						icon: 3,
-						title: '提示'
-					}, function(index) {
-						layer.close(index);
-						let loading = layer.load();
-						$.ajax({
-							url: MODULE_PATH + "batchRemove/" + ids,
-							dataType: 'json',
-							type: 'delete',
-							success: function(result) {
-								layer.close(loading);
-								if (result.success) {
-									layer.msg(result.msg, {
-										icon: 1,
-										time: 1000
-									}, function() {
-										table.reload('organization-table');
-									});
-								} else {
-									layer.msg(result.msg, {
-										icon: 2,
-										time: 1000
-									});
-								}
-							}
-						})
-					});
-				}
-
-				window.refresh = function(param) {
-					table.reload('organization-table');
-				}
-			})
-		</script>
-	</body>
+        window.refresh = function () {
+            treetable.reload('#dept-table');
+        }
+    })
+</script>
+</body>
 </html>
