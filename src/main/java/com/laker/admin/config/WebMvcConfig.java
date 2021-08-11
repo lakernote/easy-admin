@@ -37,7 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         File file = new File("web");
         log.info(file.getAbsolutePath());
         registry.addResourceHandler("/admin/**")
-                .addResourceLocations("file:" + file.getAbsolutePath() + "\\admin\\");
+                .addResourceLocations("file:" + file.getAbsolutePath() + "/admin/");
     }
 
 }
