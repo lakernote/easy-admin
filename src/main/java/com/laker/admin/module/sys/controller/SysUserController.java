@@ -45,10 +45,14 @@ public class SysUserController {
     @ApiOperation(value = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
-                                Long deptId) {
+                                Long deptId,
+                                String keyWord) {
         Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<SysUser> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId);
+        queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId)
+                .and(StrUtil.isNotBlank(keyWord), i -> i.
+                        like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord)
+                        .or().like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord));
         Page pageList = sysUserService.page(roadPage, queryWrapper);
 
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
