@@ -2,6 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.Response;
 import com.laker.admin.module.sys.entity.SysMenu;
@@ -41,7 +42,7 @@ public class SysMenuController {
     @GetMapping("/list")
     @ApiOperation(value = "系统菜单表分页查询")
     public Response list() {
-        List<SysMenu> list = sysMenuService.list();
+        List<SysMenu> list = sysMenuService.list(Wrappers.<SysMenu>lambdaQuery().orderByAsc(SysMenu::getSort));
         return Response.ok(list);
     }
 
