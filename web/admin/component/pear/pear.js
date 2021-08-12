@@ -3,7 +3,7 @@ window.rootPath = (function (src) {
     return src.substring(0, src.lastIndexOf("/") + 1);
 })();
 const EasyAdminContext = {
-    url: "http://localhost:8080",
+    url: "",
     getQueryString: function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);

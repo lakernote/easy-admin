@@ -56,7 +56,7 @@
 - **mail 邮箱**
 - **snakerflow 国产工作流引擎**
 
-#### 安装教程
+#### 开发教程
 
 ##### 服务端
 
@@ -114,11 +114,57 @@ const EasyAdminContext = {
 
 
 
+#### 部署教程
+
+整体部署包位置如下：
 
 
 
 
+![](https://images.gitee.com/uploads/images/2021/0812/141324_9e6528a0_709188.png "屏幕截图.png")
 
+##### 服务端
+
+> mvn clean package 打包
+
+**1.执行**`easy-admin.sql`
+
+**2.修改**`application.yaml`
+
+```yaml
+server:
+  port: 8080
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+```
+
+**3.启动**
+
+```sh
+nohup java -jar easy-admin.jar &
+```
+
+##### 前端
+
+**按照相对位置放即可**
+
+```
+easy-admin.jar
+application.yml
+web
+--admin
+----admin
+----compoment
+----config
+----view
+----index.html
+----login.html
+```
+
+浏览器访问`http://ip:port/admin`
 
 
 
