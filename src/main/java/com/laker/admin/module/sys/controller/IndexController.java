@@ -1,13 +1,15 @@
 package com.laker.admin.module.sys.controller;
 
-import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.IdUtil;
+import com.laker.admin.framework.Response;
+import com.laker.admin.framework.cache.ICache;
+import com.wf.captcha.SpecCaptcha;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * /admin/** 无需check login
@@ -15,17 +17,30 @@ import java.io.IOException;
 @Controller
 @Slf4j
 public class IndexController {
+    @Autowired
+    ICache iCache;
 
     @GetMapping({"/admin", "/admin/index", "/admin/"})
     public String adminIndex() {
         return "redirect:/admin/index.html";
     }
 
-
+    /**
+     * 详情参考：https://gitee.com/whvse/EasyCaptcha
+     *
+     * @return
+     */
     @GetMapping("/captcha")
-    public void captcha(HttpServletResponse response) throws IOException {
-        LineCaptcha captcha = CaptchaUtil.createLineCaptcha(100, 40, 4, 2);
-        log.info("当前验证码：{}", captcha.getCode());
-        captcha.write(response.getOutputStream());
+    @ResponseBody
+    public Response captcha() {
+        SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 5);
+        String verCode = specCaptcha.text().toLowerCase();
+        String uid = IdUtil.simpleUUID();
+        log.info("当前uid:{},验证码：{}", uid, verCode);
+        // 前后端分离，这时还未有会话信息，用于确定uid和验证码的一一映射关系，防止多人串码
+        // 把uuid和图片码一起给前端，验证的时候再一起回来
+        iCache.put(uid, verCode, 3 * 60);
+
+        return Response.ok(Dict.create().set("uid", uid).set("image", specCaptcha.toBase64()));
     }
 }

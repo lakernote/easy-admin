@@ -2,10 +2,12 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.framework.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -26,12 +28,19 @@ public class LoginController {
 
     @Autowired
     ISysUserService sysUserService;
+    @Autowired
+    ICache iCache;
 
     @PostMapping("/api/v1/login")
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "登录")
     public Response login(@RequestBody LoginDto loginDto) {
         log.info("login {}", loginDto);
+        // 验证码是否正确
+        String code = iCache.get(loginDto.getUid());
+        if (!StrUtil.equalsIgnoreCase(code, loginDto.getCaptchaCode())) {
+            return Response.error("500", "验证码不正确或已失效");
+        }
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getUserName, loginDto.getUsername())
