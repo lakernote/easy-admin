@@ -4,6 +4,8 @@
 
 **easy-admin：**       **easy**，**easy**，**easy**，打造一个**简单**、**轻量级**的**后台管理系统脚手架**。目前使用的技术都是相对较轻量级、上手很容易的技术。例如：**Spring Boot**、**hutool-all**、**mybatis-plus** 、**knife4j**  、**sa-token**、**javamelody** 、**snakerflow** 等。**后续的发展方向也是把目标对准中小型项目**，**提炼简单高效架构**。
 
+**适合场景：**`学生学习`、`前后端项目练手`、`接私活快速开发`、`中小型企业脚手架`、`Spring Boot深度扩展学习`等
+
 **项目地址**：[https://gitee.com/lakernote/easy-admin](https://gitee.com/lakernote/easy-admin)
 
 **配套技术文章**：[从零搭建开发脚手架](https://blog.csdn.net/abu935009066/category_10817814.html)
@@ -32,7 +34,7 @@
 | **基于Snakerflow的工作流引擎**                 | ✅        | [轻量级工作流引擎Snakerflow集成](https://blog.csdn.net/abu935009066/article/details/119568513) |
 | **基于mybatis插件的数据权限控制**              | ❎        | [基于Mybatis-Plus的数据权限实现](https://blog.csdn.net/abu935009066/article/details/115481149) |
 | **基于SpringTask定时任务（支持动态CRUD任务）** | ❎        | [基于Spring Task实现动态管理任务](https://blog.csdn.net/abu935009066/article/details/116142630) |
-| **在线WebLog、动态修改日志级别**               | ❎        |                                                              |
+| **在线WebLog、动态修改日志级别**               | ✅        | [在线WebLog、动态修改日志级别](https://blog.csdn.net/abu935009066/article/details/114121941) |
 
 **其他相关文章**
 
@@ -113,15 +115,27 @@ const EasyAdminContext = {
 
 #### 项目截图
 
+**在线WebLog**
+
+![](https://images.gitee.com/uploads/images/2021/0813/164746_e1d2e656_709188.gif)
+
+**登录页**
+
 ![](https://img-blog.csdnimg.cn/460b237c269f48fba2b49633f094cc76.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
+
+**主页菜单**
 
 ![](https://img-blog.csdnimg.cn/9dee2724dc4c4befac3e5bb983fd1726.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
 
-
+**流程定义**
 
 ![](https://img-blog.csdnimg.cn/1c01801cbd434150bb70890be31084d1.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
 
+**应用监控**
+
 ![](https://img-blog.csdnimg.cn/60775442c9034987a9c55c2447856c2f.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
+
+**接口文档**
 
 ![](https://img-blog.csdnimg.cn/4c016aeead7a44d6a22db8cd14db35a9.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
 

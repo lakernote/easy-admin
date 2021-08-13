@@ -26,7 +26,7 @@ logging:
   file:
     max-size: 10MB
     max-history: 50
-    name: lakermap.log
+    name: laker.log
     path: ./
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity

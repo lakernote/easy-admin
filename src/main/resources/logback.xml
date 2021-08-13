@@ -4,7 +4,7 @@
     <property name="encoding" value="UTF-8"/>
 
     <appender name="DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/test.log</file>
+        <file>${LOG_HOME}/laker.log</file>
         <Append>true</Append>
         <prudent>false</prudent>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
