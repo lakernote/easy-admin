@@ -25,9 +25,9 @@
                type="password"/>
     </div>
     <div class="layui-form-item">
-        <input placeholder="验证码 : " hover name="captchaCode" lay-verify="required"
+        <input placeholder="验证码 : " hover name="captchaCode" lay-verify="title"
                class="code layui-input layui-input-inline"/>
-        <img src="admin/images/captcha.gif" class="codeImage"/>
+        <img id="captcha" src="admin/captcha" class="codeImage"/>
     </div>
     <div class="layui-form-item">
         <input type="checkbox" name="" title="记住密码" lay-skin="primary" checked>
@@ -47,6 +47,7 @@
         var button = layui.button;
         var popup = layui.popup;
         let $ = layui.jquery;
+        captcha();
         // 登 录 提 交
         form.on('submit(login)', function (data) {
 
@@ -79,6 +80,7 @@
                             }
                         })
                     } else {
+                        captcha();
                         layer.msg(result.msg,
                             {icon: 2, time: 1000, area: ['200px', '90px']}
                         );
@@ -87,6 +89,15 @@
             })
             return false;
         });
+
+        function captcha() {
+            document.getElementById("captcha").src = EasyAdminContext.url + "/captcha" + "?" + Math.random();
+        }
+
+        $("#captcha").click(function () {
+            captcha();
+        })
+
     })
 </script>
 </body>
