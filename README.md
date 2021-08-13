@@ -23,19 +23,32 @@
 
 ##### 功能列表
 
-| 功能                                           | 完成情况 |
-| ---------------------------------------------- | -------- |
-| **用户管理、部门管理、菜单管理、角色管理**     | ✅        |
-| **基于RBAC角色的访问控制**                     | ✅        |
-| **基于knife4j-Api文档集成**                    | ✅        |
-| **基于javamelody应用监控**                     | ✅        |
-| **基于Snakerflow的工作流引擎**                 | ✅        |
-| **基于mybatis插件的数据权限控制**              | ❎        |
-| **基于SpringTask定时任务（支持动态CRUD任务）** | ❎        |
+| 功能                                           | 完成情况 | 相关文档                                                     |
+| ---------------------------------------------- | -------- | ------------------------------------------------------------ |
+| **用户管理、部门管理、菜单管理、角色管理**     | ✅        |                                                              |
+| **基于RBAC角色的访问控制**                     | ✅        | [认证授权 sa-token](https://blog.csdn.net/abu935009066/article/details/115553517) |
+| **基于knife4j-Api文档集成**                    | ✅        | [Knife4j替换swagger](https://blog.csdn.net/abu935009066/article/details/115512988) |
+| **基于javamelody应用监控**                     | ✅        | [Javamelody-应用程序监控](https://blog.csdn.net/abu935009066/article/details/116936366) |
+| **基于Snakerflow的工作流引擎**                 | ✅        | [轻量级工作流引擎Snakerflow集成](https://blog.csdn.net/abu935009066/article/details/119568513) |
+| **基于mybatis插件的数据权限控制**              | ❎        | [基于Mybatis-Plus的数据权限实现](https://blog.csdn.net/abu935009066/article/details/115481149) |
+| **基于SpringTask定时任务（支持动态CRUD任务）** | ❎        | [基于Spring Task实现动态管理任务](https://blog.csdn.net/abu935009066/article/details/116142630) |
+| **在线WebLog、动态修改日志级别**               | ❎        |                                                              |
+
+**其他相关文章**
+
+- [从零搭建开发脚手架 HttpServletRequest多次读取异常，仅能读取一次](https://blog.csdn.net/abu935009066/article/details/113870578)
+- [从零搭建开发脚手架 Spring Boot 输入参数校验多种方式整理](https://blog.csdn.net/abu935009066/article/details/114001409)
+- [从零搭建开发脚手架 实现在线WebLog、动态修改日志级别](https://blog.csdn.net/abu935009066/article/details/114121941)
+- [跨站请求伪造（CSRF）示例、原理及其防御措施](https://blog.csdn.net/abu935009066/article/details/114366771)
+- [从零搭建开发脚手架 Spring Boot集成Mybatis-plus之一](https://blog.csdn.net/abu935009066/article/details/114535661)
+- [从零搭建开发脚手架 Spring Boot集成Flyway实现数据库版本管理](https://blog.csdn.net/abu935009066/article/details/114586037)
+- [Spring Boot Tomcat临时目录tmp抛错误异常](https://blog.csdn.net/abu935009066/article/details/114596193)
 
 ##### 技术选型
 
 **前端**：
+
+**底座是Layui**
 
 - https://gitee.com/pear-admin/Pear-Admin-Layui
 
@@ -165,6 +178,3 @@ web
 ```
 
 浏览器访问`http://ip:port/admin`
-
-
-
