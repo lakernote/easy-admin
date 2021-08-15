@@ -189,7 +189,7 @@
             $.ajax({
                 type: 'GET',
                 url: designer.config.ctxPath + "/flow/task/tip",
-                data: "orderId=" + designer.config.orderId + "&taskName=" + name,//_o.props['name'].value,
+                data: "orderId=" + designer.config.orderId + "&taskName=" + name + "&" + designer.config.token,//_o.props['name'].value,
                 async: false,
                 error: function () {
                     alert('数据处理错误！');
@@ -202,9 +202,9 @@
                         "<a href='javascript:void(0)' onclick='document.body.removeChild(document.getElementById(\"tipDIV\"))' class='btnDel'></a>" +
                         "</div>" +
                         "<div style='width:180px; height:60px;border: 1px solid #d2dde2;'>" +
-                            "<div id='currentActorDIV' style='width:180px; height:20px;'>参与者:" + data.data.actors + "</div>" +
-                            "<div id='arrivalDIV' style='width:180px; height:20px;'>抵达时间:" + data.data.createTime + "</div>" +
-                            "<div id='finishDIV' style='width:180px; height:20px;'>完成时间:" + data.data.finishTime + "</div>" +
+                        "<div id='currentActorDIV' style='width:180px; height:20px;'>参与者:" + data.data.actors + "</div>" +
+                        "<div id='arrivalDIV' style='width:180px; height:20px;'>抵达时间:" + data.data.createTime + "</div>" +
+                        "<div id='finishDIV' style='width:180px; height:20px;'>完成时间:" + data.data.finishTime + "</div>" +
                         "</div>";
                     document.body.appendChild(tipDIV);
                 }

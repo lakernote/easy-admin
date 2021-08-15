@@ -42,13 +42,13 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'popup', 'common'], function () {
+    layui.use(['table', 'form', 'jquery', 'popup', 'common', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let popup = layui.popup;
         let common = layui.common;
-
+        let easyAdmin = layui.easyAdmin;
         let MODULE_PATH = "role/";
 
         let cols = [
@@ -62,9 +62,9 @@
             ]
         ]
 
-        table.render({
+        easyAdmin.tableRender({
             elem: '#role-table',
-            url: EasyAdminContext.url + '/sys/role',
+            url: '/sys/role',
             page: true,
             cols: cols,
             skin: 'line',
@@ -108,12 +108,12 @@
                 operate = "disable";
             }
             let loading = layer.load()
-            $.ajax({
+            easyAdmin.http({
                 url: '/system/role/' + operate,
                 data: JSON.stringify({roleId: this.value}),
                 dataType: 'json',
                 contentType: 'application/json',
-                type: 'put',
+                type: 'post',
                 success: function (result) {
                     layer.close(loading);
                     if (result.success) {
@@ -159,8 +159,8 @@
             layer.confirm('确定要删除该角色', {icon: 3, title: '提示'}, function (index) {
                 layer.close(index);
                 let loading = layer.load();
-                $.ajax({
-                    url: EasyAdminContext.url + "/sys/role/" + obj.data['roleId'],
+                easyAdmin.http({
+                    url: "/sys/role/" + obj.data['roleId'],
                     dataType: 'json',
                     type: 'delete',
                     success: function (result) {

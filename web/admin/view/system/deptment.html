@@ -30,7 +30,7 @@
 
 <div class="layui-card">
     <div class="layui-card-body">
-        <table id="dept-table" lay-filter="dept-table"></table>
+        <table id="table" lay-filter="dept-table"></table>
     </div>
 </div>
 
@@ -60,41 +60,46 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'treetable', 'popup'], function () {
+    layui.use(['table', 'form', 'jquery', 'treetable', 'popup', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let treetable = layui.treetable;
         let popup = layui.popup;
+        let easyAdmin = layui.easyAdmin;
 
         let MODULE_PATH = "dept/";
         window.render = function () {
-            treetable.render({
-                treeColIndex: 1,
-                treeSpid: 0,
-                treeIdName: 'deptId',
-                treePidName: 'pid',
-                skin: 'line',
-                method: 'get',
-                treeDefaultClose: true,
-                toolbar: '#dept-toolbar',
-                elem: '#dept-table',
-                url: EasyAdminContext.url + '/sys/dept/data',
-                page: false,
-                defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'],
-                cols: [
-                    [
-                        {type: 'checkbox'},
-                        {field: 'deptName', minWidth: 200, title: '部门名称'},
-                        {field: 'address', title: '详细地址'},
-                        {field: 'status', title: '状态', templet: '#dept-status'},
-                        {field: 'sort', title: '排序', width: 100},
-                        {title: '操作', templet: '#dept-bar', width: 120, align: 'center'}
+            easyAdmin.httpGet('/sys/dept/data', function (result) {
+                treetable.render({
+                    data: result.data,
+                    treeColIndex: 1,
+                    treeSpid: 0,
+                    treeIdName: 'deptId',
+                    treePidName: 'pid',
+                    skin: 'line',
+                    method: 'get',
+                    treeDefaultClose: true,
+                    toolbar: '#dept-toolbar',
+                    elem: '#table',
+                    page: false,
+                    defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'],
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {field: 'deptName', minWidth: 200, title: '部门名称'},
+                            {field: 'address', title: '详细地址'},
+                            {field: 'status', title: '状态', templet: '#dept-status'},
+                            {field: 'sort', title: '排序', width: 100},
+                            {title: '操作', templet: '#dept-bar', width: 120, align: 'center'}
+                        ]
                     ]
-                ]
-            });
+                });
+            })
+
         }
         render();
+
         form.on('submit(dept-query)', function (data) {
             var keyword = data.field.deptName;
             var $tds = $('#dept-table').next('.treeTable').find('.layui-table-body tbody tr td');

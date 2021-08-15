@@ -79,7 +79,7 @@
     </div>
     <div class="bottom">
         <div class="button-container">
-            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="save">
                 <i class="layui-icon layui-icon-ok"></i>
                 提交
             </button>
@@ -102,13 +102,14 @@
 
 
 <script>
-    layui.use(['form', 'jquery', 'laytpl', 'dtree'], function () {
+    layui.use(['form', 'jquery', 'laytpl', 'dtree', 'easyAdmin'], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let dtree = layui.dtree;
         var laytpl = layui.laytpl;
+        var easyAdmin = layui.easyAdmin;
 
-        $.get(EasyAdminContext.url + "/sys/user/getRoles", function (result) {
+        easyAdmin.httpGet("/sys/user/getRoles", function (result) {
             var getTpl = demo.innerHTML;
             var view = document.getElementById('view11');
             laytpl(getTpl).render(result, function (html) {
@@ -118,17 +119,18 @@
             form.render();
         });
 
+        easyAdmin.httpGet("/sys/dept/tree", function (treeData) {
+            dtree.renderSelect({
+                elem: "#selectParent",
+                data: treeData.data,
+                selectInputName: {nodeId: "deptId", context: "deptName"},
+                // skin: "layui",
+                dataFormat: "list",
+                response: {treeId: "deptId", parentId: "pid", title: "deptName"},
+                selectInitVal: "1"
+            });
+        })
 
-        dtree.renderSelect({
-            elem: "#selectParent",
-            url: EasyAdminContext.url + "/sys/dept/tree",
-            method: 'get',
-            selectInputName: {nodeId: "deptId", context: "deptName"},
-            // skin: "layui",
-            dataFormat: "list",
-            response: {treeId: "deptId", parentId: "pid", title: "deptName"},
-            selectInitVal: "1"
-        });
 
         form.on('submit(user-save)', function (data) {
             let roleIds = "";
@@ -137,10 +139,8 @@
             });
             roleIds = roleIds.substr(0, roleIds.length - 1);
             data.field.roleIds = roleIds;
-            alert(roleIds)
-            console.log(data);
-            $.ajax({
-                url: EasyAdminContext.url + '/sys/user',
+            easyAdmin.http({
+                url: '/sys/user',
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json',

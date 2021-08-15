@@ -94,12 +94,12 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'common', 'dtree'], function () {
+    layui.use(['table', 'form', 'common', 'dtree', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
-        let $ = layui.jquery;
         let common = layui.common;
         let dtree = layui.dtree;
+        let easyAdmin = layui.easyAdmin;
         let MODULE_PATH = "user/";
 
         let cols = [
@@ -149,20 +149,21 @@
             ]
         ]
 
-        dtree.renderSelect({
-            elem: "#selectParent",
-            url: EasyAdminContext.url + "/sys/dept/tree",
-            method: 'get',
-            selectInputName: {nodeId: "deptId", context: "deptName"},
-            // skin: "layui",
-            dataFormat: "list",
-            response: {treeId: "deptId", parentId: "pid", title: "deptName"},
-            selectInitVal: "1"
-        });
+        easyAdmin.httpGet("/sys/dept/tree", function (data) {
+            dtree.renderSelect({
+                elem: "#selectParent",
+                data: data.data,
+                selectInputName: {nodeId: "deptId", context: "deptName"},
+                // skin: "layui",
+                dataFormat: "list",
+                response: {treeId: "deptId", parentId: "pid", title: "deptName"},
+                selectInitVal: "1"
+            });
+        })
 
-        table.render({
+        easyAdmin.tableRender({
             elem: '#user-table', // 对应table的id
-            url: EasyAdminContext.url + '/sys/user', // 异步请求url
+            url: "/sys/user",
             page: true, // 分页参数可以自定义
             cols: cols, // 列表示
             skin: 'line', // 表格样式
@@ -173,6 +174,7 @@
                 icon: 'layui-icon-refresh',
             }, 'filter', 'print', 'exports']
         });
+
         // 触发行中工具条点击事件 (操作列)
         // table.on('event(filter)', callback); filter为容器lay-filter设定的值
         //  cols: [[{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}
@@ -182,7 +184,7 @@
                     window.remove(obj);
                     break;
                 case 'edit':
-                    window.edit(obj);
+                    easyAdmin.JumpEdit(MODULE_PATH, obj.data.userId)
                     break;
             }
         });
@@ -191,10 +193,10 @@
         table.on('toolbar(user-filter)', function (obj) {
             switch (obj.event) {
                 case 'add':
-                    window.add();
+                    easyAdmin.JumpAdd(MODULE_PATH);
                     break;
                 case 'refresh':
-                    window.refresh();
+                    easyAdmin.tableRefresh('user-table');
                     break;
                 case 'batchRemove':
                     window.batchRemove(obj);
@@ -219,8 +221,8 @@
         // 触发switch开关 开关被点击时触发
         form.on('switch(user-enable)', function (obj) {
             layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
-            $.ajax({
-                url: EasyAdminContext.url + '/sys/user',
+            easyAdmin.http({
+                url: '/sys/user',
                 data: JSON.stringify({
                     userId: this.value,
                     enable: obj.elem.checked ? 1 : 0
@@ -241,26 +243,6 @@
             })
         });
 
-        window.add = function () {
-            layer.open({
-                type: 2,
-                title: '新增',
-                shade: 0.1,
-                area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
-                content: MODULE_PATH + 'add.html'
-            });
-        }
-
-        window.edit = function (obj) {
-            var data = obj.data;
-            layer.open({
-                type: 2,
-                title: '修改',
-                shade: 0.1,
-                area: ['500px', '500px'],
-                content: [MODULE_PATH + 'edit.html?userId=' + data.userId, 'no']
-            });
-        }
 
         window.remove = function (obj) {
             layer.confirm('确定要删除该用户', {
@@ -269,8 +251,8 @@
             }, function (index) {
                 layer.close(index);
                 let loading = layer.load();
-                $.ajax({
-                    url: EasyAdminContext.url + "/sys/user/" + obj.data['userId'],
+                easyAdmin.http({
+                    url: "/sys/user/" + obj.data['userId'],
                     dataType: 'json',
                     type: 'delete',
                     success: function (result) {
@@ -315,7 +297,7 @@
             }, function (index) {
                 layer.close(index);
                 let loading = layer.load();
-                $.ajax({
+                easyAdmin.http({
                     url: MODULE_PATH + "batchRemove/" + ids,
                     dataType: 'json',
                     type: 'delete',
@@ -337,10 +319,6 @@
                     }
                 })
             });
-        }
-
-        window.refresh = function (param) {
-            table.reload('user-table');
         }
     })
 </script>

@@ -70,12 +70,12 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'common'], function () {
+    layui.use(['table', 'form', 'jquery', 'common', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let common = layui.common;
-
+        let easyAdmin = layui.easyAdmin;
         let cols = [
             [{
                 type: 'checkbox'
@@ -117,9 +117,9 @@
             ]
         ]
 
-        table.render({
+        easyAdmin.tableRender({
             elem: '#user-table',
-            url: EasyAdminContext.url + '/flow/process/list',
+            url: '/flow/process/list',
             page: true,
             cols: cols,
             skin: 'line',
@@ -185,8 +185,8 @@
             }, function (index) {
                 layer.close(index);
                 let loading = layer.load();
-                $.ajax({
-                    url: EasyAdminContext.url + "/flow/process/delete/" + obj.data['id'],
+                easyAdmin.http({
+                    url: "/flow/process/delete/" + obj.data['id'],
                     dataType: 'json',
                     type: 'get',
                     success: function (result) {

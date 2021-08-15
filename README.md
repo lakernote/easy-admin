@@ -101,17 +101,17 @@ spring:
 
 **二、纯静态模式**
 
-> 测试中
-
-纯静态的，可直接在浏览器运行，修改配置`web/admin/componet/pear/pear.js`
+纯静态的，可直接在浏览器运行，修改配置`web/admin/config/pear.config.yml`
 
 ```javascript
-const EasyAdminContext = {
-    url: "http://localhost:8080"
-};
+## 配置服务端地址
+admin:
+  server: http://localhost:8080
 ```
 
-直接在浏览器访问`web/admin/index.html`
+直接在浏览器访问`index.html`，如下图直接就可以访问了
+
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0816/001751_ef56d4c9_709188.png "屏幕截图.png")
 
 #### 项目截图
 
@@ -176,7 +176,7 @@ nohup java -jar easy-admin.jar &
 
 ##### 前端
 
-**按照相对位置放即可**
+**按照相对位置放即可**（或者自己弄个nginx丢进去）
 
 ```
 easy-admin.jar
@@ -192,3 +192,4 @@ web
 ```
 
 浏览器访问`http://ip:port/admin`
+

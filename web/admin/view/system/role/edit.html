@@ -63,14 +63,14 @@
 <script src="../../../component/layui/layui.js"></script>
 <script src="../../../component/pear/pear.js"></script>
 <script>
-    layui.use(['form', 'jquery'], function () {
+    layui.use(['form', 'jquery', 'easyAdmin'], function () {
         let form = layui.form;
         let $ = layui.jquery;
-
+        let easyAdmin = layui.easyAdmin;
 
         form.on('submit(role-update)', function (data) {
-            $.ajax({
-                url: EasyAdminContext.url + '/sys/role',
+            easyAdmin.http({
+                url: '/sys/role',
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json',
@@ -91,9 +91,9 @@
 
 
         // 根据menuId获取详情，用于数据回显
-        var roleId = EasyAdminContext.getQueryString("roleId");
-        $.ajax({
-            url: EasyAdminContext.url + '/sys/role/' + roleId,
+        var roleId = easyAdmin.getQueryString("roleId");
+        easyAdmin.http({
+            url: '/sys/role/' + roleId,
             dataType: 'json',
             contentType: 'application/json',
             type: 'get',

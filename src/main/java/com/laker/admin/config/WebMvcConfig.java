@@ -32,6 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/**",
                         "/admin/login.html",
                         "/error",
+                        "/swagger-resources/**",
                         "/api/v1/login",
                         "/captcha");
     }

@@ -87,18 +87,19 @@
 <script src="../../../component/layui/layui.js"></script>
 <script src="../../../component/pear/pear.js"></script>
 <script>
-    layui.use(['form', 'jquery', 'dtree', 'iconPicker'], function () {
+    layui.use(['form', 'jquery', 'dtree', 'iconPicker', 'easyAdmin'], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let dtree = layui.dtree;
         let iconPicker = layui.iconPicker;
+        let easyAdmin = layui.easyAdmin;
         let menuId;
 
         form.on('submit(power-save)', function (data) {
             data.field.icon = "layui-icon " + data.field.icon;
             data.field.menuId = menuId;
-            $.ajax({
-                url: EasyAdminContext.url + '/sys/menu',
+            easyAdmin.http({
+                url: '/sys/menu',
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json',
@@ -118,9 +119,9 @@
         });
 
         // 根据menuId获取详情，用于数据回显
-        menuId = EasyAdminContext.getQueryString("menuId");
-        $.ajax({
-            url: EasyAdminContext.url + '/sys/menu/' + menuId,
+        menuId = easyAdmin.getQueryString("menuId");
+        easyAdmin.http({
+            url: '/sys/menu/' + menuId,
             dataType: 'json',
             contentType: 'application/json',
             type: 'get',
@@ -129,17 +130,20 @@
                     // 表单数据回显
                     form.val("edit", result.data);
                     // 树形选择框回显
-                    dtree.renderSelect({
-                        elem: "#selectParent",
-                        url: EasyAdminContext.url + "/sys/menu/selectTree",
-                        method: 'get',
-                        selectInputName: {nodeId: "pid", context: "title"},
-                        // skin: "layui", // 换皮肤
-                        line: true, // 显示树线
-                        dataStyle: "layuiStyle",
-                        response: {parentId: "pid", title: "title", message: "msg", statusCode: 0},  //修改json response中返回数据的定义
-                        selectInitVal: result.data.pid + ''
-                    });
+                    easyAdmin.httpGet("/sys/menu/selectTree", function (result) {
+                        dtree.renderSelect({
+                            elem: "#selectParent",
+                            method: 'get',
+                            data: result.data,
+                            selectInputName: {nodeId: "pid", context: "title"},
+                            // skin: "layui", // 换皮肤
+                            line: true, // 显示树线
+                            dataStyle: "layuiStyle",
+                            response: {parentId: "pid", title: "title", message: "msg", statusCode: 0},  //修改json response中返回数据的定义
+                            selectInitVal: result.data.pid + ''
+                        });
+                    })
+
 
                     iconPicker.checkIcon("icon", result.data.icon);
 

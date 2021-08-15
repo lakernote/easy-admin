@@ -2,17 +2,6 @@ window.rootPath = (function (src) {
     src = document.scripts[document.scripts.length - 1].src;
     return src.substring(0, src.lastIndexOf("/") + 1);
 })();
-const EasyAdminContext = {
-    url: "",
-    getQueryString: function (name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        if (r !== null)
-            return unescape(r[2]);
-        return "";
-    }
-};
-
 layui.config({
     base: rootPath + "module/",
     version: "3.8.10"
@@ -48,6 +37,7 @@ layui.config({
     http: "http",			// ajax请求组件
     theme: "theme",			// 主题转换
     message: "message",     // 通知组件
+    easyAdmin: "easyAdmin",     // 自定义公共组件
 }).use(['layer', 'theme'], function () {
     layui.theme.changeTheme(window, false);
 });

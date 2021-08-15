@@ -20,7 +20,7 @@
                            autocomplete="off"
                            class="layui-input">
                 </div>
-                <button type="button" class="layui-btn" onclick="getLogFile()">查看
+                <button id="query" type="button" class="layui-btn">查看
                 </button>
             </div>
         </div>
@@ -40,7 +40,7 @@
                     <option value="ERROR">ERROR</option>
                 </select>
 
-                <button type="button" class="layui-btn" onclick="updateLogLevel() ">
+                <button id="update" type="button" class="layui-btn">
                     更改
                 </button>
 
@@ -55,45 +55,61 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    var $; // 使用jQuery
-    var baseApi = EasyAdminContext.url + "/sys/weblog/file";
-    var layer;
-    layui.use(['jquery', 'layer'], function () { // 加载jQuery组件
-        $ = layui.$; //使用jQuery 重点处
-        layer = layui.layer;
-        $("#log-frame").attr("src", baseApi)
-    });
+    layui.use(['table', 'form', 'common', 'dtree', 'easyAdmin'], function () {
+        var baseApi = "/sys/weblog/file";
+        var $ = layui.$; //使用jQuery 重点处
+        var layer = layui.layer;
+        var easyAdmin = layui.easyAdmin;
 
-    function getLogFile() {
-        var url = $('#url').val();
-        $("#log-frame").attr("src", baseApi + "?filePath=" + url);
-    }
+        getLogFile();
 
+        function getLogFile() {
+            var url = $('#url').val();
+            // 配置服务端地址
+            var adminServerUrl = layui.data('easyAdmin').serverUrl;
+            var user = layui.data('user');
+            // 用于判断未登录跳转到登录页
+            if (JSON.stringify(user) == "{}") {
+                console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
+                location.href = "login.html";
+            }
 
-    function updateLogLevel() {
-        var packgeName = $('#packgeName').val();
-        var level = $('#level').val();
-        $.get(EasyAdminContext.url + "/sys/weblog/level", {name: packgeName, configuredLevel: level},
-            function (data) {
-                if (data !== "ok") {
-                    layer.msg(data, {
-                        icon: 0,
-                        time: 3000 //2秒关闭（如果不配置，默认是3秒）
-                    });
-                    return;
-                }
+            $("#log-frame").attr("src", adminServerUrl + baseApi + "?filePath=" + url + "&" + user.token.name + "=" + user.token.value);
 
-                layer.msg('日志级别设置成功！', {
-                        icon: 1,
-                        time: 3000 //2秒关闭（如果不配置，默认是3秒）
-                    },
-                    function () {
-                        //do something
-                    });
-                getLogFile();
-            })
-        ;
-    }
+        }
+
+        $("#query").click(function () {
+            getLogFile();
+        })
+        $("#update").click(function () {
+            updateLogLevel();
+        })
+
+        function updateLogLevel() {
+            var packgeName = $('#packgeName').val();
+            var level = $('#level').val();
+            easyAdmin.httpGet("/sys/weblog/level?name=" + packgeName + "&configuredLevel=" + level,
+                function (data) {
+                    if (data !== "ok") {
+                        layer.msg(data, {
+                            icon: 0,
+                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                        return;
+                    }
+
+                    layer.msg('日志级别设置成功！', {
+                            icon: 1,
+                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                        },
+                        function () {
+                            //do something
+                        });
+                    getLogFile();
+                })
+            ;
+        }
+    })
 </script>
 
 </body>

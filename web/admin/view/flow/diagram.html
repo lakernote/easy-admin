@@ -29,45 +29,48 @@
 <script src="../../component/snaker/snaker.model.js" charset="utf-8" type="text/javascript"></script>
 <script src="../../component/snaker/snaker.editors.js" type="text/javascript"></script>
 <script>
+    layui.use(['table', 'form', 'jquery', 'common', 'easyAdmin'], function () {
+        let easyAdmin = layui.easyAdmin;
+        const orderId = getQueryString("orderId");
+        const processId = getQueryString("processId");
 
-    const orderId = getQueryString("orderId");
-    const processId = getQueryString("processId");
-
-    function getQueryString(name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        if (r !== null)
-            return unescape(r[2]);
-        return "";
-    }
-
-    $.ajax({
-        type: 'GET',
-        url: EasyAdminContext.url + "/flow/process/json",
-        data: "processId=" + processId + "&orderId=" + orderId,
-        async: false,
-        globle: false,
-        error: function () {
-            alert('数据处理错误！');
-            return false;
-        },
-        success: function (data) {
-            display(data.process, data.state);
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r !== null)
+                return unescape(r[2]);
+            return "";
         }
-    });
 
-    function display(process, state) {
-        /** view*/
-        $('#snakerflow').snakerflow($.extend(true, {
-                basePath: "../../component/snaker/",
-                ctxPath: EasyAdminContext.url,
-                orderId: orderId,
-                restore: eval("(" + process + ")"),
-                editable: false
-            }, eval("(" + state + ")")
-        ));
+        easyAdmin.http({
+            type: 'GET',
+            url: "/flow/process/json",
+            data: "processId=" + processId + "&orderId=" + orderId,
+            async: false,
+            globle: false,
+            error: function () {
+                alert('数据处理错误！');
+                return false;
+            },
+            success: function (data) {
+                display(data.process, data.state);
+            }
+        });
 
-    }
+        function display(process, state) {
+            /** view*/
+            $('#snakerflow').snakerflow($.extend(true, {
+                    basePath: "../../component/snaker/",
+                    ctxPath: easyAdmin.GetAdminServerUrl(),
+                    token: easyAdmin.GetTokenQueryString(),
+                    orderId: orderId,
+                    restore: eval("(" + process + ")"),
+                    editable: false
+                }, eval("(" + state + ")")
+            ));
+
+        }
+    })
 </script>
 </body>
 </html>

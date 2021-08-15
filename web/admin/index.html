@@ -81,22 +81,24 @@
 <script src="component/pear/pear.js"></script>
 <!-- 框 架 初 始 化 -->
 <script>
-    layui.use(['admin', 'jquery', 'convert', 'popup'], function () {
+    layui.use(['admin', 'jquery', 'convert', 'popup', 'easyAdmin'], function () {
         var admin = layui.admin;
         var $ = layui.jquery;
         var convert = layui.convert;
         var popup = layui.popup;
+        var easyAdmin = layui.easyAdmin;
 
         // 在登录的时候塞入的值
         var user = layui.data('user');
         // 用于判断未登录跳转到登录页
         if (JSON.stringify(user) == "{}") {
+            console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
             location.href = "login.html";
         }
 
         // 获取用户信息，用户名、昵称、头像等
-        $.ajax({
-            url: EasyAdminContext.url + "/api/v1/tokenInfo",
+        easyAdmin.http({
+            url: "/api/v1/tokenInfo",
             dataType: 'json',
             success: function (data) {
                 admin.setAvatar("admin/images/avatar.jpg", data.data.loginId);
@@ -104,6 +106,7 @@
             error: function () {
                 // 用于验证前端信息 对应到不对的会话情况
                 // 清空本地存储
+                console.log("当前浏览器存储中没有用户信息,清空本地存储,讲跳转到login.html")
                 layui.data('user', null);
                 location.href = "login.html";
             }
@@ -114,15 +117,17 @@
         admin.setConfigPath("config/pear.config.yml");
         // 动态设置配置文件中菜单树接口地址
         let readConfig = admin.readConfig();
-        const menuUrl = EasyAdminContext.url + "/sys/menu/tree";
-        readConfig.menu.data = menuUrl;
+        // 动态加载菜单树
+        easyAdmin.httpGet("/sys/menu/tree", function (data) {
+            readConfig.menu.data = data;
+        }, true, false);
         // 渲染
         admin.render(readConfig);
 
         // 登出逻辑
         admin.logout(function () {
 
-            $.get(EasyAdminContext.url + "/api/v1/loginOut");
+            easyAdmin.httpGet("/api/v1/loginOut");
 
 
             popup.success("注销成功", function () {

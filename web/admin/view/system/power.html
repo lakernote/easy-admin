@@ -60,40 +60,44 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'treetable', 'popup'], function () {
+    layui.use(['table', 'form', 'jquery', 'treetable', 'popup', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let treetable = layui.treetable;
         let popup = layui.popup;
+        let easyAdmin = layui.easyAdmin;
 
         let MODULE_PATH = "power/";
 
         window.render = function () {
-            treetable.render({
-                treeColIndex: 1,
-                treeSpid: 0,
-                treeIdName: 'menuId',
-                treePidName: 'pid',
-                skin: 'line',
-                treeDefaultClose: true,
-                toolbar: '#power-toolbar',
-                elem: '#power-table',
-                url: EasyAdminContext.url + '/sys/menu/list',
-                defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'],
-                page: false,
-                cols: [
-                    [
-                        {type: 'checkbox'},
-                        {field: 'title', minWidth: 200, title: '权限名称'},
-                        {field: 'icon', title: '图标', templet: '#icon'},
-                        {field: 'type', title: '权限类型', templet: '#power-type'},
-                        {field: 'enable', title: '是否可用', templet: '#power-enable'},
-                        {field: 'sort', title: '排序'},
-                        {title: '操作', templet: '#power-bar', width: 150, align: 'center'}
+            easyAdmin.httpGet('/sys/menu/list', function (result) {
+                treetable.render({
+                    treeColIndex: 1,
+                    treeSpid: 0,
+                    treeIdName: 'menuId',
+                    treePidName: 'pid',
+                    skin: 'line',
+                    treeDefaultClose: true,
+                    toolbar: '#power-toolbar',
+                    elem: '#power-table',
+                    data: result.data,
+                    defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'],
+                    page: false,
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {field: 'title', minWidth: 200, title: '权限名称'},
+                            {field: 'icon', title: '图标', templet: '#icon'},
+                            {field: 'type', title: '权限类型', templet: '#power-type'},
+                            {field: 'enable', title: '是否可用', templet: '#power-enable'},
+                            {field: 'sort', title: '排序'},
+                            {title: '操作', templet: '#power-bar', width: 150, align: 'center'}
+                        ]
                     ]
-                ]
-            });
+                });
+            })
+
         }
 
         render();
@@ -123,8 +127,8 @@
 
         form.on('switch(power-enable)', function (obj) {
             let loading = layer.load();
-            $.ajax({
-                url: EasyAdminContext.url + '/sys/menu',
+            easyAdmin.http({
+                url: '/sys/menu',
                 data: JSON.stringify({menuId: this.value, enable: obj.elem.checked}),
                 dataType: 'json',
                 contentType: 'application/json',

@@ -43,12 +43,13 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'element', 'popup'], function () {
+    layui.use(['table', 'form', 'jquery', 'element', 'popup', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let element = layui.element;
         var popup = layui.popup;
+        var easyAdmin = layui.easyAdmin;
         let todoCols = [
             [
                 {title: '流程名称', field: 'processName', align: 'center'},
@@ -73,18 +74,18 @@
             ]
         ]
 
-        table.render({
+        easyAdmin.tableRender({
             elem: '#todo-list-table',
-            url: EasyAdminContext.url + '/flow/task/todoList',
+            url: '/flow/task/todoList',
             page: true,
             cols: todoCols,
             skin: 'line',
             toolbar: false
         });
 
-        table.render({
+        easyAdmin.tableRender({
             elem: '#done-list-table',
-            url: EasyAdminContext.url + '/flow/task/doneList',
+            url: '/flow/task/doneList',
             page: true,
             cols: doneCols,
             skin: 'line',
@@ -134,8 +135,8 @@
         });
 
         window.agree = function (obj) {
-            $.ajax({
-                url: EasyAdminContext.url + "/flow/task/approval?taskId=" + obj.data['id'],
+            easyAdmin.http({
+                url: "/flow/task/approval?taskId=" + obj.data['id'],
                 dataType: 'json',
                 type: 'get',
                 success: function () {
@@ -145,8 +146,8 @@
         }
 
         window.refuse = function (obj) {
-            $.ajax({
-                url: EasyAdminContext.url + "/flow/task/reject?taskId=" + obj.data['id'],
+            easyAdmin.http({
+                url: "/flow/task/reject?taskId=" + obj.data['id'],
                 dataType: 'json',
                 type: 'get',
                 success: function () {

@@ -92,13 +92,13 @@
 </script>
 
 <script>
-    layui.use(['form', 'jquery', 'dtree'], function () {
+    layui.use(['form', 'jquery', 'dtree', 'easyAdmin', 'popup'], function () {
         let form = layui.form;
         let $ = layui.jquery;
-        var id;
-
+        var popup = layui.popup;
         let dtree = layui.dtree;
-
+        let easyAdmin = layui.easyAdmin;
+        var id;
 
         form.on('submit(user-save)', function (data) {
             let roleIds = "";
@@ -109,8 +109,8 @@
             data.field.roleIds = roleIds;
             data.field.userId = id;
 
-            $.ajax({
-                url: EasyAdminContext.url + '/sys/user',
+            easyAdmin.http({
+                url: '/sys/user',
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json',
@@ -129,22 +129,10 @@
             return false;
         });
 
-        //说明:获取url参数
-        //参数obj:访问路径
-        //返回值:参数
 
-
-        function getQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
-            if (r !== null)
-                return unescape(r[2]);
-            return null;
-        }
-
-        id = getQueryString("userId");
-        $.ajax({
-            url: EasyAdminContext.url + '/sys/user/' + id,
+        id = easyAdmin.getQueryString("id");
+        easyAdmin.http({
+            url: '/sys/user/' + id,
             dataType: 'json',
             contentType: 'application/json',
             type: 'get',
@@ -152,16 +140,19 @@
                 if (result.success) {
                     //表单数据回显
                     form.val("edit", result.data);
-                    dtree.renderSelect({
-                        elem: "#selectParent",
-                        url: EasyAdminContext.url + "/sys/dept/tree",
-                        method: 'get',
-                        selectInputName: {nodeId: "deptId", context: "deptName"},
-                        // skin: "layui",
-                        dataFormat: "list",
-                        response: {treeId: "deptId", parentId: "pid", title: "deptName"},
-                        selectInitVal: result.data.deptId + ''
-                    });
+                    easyAdmin.httpGet("/sys/dept/tree", function (treeData) {
+                        dtree.renderSelect({
+                            elem: "#selectParent",
+                            data: treeData.data,
+                            method: 'get',
+                            selectInputName: {nodeId: "deptId", context: "deptName"},
+                            // skin: "layui",
+                            dataFormat: "list",
+                            response: {treeId: "deptId", parentId: "pid", title: "deptName"},
+                            selectInitVal: result.data.deptId + ''
+                        });
+                    })
+
                 } else {
                     layer.msg(result.msg, {icon: 2, time: 1000});
                 }
@@ -170,7 +161,7 @@
 
         var laytpl = layui.laytpl;
 
-        $.get(EasyAdminContext.url + "/sys/user/getRoles?userId=" + id, function (result) {
+        easyAdmin.httpGet("/sys/user/getRoles?userId=" + id, function (result) {
             var getTpl = demo.innerHTML;
             var view = document.getElementById('view11');
             laytpl(getTpl).render(result, function (html) {

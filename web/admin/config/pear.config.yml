@@ -1,4 +1,7 @@
 ---
+## 配置服务端地址
+admin:
+  server: http://localhost:8080
 ## 网站配置
 logo:
   ## 网站名称
@@ -22,7 +25,7 @@ menu:
   ## 默认选中的菜单项
   select: "10"
   ## 是否开启异步菜单，true 时 data 属性设置为菜单数据，false 时为 json 文件或后端接口
-  async: true
+  async: false
 ## 视图内容配置
 tab:
   ## 是否开启多选项卡
