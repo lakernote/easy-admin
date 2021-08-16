@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -51,5 +52,11 @@ public class SysDictController {
     @ApiOperation(value = "根据id删除")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysDictService.removeById(id));
+    }
+
+    @DeleteMapping("/batch/{ids}")
+    @ApiOperation(value = "根据批量删除ids删除")
+    public Response batchRemove(@PathVariable Long[] ids) {
+        return Response.ok(sysDictService.removeByIds(CollUtil.toList(ids)));
     }
 }

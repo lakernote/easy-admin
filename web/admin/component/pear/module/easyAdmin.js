@@ -102,6 +102,17 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
          */
         this.tableRender = function (options) {
             var defaults = {
+                elem: '#table',
+                page: true,
+                skin: 'line',
+                toolbar: '#table-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                },
+                    'filter', 'print', 'exports']
+                ,
                 sendToken: true
             };
             var o = $.extend({}, defaults, options);
@@ -190,6 +201,96 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
         }
 
         /**
+         * 行内事件
+         * uri:"/sys/dict"
+         */
+        this.TableTool = function (uri, module) {
+            table.on('tool(table-filter)', function (obj) {
+                if (obj.event === 'remove') {
+                    easyAdmin.TableRemove(obj, uri + "/" + obj.data.dictId);
+                } else if (obj.event === 'edit') {
+                    easyAdmin.JumpEdit(module, obj.data.dictId);
+                }
+            });
+        }
+
+        /**
+         * 表格左右上面工具栏
+         * @param uri "/sys/dict"
+         * @param module
+         */
+        this.TableToolBar = function (uri, module) {
+            table.on('toolbar(table-filter)', function (obj) {
+                if (obj.event === 'add') {
+                    easyAdmin.JumpAdd(module);
+                } else if (obj.event === 'refresh') {
+                    easyAdmin.TableRefresh();
+                } else if (obj.event === 'batchRemove') {
+                    easyAdmin.batchRemove(obj, module, uri)
+                }
+            });
+        }
+
+        this.batchRemove = function (obj, module, uri) {
+
+            var ids = easyAdmin.checkField(obj, module + 'Id');
+            console.log(ids)
+
+            if (ids === "") {
+                layer.msg("未选中数据", {
+                    icon: 3,
+                    time: 1000
+                });
+                return false;
+            }
+
+            layer.confirm('确定要删除这些用户', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                layer.close(index);
+                let loading = layer.load();
+                easyAdmin.http({
+                    url: uri + "/batch/" + ids,
+                    dataType: 'json',
+                    type: 'delete',
+                    success: function (result) {
+                        layer.close(loading);
+                        if (result.success) {
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                area: ['100px', '80px'],
+                                time: 1000
+                            }, function () {
+                                table.reload('table');
+                            });
+                        } else {
+                            layer.msg(result.msg, {
+                                icon: 2,
+                                area: ['100px', '80px'],
+                                time: 1000
+                            });
+                        }
+                    }
+                })
+            });
+        }
+        /**
+         * 条件查询
+         */
+        this.FormQuery = function () {
+            /**
+             * 条件查询
+             */
+            form.on('submit(query)', function (data) {
+                table.reload('table', {
+                    where: data.field
+                })
+                return false;
+            });
+        }
+
+        /**
          * uri : '/sys/dict'
          *  用于 edit页面
          *  form表单回显
@@ -267,7 +368,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 title: '新增',
                 shade: 0.1,
                 area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
-                content: path + 'add.html'
+                content: path + '/add.html'
             });
         }
         /**
@@ -279,7 +380,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 title: '修改',
                 shade: 0.1,
                 area: ['500px', '500px'],
-                content: [MODULE_PATH + 'edit.html?id=' + id, 'no']
+                content: [MODULE_PATH + '/edit.html?id=' + id, 'no']
             });
         }
         /**
@@ -312,6 +413,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
             ids = ids.substr(0, ids.length - 1);
             return ids;
         }
+
 
         /**
          * 当前是否为与移动端
