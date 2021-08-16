@@ -134,7 +134,6 @@ public class GlobalExceptionHandler {
     public Response handleMaxSizeException(NotLoginException e, HttpServletResponse response) throws IOException {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        response.sendRedirect("/admin/login.html");
         return Response.error("401", e.getMessage());
     }
 
