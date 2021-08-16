@@ -130,11 +130,12 @@
                     // 表单数据回显
                     form.val("edit", result.data);
                     // 树形选择框回显
-                    easyAdmin.httpGet("/sys/menu/selectTree", function (result) {
+                    easyAdmin.httpGet("/sys/menu/selectTree", function (treeresult) {
+                        console.log(treeresult)
                         dtree.renderSelect({
                             elem: "#selectParent",
                             method: 'get',
-                            data: result.data,
+                            data: treeresult.data,
                             selectInputName: {nodeId: "pid", context: "title"},
                             // skin: "layui", // 换皮肤
                             line: true, // 显示树线

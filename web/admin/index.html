@@ -98,10 +98,10 @@
 
         // 获取用户信息，用户名、昵称、头像等
         easyAdmin.http({
-            url: "/api/v1/tokenInfo",
+            url: "/api/v1/userInfo",
             dataType: 'json',
             success: function (data) {
-                admin.setAvatar("admin/images/avatar.jpg", data.data.loginId);
+                admin.setAvatar("admin/images/avatar.jpg", data.data.nickName);
             },
             error: function () {
                 // 用于验证前端信息 对应到不对的会话情况

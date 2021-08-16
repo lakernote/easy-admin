@@ -8,7 +8,6 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.cache.ICache;
-import com.laker.admin.framework.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.Api;
@@ -48,17 +47,24 @@ public class LoginController {
         if (sysUser == null) {
             return Response.error("5001", "用户名或密码不正确");
         }
-        StpUtil.login(sysUser.getUserName());
+        StpUtil.login(sysUser.getUserId());
         return Response.ok(StpUtil.getTokenInfo());
     }
 
 
-    @RepeatSubmitLimit(businessKey = "test", businessParam = "#name")
     @GetMapping("/api/v1/tokenInfo")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前会话的token信息")
-    public Response tokenInfo(String name) {
+    public Response tokenInfo() {
         return Response.ok(StpUtil.getTokenInfo());
+    }
+
+
+    @GetMapping("/api/v1/userInfo")
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "获取当前用户信息")
+    public Response userInfo() {
+        return Response.ok(sysUserService.getById(StpUtil.getLoginIdAsLong()));
     }
 
     @GetMapping("/api/v1/loginOut")
