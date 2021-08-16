@@ -9,6 +9,7 @@ import ${package.Service}.${table.serviceName};
     import org.springframework.stereotype.Controller;
 </#if>
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.PageResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -43,12 +44,12 @@ ${table.serviceName} ${table.serviceName?substring(1)?uncap_first};
 
 @GetMapping
 @ApiOperation(value = "${table.comment!}分页查询")
-public Response pageAll(@RequestParam(required = false, defaultValue = "1") long current,
-@RequestParam(required = false, defaultValue = "10") long size) {
-Page roadPage = new Page<>(current, size);
+public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
+@RequestParam(required = false, defaultValue = "10") long limit) {
+Page roadPage = new Page<>(page, limit);
 LambdaQueryWrapper<${table.entityName}> queryWrapper = new QueryWrapper().lambda();
 Page pageList = ${table.serviceName?substring(1)?uncap_first}.page(roadPage, queryWrapper);
-return Response.ok(pageList);
+return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
 }
 
 @PostMapping

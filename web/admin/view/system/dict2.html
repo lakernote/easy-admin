@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>数据字典</title>
+    <link href="../../component/pear/css/pear.css" rel="stylesheet"/>
+</head>
+<body class="pear-container">
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">字典名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="typeName" placeholder="" class="layui-input">
+                </div>
+                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="dict-type-query">
+                    <i class="layui-icon layui-icon-search"></i>
+                    查询
+                </button>
+                <button type="reset" class="pear-btn pear-btn-md">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="dict-type-table" lay-filter="dict-type-table"></table>
+    </div>
+</div>
+
+</body>
+<script type="text/html" id="dict-type-toolbar">
+    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+        <i class="layui-icon layui-icon-delete"></i>
+        删除
+    </button>
+</script>
+
+<script type="text/html" id="dict-type-bar">
+    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">
+        <i class="layui-icon layui-icon-edit"></i>
+    </button>
+    <button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="details">
+        <i class="layui-icon layui-icon-transfer"></i>
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">
+        <i class="layui-icon layui-icon-delete"></i>
+    </button>
+</script>
+
+<script type="text/html" id="dict-type-enable">
+    <input type="checkbox" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="dict-type-enable"
+           {{d.enable== '0' ? 'checked' : '' }}>
+</script>
+
+<script type="text/html" id="dict-data-toolbar">
+    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+        <i class="layui-icon layui-icon-delete"></i>
+        删除
+    </button>
+</script>
+
+<script type="text/html" id="dict-data-bar">
+    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i>
+    </button>
+</script>
+
+<script type="text/html" id="dict-data-enable">
+    <input type="checkbox" value="{{d.dataId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="dict-data-enable"
+           {{d.enable== '0' ? 'checked' : '' }}>
+</script>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/pear/pear.js"></script>
+<script>
+    layui.use(['table', 'form', 'jquery', 'easyAdmin'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let easyAdmin = layui.easyAdmin;
+
+        let MODULE_PATH = "dict/";
+
+        let typeCode;
+
+        let cols = [
+            [{
+                type: 'checkbox'
+            },
+                {
+                    title: '字典名称',
+                    field: 'typeName',
+                    align: 'center',
+                    width: 120
+                },
+                {
+                    title: '描述',
+                    field: 'description',
+                    align: 'center'
+                },
+                {
+                    title: '字典状态',
+                    field: 'enable',
+                    align: 'center',
+                    templet: '#dict-type-enable'
+                },
+                {
+                    title: '操作',
+                    toolbar: '#dict-type-bar',
+                    align: 'center',
+                    width: 180
+                }
+            ]
+        ];
+
+        let dataCols = [
+            [{
+                type: 'checkbox'
+            },
+                {
+                    title: '标签',
+                    field: 'dataLabel',
+                    align: 'center',
+                    width: 120
+                },
+                {
+                    title: '对应值',
+                    field: 'dataValue',
+                    align: 'center'
+                },
+                {
+                    title: '状态',
+                    field: 'enable',
+                    align: 'center',
+                    templet: '#dict-data-enable'
+                },
+                {
+                    title: '操作',
+                    toolbar: '#dict-data-bar',
+                    align: 'center',
+                    width: 180
+                }
+            ]
+        ];
+
+        table.render({
+            elem: '#dict-type-table',
+            url: "../../admin/data/dictType.json",
+            page: true,
+            cols: cols,
+            skin: 'line',
+            height: 'full-148',
+            toolbar: '#dict-type-toolbar',
+            defaultToolbar: [{
+                title: '刷新',
+                layEvent: 'refresh',
+                icon: 'layui-icon-refresh',
+            }, 'filter', 'print', 'exports']
+        });
+
+        window.renderData = function (code) {
+
+            typeCode = code;
+            $(".empty").hide();
+
+            table.render({
+                elem: '#dict-data-table',
+                url: "../../admin/data/dictData.json",
+                page: true,
+                height: 'full-148',
+                cols: dataCols,
+                skin: 'line',
+                toolbar: '#dict-data-toolbar'
+            });
+        }
+
+        table.on('tool(dict-type-table)', function (obj) {
+            if (obj.event === 'remove') {
+                window.removeType(obj);
+            } else if (obj.event === 'edit') {
+                window.editType(obj);
+            } else if (obj.event === 'details') {
+                window.renderData(obj.data['typeCode'])
+            }
+        });
+
+        table.on('toolbar(dict-type-table)', function (obj) {
+            if (obj.event === 'add') {
+                window.addType();
+            } else if (obj.event === 'refresh') {
+                window.refreshType();
+            } else if (obj.event === 'batchRemove') {
+                layer.msg("批量删除")
+            }
+        });
+
+        form.on('submit(dict-type-query)', function (data) {
+            table.reload('dict-type-table', {
+                where: data.field
+            })
+            return false;
+        });
+
+        form.on('switch(dict-type-enable)', function (obj) {
+            layer.msg("切换");
+        });
+
+        window.addType = function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shade: 0.1,
+                area: ['500px', '400px'],
+                content: MODULE_PATH + 'add.html'
+            });
+        }
+
+        window.editType = function (obj) {
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: ['500px', '400px'],
+                content: MODULE_PATH + 'edit.html'
+            });
+        }
+
+        window.removeType = function (obj) {
+            layer.msg("删除");
+        }
+
+        window.refreshType = function () {
+            table.reload('dict-type-table');
+        }
+
+        window.addData = function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shade: 0.1,
+                area: ['500px', '450px'],
+                content: MODULE_PATH + 'add.html'
+            });
+        }
+
+        window.editData = function (obj) {
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: ['500px', '450px'],
+                content: MODULE_PATH + 'edit.html'
+            });
+        }
+
+        window.removeData = function (obj) {
+            layer.msg("删除");
+        }
+
+        table.on('tool(dict-data-table)', function (obj) {
+            if (obj.event === 'remove') {
+                window.removeData(obj);
+            } else if (obj.event === 'edit') {
+                window.editData(obj);
+            } else if (obj.event === 'details') {
+                window.details(obj);
+            }
+        });
+
+        table.on('toolbar(dict-data-table)', function (obj) {
+            if (obj.event === 'add') {
+                window.addData();
+            } else if (obj.event === 'refresh') {
+                window.refreshData();
+            } else if (obj.event === 'batchRemove') {
+                layer.msg("批量删除")
+            }
+        });
+
+        form.on('submit(dict-data-query)', function (data) {
+            data.field.typeCode = typeCode;
+            table.reload('dict-data-table', {
+                where: data.field
+            })
+            return false;
+        });
+
+        form.on('switch(dict-data-enable)', function (obj) {
+            layer.msg("切换状态");
+        });
+
+        window.refreshData = function () {
+            table.reload('dict-data-table');
+        }
+    })
+</script>
+</html>

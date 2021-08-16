@@ -1,4 +1,4 @@
-layui.define(['jquery', 'element', 'table', 'yaml', 'common'], function (exports) {
+layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function (exports) {
     "use strict";
 
     var MOD_NAME = 'easyAdmin';
@@ -6,7 +6,7 @@ layui.define(['jquery', 'element', 'table', 'yaml', 'common'], function (exports
     var table = layui.table;
     var element = layui.element;
     var common = layui.common;
-
+    var form = layui.form;
     var easyAdmin = new function () {
 
         this.GetAdminServerUrl = function () {
@@ -141,6 +141,122 @@ layui.define(['jquery', 'element', 'table', 'yaml', 'common'], function (exports
             table.reload(tableId);
         }
 
+        /**
+         * 默认刷新 表格 其 id = table
+         */
+        this.TableRefresh = function () {
+            table.reload('table');
+        }
+
+        /**
+         * 默认删除表格某行数据
+         * @param obj
+         * @param uri /sys/user/1
+         * @constructor
+         */
+        this.TableRemove = function (obj, uri) {
+            layer.confirm('确定要删除该用户', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                layer.close(index);
+                let loading = layer.load();
+                easyAdmin.http({
+                    url: uri,
+                    dataType: 'json',
+                    type: 'delete',
+                    success: function (result) {
+                        layer.close(loading);
+                        if (result.success) {
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                time: 1000,
+                                area: ['100px', '80px'],
+                                content: "删除成功"
+                            }, function () {
+                                obj.del();
+                            });
+                        } else {
+                            layer.msg(result.msg, {
+                                icon: 2,
+                                time: 1000,
+                                area: ['100px', '80px'],
+                                content: "删除失败"
+                            });
+                        }
+                    }
+                })
+            });
+        }
+
+        /**
+         * uri : '/sys/dict'
+         *  用于 edit页面
+         *  form表单回显
+         *  <form class="layui-form" action="" lay-filter="edit">
+         *
+         */
+        this.FormVal = function (uri) {
+            var id = this.getQueryString("id");
+            this.http({
+                url: uri + "/" + id,
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'get',
+                success: function (result) {
+                    if (result.success) {
+                        //表单数据回显
+                        form.val("edit", result.data);
+                    } else {
+                        layer.msg(result.msg, {icon: 2, time: 1000});
+                    }
+                }
+            })
+        }
+
+        /**
+         * <p>
+         *     新增 button lay-filter="save"
+         *    <button type="submit" lay-submit lay-filter="save"
+         *     其父 main页面   id="table"
+         *     <table id="table"
+         * </p>
+         *
+         */
+        this.FormSave = function (url) {
+            form.on('submit(save)', function (data) {
+                // 转换
+                data.field.enable = data.field.enable == '1' ? true : false;
+                easyAdmin.http({
+                    url: url,
+                    data: JSON.stringify(data.field),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    type: 'post',
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg(result.msg,
+                                {
+                                    icon: 1,
+                                    time: 1000,
+                                    area: ['100px', '80px'],
+                                    content: "新增成功"
+                                }
+                                , function () {
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                                    parent.layui.table.reload("table");
+                                });
+                        } else {
+                            layer.msg(result.msg,
+                                {icon: 2, time: 1000, area: ['100px', '80px']}
+                            );
+                        }
+                    }
+                })
+                return false;
+            });
+        }
+
 
         /**
          * 跳转到add页面
@@ -206,48 +322,6 @@ layui.define(['jquery', 'element', 'table', 'yaml', 'common'], function (exports
             }
             return false;
         }
-
-        /**
-         * <p>
-         *     新增 button lay-filter="save"
-         *    <button type="submit" lay-submit lay-filter="save"
-         *     其父 main页面   id="table"
-         *     <table id="table"
-         * </p>
-         *
-         */
-        this.FormAddSave = function (url) {
-            form.on('submit(save)', function (data) {
-                easyAdmin.http({
-                    url: url,
-                    data: JSON.stringify(data.field),
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    type: 'post',
-                    success: function (result) {
-                        if (result.success) {
-                            layer.msg(result.msg,
-                                {
-                                    icon: 1,
-                                    time: 1000,
-                                    area: ['100px', '80px'],
-                                    content: "新增成功"
-                                }
-                                , function () {
-                                    parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
-                                    parent.layui.table.reload("table");
-                                });
-                        } else {
-                            layer.msg(result.msg,
-                                {icon: 2, time: 1000, area: ['100px', '80px']}
-                            );
-                        }
-                    }
-                })
-                return false;
-            });
-        }
-
 
         /**
          * 提交 json 数据
