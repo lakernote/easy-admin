@@ -207,9 +207,9 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
         this.TableTool = function (uri, module) {
             table.on('tool(table-filter)', function (obj) {
                 if (obj.event === 'remove') {
-                    easyAdmin.TableRemove(obj, uri + "/" + obj.data.dictId);
+                    easyAdmin.TableRemove(obj, uri + "/" + obj.data[module + 'Id']);
                 } else if (obj.event === 'edit') {
-                    easyAdmin.JumpEdit(module, obj.data.dictId);
+                    easyAdmin.JumpEdit(module, obj.data[module + 'Id']);
                 }
             });
         }

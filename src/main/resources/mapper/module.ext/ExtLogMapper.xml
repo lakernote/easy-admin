@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laker.admin.module.ext.mapper.ExtLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.laker.admin.module.ext.entity.ExtLog">
+        <id column="log_id" property="logId" />
+        <result column="user_id" property="userId" />
+        <result column="ip" property="ip" />
+        <result column="client" property="client" />
+        <result column="request" property="request" />
+        <result column="response" property="response" />
+        <result column="cost" property="cost" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        log_id, user_id, ip, client, request, response, cost, create_time
+    </sql>
+
+</mapper>

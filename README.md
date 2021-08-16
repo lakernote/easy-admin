@@ -2,9 +2,11 @@
 
 #### 介绍
 
-**easy-admin：**       **easy**，**easy**，**easy**，打造一个**简单**、**轻量级**的**后台管理系统脚手架**。目前使用的技术都是相对较轻量级、上手很容易的技术。例如：**Spring Boot**、**hutool-all**、**mybatis-plus** 、**knife4j**  、**sa-token**、**javamelody** 、**snakerflow** 等。**后续的发展方向也是把目标对准中小型项目**，**提炼简单高效架构**。
+**easy**，**easy**，**easy**，打造一个**简单**、**轻量级**的**后台管理系统脚手架**。目前使用的技术都是相对较轻量级、上手很容易的技术。例如：**Spring Boot**、**hutool-all**、**mybatis-plus** 、**knife4j**  、**sa-token**、**javamelody** 、**snakerflow** 等。**后续的发展方向也是把目标对准中小型项目**，**提炼简单高效架构**。
 
 **适合场景：**`学生学习`、`前后端项目练手`、`接私活快速开发`、`中小型企业脚手架`、`Spring Boot深度扩展学习`等
+
+项目架构灵活多变，内置前后端代码生成，可前后端分离，也可以一体化开发。
 
 **项目地址**：[https://gitee.com/lakernote/easy-admin](https://gitee.com/lakernote/easy-admin)
 
@@ -97,7 +99,7 @@ spring:
 
 **一、Spring Boot虚拟磁盘模式**
 
-运行`EasyAdminApplication.java`会自动在浏览器打开首页。**推荐**
+运行`EasyAdminApplication.java`会自动在浏览器打开首页。
 
 **二、纯静态模式**
 
@@ -112,6 +114,29 @@ admin:
 直接在浏览器访问`index.html`，如下图直接就可以访问了
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0816/001751_ef56d4c9_709188.png "屏幕截图.png")
+
+#### 代码生成
+
+执行`CodeGenerator.java`，按照提示输入即可，以下为示例和解释
+
+```
+--------生成文件输出目录---------
+D:\JT\easy-admin/src/main/java
+-----------------
+请输入模块名：
+module.ext  // 仅仅会影响生成java代码路径D:\JT\easy-admin/src/main/java/com/laker/admin/module/ext
+请输入表名，多个英文逗号分割：
+ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/log
+           // 影响接口定义 http://xx:port/ext/log
+```
+
+生成好后，直接在菜单权限处，配置访问路径`view/ext/log.html`即可访问新建模块
+
+#### 规约
+
+数据库表命名：模块名+实体，例如：ext_log
+
+数据库字段：主键定义为bigint，且命名为：业务Id,例如：logId
 
 #### 项目截图
 
@@ -192,4 +217,3 @@ web
 ```
 
 浏览器访问`http://ip:port/admin`
-

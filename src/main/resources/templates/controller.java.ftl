@@ -1,5 +1,6 @@
 package ${package.Controller};
 
+import cn.hutool.core.collection.CollUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 <#else>
     @Controller
 </#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
+@RequestMapping("/${cfg.easyModule}/${cfg.easyMain}")
 <#if superControllerClass??>
     public class ${table.controllerName} extends ${superControllerClass} {
 <#else>
@@ -68,5 +69,10 @@ return Response.ok(${table.serviceName?substring(1)?uncap_first}.getById(id));
 @ApiOperation(value = "根据id删除${table.comment!}")
 public Response delete(@PathVariable Long id) {
 return Response.ok(${table.serviceName?substring(1)?uncap_first}.removeById(id));
+}
+@DeleteMapping("/batch/{ids}")
+@ApiOperation(value = "根据批量删除ids删除")
+public Response batchRemove(@PathVariable Long[] ids) {
+return Response.ok(${table.serviceName?substring(1)?uncap_first}.removeByIds(CollUtil.toList(ids)));
 }
 }

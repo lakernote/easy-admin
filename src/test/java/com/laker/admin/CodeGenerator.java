@@ -1,5 +1,6 @@
 package com.laker.admin;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -10,9 +11,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
@@ -56,7 +55,10 @@ public class CodeGenerator {
         // 生成代码包配置
         PackageConfig pc = packageConfig(mpg);
 
-        diyConfig(mpg, projectPath, pc);
+        // 策略配置
+        String[] tables = strategyConfig(mpg, pc);
+
+        diyConfig(mpg, projectPath, pc, tables);
 
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
@@ -71,21 +73,32 @@ public class CodeGenerator {
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
-        // 策略配置
-        strategyConfig(mpg, pc);
 
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
+
+        try {
+            CodeWebGenerator.web(mpg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void diyConfig(AutoGenerator mpg, String projectPath, PackageConfig pc) {
+    private static void diyConfig(AutoGenerator mpg, String projectPath, PackageConfig pc, String[] tables) {
         // 自定义配置
+        // 自定义属性注入abc=${cfg.abc}
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-                // to do nothing
+                Map<String, Object> map = new HashMap<>();
+                String table = tables[0];
+                String[] split = StrUtil.split(table, "_");
+                map.put("easyModule", split[0]);
+                map.put("easyMain", split[1]);
+                this.setMap(map);
             }
         };
+
 
         // 如果模板引擎是 freemarker
         String templatePath = "/templates/mapper.xml.ftl";
@@ -123,7 +136,7 @@ public class CodeGenerator {
         mpg.setCfg(cfg);
     }
 
-    private static void strategyConfig(AutoGenerator mpg, PackageConfig pc) {
+    private static String[] strategyConfig(AutoGenerator mpg, PackageConfig pc) {
         StrategyConfig strategy = new StrategyConfig();
         // 数据库表映射到实体的命名策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
@@ -139,10 +152,12 @@ public class CodeGenerator {
 //        strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
 //        strategy.setSuperEntityColumns("id");
-        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+        String[] table = scanner("表名，多个英文逗号分割").split(",");
+        strategy.setInclude(table);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);
+        return table;
     }
 
     private static PackageConfig packageConfig(AutoGenerator mpg) {
