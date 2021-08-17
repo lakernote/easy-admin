@@ -18,16 +18,16 @@
 
 | 功能                                            | 状态 | 相关文档                                                     |
 | ----------------------------------------------- | ---- | ------------------------------------------------------------ |
-| **用户管理、部门管理、菜单管理、角色管理**🐾     | ✅    |                                                              |
-| **基于RBAC角色的访问控制**🐾                     | ✅    | [认证授权 sa-token](https://blog.csdn.net/abu935009066/article/details/115553517) |
-| **基于knife4j-Api文档集成**🐾                    | ✅    | [Knife4j替换swagger](https://blog.csdn.net/abu935009066/article/details/115512988) |
-| **基于javamelody应用监控**🐾                     | ✅    | [Javamelody-应用程序监控](https://blog.csdn.net/abu935009066/article/details/116936366) |
-| **基于Snakerflow的工作流引擎**🐾                 | ✅    | [轻量级工作流引擎Snakerflow集成](https://blog.csdn.net/abu935009066/article/details/119568513) |
-| **自定义注解+AOP用户行为分析**🐾                 | ✅    | [SpringBoot自定义注解+AOP实现用户行为监控](https://blog.csdn.net/abu935009066/article/details/119755927) |
-| **基于Freemrker的前后端代码一键生成**🐾          | ✅    |                                                              |
-| **基于mybatis插件的数据权限控制**🐾              | ❌    | [基于Mybatis-Plus的数据权限实现](https://blog.csdn.net/abu935009066/article/details/115481149) |
-| **基于SpringTask定时任务（支持动态CRUD任务）**🐾 | ✅   | [基于Spring Task实现动态管理任务](https://blog.csdn.net/abu935009066/article/details/116142630) |
-| **在线WebLog、动态修改日志级别**🐾               | ✅    | [在线WebLog、动态修改日志级别](https://blog.csdn.net/abu935009066/article/details/114121941) |
+| **用户管理、部门管理、菜单管理、角色管理** 🐾     | ✅    |                                                              |
+| **基于RBAC角色的访问控制** 🐾                     | ✅    | [认证授权 sa-token](https://blog.csdn.net/abu935009066/article/details/115553517) |
+| **基于knife4j-Api文档集成** 🐾                    | ✅    | [Knife4j替换swagger](https://blog.csdn.net/abu935009066/article/details/115512988) |
+| **基于javamelody应用监控** 🐾                     | ✅    | [Javamelody-应用程序监控](https://blog.csdn.net/abu935009066/article/details/116936366) |
+| **基于Snakerflow的工作流引擎** 🐾                 | ✅    | [轻量级工作流引擎Snakerflow集成](https://blog.csdn.net/abu935009066/article/details/119568513) |
+| **自定义注解+AOP用户行为分析** 🐾                 | ✅    | [SpringBoot自定义注解+AOP实现用户行为监控](https://blog.csdn.net/abu935009066/article/details/119755927) |
+| **基于Freemrker的前后端代码一键生成** 🐾          | ✅    |                                                              |
+| **基于mybatis插件的数据权限控制** 🐾              | ❌    | [基于Mybatis-Plus的数据权限实现](https://blog.csdn.net/abu935009066/article/details/115481149) |
+| **基于SpringTask定时任务(支持动态CRUD任务)** 🐾 | ✅   | [基于Spring Task实现动态管理任务](https://blog.csdn.net/abu935009066/article/details/116142630) |
+| **在线WebLog、动态修改日志级别** 🐾               | ✅    | [在线WebLog、动态修改日志级别](https://blog.csdn.net/abu935009066/article/details/114121941) |
 
 #### 在线演示
 
