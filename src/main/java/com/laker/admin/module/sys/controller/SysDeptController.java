@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.ResultTable;
 import com.laker.admin.framework.ResultTree;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.sys.entity.SysDept;
 import com.laker.admin.module.sys.service.ISysDeptService;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/dept")
+@Metrics
 public class SysDeptController {
     @Autowired
     ISysDeptService sysDeptService;

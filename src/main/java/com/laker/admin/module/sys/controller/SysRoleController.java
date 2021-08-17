@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.ResultTree;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.sys.entity.SysMenu;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysRolePower;
@@ -31,6 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/role")
+@Metrics
 public class SysRoleController {
     @Autowired
     ISysRoleService sysRoleService;

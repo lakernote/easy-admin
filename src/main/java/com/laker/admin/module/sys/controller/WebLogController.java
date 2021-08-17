@@ -9,10 +9,11 @@ import org.springframework.boot.logging.LoggerGroups;
 import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 
@@ -24,7 +25,7 @@ import java.io.File;
  * @author laker
  * @since 2021-08-05
  */
-@RestController
+@Controller
 @RequestMapping("/sys/weblog")
 public class WebLogController {
     @Autowired
@@ -36,6 +37,7 @@ public class WebLogController {
 
 
     @GetMapping(value = "/file", produces = "text/plain; charset=UTF-8")
+    @ResponseBody
     public Resource logFile(@RequestParam(required = false) String filePath) {
         String lookFilePath = lakerConfig.getLogFilePath();
         if (StrUtil.isNotBlank(filePath)) {
@@ -49,6 +51,7 @@ public class WebLogController {
     }
 
     @RequestMapping(value = "/level") //动态设置日志级别
+    @ResponseBody
     public String configureLogLevel(String name, LogLevel configuredLevel) {
         if (StrUtil.isBlank(name)) {
             return "请输入日志名称";

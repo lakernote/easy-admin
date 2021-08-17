@@ -1,11 +1,13 @@
 package com.laker.admin.module.ext.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/ext/log")
+@Metrics
 public class ExtLogController {
     @Autowired
     IExtLogService extLogService;
@@ -29,9 +32,14 @@ public class ExtLogController {
     @GetMapping
     @ApiOperation(value = "日志分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
-                                @RequestParam(required = false, defaultValue = "10") long limit) {
+                                @RequestParam(required = false, defaultValue = "10") long limit,
+                                String keyWord) {
         Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<ExtLog> queryWrapper = new QueryWrapper().lambda();
+        if (StrUtil.isNotBlank(keyWord)) {
+            queryWrapper.like(ExtLog::getRequest, keyWord);
+        }
+        queryWrapper.orderByDesc(ExtLog::getCreateTime);
         Page pageList = extLogService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }

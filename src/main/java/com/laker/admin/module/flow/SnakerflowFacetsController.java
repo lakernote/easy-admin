@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.aop.Metrics;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -42,6 +43,7 @@ public class SnakerflowFacetsController {
 
     @GetMapping("/process/modelJson")
     @ApiOperation(value = "根据流程定义名称获取流程定义json", tags = "流程引擎-流程")
+    @Metrics
     public String getProcess(@RequestParam(required = false) String processId) {
         if (StrUtil.isBlank(processId)) {
             return "";
@@ -80,6 +82,7 @@ public class SnakerflowFacetsController {
      */
     @ApiOperation(value = "根据流程定义ID，删除流程定义", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/delete/{id}", method = RequestMethod.GET)
+    @Metrics
     public Response processDelete(@PathVariable("id") String id) {
         snakerEngineFacets.getEngine().process().undeploy(id);
         return Response.ok();
@@ -121,6 +124,7 @@ public class SnakerflowFacetsController {
 
     @ApiOperation(value = "流程定义+流程状态", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/json", method = RequestMethod.GET)
+    @Metrics
     public Object json(String processId, String orderId) {
         Process process = snakerEngineFacets.getEngine().process().getProcessById(processId);
         AssertHelper.notNull(process);

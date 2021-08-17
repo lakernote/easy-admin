@@ -70,7 +70,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<Long> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId()).collect(Collectors.toList());
         List<SysRolePower> rolePowerLists = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().in(SysRolePower::getRoleId, roleIds));
         List<Long> powerIds = rolePowerLists.stream().map(sysRolePower -> sysRolePower.getPowerId()).collect(Collectors.toList());
-        return menuService.list(Wrappers.<SysMenu>lambdaQuery().in(SysMenu::getMenuId, powerIds).eq(SysMenu::getEnable, true).orderByDesc(SysMenu::getSort));
+        return menuService.list(Wrappers.<SysMenu>lambdaQuery().in(SysMenu::getMenuId, powerIds).eq(SysMenu::getEnable, true).orderByAsc(SysMenu::getSort));
     }
 
 }

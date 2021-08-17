@@ -1,6 +1,9 @@
 package com.laker.admin.utils.http;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -43,6 +46,18 @@ public class HttpServletRequestUtil {
         }
         StringBuffer urlBuffer = request.getRequestURL().append("?").append(queryString);
         return urlBuffer.toString();
+
+    }
+
+    /**
+     * 获取getRequestURI
+     *
+     * @return
+     */
+    public static String getRequestUserAgent() {
+        HttpServletRequest request = getRequest();
+        UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
+        return JSONUtil.toJsonStr(userAgent);
 
     }
 

@@ -1,12 +1,15 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
@@ -33,6 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/user")
+@Metrics
 public class SysUserController {
     @Autowired
     ISysUserService sysUserService;
@@ -64,6 +68,12 @@ public class SysUserController {
     public Response saveOrUpdate(@RequestBody SysUser param) {
 
         if (param.getUserId() == null) {
+            // 只有超级管理员才能创建用户
+            if (StpUtil.getLoginIdAsLong() != 1L) {
+                return Response.error("403", "只有超级管理员才能创建用户!");
+            }
+            String password = param.getPassword();
+            param.setPassword(SecureUtil.sha256(password));
             param.setCreateTime(LocalDateTime.now());
             sysUserService.save(param);
             if (StrUtil.isNotBlank(param.getRoleIds())) {

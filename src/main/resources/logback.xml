@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="LOG_HOME" value="logs"/>
-    <property name="encoding" value="UTF-8"/>
+    <property name="ENCODING" value="UTF-8"/>
 
     <appender name="DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 正在记录的日志文件的路径及文件名 -->
         <file>${LOG_HOME}/laker.log</file>
         <Append>true</Append>
         <prudent>false</prudent>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--日志打印的格式-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{50} %line - %m%n</pattern>
+            <!--编码格式-->
+            <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按天回滚 daily -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--归档日志文件名-->
-            <FileNamePattern>${LOG_HOME}/test.log.%d{yyyy-MM-dd}</FileNamePattern>
-            <!-- 最多保存15天历史文件 -->
+            <!-- 每天日志归档路径以及格式 -->
+            <FileNamePattern>${LOG_HOME}/laker-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
+            <!--日志量最大20GB-->
+            <totalSizeCap>20GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--超过10MB就切分日志-->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 

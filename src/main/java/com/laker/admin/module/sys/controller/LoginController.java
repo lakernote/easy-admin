@@ -3,10 +3,12 @@ package com.laker.admin.module.sys.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -14,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ApiSupport(order = 2)
 @RestController
 @Slf4j
+@Metrics
 public class LoginController {
 
     @Autowired
@@ -33,7 +37,7 @@ public class LoginController {
     @PostMapping("/api/v1/login")
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "登录")
-    public Response login(@RequestBody LoginDto loginDto) {
+    public Response login(@Validated @RequestBody LoginDto loginDto) {
         log.info("login {}", loginDto);
         // 验证码是否正确
         String code = iCache.get(loginDto.getUid());
@@ -43,7 +47,7 @@ public class LoginController {
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getUserName, loginDto.getUsername())
-                .eq(SysUser::getPassword, loginDto.getPassword()));
+                .eq(SysUser::getPassword, SecureUtil.sha256(loginDto.getPassword())));
         if (sysUser == null) {
             return Response.error("5001", "用户名或密码不正确");
         }

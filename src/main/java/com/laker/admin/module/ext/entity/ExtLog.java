@@ -2,10 +2,12 @@ package com.laker.admin.module.ext.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -41,6 +43,8 @@ public class ExtLog implements Serializable {
      * 浏览器或者app信息
      */
     private String client;
+    private String uri;
+    private String method;
 
     /**
      * 请求
@@ -52,6 +56,8 @@ public class ExtLog implements Serializable {
      */
     private String response;
 
+    private Boolean status;
+
     /**
      * 耗时ms
      */
@@ -60,6 +66,7 @@ public class ExtLog implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 
 

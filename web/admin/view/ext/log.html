@@ -68,49 +68,52 @@
                         title: '用户id',
                         field: 'userId',
                         align: 'center',
-                        width: 120
+                        width: 80
                     },
                     {
-                        title: 'ip地址',
+                        title: '请求IP',
                         field: 'ip',
                         align: 'center',
-                        width: 120
+                        width: 100
                     },
                     {
-                        title: '浏览器或者app信息',
-                        field: 'client',
-                        align: 'center',
-                        width: 120
+                        title: '请求方法',
+                        field: 'method',
+                        align: 'center'
                     },
                     {
-                        title: '请求',
+                        title: '请求URI',
+                        field: 'uri',
+                        align: 'center'
+                    },
+                    {
+                        title: '请求内容',
                         field: 'request',
-                        align: 'center',
-                        width: 120
+                        align: 'center'
                     },
                     {
-                        title: '响应',
+                        title: '响应内容',
                         field: 'response',
                         align: 'center',
-                        width: 120
+                        width: 150
                     },
                     {
                         title: '耗时ms',
                         field: 'cost',
                         align: 'center',
-                        width: 120
+                        width: 80
+                    },
+                    {
+                        title: 'Client信息',
+                        field: 'client',
+                        align: 'center',
+                        width: 80
                     },
                     {
                         title: '创建时间',
                         field: 'createTime',
                         align: 'center',
-                        width: 120
-                    },
-                    {
-                        title: '操作',
-                        toolbar: '#record-toolbar',
-                        align: 'center',
-                        width: 180
+                        width: 150
                     }
                 ]
             ]
@@ -121,7 +124,9 @@
         let uri = "/ext/" + module;
         easyAdmin.tableRender({
             url: uri,
-            cols: cols
+            cols: cols,
+            toolbar: null,
+            defaultToolbar: null
         });
         easyAdmin.TableTool(uri, module);
         easyAdmin.TableToolBar(uri, module);

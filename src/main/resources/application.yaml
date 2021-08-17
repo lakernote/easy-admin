@@ -22,12 +22,6 @@ spring:
       thread-name-prefix: laker-
   freemarker:
     suffix: .ftl
-logging:
-  file:
-    max-size: 10MB
-    max-history: 50
-    name: laker.log
-    path: ./
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
 knife4j:
