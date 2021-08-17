@@ -7,6 +7,8 @@ import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.module.sys.entity.SysUser;
+import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +38,8 @@ public class SnakerflowFacetsController {
 
     @Autowired
     private SnakerEngineFacets snakerEngineFacets;
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * --------- 流程相关 ---------
@@ -196,7 +200,9 @@ public class SnakerflowFacetsController {
             if (task.getTaskName().equalsIgnoreCase(taskName)) {
                 String[] actors = snakerEngineFacets.getEngine().query().getTaskActorsByTaskId(task.getId());
                 for (String actor : actors) {
-                    builder.append(actor).append(",");
+                    SysUser sysUser = sysUserService.getById(Long.valueOf(actor));
+                    String nickName = sysUser.getNickName();
+                    builder.append(nickName).append(",");
                     find = true;
                 }
                 createTime = task.getCreateTime();
@@ -208,7 +214,9 @@ public class SnakerflowFacetsController {
                 if (task.getTaskName().equalsIgnoreCase(taskName)) {
                     String[] actors = snakerEngineFacets.getEngine().query().getHistoryTaskActorsByTaskId(task.getId());
                     for (String actor : actors) {
-                        builder.append(actor).append(",");
+                        SysUser sysUser = sysUserService.getById(Long.valueOf(actor));
+                        String nickName = sysUser.getNickName();
+                        builder.append(nickName).append(",");
                     }
                     createTime = task.getCreateTime();
                     finishTime = task.getFinishTime();
@@ -299,8 +307,8 @@ public class SnakerflowFacetsController {
     @PostMapping("/startAndExecute")
     public Response startAndExecute(String name, Integer version, @RequestBody Map args) {
         args.put("user1", StpUtil.getLoginIdAsString());
-        args.put("user2", "yang");
-        args.put("user3", "zhang");
+        args.put("user2", "17");
+        args.put("user3", "18");
         Object day = args.get("day");
         if (day != null) {
             args.put("day", Integer.valueOf((String) day));
