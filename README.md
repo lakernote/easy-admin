@@ -26,7 +26,7 @@
 | **自定义注解+AOP用户行为分析**🐾                 | ✅    | [SpringBoot自定义注解+AOP实现用户行为监控](https://blog.csdn.net/abu935009066/article/details/119755927) |
 | **基于Freemrker的前后端代码一键生成**🐾          | ✅    |                                                              |
 | **基于mybatis插件的数据权限控制**🐾              | ❌    | [基于Mybatis-Plus的数据权限实现](https://blog.csdn.net/abu935009066/article/details/115481149) |
-| **基于SpringTask定时任务（支持动态CRUD任务）**🐾 | ❌    | [基于Spring Task实现动态管理任务](https://blog.csdn.net/abu935009066/article/details/116142630) |
+| **基于SpringTask定时任务(支持动态CRUD任务)** 🐾 | ❌    | [基于Spring Task实现动态管理任务](https://blog.csdn.net/abu935009066/article/details/116142630) |
 | **在线WebLog、动态修改日志级别**🐾               | ✅    | [在线WebLog、动态修改日志级别](https://blog.csdn.net/abu935009066/article/details/114121941) |
 
 #### 在线演示
