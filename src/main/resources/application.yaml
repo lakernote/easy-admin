@@ -24,6 +24,9 @@ spring:
     suffix: .ftl
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
+  # 支持统配符 * 或者 ; 分割
+  typeEnumsPackage: com.laker.admin.module.enums
+
 knife4j:
   # 开启增强
   enable: true

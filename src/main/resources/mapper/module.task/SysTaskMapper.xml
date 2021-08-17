@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laker.admin.module.task.mapper.SysTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.laker.admin.module.task.entity.SysTask">
+        <id column="task_id" property="taskId" />
+        <result column="task_code" property="taskCode" />
+        <result column="task_name" property="taskName" />
+        <result column="task_class_name" property="taskClassName" />
+        <result column="task_cron" property="taskCron" />
+        <result column="create_time" property="createTime" />
+        <result column="enable" property="enable" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        task_id, task_code, task_name, task_class_name, task_cron, create_time, enable
+    </sql>
+
+</mapper>

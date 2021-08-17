@@ -182,7 +182,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                             layer.msg(result.msg, {
                                 icon: 1,
                                 time: 1000,
-                                area: ['100px', '80px'],
+                                area: ['100px', '65px'],
                                 content: "删除成功"
                             }, function () {
                                 obj.del();
@@ -191,7 +191,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                             layer.msg(result.msg, {
                                 icon: 2,
                                 time: 1000,
-                                area: ['100px', '80px'],
+                                area: ['100px', '65px'],
                                 content: "删除失败"
                             });
                         }
@@ -259,7 +259,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         if (result.success) {
                             layer.msg(result.msg, {
                                 icon: 1,
-                                area: ['100px', '80px'],
+                                area: ['100px', '65px'],
                                 time: 1000
                             }, function () {
                                 table.reload('table');
@@ -267,7 +267,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         } else {
                             layer.msg(result.msg, {
                                 icon: 2,
-                                area: ['100px', '80px'],
+                                area: ['100px', '65px'],
                                 time: 1000
                             });
                         }
@@ -340,7 +340,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                                 {
                                     icon: 1,
                                     time: 1000,
-                                    area: ['100px', '80px'],
+                                    area: ['100px', '65px'],
                                     content: "新增成功"
                                 }
                                 , function () {
@@ -349,7 +349,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                                 });
                         } else {
                             layer.msg(result.msg,
-                                {icon: 2, time: 1000, area: ['100px', '80px']}
+                                {icon: 2, time: 1000, area: ['100px', '65px']}
                             );
                         }
                     }

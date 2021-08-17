@@ -1,13 +1,13 @@
 package com.laker.admin.module.task.core;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.laker.admin.module.enums.TaskStateEnum;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.concurrent.ScheduledFuture;
-
 @Data
 @Builder
+@AllArgsConstructor
 public class TaskDto {
     /**
      * 任务的编码 必须全局唯一
@@ -26,19 +26,12 @@ public class TaskDto {
      */
     private String taskCron;
 
-    @JsonIgnore
-    private ScheduledFuture scheduledFuture;
-
-    @JsonIgnore
-    private IJob job;
-    /**
-     * 是否执行完成
-     */
-    private Boolean done;
 
     private TaskStateEnum taskState;
 
-    public Boolean getDone() {
-        return scheduledFuture == null ? null : scheduledFuture.isDone();
+
+    public TaskDto() {
+
     }
+
 }

@@ -5,6 +5,11 @@ import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.LFUCache;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.laker.admin.framework.SpringUtils;
+import com.laker.admin.module.enums.TaskStateEnum;
+import com.laker.admin.module.task.entity.SysTask;
+import com.laker.admin.module.task.service.ISysTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -37,6 +42,9 @@ public class CoreProcessor implements CommandLineRunner {
     @Autowired
     private List<ICallBack> callBacks;
 
+    @Autowired
+    private ISysTaskService sysTaskService;
+
     /**
      * 启动后存储任务列表
      */
@@ -62,7 +70,6 @@ public class CoreProcessor implements CommandLineRunner {
                         .taskCode(taskCode)
                         .taskName(taskName)
                         .taskCron(cron)
-                        .job(job)
                         .taskClassName(job.getClass().getName()).build();
                 TaskDto res = this.startJVMJob(taskDto, null);
                 taskStore.saveTask(res);
@@ -85,10 +92,13 @@ public class CoreProcessor implements CommandLineRunner {
                                     iCallBack.start(task);
                                 });
                                 try {
-                                    if (task.getJob() != null) {
-                                        task.getJob().execute(param);
-                                    } else {
-                                        log.error("未获取到job实例，task:{}", task);
+                                    String taskClassName = task.getTaskClassName();
+                                    Map<String, IJob> beansOfType = SpringUtils.getBeansOfType(IJob.class);
+                                    for (IJob iJob : beansOfType.values()) {
+                                        if (StrUtil.equals(taskClassName, iJob.getClass().getName())) {
+                                            iJob.execute(param);
+                                            break;
+                                        }
                                     }
 
                                 } catch (Exception e) {
@@ -102,7 +112,6 @@ public class CoreProcessor implements CommandLineRunner {
                                 }
                             },
                             new CronTrigger(taskCron));
-            task.setScheduledFuture(future);
             JVM_RUNNING_TASK.put(task.getTaskCode(), future);
         } else {
             log.warn("cron表达式为：{}，Job信息：{}，不予启动任务。", taskCron, task);
@@ -135,28 +144,14 @@ public class CoreProcessor implements CommandLineRunner {
         removeJvmTask(taskCode);
         TaskDto taskDto = taskStore.findByTaskCode(taskCode);
         startJVMJob(taskDto, null);
-        taskDto.setTaskState(TaskStateEnum.START);
-        taskStore.saveTask(taskDto);
+        sysTaskService.update(Wrappers.<SysTask>lambdaUpdate().set(SysTask::getTaskState, TaskStateEnum.START).eq(SysTask::getTaskCode, taskCode));
     }
 
 
     public synchronized void stopJob(String taskCode) {
         removeJvmTask(taskCode);
-        taskStore.updateTaskStateByTaskCode(TaskStateEnum.STOP, taskCode);
+        sysTaskService.update(Wrappers.<SysTask>lambdaUpdate().set(SysTask::getTaskState, TaskStateEnum.STOP).eq(SysTask::getTaskCode, taskCode));
     }
 
-
-    public synchronized void updateJob(String taskCode, String taskCron, String taskName) {
-        removeJvmTask(taskCode);
-        taskStore.updateTaskByTaskCode(taskCron, taskName, taskCode);
-        TaskDto taskDto = taskStore.findByTaskCode(taskCode);
-        startJVMJob(taskDto, null);
-        taskStore.updateTaskStateByTaskCode(TaskStateEnum.START, taskCode);
-    }
-
-
-    public List<TaskDto> listJob() {
-        return taskStore.list();
-    }
 
 }
