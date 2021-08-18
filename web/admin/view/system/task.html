@@ -46,6 +46,10 @@
     <button class="pear-btn  pear-btn-sm" lay-event="stop">
         暂停
     </button>
+
+    <button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="tasklog">
+        日志
+    </button>
 </script>
 
 
@@ -110,7 +114,7 @@
                         title: '操作',
                         toolbar: '#record-toolbar',
                         align: 'center',
-                        width: 220
+                        width: 250
                     }
                 ]
             ]
@@ -142,19 +146,37 @@
                 });
             } else if (obj.event === 'start') {
                 easyAdmin.httpGet(uri + "/start?taskCode=" + obj.data.taskCode, function (result) {
-                    layer.msg(result.msg,
-                        {
-                            icon: 1,
-                            time: 1000,
-                            area: ['100px', '65px'],
-                            content: "操作成功"
-                        }
-                        , function () {
-                            table.reload('table');
-                        });
+                    if (result.success) {
+
+                        layer.msg(result.msg,
+                            {
+                                icon: 1,
+                                time: 1000,
+                                area: ['100px', '65px'],
+                                content: "操作成功"
+                            }
+                            , function () {
+                                table.reload('table');
+                            });
+                    } else {
+                        layer.msg(result.msg,
+                            {
+                                icon: 2,
+                                time: 1000,
+                                area: ['220px', '70px']
+                            });
+                    }
                 });
             } else if (obj.event === 'edit') {
                 easyAdmin.JumpEdit(module, obj.data[module + 'Id']);
+            } else if (obj.event === 'tasklog') {
+                layer.open({
+                    type: 2,
+                    title: '详情',
+                    shade: 0.1,
+                    area: ['1000px', '700px'],
+                    content: [module + '/tasklog.html?id=' + obj.data.taskCode, 'no']
+                });
             }
         });
         easyAdmin.FormQuery();

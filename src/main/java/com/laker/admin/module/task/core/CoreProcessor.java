@@ -71,8 +71,11 @@ public class CoreProcessor implements CommandLineRunner {
                         .taskName(taskName)
                         .taskCron(cron)
                         .taskClassName(job.getClass().getName()).build();
-                TaskDto res = this.startJVMJob(taskDto, null);
-                taskStore.saveTask(res);
+                taskStore.saveTask(taskDto);
+                TaskDto storeTask = taskStore.findByTaskCode(taskCode);
+                if (storeTask.getEnable() && storeTask.getTaskState().equals(TaskStateEnum.START)) {
+                    this.startJVMJob(storeTask, null);
+                }
             }
         });
     }
@@ -82,16 +85,16 @@ public class CoreProcessor implements CommandLineRunner {
      *
      * @return
      */
-    private TaskDto startJVMJob(TaskDto task, Map param) {
+    private void startJVMJob(TaskDto task, Map param) {
         String taskCron = task.getTaskCron();
         // TODO taskCron CHECK
         if (StrUtil.isNotBlank(taskCron) && !StrUtil.equals(taskCron, "-")) {
             ScheduledFuture<?> future = threadPoolTaskScheduler
                     .schedule(() -> {
-                                callBacks.forEach(iCallBack -> {
-                                    iCallBack.start(task);
-                                });
                                 try {
+                                    callBacks.forEach(iCallBack -> {
+                                        iCallBack.start(task);
+                                    });
                                     String taskClassName = task.getTaskClassName();
                                     Map<String, IJob> beansOfType = SpringUtils.getBeansOfType(IJob.class);
                                     for (IJob iJob : beansOfType.values()) {
@@ -116,7 +119,6 @@ public class CoreProcessor implements CommandLineRunner {
         } else {
             log.warn("cron表达式为：{}，Job信息：{}，不予启动任务。", taskCron, task);
         }
-        return task;
     }
 
     private void removeJvmTask(String taskCode) {
@@ -141,10 +143,13 @@ public class CoreProcessor implements CommandLineRunner {
 
 
     public synchronized void startJob(String taskCode) {
-        removeJvmTask(taskCode);
         TaskDto taskDto = taskStore.findByTaskCode(taskCode);
-        startJVMJob(taskDto, null);
-        sysTaskService.update(Wrappers.<SysTask>lambdaUpdate().set(SysTask::getTaskState, TaskStateEnum.START).eq(SysTask::getTaskCode, taskCode));
+        if (taskDto.getEnable()) {
+            removeJvmTask(taskCode);
+            startJVMJob(taskDto, null);
+            sysTaskService.update(Wrappers.<SysTask>lambdaUpdate().set(SysTask::getTaskState, TaskStateEnum.START).eq(SysTask::getTaskCode, taskCode));
+        }
+
     }
 
 

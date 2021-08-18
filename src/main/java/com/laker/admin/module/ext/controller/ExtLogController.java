@@ -1,5 +1,6 @@
 package com.laker.admin.module.ext.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -31,6 +32,7 @@ public class ExtLogController {
 
     @GetMapping
     @ApiOperation(value = "日志分页查询")
+    @SaCheckPermission("log.list")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 String keyWord) {

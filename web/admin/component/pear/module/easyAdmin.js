@@ -105,6 +105,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 elem: '#table',
                 page: true,
                 skin: 'line',
+                where: null,
                 toolbar: '#table-toolbar',
                 defaultToolbar: [{
                     title: '刷新',
@@ -135,6 +136,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 elem: o.elem, // 对应table的id
                 headers: headers,
                 url: adminServerUrl + o.url,
+                where: o.where,
                 page: o.page, // 分页参数可以自定义
                 cols: o.cols, // 列表示
                 skin: o.skin, // 表格样式
@@ -341,7 +343,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                                     icon: 1,
                                     time: 1000,
                                     area: ['100px', '65px'],
-                                    content: "新增成功"
+                                    content: "保存成功"
                                 }
                                 , function () {
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
@@ -349,7 +351,11 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                                 });
                         } else {
                             layer.msg(result.msg,
-                                {icon: 2, time: 1000, area: ['100px', '65px']}
+                                {
+                                    icon: 2,
+                                    time: 1000,
+                                    area: ['220px', '70px']
+                                }
                             );
                         }
                     }

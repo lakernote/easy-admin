@@ -1,5 +1,6 @@
 package com.laker.admin.module.task;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,6 +42,7 @@ public class TaskManagerController {
 
     @PostMapping
     @ApiOperation("更新任务")
+    @SaCheckPermission("task.update")
     public Response update(@RequestBody SysTask sysTask) {
         sysTaskService.saveOrUpdate(sysTask);
         return Response.ok();
@@ -53,6 +55,7 @@ public class TaskManagerController {
 
     @GetMapping("/start")
     @ApiOperation("开始任务")
+    @SaCheckPermission("task.start")
     public Response start(String taskCode) {
         coreProcessor.startJob(taskCode);
         return Response.ok();

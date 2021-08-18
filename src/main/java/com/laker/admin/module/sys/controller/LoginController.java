@@ -38,7 +38,6 @@ public class LoginController {
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "登录")
     public Response login(@Validated @RequestBody LoginDto loginDto) {
-        log.info("login {}", loginDto);
         // 验证码是否正确
         String code = iCache.get(loginDto.getUid());
         if (!StrUtil.equalsIgnoreCase(code, loginDto.getCaptchaCode())) {

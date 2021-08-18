@@ -2,6 +2,7 @@
 package com.laker.admin.framework.handler;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.lang.Dict;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.exception.BusinessException;
@@ -131,10 +132,18 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
-    public Response handleMaxSizeException(NotLoginException e, HttpServletResponse response) throws IOException {
+    public Response handleNotLoginException(NotLoginException e, HttpServletResponse response) throws IOException {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error("401", e.getMessage());
+    }
+
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(SaTokenException.class)
+    public Response handleMaxSizeException(SaTokenException e, HttpServletResponse response) throws IOException {
+        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.error(e.getMessage(), e);
+        return Response.error("403", e.getMessage());
     }
 
     /**

@@ -28,7 +28,10 @@ public class TaskDto {
 
 
     private TaskStateEnum taskState;
-
+    /**
+     * 是否启用
+     */
+    private Boolean enable;
 
     public TaskDto() {
 
