@@ -220,7 +220,6 @@
 
         // 触发switch开关 开关被点击时触发
         form.on('switch(user-enable)', function (obj) {
-            layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
             easyAdmin.http({
                 url: '/sys/user',
                 data: JSON.stringify({
@@ -232,12 +231,9 @@
                 type: 'post',
                 success: function (result) {
                     if (result.success) {
-                        layer.msg(result.msg, {icon: 1, time: 1000}, function () {
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
-                            parent.layui.table.reload("user-table");
-                        });
+                        layer.msg("操作成功", {icon: 1, time: 1000, area: ['100px', '65px']});
                     } else {
-                        layer.msg(result.msg, {icon: 2, time: 1000});
+                        layer.msg(result.msg, {icon: 2, time: 1000, area: ['100px', '65px']});
                     }
                 }
             })

@@ -147,25 +147,20 @@
         });
 
         form.on('switch(dept-enable)', function (obj) {
-            let operate;
-            if (obj.elem.checked) {
-                operate = "enable";
-            } else {
-                operate = "disable";
-            }
-            let loading = layer.load();
-            $.ajax({
-                url: '/system/dept/' + operate,
-                data: JSON.stringify({deptId: this.value}),
+            easyAdmin.http({
+                url: '/sys/dept',
+                data: JSON.stringify({
+                    deptId: this.value,
+                    status: obj.elem.checked
+                }),
                 dataType: 'json',
                 contentType: 'application/json',
-                type: 'put',
+                type: 'post',
                 success: function (result) {
-                    layer.close(loading);
                     if (result.success) {
-                        popup.success(result.msg);
+                        layer.msg("操作成功", {icon: 1, time: 1000, area: ['100px', '65px']});
                     } else {
-                        popup.failure(result.msg);
+                        layer.msg(result.msg, {icon: 2, time: 1000, area: ['100px', '65px']});
                     }
                 }
             })

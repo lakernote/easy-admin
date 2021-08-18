@@ -2,6 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.ResultTable;
@@ -61,13 +62,13 @@ public class SysDeptController {
 
     @GetMapping("/data")
     public ResultTable data(SysDept param) {
-        List<SysDept> data = sysDeptService.list();
+        List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery().eq(SysDept::getStatus, true));
         return ResultTable.dataTable(data);
     }
 
     @GetMapping("/tree")
     public ResultTree tree(SysDept param) {
-        List<SysDept> data = sysDeptService.list();
+        List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery().eq(SysDept::getStatus, true));
         return ResultTree.data(data);
     }
 
