@@ -190,8 +190,8 @@
             layer.confirm('确定要删除该部门', {icon: 3, title: '提示'}, function (index) {
                 layer.close(index);
                 let loading = layer.load();
-                $.ajax({
-                    url: EasyAdminContext.url + "/sys/dept/" + obj.data['deptId'],
+                easyAdmin.http({
+                    url: "/sys/dept/" + obj.data['deptId'],
                     dataType: 'json',
                     type: 'delete',
                     success: function (result) {
