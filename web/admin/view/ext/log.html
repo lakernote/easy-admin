@@ -55,7 +55,7 @@
 </script>
 <script type="text/html" id="log-bar">
     {{#if (d.status) { }}
-    <button class="pear-btn pear-btn-sm pear-btn-success" lay-event="edit2"><i class="layui-icon layui-icon-ok"></i>
+    <button class="pear-btn pear-btn-sm pear-btn-success" lay-event="edit2">
         成功
     </button>
     {{# }else if(!d.status){ }}
@@ -89,40 +89,40 @@
                         }
                     },
                     {
+                        title: '归属',
+                        field: 'city',
+                        align: 'center',
+                        width: 160
+                    },
+                    {
+                        title: '请求URI',
+                        field: 'uri',
+                        align: 'center',
+                        width: 160
+                    },
+                    {
+                        title: 'Client',
+                        field: 'client',
+                        align: 'center',
+                        width: 300
+                    },
+                    {
                         title: '请求IP',
                         field: 'ip',
                         align: 'center',
                         width: 100
                     },
                     {
-                        title: '归属',
-                        field: 'city',
-                        align: 'center',
-                        width: 100
-                    },
-                    {
-                        title: '请求URI',
-                        field: 'uri',
-                        align: 'center',
-                        width: 200
-                    },
-                    {
-                        title: 'Client',
-                        field: 'client',
-                        align: 'center',
-                        width: 150
-                    },
-                    {
                         title: '请求内容',
                         field: 'request',
                         align: 'center',
-                        width: 150
+                        width: 100
                     },
                     {
                         title: '响应内容',
                         field: 'response',
                         align: 'center',
-                        width: 150
+                        width: 80
                     },
                     {
                         title: '耗时ms',
@@ -134,14 +134,14 @@
                         title: '访问时间',
                         field: 'createTime',
                         align: 'center',
-                        width: 150
+                        width: 160
                     }
                     ,
                     {
                         title: '访问状态',
                         field: 'status',
                         align: 'center',
-                        width: 80,
+                        width: 60,
                         templet: '#log-bar'
                     }
                 ]
