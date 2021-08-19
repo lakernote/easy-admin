@@ -3,7 +3,6 @@ package com.laker.admin.utils.http;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -36,16 +35,15 @@ public class HttpServletRequestUtil {
     /**
      * 获取getRequestURI
      *
-     * @return
+     * @return /sys/user/getInfo?id=1
      */
     public static String getRequestURI() {
         HttpServletRequest request = getRequest();
         String queryString = request.getQueryString();
         if (!StringUtils.hasText(queryString)) {
-            return request.getRequestURL().toString();
+            return request.getRequestURI();
         }
-        StringBuffer urlBuffer = request.getRequestURL().append("?").append(queryString);
-        return urlBuffer.toString();
+        return request.getRequestURI() + "?" + queryString;
 
     }
 
@@ -54,14 +52,14 @@ public class HttpServletRequestUtil {
      *
      * @return
      */
-    public static String getRequestUserAgent() {
+    public static UserAgent getRequestUserAgent() {
         HttpServletRequest request = getRequest();
         UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
-        return JSONUtil.toJsonStr(userAgent);
+        return userAgent;
 
     }
 
-    public static String getRemoteAddress() {
+    public static String getRemoteIP() {
         HttpServletRequest request = getRequest();
         if (request == null) {
             return "unknown";
@@ -82,6 +80,11 @@ public class HttpServletRequestUtil {
 
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
+        }
+        // 多次反向代理后会有多个IP值，第一个为真实IP。
+        int index = ip.indexOf(',');
+        if (index != -1) {
+            ip = ip.substring(0, index);
         }
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
@@ -128,7 +131,7 @@ public class HttpServletRequestUtil {
     public static String getAllRequestInfo() {
         StringBuilder sb = new StringBuilder();
         sb.append("请求详情为：").append(StrUtil.CRLF);
-        sb.append("RemoteAddress: ").append(getRemoteAddress()).append(StrUtil.CRLF);
+        sb.append("RemoteAddress: ").append(getRemoteIP()).append(StrUtil.CRLF);
         sb.append("Method: ").append(getRequest().getMethod()).append(StrUtil.CRLF);
         sb.append("URI: ").append(getRequestURI()).append(StrUtil.CRLF);
         sb.append("Headers: ").append(StrUtil.join(StrUtil.CRLF + "         ", mapToList(getHeaders()))).append(StrUtil.CRLF);

@@ -11,9 +11,13 @@ import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
+import com.laker.admin.module.sys.entity.SysUser;
+import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 public class ExtLogController {
     @Autowired
     IExtLogService extLogService;
+    @Autowired
+    ISysUserService sysUserService;
 
     @GetMapping
     @ApiOperation(value = "日志分页查询")
@@ -43,7 +49,15 @@ public class ExtLogController {
         }
         queryWrapper.orderByDesc(ExtLog::getCreateTime);
         Page pageList = extLogService.page(roadPage, queryWrapper);
-        return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
+        List<ExtLog> records = pageList.getRecords();
+        records.forEach(extLog -> {
+            if (extLog.getUserId() != null) {
+                SysUser sysUser = sysUserService.getById(extLog.getUserId());
+                extLog.setUser(sysUser);
+            }
+
+        });
+        return PageResponse.ok(records, pageList.getTotal());
     }
 
     @PostMapping

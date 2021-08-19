@@ -53,6 +53,17 @@
         删除
     </button>
 </script>
+<script type="text/html" id="log-bar">
+    {{#if (d.status) { }}
+    <button class="pear-btn pear-btn-sm pear-btn-success" lay-event="edit2"><i class="layui-icon layui-icon-ok"></i>
+        成功
+    </button>
+    {{# }else if(!d.status){ }}
+    <button class="pear-btn pear-btn-sm pear-btn-danger"><i class="layui-icon layui-icon-help"></i>
+        异常
+    </button>
+    {{# } }}
+</script>
 
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
@@ -65,10 +76,17 @@
                     type: 'checkbox'
                 },
                     {
-                        title: '用户id',
-                        field: 'userId',
+                        title: '用户',
+                        field: 'user.nickName',
                         align: 'center',
-                        width: 80
+                        width: 80,
+                        templet: function (d) {
+                            if (d.user != null) {
+                                return d.user.nickName;
+                            } else {
+                                return "";
+                            }
+                        }
                     },
                     {
                         title: '请求IP',
@@ -77,19 +95,28 @@
                         width: 100
                     },
                     {
-                        title: '请求方法',
-                        field: 'method',
-                        align: 'center'
+                        title: '归属',
+                        field: 'city',
+                        align: 'center',
+                        width: 100
                     },
                     {
                         title: '请求URI',
                         field: 'uri',
-                        align: 'center'
+                        align: 'center',
+                        width: 200
+                    },
+                    {
+                        title: 'Client',
+                        field: 'client',
+                        align: 'center',
+                        width: 150
                     },
                     {
                         title: '请求内容',
                         field: 'request',
-                        align: 'center'
+                        align: 'center',
+                        width: 150
                     },
                     {
                         title: '响应内容',
@@ -101,19 +128,21 @@
                         title: '耗时ms',
                         field: 'cost',
                         align: 'center',
-                        width: 80
+                        width: 70
                     },
                     {
-                        title: 'Client信息',
-                        field: 'client',
-                        align: 'center',
-                        width: 80
-                    },
-                    {
-                        title: '创建时间',
+                        title: '访问时间',
                         field: 'createTime',
                         align: 'center',
                         width: 150
+                    }
+                    ,
+                    {
+                        title: '访问状态',
+                        field: 'status',
+                        align: 'center',
+                        width: 80,
+                        templet: '#log-bar'
                     }
                 ]
             ]

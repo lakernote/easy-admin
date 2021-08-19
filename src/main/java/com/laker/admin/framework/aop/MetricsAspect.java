@@ -2,9 +2,11 @@ package com.laker.admin.framework.aop;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.UserAgent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
+import com.laker.admin.utils.IP2CityUtil;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -45,10 +47,17 @@ public class MetricsAspect {
         Object returnValue;
         Instant start = Instant.now();
         ExtLog logBean = new ExtLog();
-        logBean.setIp(HttpServletRequestUtil.getRemoteAddress());
+        logBean.setIp(HttpServletRequestUtil.getRemoteIP());
+        if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
+            String cityInfo = IP2CityUtil.getCityInfo(logBean.getIp());
+            String[] split = cityInfo.split("|");
+            logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
+        }
         logBean.setUri(HttpServletRequestUtil.getRequestURI());
         logBean.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
-        logBean.setClient(HttpServletRequestUtil.getRequestUserAgent());
+        UserAgent userAgent = HttpServletRequestUtil.getRequestUserAgent();
+        String client = userAgent.getOs().getName() + "." + userAgent.getBrowser().getName();
+        logBean.setClient(client);
         logBean.setRequest(objectMapper.writeValueAsString(pjp.getArgs()));
         logBean.setMethod(name);
         logBean.setStatus(true);
