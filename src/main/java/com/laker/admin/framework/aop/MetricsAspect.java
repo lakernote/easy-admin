@@ -50,7 +50,7 @@ public class MetricsAspect {
         logBean.setIp(HttpServletRequestUtil.getRemoteIP());
         if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
             String cityInfo = IP2CityUtil.getCityInfo(logBean.getIp());
-            String[] split = cityInfo.split("|");
+            String[] split = cityInfo.split("\\|");
             logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
         }
         logBean.setUri(HttpServletRequestUtil.getRequestURI());
