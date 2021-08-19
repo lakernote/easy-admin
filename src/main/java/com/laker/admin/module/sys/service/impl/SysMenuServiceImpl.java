@@ -60,6 +60,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             menuVO.setIcon(e.getIcon());
             menuVO.setOpenType(e.getOpenType());
             menuVO.setType(e.getType());
+            menuVO.setPowerCode(e.getPowerCode());
             menuInfo.add(menuVO);
         }
         return TreeUtil.toTree(menuInfo, 0L);

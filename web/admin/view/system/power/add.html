@@ -19,7 +19,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="权限名称"
+                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="菜单名称"
                                class="layui-input">
                     </div>
                 </div>
@@ -93,6 +93,11 @@
         let iconPicker = layui.iconPicker;
         let dtree = layui.dtree;
         let easyAdmin = layui.easyAdmin;
+        $("#powerUrlItem").show();
+        $("#powerCodeItem").hide();
+        $("#openTypeItem").show();
+        $("#powerCode").val("");
+
         easyAdmin.httpGet("/sys/menu/selectTree", function (result) {
             dtree.renderSelect({
                 elem: "#selectParent",

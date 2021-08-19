@@ -22,5 +22,7 @@ public class MenuVo {
 
     private Integer type;
 
+    private String powerCode;
+
     private List<MenuVo> children;
 }
