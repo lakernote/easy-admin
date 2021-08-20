@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.ext.entity.ExtLeave;
 import com.laker.admin.module.ext.service.IExtLeaveService;
 import com.laker.admin.module.flow.SnakerEngineFacets;
@@ -31,6 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/ext/leave")
+@Metrics
 public class ExtLeaveController {
     @Autowired
     IExtLeaveService extLeaveService;
