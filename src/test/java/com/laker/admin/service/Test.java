@@ -10,7 +10,7 @@ public class Test {
         String s = SecureUtil.sha256("lakernote");
         System.out.println(s);
 
-        String cityInfo = IP2CityUtil.getCityInfo("203.119.241.114");
+        String cityInfo = IP2CityUtil.getCityInfo("120.36.3.41");
         System.out.println(cityInfo);
         String[] split = cityInfo.split("\\|");
         System.out.println(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));

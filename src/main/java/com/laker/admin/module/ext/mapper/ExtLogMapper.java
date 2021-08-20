@@ -1,7 +1,12 @@
 package com.laker.admin.module.ext.mapper;
 
-import com.laker.admin.module.ext.entity.ExtLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.laker.admin.module.ext.entity.ExtLog;
+import com.laker.admin.module.ext.vo.LogStatisticsTop10Vo;
+import com.laker.admin.module.ext.vo.LogStatisticsVo;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +17,29 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-08-16
  */
 public interface ExtLogMapper extends BaseMapper<ExtLog> {
+
+
+    @Select("select DATE_FORMAT(create_time,'%Y-%m-%d') date,count(*) value from ext_log where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= create_time  group by date ORDER BY create_time ")
+    List<LogStatisticsVo> selectStatistics7Day();
+
+    @Select("SELECT\n" +
+            "\tw.ip,\n" +
+            "\t( SELECT n.city FROM ext_log n WHERE n.ip = w.ip ORDER BY n.create_time LIMIT 1 ) city,\n" +
+            "\tcount( * ) \n" +
+            "VALUE\n" +
+            "\t\n" +
+            "FROM\n" +
+            "\text_log w \n" +
+            "WHERE\n" +
+            "\tDATE_SUB( CURDATE( ), INTERVAL  12 HOUR  ) <= w.create_time \n" +
+            "GROUP BY\n" +
+            "\tw.ip \n" +
+            "ORDER BY\n" +
+            "\t\n" +
+            "VALUE\n" +
+            "DESC\n" +
+            "\n" +
+            "LIMIT 10")
+    List<LogStatisticsTop10Vo> selectStatisticsVisitsTop10IP();
 
 }

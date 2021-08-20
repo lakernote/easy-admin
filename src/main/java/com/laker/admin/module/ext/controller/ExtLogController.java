@@ -6,9 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.PageResponse;
+import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.ext.entity.ExtLog;
+import com.laker.admin.module.ext.mapper.ExtLogMapper;
 import com.laker.admin.module.ext.service.IExtLogService;
+import com.laker.admin.module.ext.vo.LogStatisticsTop10Vo;
+import com.laker.admin.module.ext.vo.LogStatisticsVo;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +38,10 @@ import java.util.List;
 public class ExtLogController {
     @Autowired
     IExtLogService extLogService;
+
+    @Autowired
+    ExtLogMapper extLogMapper;
+
     @Autowired
     ISysUserService sysUserService;
 
@@ -59,5 +67,20 @@ public class ExtLogController {
 
         });
         return PageResponse.ok(records, pageList.getTotal());
+    }
+
+
+    @GetMapping("/visits7day")
+    @ApiOperation(value = "7天访问量")
+    public Response visits7day() {
+        List<LogStatisticsVo> logStatisticsVo = extLogMapper.selectStatistics7Day();
+        return Response.ok(logStatisticsVo);
+    }
+
+    @GetMapping("/visitsTop10IP")
+    @ApiOperation(value = "visitsTop10IP")
+    public PageResponse visitsTop10IP() {
+        List<LogStatisticsTop10Vo> logStatisticsVo = extLogMapper.selectStatisticsVisitsTop10IP();
+        return PageResponse.ok(logStatisticsVo, 10L);
     }
 }
