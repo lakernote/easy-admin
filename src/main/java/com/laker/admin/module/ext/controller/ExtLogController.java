@@ -1,13 +1,11 @@
 package com.laker.admin.module.ext.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.PageResponse;
-import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
@@ -15,7 +13,10 @@ import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -58,29 +59,5 @@ public class ExtLogController {
 
         });
         return PageResponse.ok(records, pageList.getTotal());
-    }
-
-    @PostMapping
-    @ApiOperation(value = "新增或者更新日志")
-    public Response saveOrUpdate(@RequestBody ExtLog param) {
-        return Response.ok(extLogService.saveOrUpdate(param));
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation(value = "根据id查询日志")
-    public Response get(@PathVariable Long id) {
-        return Response.ok(extLogService.getById(id));
-    }
-
-    @DeleteMapping("/{id}")
-    @ApiOperation(value = "根据id删除日志")
-    public Response delete(@PathVariable Long id) {
-        return Response.ok(extLogService.removeById(id));
-    }
-
-    @DeleteMapping("/batch/{ids}")
-    @ApiOperation(value = "根据批量删除ids删除")
-    public Response batchRemove(@PathVariable Long[] ids) {
-        return Response.ok(extLogService.removeByIds(CollUtil.toList(ids)));
     }
 }

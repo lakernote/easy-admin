@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -43,18 +44,21 @@ public class SysDeptController {
 
     @PostMapping
     @ApiOperation(value = "新增或者更新")
+    @SaCheckPermission("dept.update")
     public Response saveOrUpdate(@RequestBody SysDept param) {
         return Response.ok(sysDeptService.saveOrUpdate(param));
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id查询")
+    @SaCheckPermission("dept.detail")
     public Response get(@PathVariable Long id) {
         return Response.ok(sysDeptService.getById(id));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除")
+    @SaCheckPermission("dept.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysDeptService.removeById(id));
     }

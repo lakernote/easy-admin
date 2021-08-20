@@ -212,7 +212,10 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                     easyAdmin.TableRemove(obj, uri + "/" + obj.data[module + 'Id']);
                 } else if (obj.event === 'edit') {
                     easyAdmin.JumpEdit(module, obj.data[module + 'Id']);
+                } else if (obj.event === 'diagram') {
+                    easyAdmin.JumpDiagram(obj);
                 }
+
             });
         }
 
@@ -375,6 +378,16 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 shade: 0.1,
                 area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
                 content: path + '/add.html'
+            });
+        }
+
+        this.JumpDiagram = function (obj) {
+            layer.open({
+                type: 2,
+                title: '查看流程图',
+                shade: 0.1,
+                area: [common.isModile() ? '100%' : '980px', common.isModile() ? '100%' : '500px'],
+                content: ['../flow/diagram.html?orderId=' + obj.data.orderId, 'no']
             });
         }
         /**

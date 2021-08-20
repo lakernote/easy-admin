@@ -1,6 +1,8 @@
 package com.laker.admin.framework.ext.mybatis;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
+import com.laker.admin.framework.EasyAdminSecurityUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
@@ -29,18 +31,23 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
     @Override
     public Expression getSqlSegment(Expression where, String mappedStatementId) {
 
-        // 1. 获取权限过滤相关信息
-        DataFilterMetaData dataFilterMetaData = DataFilterThreadLocal.get();
+        // TODO 暂时哪些要做过滤
+        if (!StrUtil.contains(mappedStatementId, "ExtLeaveMapper")) {
+            return where;
+        }
         try {
-//            log.info("开始进行权限过滤,dataFilterMetaData:{} , where: {},mappedStatementId: {}", dataFilterMetaData, where, mappedStatementId);
-            if (dataFilterMetaData == null) {
+            // 1. 获取权限过滤相关信息
+            UserInfoAndPowers userInfoAndPowers = EasyAdminSecurityUtils.getCurrentUserInfo();
+            if (userInfoAndPowers == null) {
                 return where;
             }
+
+            log.info("开始进行权限过滤,dataFilterMetaData:{} , where: {},mappedStatementId: {}", userInfoAndPowers, where, mappedStatementId);
             Expression expression = new HexValue(" 1 = 1 ");
             if (where == null) {
                 where = expression;
             }
-            switch (dataFilterMetaData.filterType) {
+            switch (userInfoAndPowers.filterType) {
                 // 查看全部
                 case ALL:
                     return where;
@@ -48,7 +55,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                 case DEPT_SETS:
                     // 创建IN 表达式
                     // 创建IN范围的元素集合
-                    Set<Long> deptIds = dataFilterMetaData.getDeptIds();
+                    Set<Long> deptIds = userInfoAndPowers.getDeptIds();
                     // 把集合转变为JSQLParser需要的元素列表
                     ItemsList itemsList = new ExpressionList(deptIds.stream().map(LongValue::new).collect(Collectors.toList()));
                     InExpression inExpression = new InExpression(new Column("create_dept_id"), itemsList);
@@ -59,7 +66,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                     // dept_id = deptId
                     EqualsTo equalsTo = new EqualsTo();
                     equalsTo.setLeftExpression(new Column("create_dept_id"));
-                    equalsTo.setRightExpression(new LongValue(dataFilterMetaData.getDeptId()));
+                    equalsTo.setRightExpression(new LongValue(userInfoAndPowers.getDeptId()));
                     // 创建 AND 表达式 拼接Where 和 = 表达式
                     // WHERE xxx AND dept_id = 3
                     return new AndExpression(where, equalsTo);
@@ -68,17 +75,16 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                     // create_by = userId
                     EqualsTo selfEqualsTo = new EqualsTo();
                     selfEqualsTo.setLeftExpression(new Column("create_by"));
-                    selfEqualsTo.setRightExpression(new LongValue(dataFilterMetaData.getUserId()));
+                    selfEqualsTo.setRightExpression(new LongValue(userInfoAndPowers.getUserId()));
                     return new AndExpression(where, selfEqualsTo);
                 case DIY:
-                    return new AndExpression(where, new StringValue(dataFilterMetaData.getSql()));
+                    return new AndExpression(where, new StringValue(userInfoAndPowers.getSql()));
                 default:
                     break;
             }
         } catch (Exception e) {
             log.error("LakerDataPermissionHandler.err", e);
         } finally {
-            DataFilterThreadLocal.clear();
         }
         return where;
     }

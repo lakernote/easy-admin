@@ -2,15 +2,22 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
+import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
+import com.laker.admin.module.sys.entity.SysUserRole;
+import com.laker.admin.module.sys.service.ISysRoleService;
+import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +28,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(tags = "认证授权")
 @ApiSupport(order = 2)
@@ -33,6 +43,10 @@ public class LoginController {
     ISysUserService sysUserService;
     @Autowired
     ICache iCache;
+    @Autowired
+    ISysUserRoleService sysUserRoleService;
+    @Autowired
+    ISysRoleService sysRoleService;
 
     @PostMapping("/api/v1/login")
     @ApiOperationSupport(order = 1)
@@ -51,9 +65,22 @@ public class LoginController {
             return Response.error("5001", "用户名或密码不正确");
         }
         if (sysUser.getEnable().intValue() == 0) {
-            return Response.error("5001", "用户:" + loginDto.getUsername()+"已被禁用");
+            return Response.error("5001", "用户:" + loginDto.getUsername() + "已被禁用");
         }
         StpUtil.login(sysUser.getUserId());
+        List<SysUserRole> userRoles = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, sysUser.getUserId()));
+        List<Long> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId()).collect(Collectors.toList());
+        List<SysRole> roleList = sysRoleService.list(Wrappers.<SysRole>lambdaQuery().in(SysRole::getRoleId, roleIds).eq(SysRole::getEnable, true).eq(SysRole::getRoleType, 2));
+        UserInfoAndPowers.UserInfoAndPowersBuilder userInfoAndPowersBuilder = UserInfoAndPowers.builder()
+                .deptId(sysUser.getDeptId())
+                .userId(sysUser.getUserId());
+        if (CollUtil.size(roleList) == 1) {
+            userInfoAndPowersBuilder.filterType(roleList.get(0).getDataType());
+        } else {
+            log.warn("用户：{}，数据权限配置异常，数据权限：{}", sysUser.getUserId(), CollUtil.size(roleList));
+        }
+        StpUtil.getSession().set(EasyAdminConstants.CURRENT_USER, userInfoAndPowersBuilder.build());
+
         return Response.ok(StpUtil.getTokenInfo());
     }
 

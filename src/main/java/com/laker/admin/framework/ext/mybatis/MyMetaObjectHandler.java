@@ -1,6 +1,8 @@
 package com.laker.admin.framework.ext.mybatis;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.laker.admin.framework.EasyAdminConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,9 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.info("start insert fill ....");
         this.strictInsertFill(metaObject, "createTime", () -> LocalDateTime.now(), LocalDateTime.class);
-        this.strictInsertFill(metaObject, "operator", String.class, "张三");
+        this.strictInsertFill(metaObject, "createBy", Long.class, StpUtil.getLoginIdAsLong());
+        UserInfoAndPowers userInfoAndPowers = (UserInfoAndPowers) StpUtil.getSession().get(EasyAdminConstants.CURRENT_USER);
+        this.strictInsertFill(metaObject, "createDeptId", Long.class, userInfoAndPowers.getDeptId());
     }
 
     @Override

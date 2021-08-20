@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -65,6 +66,7 @@ public class SysUserController {
     @PostMapping
     @ApiOperation(value = "新增或者更新")
     @Transactional
+    @SaCheckPermission("user.update")
     public Response saveOrUpdate(@RequestBody SysUser param) {
 
         if (param.getUserId() == null) {
@@ -108,6 +110,7 @@ public class SysUserController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除")
+    @SaCheckPermission("user.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysUserService.removeById(id));
     }

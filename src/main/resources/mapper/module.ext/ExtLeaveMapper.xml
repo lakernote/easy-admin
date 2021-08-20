@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laker.admin.module.ext.mapper.ExtLeaveMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.laker.admin.module.ext.entity.ExtLeave">
+        <id column="leave_id" property="leaveId" />
+        <result column="leave_day" property="leaveDay" />
+        <result column="leave_reason" property="leaveReason" />
+        <result column="leave_user_id" property="leaveUserId" />
+        <result column="create_by" property="createBy" />
+        <result column="create_dept_id" property="createDeptId" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        leave_id, leave_day, leave_reason, leave_user_id, create_by, create_dept_id, create_time
+    </sql>
+
+</mapper>

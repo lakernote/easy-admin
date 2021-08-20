@@ -1,5 +1,6 @@
 package com.laker.admin.framework.ext.mybatis;
 
+import com.laker.admin.module.enums.DataFilterTypeEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,8 +9,8 @@ import java.util.Set;
 
 @Data
 @Builder
-public class DataFilterMetaData {
-    DataFilterTypeEnum filterType = DataFilterTypeEnum.ALL;
+public class UserInfoAndPowers {
+    DataFilterTypeEnum filterType = DataFilterTypeEnum.SELF;
     private Long userId;
     private String userName;
     private Long deptId;
@@ -19,4 +20,9 @@ public class DataFilterMetaData {
     private String userTableAlias;
     private String sql;
     private Set<Long> deptIds;
+
+    public Boolean isSuperAdmin() {
+        return userId.longValue() == 1L;
+    }
+
 }

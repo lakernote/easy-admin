@@ -1,5 +1,6 @@
-package com.laker.admin.framework.ext.mybatis;
+package com.laker.admin.module.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,6 +12,8 @@ public enum DataFilterTypeEnum {
     SELF(3, "本人"),
     DEPT_SETS(4, "自定义组织机构"),
     DIY(5, "自定义sql过滤");
-    int type;
-    String desc;
+
+    @EnumValue
+    private final int type;
+    private final String desc;
 }

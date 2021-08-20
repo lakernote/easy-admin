@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -50,6 +51,7 @@ public class SysMenuController {
 
     @PostMapping
     @ApiOperation(value = "新增或者更新系统菜单表")
+    @SaCheckPermission("menu.update")
     public Response saveOrUpdate(@RequestBody SysMenu param) {
         return Response.ok(sysMenuService.saveOrUpdate(param));
     }
@@ -77,6 +79,7 @@ public class SysMenuController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除系统菜单表")
+    @SaCheckPermission("menu.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysMenuService.removeById(id));
     }

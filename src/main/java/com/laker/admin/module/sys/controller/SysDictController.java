@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -40,6 +41,7 @@ public class SysDictController {
 
     @PostMapping
     @ApiOperation(value = "新增或者更新")
+    @SaCheckPermission("dict.update")
     public Response saveOrUpdate(@RequestBody SysDict param) {
         return Response.ok(sysDictService.saveOrUpdate(param));
     }
@@ -52,12 +54,14 @@ public class SysDictController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除")
+    @SaCheckPermission("dict.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysDictService.removeById(id));
     }
 
     @DeleteMapping("/batch/{ids}")
     @ApiOperation(value = "根据批量删除ids删除")
+    @SaCheckPermission("dict.delete")
     public Response batchRemove(@PathVariable Long[] ids) {
         return Response.ok(sysDictService.removeByIds(CollUtil.toList(ids)));
     }

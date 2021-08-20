@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.util.StrUtil;
 import com.laker.admin.config.LakerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class WebLogController {
 
     @RequestMapping(value = "/level") //动态设置日志级别
     @ResponseBody
+    @SaCheckPermission("weblog.update")
     public String configureLogLevel(String name, LogLevel configuredLevel) {
         if (StrUtil.isBlank(name)) {
             return "请输入日志名称";

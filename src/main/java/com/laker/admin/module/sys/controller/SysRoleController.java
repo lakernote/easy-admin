@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -16,6 +17,7 @@ import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -44,15 +46,18 @@ public class SysRoleController {
     @GetMapping
     @ApiOperation(value = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long current,
-                                @RequestParam(required = false, defaultValue = "10") long size) {
+                                @RequestParam(required = false, defaultValue = "10") long size,
+                                Integer roleType) {
         Page roadPage = new Page<>(current, size);
         LambdaQueryWrapper<SysRole> queryWrapper = new QueryWrapper().lambda();
+        queryWrapper.eq(SysRole::getRoleType, roleType);
         Page pageList = sysRoleService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
     @PostMapping
     @ApiOperation(value = "新增或者更新")
+    @SaCheckPermission("role.update")
     public Response saveOrUpdate(@RequestBody SysRole param) {
         return Response.ok(sysRoleService.saveOrUpdate(param));
     }
@@ -82,6 +87,8 @@ public class SysRoleController {
 
     @PutMapping("/saveRolePower")
     @ApiOperation(value = "保存角色权限数据")
+    @SaCheckPermission("role.update.power")
+    @Transactional(rollbackFor = Exception.class)
     public Response saveRolePower(Long roleId, String powerIds) {
         List<String> stringList = Arrays.asList(powerIds.split(","));
         sysRolePowerService.remove(Wrappers.<SysRolePower>lambdaQuery().eq(SysRolePower::getRoleId, roleId));
@@ -99,6 +106,7 @@ public class SysRoleController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除")
+    @SaCheckPermission("role.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysRoleService.removeById(id));
     }

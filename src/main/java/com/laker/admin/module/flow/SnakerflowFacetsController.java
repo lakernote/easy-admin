@@ -130,6 +130,9 @@ public class SnakerflowFacetsController {
     @RequestMapping(value = "/process/json", method = RequestMethod.GET)
     @Metrics
     public Object json(String processId, String orderId) {
+        if (StrUtil.isBlank(processId)) {
+            processId = snakerEngineFacets.getEngine().query().getHistOrder(orderId).getProcessId();
+        }
         Process process = snakerEngineFacets.getEngine().process().getProcessById(processId);
         AssertHelper.notNull(process);
         ProcessModel model = process.getModel();

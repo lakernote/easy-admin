@@ -36,6 +36,8 @@ public class SysUser implements Serializable {
     private String nickName;
 
     private Long deptId;
+    @TableField(exist = false)
+    private SysDept dept;
 
     private Integer sex;
 

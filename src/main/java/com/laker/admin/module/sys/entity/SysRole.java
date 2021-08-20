@@ -3,6 +3,7 @@ package com.laker.admin.module.sys.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.laker.admin.module.enums.DataFilterTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -47,6 +48,12 @@ public class SysRole implements Serializable {
     private Boolean enable;
 
     private LocalDateTime createTime;
+
+    private Integer roleType;
+
+    private DataFilterTypeEnum dataType;
+
+    private String dataSql;
 
     /**
      * 提供前端 显示
