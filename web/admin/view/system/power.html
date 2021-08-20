@@ -168,8 +168,8 @@
             layer.confirm('确定要删除该权限', {icon: 3, title: '提示'}, function (index) {
                 layer.close(index);
                 let loading = layer.load();
-                $.ajax({
-                    url: MODULE_PATH + "remove/" + obj.data['powerId'],
+                easyAdmin.http({
+                    url: "/sys/menu/" + obj.data['menuId'],
                     dataType: 'json',
                     type: 'delete',
                     success: function (result) {

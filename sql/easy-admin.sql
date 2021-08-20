@@ -11,7 +11,7 @@
  Target Server Version : 50528
  File Encoding         : 65001
 
- Date: 20/08/2021 12:17:56
+ Date: 20/08/2021 14:20:27
 */
 
 SET NAMES utf8mb4;
@@ -57,7 +57,7 @@ CREATE TABLE `ext_log`  (
   `cost` int(10) DEFAULT NULL COMMENT '耗时ms',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2666 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日志' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2815 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日志' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -127,7 +127,6 @@ CREATE TABLE `sys_menu`  (
 -- Records of sys_menu
 -- ----------------------------
 INSERT INTO `sys_menu` VALUES (1, 0, '工作空间', 'layui-icon layui-icon-cellphone', '', '', 0, 1, NULL, NULL, 0, '');
-INSERT INTO `sys_menu` VALUES (250, 1, '控制后台', 'layui-icon layui-icon-console', 'view/console/console1.html', '_iframe', 0, 1, NULL, NULL, 1, NULL);
 INSERT INTO `sys_menu` VALUES (251, 0, '系统管理', 'layui-icon layui-icon-set-fill', '', '', 0, 1, NULL, NULL, 0, NULL);
 INSERT INTO `sys_menu` VALUES (252, 251, '权限管理', 'layui-icon layui-icon layui-icon layui-icon-face-cry', 'view/system/power.html', '_iframe', 2, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (258, 251, '用户管理', 'layui-icon layui-icon-user', 'view/system/user.html', '_iframe', 1, 1, NULL, NULL, 1, 'user');
@@ -141,7 +140,6 @@ INSERT INTO `sys_menu` VALUES (265, 251, '流程实例', 'layui-icon ', 'view/fl
 INSERT INTO `sys_menu` VALUES (266, 251, '应用监控', 'layui-icon layui-icon layui-icon-auz', 'http://localhost:8080/monitoring', '_iframe', 10, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (268, 251, '接口文档', 'layui-icon layui-icon layui-icon layui-icon ', 'http://localhost:8080/doc.html', '_iframe', 5, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (269, 1, '任务列表', 'layui-icon ', 'view/flow/taskList.html', '_iframe', 1, 1, NULL, NULL, 1, '');
-INSERT INTO `sys_menu` VALUES (270, 1, '请假申请', 'layui-icon ', 'view/flow/process/leave.html', '_iframe', 4, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (280, 251, '角色管理', 'layui-icon layui-icon ', 'view/system/role.html', '_iframe', 3, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (281, 251, '部门管理', 'layui-icon layui-icon ', 'view/system/deptment.html', '_iframe', 4, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (282, 1, '配套专栏', 'layui-icon layui-icon layui-icon layui-icon ', 'https://blog.csdn.net/abu935009066/category_10817814.html', '_iframe', 3, 1, NULL, NULL, 1, '');
