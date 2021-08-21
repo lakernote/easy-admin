@@ -13,7 +13,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">请假天数</label>
                 <div class="layui-input-block">
-                    <input type="text" name="leaveDay" lay-verify="title" lay-verify="required"
+                    <input type="text" name="leaveDay" lay-verify="required|number"
                            autocomplete="off"
                            placeholder="请输入"
                            class="layui-input">
@@ -22,7 +22,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">请假原因</label>
                 <div class="layui-input-block">
-                    <input type="text" name="leaveReason" lay-verify="title" autocomplete="off"
+                    <input type="text" name="leaveReason" lay-verify="required|title" autocomplete="off"
                            placeholder="请输入"
                            class="layui-input">
                 </div>
