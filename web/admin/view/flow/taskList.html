@@ -27,50 +27,46 @@
 </body>
 
 <script type="text/html" id="lct-bar">
-    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>
+    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">流程图
     </button>
     <!--    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i>-->
     <!--    </button>-->
 </script>
 
 <script type="text/html" id="todo-bar">
-    <button class="pear-btn pear-btn-sm pear-btn-success" lay-event="agree"><i class="layui-icon layui-icon-ok"></i>
+    <button class="pear-btn pear-btn-sm pear-btn-success" lay-event="agree">同意
     </button>
-    <button class="pear-btn pear-btn-sm pear-btn-danger" lay-event="refuse"><i class="layui-icon layui-icon-help"></i>
+    <button class="pear-btn pear-btn-sm pear-btn-warming" lay-event="refuse">驳回
     </button>
 </script>
 
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'element', 'popup', 'easyAdmin'], function () {
+    layui.use(['table', 'form', 'jquery', 'element', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let element = layui.element;
-        var popup = layui.popup;
         var easyAdmin = layui.easyAdmin;
         let todoCols = [
             [
+                {title: '流程编号', field: 'orderNo', align: 'center'},
+                {title: '任务节点', field: 'taskName', align: 'center'},
+                {title: '任务到达时间', field: 'taskCreateTime', align: 'center'},
                 {title: '流程名称', field: 'processName', align: 'center'},
-                {title: '流程实例创建者', field: 'creator', align: 'center'},
-                {title: '流程实例创建时间', field: 'orderCreateTime', align: 'center'},
-                {title: '流程实例编号', field: 'orderNo', align: 'center'},
-                {title: '任务名称', field: 'taskName', align: 'center'},
-                {title: '任务创建时间', field: 'taskCreateTime', align: 'center'},
-                {title: '处理', toolbar: '#todo-bar', align: 'center', width: 150}
+                {title: '操作', toolbar: '#todo-bar', align: 'center', width: 150}
             ]
         ]
 
         let doneCols = [
             [
+                {title: '流程编号', field: 'orderNo', align: 'center'},
+                {title: '任务节点', field: 'taskName', align: 'center'},
+                {title: '任务到达时间', field: 'taskCreateTime', align: 'center'},
+                {title: '任务完成时间', field: 'taskEndTime', align: 'center'},
                 {title: '流程名称', field: 'processName', align: 'center'},
-                {title: '流程实例创建者', field: 'creator', align: 'center'},
-                {title: '流程实例创建时间', field: 'orderCreateTime', align: 'center'},
-                {title: '流程实例编号', field: 'orderNo', align: 'center'},
-                {title: '任务名称', field: 'taskName', align: 'center'},
-                {title: '任务创建时间', field: 'taskCreateTime', align: 'center'},
-                {title: '处理', toolbar: '#lct-bar', align: 'center', width: 150}
+                {title: '操作', toolbar: '#lct-bar', align: 'center', width: 150}
             ]
         ]
 
@@ -147,7 +143,7 @@
 
         window.refuse = function (obj) {
             easyAdmin.http({
-                url: "/flow/task/reject?taskId=" + obj.data['id'],
+                url: "/flow/task/rejectToCreate?taskId=" + obj.data['id'],
                 dataType: 'json',
                 type: 'get',
                 success: function () {

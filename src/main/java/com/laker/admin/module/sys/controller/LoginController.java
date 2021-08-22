@@ -73,7 +73,8 @@ public class LoginController {
         List<SysRole> roleList = sysRoleService.list(Wrappers.<SysRole>lambdaQuery().in(SysRole::getRoleId, roleIds).eq(SysRole::getEnable, true).eq(SysRole::getRoleType, 2));
         UserInfoAndPowers.UserInfoAndPowersBuilder userInfoAndPowersBuilder = UserInfoAndPowers.builder()
                 .deptId(sysUser.getDeptId())
-                .userId(sysUser.getUserId());
+                .userId(sysUser.getUserId())
+                .nickName(sysUser.getNickName());
         if (CollUtil.size(roleList) == 1) {
             userInfoAndPowersBuilder.filterType(roleList.get(0).getDataType());
         } else {

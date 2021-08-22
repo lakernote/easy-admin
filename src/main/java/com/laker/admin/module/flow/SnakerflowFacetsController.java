@@ -1,12 +1,16 @@
 package com.laker.admin.module.flow;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.module.flow.process.SnakerEngineFacets;
+import com.laker.admin.module.flow.process.SnakerHelper;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
@@ -87,6 +91,7 @@ public class SnakerflowFacetsController {
     @ApiOperation(value = "根据流程定义ID，删除流程定义", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/delete/{id}", method = RequestMethod.GET)
     @Metrics
+    @SaCheckPermission("flow.delete")
     public Response processDelete(@PathVariable("id") String id) {
         snakerEngineFacets.getEngine().process().undeploy(id);
         return Response.ok();
@@ -100,6 +105,7 @@ public class SnakerflowFacetsController {
      */
     @ApiOperation(value = "保存流程定义[web流程设计器]", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/deployXml", method = RequestMethod.POST)
+    @SaCheckPermission("flow.update")
     public boolean processDeploy(String model, String id) {
         InputStream input = null;
         try {
@@ -251,6 +257,25 @@ public class SnakerflowFacetsController {
         return Response.ok();
     }
 
+    /**
+     * 活动任务的驳回-驳回到发起人
+     */
+    @GetMapping("/task/rejectToCreate")
+    @ApiOperation(value = "任务的驳回-驳回到发起人", tags = "流程引擎-任务")
+    public Response activeTaskReject(String taskId) {
+        List<WorkItem> workItems = snakerEngineFacets.getEngine().query().getWorkItems(null, new QueryFilter().setTaskId(taskId));
+        if (CollUtil.isEmpty(workItems)) {
+            Response.error("500", "不存在任务喽");
+        }
+        WorkItem workItem = workItems.get(0);
+        Process process = snakerEngineFacets.getEngine().process().getProcessById(workItem.getProcessId());
+        ProcessModel model = process.getModel();
+        // 获取开始节点下面的第一个节点
+        String name = model.getStart().getOutputs().get(0).getTarget().getName();
+        snakerEngineFacets.executeAndJump(taskId, StpUtil.getLoginIdAsString(), null, name);
+        return Response.ok();
+    }
+
     @RequestMapping(value = "/task/approval", method = RequestMethod.GET)
     @ApiOperation(value = "【审批任务】同意", tags = "流程引擎-任务")
     public Response doApproval(String taskId, String reason) {
@@ -260,7 +285,7 @@ public class SnakerflowFacetsController {
 
 
     /**
-     * 历史任务撤回
+     * 历史任务撤回，这玩意只能撤回刚发出的且没有被处理的
      *
      * @param taskId
      * @return
@@ -297,27 +322,5 @@ public class SnakerflowFacetsController {
         snakerEngineFacets.getEngine().query().getHistoryOrders(page, filter);
 
         return PageResponse.ok(JSONUtil.parse(page.getResult()), page.getTotalCount());
-    }
-
-
-    /**
-     * @param name
-     * @param version
-     * @param args
-     * @return
-     */
-    @ApiOperation("模拟 相关参数和 流程")
-    @PostMapping("/startAndExecute")
-    public Response startAndExecute(String name, Integer version, @RequestBody Map args) {
-        args.put("user1", StpUtil.getLoginIdAsString());
-        args.put("user2", "17");
-        args.put("user3", "18");
-        Object day = args.get("day");
-        if (day != null) {
-            args.put("day", Integer.valueOf((String) day));
-        }
-
-        snakerEngineFacets.startAndExecute(name, version, StpUtil.getLoginIdAsString(), args);
-        return Response.ok();
     }
 }

@@ -14,7 +14,7 @@
  *  * limitations under the License.
  *
  */
-package com.laker.admin.module.flow;
+package com.laker.admin.module.flow.process;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;

@@ -2,17 +2,21 @@ package com.laker.admin.module.ext.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.laker.admin.framework.EasyAdminSecurityUtils;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.ext.entity.ExtLeave;
 import com.laker.admin.module.ext.service.IExtLeaveService;
-import com.laker.admin.module.flow.SnakerEngineFacets;
+import com.laker.admin.module.flow.process.BaseFlowController;
+import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
+import org.snaker.engine.SnakerEngine;
 import org.snaker.engine.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +37,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/ext/leave")
 @Metrics
-public class ExtLeaveController {
+public class ExtLeaveController extends BaseFlowController {
     @Autowired
     IExtLeaveService extLeaveService;
     @Autowired
     private SnakerEngineFacets snakerEngineFacets;
-
     @Autowired
     private ISysUserService sysUserService;
 
@@ -54,13 +57,14 @@ public class ExtLeaveController {
         List<ExtLeave> records = pageList.getRecords();
         records.forEach(extLeave -> {
             extLeave.setCreateUser(sysUserService.getUserAndDeptById(extLeave.getCreateBy()));
-            extLeave.setOrder(snakerEngineFacets.getEngine().query().getHistOrder(extLeave.getOrderId()));
+            this.setFlowStatusInfo(extLeave);
+
         });
         return PageResponse.ok(records, pageList.getTotal());
     }
 
     @PostMapping
-    @ApiOperation(value = "新增或者更新")
+    @ApiOperation(value = "发起请假")
     @Transactional(rollbackFor = Exception.class)
     public Response saveOrUpdate(@RequestBody ExtLeave param) {
         if (param.getLeaveId() == null) {
@@ -70,6 +74,7 @@ public class ExtLeaveController {
             args.put("user2", "17");
             args.put("user3", "18");
             args.put("day", param.getLeaveDay());
+            args.put(SnakerEngine.ID, EasyAdminSecurityUtils.getCurrentUserInfo().getNickName() + "-" + DateUtil.now() + "的请假申请");
             Order leave = snakerEngineFacets.startAndExecute("leave", 2, StpUtil.getLoginIdAsString(), args);
             param.setOrderId(leave.getId());
             extLeaveService.saveOrUpdate(param);

@@ -214,6 +214,24 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                     easyAdmin.JumpEdit(module, obj.data[module + 'Id']);
                 } else if (obj.event === 'diagram') {
                     easyAdmin.JumpDiagram(obj);
+                } else if (obj.event === 'undo') { //流程撤回
+                    easyAdmin.httpGet("/flow/task/undo?taskId=" + obj.data.createTaskId, function (result) {
+                        if (result.success) {
+                            layer.msg("撤回成功", {
+                                icon: 1,
+                                area: ['100px', '65px'],
+                                time: 1000
+                            }, function () {
+                                table.reload('table');
+                            });
+                        } else {
+                            layer.msg("后续活动任务已完成或不存在，无法撤回", {
+                                icon: 2,
+                                area: ['350px', '65px'],
+                                time: 1000
+                            });
+                        }
+                    });
                 }
 
             });

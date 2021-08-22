@@ -36,10 +36,10 @@
 
 <script type="text/html" id="record-toolbar">
     <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">
-        <i class="layui-icon layui-icon-edit"></i>
+        详情
     </button>
-    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">
-        <i class="layui-icon layui-icon-delete"></i>
+    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="undo">
+        撤回
     </button>
     <button class="pear-btn pear-btn-success pear-btn-sm" lay-event="diagram">
         流程图
@@ -61,58 +61,60 @@
         let easyAdmin = layui.easyAdmin;
 
         let cols = [
-                [{
-                    type: 'checkbox'
-                },
+                [
                     {
                         title: '请假天数',
                         field: 'leaveDay',
                         align: 'center',
-                        width: 100
                     },
                     {
                         title: '请假原因',
                         field: 'leaveReason',
                         align: 'center',
-                        width: 120
                     },
                     {
                         title: '创建人',
                         field: 'createBy',
                         align: 'center',
-                        width: 120,
                         templet: '<div>{{d.createUser.nickName}}</div>'
                     },
                     {
                         title: '创建人部门',
                         field: 'createDeptId',
                         align: 'center',
-                        width: 120,
                         templet: '<div>{{d.createUser.dept.deptName}}</div>'
                     },
                     {
-                        title: '创建时间',
+                        title: '申请时间',
                         field: 'createTime',
-                        align: 'center',
-                        width: 160
+                        align: 'center'
                     },
                     {
                         title: '状态',
                         field: 'createTime',
                         align: 'center',
-                        width: 160,
                         templet: function (d) {
-                            if (d.order.orderState == 0) {
+                            if (d.orderState == 0) {
                                 return '<span style="color: #eb7350;">审批完成</span>'
                             }
                             return '<span style="color: #00b487;">审批中</span>'
                         }
                     },
                     {
+                        title: '当前节点',
+                        field: 'taskName',
+                        align: 'center'
+                    },
+                    {
+                        title: '当前处理人',
+                        field: 'taskOperatorName',
+                        align: 'center'
+                    },
+                    {
                         title: '操作',
                         toolbar: '#record-toolbar',
                         align: 'center',
-                        width: 200
+                        width: 250
                     }
                 ]
             ]

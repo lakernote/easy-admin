@@ -120,7 +120,11 @@
                         parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
                         parent.layui.table.reload("user-table");
                     } else {
-                        alert('数据处理错误！');
+                        layer.msg("没有修改权限哦！flow.update", {
+                            icon: 2,
+                            time: 1000,
+                            area: ['300px', '65px']
+                        });
                     }
                 }
             });

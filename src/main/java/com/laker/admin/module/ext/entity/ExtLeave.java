@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.laker.admin.module.flow.process.BaseFlowStatus;
 import com.laker.admin.module.sys.entity.SysUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.snaker.engine.entity.HistoryOrder;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ExtLeave implements Serializable {
+public class ExtLeave extends BaseFlowStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -66,12 +66,4 @@ public class ExtLeave implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
-
-    private String orderId;
-
-    @TableField(exist = false)
-    private HistoryOrder order;
-
-
 }
