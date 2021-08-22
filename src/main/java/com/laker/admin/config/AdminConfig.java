@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
- * 增加依赖
- * <dependency>
- * <groupId>org.springframework.boot</groupId>
- * <artifactId>spring-boot-configuration-processor</artifactId>
- * <optional>true</optional>
- * </dependency>
+ * 自定义配置
+ *
+ * @author laker
  */
 @Configuration
 @Data

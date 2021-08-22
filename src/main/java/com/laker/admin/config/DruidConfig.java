@@ -23,6 +23,7 @@ import java.io.IOException;
 
 /**
  * durid 监控页面配置 默认地址 localhost:8080/druid/login.html
+ * @author laker
  */
 @Configuration
 @Slf4j

@@ -12,6 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
  * ip:port/doc.html
+ * @author longli
  */
 @Configuration
 @EnableSwagger2WebMvc

@@ -24,21 +24,19 @@ public interface ExtLogMapper extends BaseMapper<ExtLog> {
 
     @Select("SELECT\n" +
             "\tw.ip,\n" +
-            "\t( SELECT n.city FROM ext_log n WHERE n.ip = w.ip ORDER BY n.create_time LIMIT 1 ) city,\n" +
+            "\tcity,\n" +
             "\tcount( * ) \n" +
-            "VALUE\n" +
-            "\t\n" +
+            "\tVALUE\t\n" +
             "FROM\n" +
             "\text_log w \n" +
             "WHERE\n" +
-            "\tDATE_SUB( CURDATE( ), INTERVAL  12 HOUR  ) <= w.create_time \n" +
+            "\tDATE_SUB( CURDATE( ), INTERVAL 1 day ) <= w.create_time \n" +
             "GROUP BY\n" +
             "\tw.ip \n" +
             "ORDER BY\n" +
             "\t\n" +
             "VALUE\n" +
-            "DESC\n" +
-            "\n" +
+            "DESC \n" +
             "LIMIT 10")
     List<LogStatisticsTop10Vo> selectStatisticsVisitsTop10IP();
 
