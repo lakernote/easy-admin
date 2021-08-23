@@ -155,6 +155,12 @@
             <artifactId>ip2region</artifactId>
             <version>1.7.2</version>
         </dependency>
+        <!-- nginx配置文件处理 -->
+        <dependency>
+            <groupId>com.github.odiszapc</groupId>
+            <artifactId>nginxparser</artifactId>
+            <version>0.9.6</version>
+        </dependency>
     </dependencies>
 
     <build>
