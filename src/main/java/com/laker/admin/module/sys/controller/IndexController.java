@@ -39,7 +39,7 @@ public class IndexController {
 //        ChineseGifCaptcha specCaptcha = new ChineseGifCaptcha(130, 48, 4);
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48);
         // 几位数运算，默认是两位
-        captcha.setLen(3);
+        captcha.setLen(2);
         captcha.getArithmeticString();  // 获取运算的公式：3+2=?
         captcha.text();  // 获取运算的结果：5
         String verCode = captcha.text().toLowerCase();
