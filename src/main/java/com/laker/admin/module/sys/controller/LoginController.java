@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,10 +10,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.PageDtoUtil;
+import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
+import com.laker.admin.framework.ext.satoken.MySaTokenListener;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
@@ -24,11 +28,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +101,31 @@ public class LoginController {
     @ApiOperation(value = "获取当前用户信息")
     public Response userInfo() {
         return Response.ok(sysUserService.getById(StpUtil.getLoginIdAsLong()));
+    }
+
+    @GetMapping("/api/v1/onlineUsers")
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "获取在线用户信息")
+    public PageResponse onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
+                                    @RequestParam(required = false, defaultValue = "10") int limit) {
+        List<String> sessionIds = StpUtil.searchTokenValue(null, -1, 1000);
+        log.info("当前用户：{}", Arrays.toString(sessionIds.toArray()));
+        PageDtoUtil pageDto = PageDtoUtil.getPageDto(MySaTokenListener.ONLINE_USERS, page, limit);
+        log.warn("stp用户数：{}，memory用户数：{}", sessionIds.size(), pageDto.getTotal());
+        return PageResponse.ok(pageDto.getPageList(), (long) pageDto.getTotal());
+    }
+
+    @GetMapping("/api/v1/kickOffline")
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "踢人下线")
+    @SaCheckPermission("online.user.kick")
+    public Response kickOffline(String token) {
+        log.info("踢人下线，token:{}", token);
+        if (StpUtil.getTokenValue().equals(token)) {
+            return Response.error("500", "不能踢自己啊老弟");
+        }
+        StpUtil.logoutByTokenValue(token);
+        return Response.ok();
     }
 
     @GetMapping("/api/v1/loginOut")
