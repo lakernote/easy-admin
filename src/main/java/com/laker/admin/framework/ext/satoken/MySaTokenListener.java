@@ -1,5 +1,7 @@
 package com.laker.admin.framework.ext.satoken;
 
+import cn.dev33.satoken.SaManager;
+import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.listener.SaTokenListener;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -26,6 +29,11 @@ public class MySaTokenListener implements SaTokenListener {
 
     @Autowired
     ISysUserService sysUserService;
+
+    @PostConstruct
+    public void init() {
+        initRefreshThread();
+    }
 
     /**
      * 每次登录时触发
@@ -44,7 +52,7 @@ public class MySaTokenListener implements SaTokenListener {
                 .tokenValue(StpUtil.getTokenValue())
                 .nickName(sysUserService.getById((Long) loginId).getNickName())
                 .browser(requestUserAgent.getBrowser().getName()).build());
-        log.info("user doLogin,useId:{},token:{}",loginId,StpUtil.getTokenValue());
+        log.info("user doLogin,useId:{},token:{}", loginId, StpUtil.getTokenValue());
     }
 
     /**
@@ -56,7 +64,7 @@ public class MySaTokenListener implements SaTokenListener {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
-        log.info("user doLogout,useId:{},token:{}",loginId,tokenValue);
+        log.info("user doLogout,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**
@@ -68,7 +76,7 @@ public class MySaTokenListener implements SaTokenListener {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
-        log.info("user doLogoutByLoginId,useId:{},token:{}",loginId,tokenValue);
+        log.info("user doLogoutByLoginId,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**
@@ -79,7 +87,7 @@ public class MySaTokenListener implements SaTokenListener {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
-        log.info("user doReplaced,useId:{},token:{}",loginId,tokenValue);
+        log.info("user doReplaced,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**
@@ -103,7 +111,8 @@ public class MySaTokenListener implements SaTokenListener {
      */
     @Override
     public void doCreateSession(String id) {
-        // ... 
+        // ...
+        log.info("user doCreateSession,id:{}", id);
     }
 
     /**
@@ -111,7 +120,67 @@ public class MySaTokenListener implements SaTokenListener {
      */
     @Override
     public void doLogoutSession(String id) {
-        // ... 
+        // ...
+        log.info("user doLogoutSession,id:{}", id);
+    }
+    // --------------------- 定时清理过期数据
+
+    /**
+     * 执行数据清理的线程
+     */
+    public Thread refreshThread;
+
+    /**
+     * 是否继续执行数据清理的线程标记
+     */
+    public boolean refreshFlag;
+
+    /**
+     * 初始化定时任务
+     */
+    public void initRefreshThread() {
+
+        // 如果配置了<=0的值，则不启动定时清理
+        if (SaManager.getConfig().getDataRefreshPeriod() <= 0) {
+            return;
+        }
+        // 启动定时刷新
+        this.refreshFlag = true;
+        this.refreshThread = new Thread(() -> {
+            for (; ; ) {
+                log.info("定时清理过期会话开始。间隔：{}s,在线人数：{}", SaManager.getConfig().getDataRefreshPeriod() + 5, ONLINE_USERS.size());
+                try {
+                    try {
+                        // 如果已经被标记为结束
+                        if (refreshFlag == false) {
+                            return;
+                        }
+                        long start = System.currentTimeMillis();
+                        ONLINE_USERS.removeIf(onlineUser -> {
+                            long timeout = StpUtil.stpLogic.getTokenActivityTimeoutByToken(onlineUser.getTokenValue());
+                            if (timeout == SaTokenDao.NOT_VALUE_EXPIRE) {
+                                return true;
+                            }
+                            return false;
+                        });
+                        log.info("定时清理过期会话结束，在线人数：{},耗时：{}ms", ONLINE_USERS.size(), System.currentTimeMillis() - start);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // 休眠N秒
+                    int dataRefreshPeriod = SaManager.getConfig().getDataRefreshPeriod();
+                    if (dataRefreshPeriod <= 0) {
+                        dataRefreshPeriod = 1;
+                    }
+                    dataRefreshPeriod = dataRefreshPeriod + 5;
+                    Thread.sleep(dataRefreshPeriod * 1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        refreshThread.start();
     }
 
 }

@@ -1,9 +1,11 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -17,6 +19,7 @@ import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.ext.satoken.MySaTokenListener;
+import com.laker.admin.framework.ext.satoken.OnlineUser;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
@@ -110,9 +113,19 @@ public class LoginController {
                                     @RequestParam(required = false, defaultValue = "10") int limit) {
         List<String> sessionIds = StpUtil.searchTokenValue(null, -1, 1000);
         log.info("当前用户：{}", Arrays.toString(sessionIds.toArray()));
+        MySaTokenListener.ONLINE_USERS.sort((o1, o2) -> DateUtil.compare(o2.getLoginTime(), o1.getLoginTime()));
         PageDtoUtil pageDto = PageDtoUtil.getPageDto(MySaTokenListener.ONLINE_USERS, page, limit);
         log.warn("stp用户数：{}，memory用户数：{}", sessionIds.size(), pageDto.getTotal());
-        return PageResponse.ok(pageDto.getPageList(), (long) pageDto.getTotal());
+        List<OnlineUser> pageList = (List<OnlineUser>) pageDto.getPageList();
+        pageList.forEach(onlineUser -> {
+            String keyLastActivityTime = StpUtil.stpLogic.splicingKeyLastActivityTime(onlineUser.getTokenValue());
+            String lastActivityTimeString = SaManager.getSaTokenDao().get(keyLastActivityTime);
+            if (lastActivityTimeString != null) {
+                long lastActivityTime = Long.parseLong(lastActivityTimeString);
+                onlineUser.setLastActivityTime(DateUtil.date(lastActivityTime));
+            }
+        });
+        return PageResponse.ok(pageList, (long) pageDto.getTotal());
     }
 
     @GetMapping("/api/v1/kickOffline")
