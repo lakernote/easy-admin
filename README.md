@@ -1,10 +1,10 @@
 # Easyadmin
 
-> **有用的话请鼓励💋💋💋下作者，右上角watch、star、fork三连点一波**💋💋💋
+> **有用的话请鼓励❤️下作者，右上角watch、star、fork三连点💋💋💋一波**
 
 #### 介绍
 
-**easy**https://blog.csdn.net/abu935009066/article/details/117471885，**easy**❤️，**easy**❤️，打造一款**简单**、**轻量级**的**后台管理系统脚手架**⛳⛳⛳。目前使用的技术都是相对较轻量级、上手很容易的技术。例如：**Spring Boot**、**hutool-all**、**mybatis-plus** 、**knife4j**  、**sa-token**、**javamelody** 、**snakerflow** 等。**后续的发展方向也是把目标对准中小型项目**，**提炼简单高效架构**。
+**easy**❤️，**easy**❤️，**easy**❤️，打造一款**简单**、**轻量级**的**后台管理系统脚手架**⛳⛳⛳。目前使用的技术都是相对较轻量级、上手很容易的技术。例如：**Spring Boot**、**hutool-all**、**mybatis-plus** 、**knife4j**  、**sa-token**、**javamelody** 、**snakerflow** 等。**后续的发展方向也是把目标对准中小型项目**，**提炼简单高效架构**。
 
 **适合场景：💋学生学习、💋前后端项目练手、💋私活快速开发、💋中小型企业脚手架、💋Spring Boot深度扩展学习**等
 
