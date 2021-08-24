@@ -11,7 +11,7 @@
  Target Server Version : 50528
  File Encoding         : 65001
 
- Date: 20/08/2021 14:20:27
+ Date: 24/08/2021 15:02:58
 */
 
 SET NAMES utf8mb4;
@@ -31,13 +31,14 @@ CREATE TABLE `ext_leave`  (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `order_id` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`leave_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of ext_leave
 -- ----------------------------
-INSERT INTO `ext_leave` VALUES (4, 3, '找妹子', 1, 1, 4, '2021-08-19 20:20:49', 'a576a521e1354e60b5126439b8e2ed0d');
-INSERT INTO `ext_leave` VALUES (6, 1, 'laoyang', 17, 17, 5, '2021-08-20 12:10:52', '6e349ecb0127445eb16b1991be86183c');
+INSERT INTO `ext_leave` VALUES (14, 3, '正常', 16, 16, 4, '2021-08-22 23:59:08', '4aacacb31f964104b50b8cc814d807ac');
+INSERT INTO `ext_leave` VALUES (15, 5, '测绘', 16, 16, 4, '2021-08-22 23:59:18', '2a3773645b214ea0b8fc48d6784e52e9');
+INSERT INTO `ext_leave` VALUES (16, 234234, '234234', 16, 16, 4, '2021-08-23 00:18:39', '7f0b9b62c76d44258d62eab833e7fa69');
 
 -- ----------------------------
 -- Table structure for ext_log
@@ -57,7 +58,7 @@ CREATE TABLE `ext_log`  (
   `cost` int(10) DEFAULT NULL COMMENT '耗时ms',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2815 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日志' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3540 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日志' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -121,7 +122,7 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`menu_id`) USING BTREE,
   INDEX `title`(`title`) USING BTREE,
   INDEX `href`(`href`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 290 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 291 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -150,6 +151,7 @@ INSERT INTO `sys_menu` VALUES (286, 258, '查询', 'layui-icon ', '', '', 1, 1, 
 INSERT INTO `sys_menu` VALUES (287, 251, '任务管理', 'layui-icon ', 'view/system/task.html', '_iframe', 14, 1, NULL, NULL, 1, '');
 INSERT INTO `sys_menu` VALUES (288, 285, '查看权限', 'layui-icon ', '', '', 1, 1, NULL, NULL, 2, 'log.list');
 INSERT INTO `sys_menu` VALUES (289, 1, '请假管理', 'layui-icon ', 'view/ext/leave.html', '_iframe', 2, 1, NULL, NULL, 1, '');
+INSERT INTO `sys_menu` VALUES (290, 1, '在线用户', 'layui-icon ', 'view/system/onlineUser.html', '_iframe', 6, 1, NULL, NULL, 1, '');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -172,7 +174,6 @@ CREATE TABLE `sys_role`  (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (2, '超级管理员', 'superAdmin', '超级管理员很牛逼', 1, NULL, 1, 1, NULL);
-INSERT INTO `sys_role` VALUES (3, '普通员工', 'general ', '普通员工2', 0, NULL, 1, 1, NULL);
 INSERT INTO `sys_role` VALUES (5, '管理员', 'admin', '', 1, NULL, 1, 1, NULL);
 INSERT INTO `sys_role` VALUES (6, '数据权限普通角色本人', 'gg', '数据权限普通角色本人', 1, NULL, 2, 3, NULL);
 INSERT INTO `sys_role` VALUES (7, '数据权限ALL', '数据权限', '数据权限', 1, NULL, 2, 1, NULL);
@@ -186,7 +187,7 @@ CREATE TABLE `sys_role_power`  (
   `role_id` bigint(20) DEFAULT NULL,
   `power_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 108 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 153 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_role_power
@@ -201,25 +202,29 @@ INSERT INTO `sys_role_power` VALUES (33, 2, 251);
 INSERT INTO `sys_role_power` VALUES (34, 2, 252);
 INSERT INTO `sys_role_power` VALUES (35, 2, 264);
 INSERT INTO `sys_role_power` VALUES (36, 2, 265);
-INSERT INTO `sys_role_power` VALUES (89, 5, 1);
-INSERT INTO `sys_role_power` VALUES (90, 5, 250);
-INSERT INTO `sys_role_power` VALUES (91, 5, 269);
-INSERT INTO `sys_role_power` VALUES (92, 5, 270);
-INSERT INTO `sys_role_power` VALUES (93, 5, 282);
-INSERT INTO `sys_role_power` VALUES (94, 5, 285);
-INSERT INTO `sys_role_power` VALUES (95, 5, 288);
-INSERT INTO `sys_role_power` VALUES (96, 5, 289);
-INSERT INTO `sys_role_power` VALUES (97, 5, 251);
-INSERT INTO `sys_role_power` VALUES (98, 5, 252);
-INSERT INTO `sys_role_power` VALUES (99, 5, 258);
-INSERT INTO `sys_role_power` VALUES (100, 5, 264);
-INSERT INTO `sys_role_power` VALUES (101, 5, 265);
-INSERT INTO `sys_role_power` VALUES (102, 5, 266);
-INSERT INTO `sys_role_power` VALUES (103, 5, 268);
-INSERT INTO `sys_role_power` VALUES (104, 5, 280);
-INSERT INTO `sys_role_power` VALUES (105, 5, 281);
-INSERT INTO `sys_role_power` VALUES (106, 5, 283);
-INSERT INTO `sys_role_power` VALUES (107, 5, 284);
+INSERT INTO `sys_role_power` VALUES (130, 5, 1);
+INSERT INTO `sys_role_power` VALUES (131, 5, 269);
+INSERT INTO `sys_role_power` VALUES (132, 5, 282);
+INSERT INTO `sys_role_power` VALUES (133, 5, 285);
+INSERT INTO `sys_role_power` VALUES (134, 5, 288);
+INSERT INTO `sys_role_power` VALUES (135, 5, 289);
+INSERT INTO `sys_role_power` VALUES (136, 5, 290);
+INSERT INTO `sys_role_power` VALUES (137, 5, 251);
+INSERT INTO `sys_role_power` VALUES (138, 5, 252);
+INSERT INTO `sys_role_power` VALUES (139, 5, 258);
+INSERT INTO `sys_role_power` VALUES (140, 5, 286);
+INSERT INTO `sys_role_power` VALUES (141, 5, 264);
+INSERT INTO `sys_role_power` VALUES (142, 5, 265);
+INSERT INTO `sys_role_power` VALUES (143, 5, 266);
+INSERT INTO `sys_role_power` VALUES (144, 5, 268);
+INSERT INTO `sys_role_power` VALUES (145, 5, 280);
+INSERT INTO `sys_role_power` VALUES (146, 5, 281);
+INSERT INTO `sys_role_power` VALUES (147, 5, 283);
+INSERT INTO `sys_role_power` VALUES (148, 5, 284);
+INSERT INTO `sys_role_power` VALUES (149, 5, 287);
+INSERT INTO `sys_role_power` VALUES (150, 5, 259);
+INSERT INTO `sys_role_power` VALUES (151, 5, 260);
+INSERT INTO `sys_role_power` VALUES (152, 5, 262);
 
 -- ----------------------------
 -- Table structure for sys_task
@@ -295,7 +300,7 @@ CREATE TABLE `sys_user_role`  (
   `user_id` bigint(20) DEFAULT NULL,
   `role_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_user_role
@@ -303,18 +308,18 @@ CREATE TABLE `sys_user_role`  (
 INSERT INTO `sys_user_role` VALUES (24, 22, 2);
 INSERT INTO `sys_user_role` VALUES (25, 22, 3);
 INSERT INTO `sys_user_role` VALUES (28, 23, 2);
-INSERT INTO `sys_user_role` VALUES (30, 18, 2);
-INSERT INTO `sys_user_role` VALUES (31, 18, 3);
-INSERT INTO `sys_user_role` VALUES (47, 16, 2);
-INSERT INTO `sys_user_role` VALUES (48, 16, 3);
-INSERT INTO `sys_user_role` VALUES (49, 16, 5);
-INSERT INTO `sys_user_role` VALUES (50, 16, 6);
 INSERT INTO `sys_user_role` VALUES (54, 1, 2);
 INSERT INTO `sys_user_role` VALUES (55, 1, 3);
 INSERT INTO `sys_user_role` VALUES (56, 1, 5);
-INSERT INTO `sys_user_role` VALUES (57, 17, 2);
-INSERT INTO `sys_user_role` VALUES (58, 17, 5);
-INSERT INTO `sys_user_role` VALUES (59, 17, 7);
+INSERT INTO `sys_user_role` VALUES (60, 16, 2);
+INSERT INTO `sys_user_role` VALUES (61, 16, 5);
+INSERT INTO `sys_user_role` VALUES (62, 16, 6);
+INSERT INTO `sys_user_role` VALUES (63, 17, 2);
+INSERT INTO `sys_user_role` VALUES (64, 17, 5);
+INSERT INTO `sys_user_role` VALUES (65, 17, 7);
+INSERT INTO `sys_user_role` VALUES (66, 18, 2);
+INSERT INTO `sys_user_role` VALUES (67, 18, 5);
+INSERT INTO `sys_user_role` VALUES (68, 18, 7);
 
 -- ----------------------------
 -- Table structure for wf_hist_order
@@ -340,19 +345,9 @@ CREATE TABLE `wf_hist_order`  (
 -- ----------------------------
 -- Records of wf_hist_order
 -- ----------------------------
-INSERT INTO `wf_hist_order` VALUES ('12aea136c0e142708e3a83bca50b9c3a', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, 'yang', '2021-08-12 17:17:00', NULL, NULL, NULL, NULL, '20210812-17:17:00-148-497', '{\"day\":4,\"leaveReason\":\"24538\",\"user1\":\"yang\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
-INSERT INTO `wf_hist_order` VALUES ('1938cf20827a49739e388ba12c434ee3', '6d8fa9bd5833446ab2c7c8c799d55d30', 0, '1', '2021-08-19 20:09:19', '2021-08-20 12:09:54', NULL, NULL, NULL, '20210819-20:09:19-440-111', '{\"user1\":\"1\",\"user2\":\"17\",\"day\":null,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('2938b3d58ebe453abe2ad2ae95bd77e6', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, 'laker', '2021-08-12 11:31:59', NULL, NULL, NULL, NULL, '20210812-11:31:59-487-128', '{\"day\":3,\"leaveReason\":\"发起请假\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
-INSERT INTO `wf_hist_order` VALUES ('3381c01f35654a1182ca87cd42d82063', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '1', '2021-08-16 17:31:10', NULL, NULL, NULL, NULL, '20210816-17:31:10-632-695', '{\"day\":23,\"leaveReason\":\"gaga\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
-INSERT INTO `wf_hist_order` VALUES ('4202e1bd4e314038a3b26c2079f119ac', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '1', '2021-08-19 20:07:20', NULL, NULL, NULL, NULL, '20210819-20:07:21-002-338', '{\"user1\":\"1\",\"user2\":\"17\",\"day\":3,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('6d0b4e44a05d4ef3a529e0a5a222d1a6', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '16', '2021-08-17 12:51:04', NULL, NULL, NULL, NULL, '20210817-12:51:04-587-237', '{\"day\":5,\"leaveReason\":\"adsfafadf\",\"user1\":\"16\",\"user2\":\"17\",\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('6e349ecb0127445eb16b1991be86183c', '6d8fa9bd5833446ab2c7c8c799d55d30', 0, '17', '2021-08-20 12:10:52', '2021-08-20 12:11:07', NULL, NULL, NULL, '20210820-12:10:52-808-980', '{\"user1\":\"17\",\"user2\":\"17\",\"day\":1,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('7e89a54ca83a4becb522c8c0addbcf73', '6d8fa9bd5833446ab2c7c8c799d55d30', 0, '16', '2021-08-20 09:35:00', '2021-08-20 12:09:54', NULL, NULL, NULL, '20210820-09:35:00-806-758', '{\"user1\":\"16\",\"user2\":\"17\",\"day\":2,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('943cbbc547824f538fecc75dc503ed61', '6d8fa9bd5833446ab2c7c8c799d55d30', 0, '16', '2021-08-17 12:55:38', '2021-08-17 12:56:35', NULL, NULL, NULL, '20210817-12:55:38-651-801', '{\"day\":5,\"leaveReason\":\"cesfsfa\",\"user1\":\"16\",\"user2\":\"17\",\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('a576a521e1354e60b5126439b8e2ed0d', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '1', '2021-08-19 20:20:49', NULL, NULL, NULL, NULL, '20210819-20:20:49-821-90', '{\"user1\":\"1\",\"user2\":\"17\",\"day\":3,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('bd81a2b7bd3b4d03a9a2bba0ff6a5a53', '6d8fa9bd5833446ab2c7c8c799d55d30', 0, '1', '2021-08-19 20:08:35', '2021-08-20 12:09:55', NULL, NULL, NULL, '20210819-20:08:35-967-274', '{\"user1\":\"1\",\"user2\":\"17\",\"day\":null,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_order` VALUES ('cc837aa0e732448fb72143569189a4e8', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '1', '2021-08-17 10:17:55', NULL, NULL, NULL, NULL, '20210817-10:17:55-035-663', '{\"day\":5,\"leaveReason\":\"324\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
-INSERT INTO `wf_hist_order` VALUES ('dabb3d6899a84775a6de6998ec3e3240', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '16', '2021-08-17 11:12:29', NULL, NULL, NULL, NULL, '20210817-11:12:29-974-492', '{\"day\":3,\"leaveReason\":\"测试请假3天\",\"user1\":\"16\",\"user2\":\"yang\",\"user3\":\"zhang\"}');
+INSERT INTO `wf_hist_order` VALUES ('2a3773645b214ea0b8fc48d6784e52e9', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '16', '2021-08-22 23:59:17', NULL, NULL, NULL, NULL, '老李-2021-08-22 23:59:17的请假申请', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-22 23:59:17的请假申请\",\"day\":5,\"user3\":\"18\"}');
+INSERT INTO `wf_hist_order` VALUES ('4aacacb31f964104b50b8cc814d807ac', '6d8fa9bd5833446ab2c7c8c799d55d30', 0, '16', '2021-08-22 23:59:08', '2021-08-23 00:00:24', NULL, NULL, NULL, '老李-2021-08-22 23:59:07的请假申请', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-22 23:59:07的请假申请\",\"day\":3,\"user3\":\"18\"}');
+INSERT INTO `wf_hist_order` VALUES ('7f0b9b62c76d44258d62eab833e7fa69', '6d8fa9bd5833446ab2c7c8c799d55d30', 1, '16', '2021-08-23 00:18:39', NULL, NULL, NULL, NULL, '老李-2021-08-23 00:18:39的请假申请', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-23 00:18:39的请假申请\",\"day\":234234,\"user3\":\"18\"}');
 
 -- ----------------------------
 -- Table structure for wf_hist_task
@@ -382,30 +377,16 @@ CREATE TABLE `wf_hist_task`  (
 -- ----------------------------
 -- Records of wf_hist_task
 -- ----------------------------
-INSERT INTO `wf_hist_task` VALUES ('07677acf9e254e91b2ac127878f64ea0', '6d0b4e44a05d4ef3a529e0a5a222d1a6', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-17 12:51:04', '2021-08-17 12:51:55', NULL, '', 'fd3a81ab60724a5bbba98a675a7e72f6', '{}');
-INSERT INTO `wf_hist_task` VALUES ('16369ae12a9740cd8c669336c5632a6e', 'a576a521e1354e60b5126439b8e2ed0d', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-19 20:20:49', '2021-08-20 12:09:54', NULL, '', '2180350ae6604ebc9533d3f4ce457fa4', '{}');
-INSERT INTO `wf_hist_task` VALUES ('16d1c3ebd3ea4e0d81bbead73286a4dd', '943cbbc547824f538fecc75dc503ed61', 'apply', '请假申请2', 0, 0, 0, '16', '2021-08-17 12:55:38', '2021-08-17 12:55:38', NULL, '', 'start', '{\"day\":5,\"leaveReason\":\"cesfsfa\",\"user1\":\"16\",\"user2\":\"17\",\"user3\":\"18\",\"S-ACTOR\":\"16\"}');
-INSERT INTO `wf_hist_task` VALUES ('208bf5598ce249e6ad65fa0ed1ca94b7', '12aea136c0e142708e3a83bca50b9c3a', 'apply', '请假申请', 0, 0, 0, 'yang', '2021-08-12 17:17:00', '2021-08-12 17:17:00', NULL, '', 'start', '{\"day\":4,\"leaveReason\":\"24538\",\"user1\":\"yang\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"yang\"}');
-INSERT INTO `wf_hist_task` VALUES ('2180350ae6604ebc9533d3f4ce457fa4', 'a576a521e1354e60b5126439b8e2ed0d', 'apply', '请假申请2', 0, 0, 0, '1', '2021-08-19 20:20:49', '2021-08-19 20:20:49', NULL, '', 'start', '{\"user1\":\"1\",\"user2\":\"17\",\"S-ACTOR\":\"1\",\"day\":3,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_task` VALUES ('243036b8c7ff49138adbd554ec6dfb6f', 'bd81a2b7bd3b4d03a9a2bba0ff6a5a53', 'apply', '请假申请2', 0, 0, 0, '1', '2021-08-19 20:08:35', '2021-08-19 20:08:35', NULL, '', 'start', '{\"user1\":\"1\",\"user2\":\"17\",\"S-ACTOR\":\"1\",\"day\":null,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_task` VALUES ('2c3937c59df04691bf52cb4e5f5ab4fa', '4202e1bd4e314038a3b26c2079f119ac', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-19 20:07:21', '2021-08-20 12:09:55', NULL, '', 'df5ef7b9514e492cbcff3d52f59c0ce3', '{}');
-INSERT INTO `wf_hist_task` VALUES ('2f0dc046e8cb4770ab34bd12064a6c7b', '1938cf20827a49739e388ba12c434ee3', 'apply', '请假申请2', 0, 0, 0, '1', '2021-08-19 20:09:19', '2021-08-19 20:09:19', NULL, '', 'start', '{\"user1\":\"1\",\"user2\":\"17\",\"S-ACTOR\":\"1\",\"day\":null,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_task` VALUES ('4693283691fc41a0b06746006064e5ee', '2938b3d58ebe453abe2ad2ae95bd77e6', 'apply', '请假申请', 0, 0, 0, 'laker', '2021-08-12 11:31:59', '2021-08-12 11:31:59', NULL, '', 'start', '{\"day\":3,\"leaveReason\":\"发起请假\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"laker\"}');
-INSERT INTO `wf_hist_task` VALUES ('4f0f776c5645467b90987d54a2a8adbc', 'cc837aa0e732448fb72143569189a4e8', 'apply', '请假申请2', 0, 0, 0, '1', '2021-08-17 10:17:55', '2021-08-17 10:17:55', NULL, '', 'start', '{\"day\":5,\"leaveReason\":\"324\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"1\"}');
-INSERT INTO `wf_hist_task` VALUES ('72645b90dacc45449993e6784eb61ca6', '1938cf20827a49739e388ba12c434ee3', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-19 20:09:19', '2021-08-20 12:09:54', NULL, '', '2f0dc046e8cb4770ab34bd12064a6c7b', '{}');
-INSERT INTO `wf_hist_task` VALUES ('8bc2e2ac852f4718959f7b7133a07bbc', 'bd81a2b7bd3b4d03a9a2bba0ff6a5a53', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-19 20:08:35', '2021-08-20 12:09:55', NULL, '', '243036b8c7ff49138adbd554ec6dfb6f', '{}');
-INSERT INTO `wf_hist_task` VALUES ('997e05acadde407095731d4f0f31728b', '3381c01f35654a1182ca87cd42d82063', 'apply', '请假申请2', 0, 0, 0, '1', '2021-08-16 17:31:10', '2021-08-16 17:31:10', NULL, '', 'start', '{\"day\":23,\"leaveReason\":\"gaga\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"1\"}');
-INSERT INTO `wf_hist_task` VALUES ('abbacc65bb1b4251a3fc22b8d0d95507', '943cbbc547824f538fecc75dc503ed61', 'approveBoss', '总经理审批', 0, 0, 0, '18', '2021-08-17 12:56:07', '2021-08-17 12:56:34', NULL, '', 'ea58fa2f7ff848bcb7a66b953e8d3a38', '{}');
-INSERT INTO `wf_hist_task` VALUES ('b0c9debfa0bb4ebe9f10542536c03197', '6e349ecb0127445eb16b1991be86183c', 'apply', '请假申请2', 0, 0, 0, '17', '2021-08-20 12:10:52', '2021-08-20 12:10:52', NULL, '', 'start', '{\"user1\":\"17\",\"user2\":\"17\",\"S-ACTOR\":\"17\",\"day\":1,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_task` VALUES ('bd39bcbe266144ceb2aba6dbff14ffd7', '7e89a54ca83a4becb522c8c0addbcf73', 'apply', '请假申请2', 0, 0, 0, '16', '2021-08-20 09:35:00', '2021-08-20 09:35:00', NULL, '', 'start', '{\"user1\":\"16\",\"user2\":\"17\",\"S-ACTOR\":\"16\",\"day\":2,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_task` VALUES ('cd4149a5abe440aab3c8875209078613', '6e349ecb0127445eb16b1991be86183c', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-20 12:10:52', '2021-08-20 12:11:07', NULL, '', 'b0c9debfa0bb4ebe9f10542536c03197', '{}');
-INSERT INTO `wf_hist_task` VALUES ('ce7d34f4244742a4b020922112231e7d', '2938b3d58ebe453abe2ad2ae95bd77e6', 'approveDept', '部门经理审批', 0, 0, 0, 'yang', '2021-08-12 11:31:59', '2021-08-16 15:47:10', NULL, '', '4693283691fc41a0b06746006064e5ee', '{\"rejectReason\":null}');
-INSERT INTO `wf_hist_task` VALUES ('dde5dc577d4b4369950bcf393acdd53b', '12aea136c0e142708e3a83bca50b9c3a', 'approveDept', '部门经理审批', 0, 0, 0, 'yang', '2021-08-12 17:17:00', '2021-08-12 17:18:34', NULL, '', '208bf5598ce249e6ad65fa0ed1ca94b7', '{}');
-INSERT INTO `wf_hist_task` VALUES ('df5ef7b9514e492cbcff3d52f59c0ce3', '4202e1bd4e314038a3b26c2079f119ac', 'apply', '请假申请2', 0, 0, 0, '1', '2021-08-19 20:07:21', '2021-08-19 20:07:21', NULL, '', 'start', '{\"user1\":\"1\",\"user2\":\"17\",\"S-ACTOR\":\"1\",\"day\":3,\"user3\":\"18\"}');
-INSERT INTO `wf_hist_task` VALUES ('e2bdb19450da4132a7916bb3fa2409ff', 'dabb3d6899a84775a6de6998ec3e3240', 'apply', '请假申请2', 0, 0, 0, '16', '2021-08-17 11:12:30', '2021-08-17 11:12:30', NULL, '', 'start', '{\"day\":3,\"leaveReason\":\"测试请假3天\",\"user1\":\"16\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"16\"}');
-INSERT INTO `wf_hist_task` VALUES ('ea58fa2f7ff848bcb7a66b953e8d3a38', '943cbbc547824f538fecc75dc503ed61', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-17 12:55:38', '2021-08-17 12:56:07', NULL, '', '16d1c3ebd3ea4e0d81bbead73286a4dd', '{}');
-INSERT INTO `wf_hist_task` VALUES ('f27218f91f694b578a13267305b6e841', '7e89a54ca83a4becb522c8c0addbcf73', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-20 09:35:00', '2021-08-20 12:09:54', NULL, '', 'bd39bcbe266144ceb2aba6dbff14ffd7', '{}');
-INSERT INTO `wf_hist_task` VALUES ('fd3a81ab60724a5bbba98a675a7e72f6', '6d0b4e44a05d4ef3a529e0a5a222d1a6', 'apply', '请假申请2', 0, 0, 0, '16', '2021-08-17 12:51:04', '2021-08-17 12:51:04', NULL, '', 'start', '{\"day\":5,\"leaveReason\":\"adsfafadf\",\"user1\":\"16\",\"user2\":\"17\",\"user3\":\"18\",\"S-ACTOR\":\"16\"}');
+INSERT INTO `wf_hist_task` VALUES ('039022baeb2147f6abde941cc0de3976', '2a3773645b214ea0b8fc48d6784e52e9', 'apply', '请假申请', 0, 0, 0, '16', '2021-08-23 00:17:38', '2021-08-23 00:17:46', NULL, '', '39b69df8a57a45a69c89b715712132c4', '{}');
+INSERT INTO `wf_hist_task` VALUES ('0ae77bfcb09c4472902f071173fbb5a9', '2a3773645b214ea0b8fc48d6784e52e9', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-22 23:59:18', '2021-08-22 23:59:39', NULL, '', 'bfc6bf3135b341469c7b2694952b256a', '{}');
+INSERT INTO `wf_hist_task` VALUES ('168f2a2f0442419faf38f13043834d27', '4aacacb31f964104b50b8cc814d807ac', 'apply', '请假申请', 0, 0, 0, '16', '2021-08-22 23:59:08', '2021-08-22 23:59:08', NULL, '', 'start', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-22 23:59:07的请假申请\",\"S-ACTOR\":\"16\",\"day\":3,\"user3\":\"18\"}');
+INSERT INTO `wf_hist_task` VALUES ('2b51086e44bc4aa99b1de2294708a8a3', '4aacacb31f964104b50b8cc814d807ac', 'approveBoss', '总经理审批', 0, 0, 0, '18', '2021-08-22 23:59:39', '2021-08-23 00:00:24', NULL, '', 'a0e1be72e3314c0597b62498b52e66f8', '{}');
+INSERT INTO `wf_hist_task` VALUES ('39b69df8a57a45a69c89b715712132c4', '2a3773645b214ea0b8fc48d6784e52e9', 'approveBoss', '总经理审批', 0, 0, 0, '18', '2021-08-22 23:59:39', '2021-08-23 00:07:37', NULL, '', '0ae77bfcb09c4472902f071173fbb5a9', '{}');
+INSERT INTO `wf_hist_task` VALUES ('3ef19ef8edcc4724bdf063675ebe447c', '2a3773645b214ea0b8fc48d6784e52e9', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-23 00:17:46', '2021-08-23 00:18:15', NULL, '', '039022baeb2147f6abde941cc0de3976', '{}');
+INSERT INTO `wf_hist_task` VALUES ('557fe529573f4b48b1bc0fe54d79c999', '7f0b9b62c76d44258d62eab833e7fa69', 'apply', '请假申请', 0, 0, 0, '16', '2021-08-23 00:18:39', '2021-08-23 00:18:39', NULL, '', 'start', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-23 00:18:39的请假申请\",\"S-ACTOR\":\"16\",\"day\":234234,\"user3\":\"18\"}');
+INSERT INTO `wf_hist_task` VALUES ('6631c7a664514642b0036a8ab41a4f5d', '2a3773645b214ea0b8fc48d6784e52e9', 'apply', '请假申请', 0, 0, 0, '16', '2021-08-23 00:07:37', '2021-08-23 00:08:00', NULL, '', '39b69df8a57a45a69c89b715712132c4', '{}');
+INSERT INTO `wf_hist_task` VALUES ('a0e1be72e3314c0597b62498b52e66f8', '4aacacb31f964104b50b8cc814d807ac', 'approveDept', '部门经理审批', 0, 0, 0, '17', '2021-08-22 23:59:08', '2021-08-22 23:59:39', NULL, '', '168f2a2f0442419faf38f13043834d27', '{}');
+INSERT INTO `wf_hist_task` VALUES ('bfc6bf3135b341469c7b2694952b256a', '2a3773645b214ea0b8fc48d6784e52e9', 'apply', '请假申请', 0, 0, 0, '16', '2021-08-22 23:59:17', '2021-08-22 23:59:18', NULL, '', 'start', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-22 23:59:17的请假申请\",\"S-ACTOR\":\"16\",\"day\":5,\"user3\":\"18\"}');
 
 -- ----------------------------
 -- Table structure for wf_hist_task_actor
@@ -420,30 +401,16 @@ CREATE TABLE `wf_hist_task_actor`  (
 -- ----------------------------
 -- Records of wf_hist_task_actor
 -- ----------------------------
-INSERT INTO `wf_hist_task_actor` VALUES ('4693283691fc41a0b06746006064e5ee', 'laker');
-INSERT INTO `wf_hist_task_actor` VALUES ('208bf5598ce249e6ad65fa0ed1ca94b7', 'yang');
-INSERT INTO `wf_hist_task_actor` VALUES ('dde5dc577d4b4369950bcf393acdd53b', 'yang');
-INSERT INTO `wf_hist_task_actor` VALUES ('ce7d34f4244742a4b020922112231e7d', 'yang');
-INSERT INTO `wf_hist_task_actor` VALUES ('997e05acadde407095731d4f0f31728b', '1');
-INSERT INTO `wf_hist_task_actor` VALUES ('4f0f776c5645467b90987d54a2a8adbc', '1');
-INSERT INTO `wf_hist_task_actor` VALUES ('e2bdb19450da4132a7916bb3fa2409ff', '16');
-INSERT INTO `wf_hist_task_actor` VALUES ('fd3a81ab60724a5bbba98a675a7e72f6', '16');
-INSERT INTO `wf_hist_task_actor` VALUES ('07677acf9e254e91b2ac127878f64ea0', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('16d1c3ebd3ea4e0d81bbead73286a4dd', '16');
-INSERT INTO `wf_hist_task_actor` VALUES ('ea58fa2f7ff848bcb7a66b953e8d3a38', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('abbacc65bb1b4251a3fc22b8d0d95507', '18');
-INSERT INTO `wf_hist_task_actor` VALUES ('df5ef7b9514e492cbcff3d52f59c0ce3', '1');
-INSERT INTO `wf_hist_task_actor` VALUES ('243036b8c7ff49138adbd554ec6dfb6f', '1');
-INSERT INTO `wf_hist_task_actor` VALUES ('2f0dc046e8cb4770ab34bd12064a6c7b', '1');
-INSERT INTO `wf_hist_task_actor` VALUES ('2180350ae6604ebc9533d3f4ce457fa4', '1');
-INSERT INTO `wf_hist_task_actor` VALUES ('bd39bcbe266144ceb2aba6dbff14ffd7', '16');
-INSERT INTO `wf_hist_task_actor` VALUES ('f27218f91f694b578a13267305b6e841', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('16369ae12a9740cd8c669336c5632a6e', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('72645b90dacc45449993e6784eb61ca6', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('8bc2e2ac852f4718959f7b7133a07bbc', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('2c3937c59df04691bf52cb4e5f5ab4fa', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('b0c9debfa0bb4ebe9f10542536c03197', '17');
-INSERT INTO `wf_hist_task_actor` VALUES ('cd4149a5abe440aab3c8875209078613', '17');
+INSERT INTO `wf_hist_task_actor` VALUES ('168f2a2f0442419faf38f13043834d27', '16');
+INSERT INTO `wf_hist_task_actor` VALUES ('bfc6bf3135b341469c7b2694952b256a', '16');
+INSERT INTO `wf_hist_task_actor` VALUES ('0ae77bfcb09c4472902f071173fbb5a9', '17');
+INSERT INTO `wf_hist_task_actor` VALUES ('a0e1be72e3314c0597b62498b52e66f8', '17');
+INSERT INTO `wf_hist_task_actor` VALUES ('2b51086e44bc4aa99b1de2294708a8a3', '18');
+INSERT INTO `wf_hist_task_actor` VALUES ('39b69df8a57a45a69c89b715712132c4', '18');
+INSERT INTO `wf_hist_task_actor` VALUES ('6631c7a664514642b0036a8ab41a4f5d', '16');
+INSERT INTO `wf_hist_task_actor` VALUES ('039022baeb2147f6abde941cc0de3976', '16');
+INSERT INTO `wf_hist_task_actor` VALUES ('3ef19ef8edcc4724bdf063675ebe447c', '17');
+INSERT INTO `wf_hist_task_actor` VALUES ('557fe529573f4b48b1bc0fe54d79c999', '16');
 
 -- ----------------------------
 -- Table structure for wf_order
@@ -471,14 +438,8 @@ CREATE TABLE `wf_order`  (
 -- ----------------------------
 -- Records of wf_order
 -- ----------------------------
-INSERT INTO `wf_order` VALUES ('12aea136c0e142708e3a83bca50b9c3a', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', 'yang', '2021-08-12 17:17:00', NULL, '2021-08-12 17:18:34', 'yang', NULL, NULL, '20210812-17:17:00-148-497', '{\"day\":4,\"leaveReason\":\"24538\",\"user1\":\"yang\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 2);
-INSERT INTO `wf_order` VALUES ('2938b3d58ebe453abe2ad2ae95bd77e6', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', 'laker', '2021-08-12 11:31:59', NULL, '2021-08-16 15:47:10', 'yang', NULL, NULL, '20210812-11:31:59-487-128', '{\"day\":3,\"leaveReason\":\"发起请假\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 2);
-INSERT INTO `wf_order` VALUES ('3381c01f35654a1182ca87cd42d82063', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '1', '2021-08-16 17:31:10', NULL, '2021-08-16 17:31:14', '1', NULL, NULL, '20210816-17:31:10-632-695', '{\"day\":23,\"leaveReason\":\"gaga\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 1);
-INSERT INTO `wf_order` VALUES ('4202e1bd4e314038a3b26c2079f119ac', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '1', '2021-08-19 20:07:20', NULL, '2021-08-20 12:09:55', '17', NULL, NULL, '20210819-20:07:21-002-338', '{\"user1\":\"1\",\"user2\":\"17\",\"day\":3,\"user3\":\"18\"}', 2);
-INSERT INTO `wf_order` VALUES ('6d0b4e44a05d4ef3a529e0a5a222d1a6', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '16', '2021-08-17 12:51:04', NULL, '2021-08-17 12:51:55', '17', NULL, NULL, '20210817-12:51:04-587-237', '{\"day\":5,\"leaveReason\":\"adsfafadf\",\"user1\":\"16\",\"user2\":\"17\",\"user3\":\"18\"}', 2);
-INSERT INTO `wf_order` VALUES ('a576a521e1354e60b5126439b8e2ed0d', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '1', '2021-08-19 20:20:49', NULL, '2021-08-20 12:09:54', '17', NULL, NULL, '20210819-20:20:49-821-90', '{\"user1\":\"1\",\"user2\":\"17\",\"day\":3,\"user3\":\"18\"}', 2);
-INSERT INTO `wf_order` VALUES ('cc837aa0e732448fb72143569189a4e8', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '1', '2021-08-17 10:17:55', NULL, '2021-08-17 10:17:55', '1', NULL, NULL, '20210817-10:17:55-035-663', '{\"day\":5,\"leaveReason\":\"324\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 1);
-INSERT INTO `wf_order` VALUES ('dabb3d6899a84775a6de6998ec3e3240', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '16', '2021-08-17 11:12:29', NULL, '2021-08-17 11:12:30', '16', NULL, NULL, '20210817-11:12:29-974-492', '{\"day\":3,\"leaveReason\":\"测试请假3天\",\"user1\":\"16\",\"user2\":\"yang\",\"user3\":\"zhang\"}', 1);
+INSERT INTO `wf_order` VALUES ('2a3773645b214ea0b8fc48d6784e52e9', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '16', '2021-08-22 23:59:17', NULL, '2021-08-23 00:18:15', '17', NULL, NULL, '老李-2021-08-22 23:59:17的请假申请', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-22 23:59:17的请假申请\",\"day\":5,\"user3\":\"18\"}', 6);
+INSERT INTO `wf_order` VALUES ('7f0b9b62c76d44258d62eab833e7fa69', NULL, '6d8fa9bd5833446ab2c7c8c799d55d30', '16', '2021-08-23 00:18:39', NULL, '2021-08-23 00:18:39', '16', NULL, NULL, '老李-2021-08-23 00:18:39的请假申请', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-23 00:18:39的请假申请\",\"day\":234234,\"user3\":\"18\"}', 1);
 
 -- ----------------------------
 -- Table structure for wf_process
@@ -502,7 +463,7 @@ CREATE TABLE `wf_process`  (
 -- ----------------------------
 -- Records of wf_process
 -- ----------------------------
-INSERT INTO `wf_process` VALUES ('6d8fa9bd5833446ab2c7c8c799d55d30', 'leave', '请假流程测试', NULL, '', 1, 0x3C3F786D6C2076657273696F6E3D22312E302220656E636F64696E673D225554462D3822207374616E64616C6F6E653D226E6F223F3E0A3C70726F63657373206E616D653D226C656176652220646973706C61794E616D653D22E8AFB7E58187E6B581E7A88BE6B58BE8AF9522203E0A3C7374617274206C61796F75743D2232342C3132342C35302C353022206E616D653D227374617274312220646973706C61794E616D653D2273746172743122203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D226170706C7922206E616D653D227472616E736974696F6E3122202F3E0A3C2F73746172743E0A3C656E64206C61796F75743D223537302C3132342C35302C353022206E616D653D22656E64312220646973706C61794E616D653D22656E643122203E0A3C2F656E643E0A3C7461736B206C61796F75743D223131372C3132322C3130302C353022206E616D653D226170706C792220646973706C61794E616D653D22E8AFB7E58187E794B3E8AFB732222061737369676E65653D22757365723122207461736B547970653D224D616A6F722220706572666F726D547970653D22414E5922203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22617070726F76654465707422206E616D653D227472616E736974696F6E3222202F3E0A3C2F7461736B3E0A3C7461736B206C61796F75743D223237322C3132322C3130302C353022206E616D653D22617070726F7665446570742220646973706C61794E616D653D22E983A8E997A8E7BB8FE79086E5AEA1E689B9222061737369676E65653D22757365723222207461736B547970653D224D616A6F722220706572666F726D547970653D22414E5922203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D226465636973696F6E3122206E616D653D227472616E736974696F6E3322202F3E0A3C2F7461736B3E0A3C6465636973696F6E206C61796F75743D223432362C3132342C35302C353022206E616D653D226465636973696F6E312220657870723D2223646179202667743B2032203F20277472616E736974696F6E3527203A20277472616E736974696F6E34272220646973706C61794E616D653D226465636973696F6E3122203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22656E643122206E616D653D227472616E736974696F6E342220646973706C61794E616D653D22266C743B3D32E5A4A922202F3E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22617070726F7665426F737322206E616D653D227472616E736974696F6E352220646973706C61794E616D653D222667743B32E5A4A922202F3E0A3C2F6465636973696F6E3E0A3C7461736B206C61796F75743D223430342C3233312C3130302C353022206E616D653D22617070726F7665426F73732220646973706C61794E616D653D22E680BBE7BB8FE79086E5AEA1E689B9222061737369676E65653D22757365723322207461736B547970653D224D616A6F722220706572666F726D547970653D22414E5922203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22656E643122206E616D653D227472616E736974696F6E3622202F3E0A3C2F7461736B3E0A3C2F70726F636573733E, 2, '2021-08-11 19:06:37', NULL);
+INSERT INTO `wf_process` VALUES ('6d8fa9bd5833446ab2c7c8c799d55d30', 'leave', '请假流程', NULL, '', 1, 0x3C3F786D6C2076657273696F6E3D22312E302220656E636F64696E673D225554462D3822207374616E64616C6F6E653D226E6F223F3E0A3C70726F63657373206E616D653D226C656176652220646973706C61794E616D653D22E8AFB7E58187E6B581E7A88B22203E0A3C7374617274206C61796F75743D2232342C3132342C35302C353022206E616D653D227374617274312220646973706C61794E616D653D2273746172743122203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D226170706C7922206E616D653D227472616E736974696F6E3122202F3E0A3C2F73746172743E0A3C656E64206C61796F75743D223537302C3132342C35302C353022206E616D653D22656E64312220646973706C61794E616D653D22656E643122203E0A3C2F656E643E0A3C7461736B206C61796F75743D223131372C3132322C3130302C353022206E616D653D226170706C792220646973706C61794E616D653D22E8AFB7E58187E794B3E8AFB7222061737369676E65653D22757365723122207461736B547970653D224D616A6F722220706572666F726D547970653D22414E5922203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22617070726F76654465707422206E616D653D227472616E736974696F6E3222202F3E0A3C2F7461736B3E0A3C7461736B206C61796F75743D223237322C3132322C3130302C353022206E616D653D22617070726F7665446570742220646973706C61794E616D653D22E983A8E997A8E7BB8FE79086E5AEA1E689B9222061737369676E65653D22757365723222207461736B547970653D224D616A6F722220706572666F726D547970653D22414E5922203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D226465636973696F6E3122206E616D653D227472616E736974696F6E3322202F3E0A3C2F7461736B3E0A3C6465636973696F6E206C61796F75743D223432362C3132342C35302C353022206E616D653D226465636973696F6E312220657870723D2223646179202667743B2032203F20277472616E736974696F6E3527203A20277472616E736974696F6E34272220646973706C61794E616D653D226465636973696F6E3122203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22656E643122206E616D653D227472616E736974696F6E342220646973706C61794E616D653D22266C743B3D32E5A4A922202F3E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22617070726F7665426F737322206E616D653D227472616E736974696F6E352220646973706C61794E616D653D222667743B32E5A4A922202F3E0A3C2F6465636973696F6E3E0A3C7461736B206C61796F75743D223430342C3233312C3130302C353022206E616D653D22617070726F7665426F73732220646973706C61794E616D653D22E680BBE7BB8FE79086E5AEA1E689B9222061737369676E65653D22757365723322207461736B547970653D224D616A6F722220706572666F726D547970653D22414E5922203E0A3C7472616E736974696F6E206F66667365743D22302C302220746F3D22656E643122206E616D653D227472616E736974696F6E3622202F3E0A3C2F7461736B3E0A3C2F70726F636573733E, 2, '2021-08-11 19:06:37', NULL);
 INSERT INTO `wf_process` VALUES ('a7a5d0b6a4e542ce99308bebeedb1452', 'test', '测试单点流程', NULL, '', 1, 0x3C3F786D6C2076657273696F6E3D22312E302220656E636F64696E673D225554462D3822207374616E64616C6F6E653D226E6F223F3E0A3C70726F63657373206E616D653D22746573742220646973706C61794E616D653D22E6B58BE8AF95E58D95E782B9E6B581E7A88B22203E0A3C7374617274206C61796F75743D223131302C3139362C35302C353022206E616D653D22737461727422203E0A3C7472616E736974696F6E206F66667365743D22302C2D31302220746F3D22726563743322206E616D653D22706174683422202F3E0A3C2F73746172743E0A3C656E64206C61796F75743D223437312C3139392C35302C353022206E616D653D22656E6422203E0A3C2F656E643E0A3C7461736B206C61796F75743D223235332C3139382C3130302C353022206E616D653D2272656374332220646973706C61794E616D653D22726563743322203E0A3C7472616E736974696F6E206F66667365743D22302C2D31302220746F3D22656E6422206E616D653D22706174683522202F3E0A3C2F7461736B3E0A3C2F70726F636573733E, 0, '2021-08-18 16:42:25', NULL);
 
 -- ----------------------------
@@ -533,14 +494,8 @@ CREATE TABLE `wf_task`  (
 -- ----------------------------
 -- Records of wf_task
 -- ----------------------------
-INSERT INTO `wf_task` VALUES ('1d0e94562ecb4aa4bfa1d6b60550182a', 'dabb3d6899a84775a6de6998ec3e3240', 'approveDept', '部门经理审批', 0, 0, NULL, '2021-08-17 11:12:30', NULL, NULL, '', 'e2bdb19450da4132a7916bb3fa2409ff', '{\"day\":3,\"leaveReason\":\"测试请假3天\",\"user1\":\"16\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"yang\"}', 0);
-INSERT INTO `wf_task` VALUES ('4290a498e5dc488e99edf7a677a11377', 'a576a521e1354e60b5126439b8e2ed0d', 'approveBoss', '总经理审批', 0, 0, NULL, '2021-08-20 12:09:54', NULL, NULL, '', '16369ae12a9740cd8c669336c5632a6e', '{\"user1\":\"1\",\"user2\":\"17\",\"S-ACTOR\":\"18\",\"day\":3,\"user3\":\"18\"}', 0);
-INSERT INTO `wf_task` VALUES ('5489c4d51d4a4e95b40d716bf6c0ccaa', '12aea136c0e142708e3a83bca50b9c3a', 'approveBoss', '总经理审批', 0, 0, NULL, '2021-08-12 17:18:34', NULL, NULL, '', 'dde5dc577d4b4369950bcf393acdd53b', '{\"user1\":\"yang\",\"user2\":\"yang\",\"leaveReason\":\"24538\",\"S-ACTOR\":\"approveBoss.operator\",\"day\":4,\"user3\":\"zhang\"}', 0);
-INSERT INTO `wf_task` VALUES ('57a8b088f4554f22afe1488bd8865dbe', 'cc837aa0e732448fb72143569189a4e8', 'approveDept', '部门经理审批', 0, 0, NULL, '2021-08-17 10:17:55', NULL, NULL, '', '4f0f776c5645467b90987d54a2a8adbc', '{\"day\":5,\"leaveReason\":\"324\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"yang\"}', 0);
-INSERT INTO `wf_task` VALUES ('6ecaf3f51e994b4ebe3aa393e15acfd2', '4202e1bd4e314038a3b26c2079f119ac', 'approveBoss', '总经理审批', 0, 0, NULL, '2021-08-20 12:09:55', NULL, NULL, '', '2c3937c59df04691bf52cb4e5f5ab4fa', '{\"user1\":\"1\",\"user2\":\"17\",\"S-ACTOR\":\"18\",\"day\":3,\"user3\":\"18\"}', 0);
-INSERT INTO `wf_task` VALUES ('9c0c8e5abf1347c0a5c55f38cf8fbf2b', '3381c01f35654a1182ca87cd42d82063', 'approveDept', '部门经理审批', 0, 0, NULL, '2021-08-16 17:31:14', NULL, NULL, '', '997e05acadde407095731d4f0f31728b', '{\"day\":23,\"leaveReason\":\"gaga\",\"user1\":\"1\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"yang\"}', 0);
-INSERT INTO `wf_task` VALUES ('b791e76f2b374fbd9a539a9d5590f2d9', '6d0b4e44a05d4ef3a529e0a5a222d1a6', 'approveBoss', '总经理审批', 0, 0, NULL, '2021-08-17 12:51:55', NULL, NULL, '', '07677acf9e254e91b2ac127878f64ea0', '{\"user1\":\"16\",\"user2\":\"17\",\"leaveReason\":\"adsfafadf\",\"S-ACTOR\":\"approveBoss.operator\",\"day\":5,\"user3\":\"18\"}', 0);
-INSERT INTO `wf_task` VALUES ('c12287f093b24889b3514406da4db7ae', '2938b3d58ebe453abe2ad2ae95bd77e6', 'apply', '请假申请', 0, 0, 'laker', '2021-08-16 15:47:10', NULL, NULL, '', 'start', '{\"day\":3,\"leaveReason\":\"发起请假\",\"user1\":\"laker\",\"user2\":\"yang\",\"user3\":\"zhang\",\"S-ACTOR\":\"laker\"}', 0);
+INSERT INTO `wf_task` VALUES ('9566df8655f44676bd840f5a3536a267', '7f0b9b62c76d44258d62eab833e7fa69', 'apply', '请假申请', 0, 0, '16', '2021-08-23 00:18:44', NULL, NULL, '', 'start', '{\"user1\":\"16\",\"user2\":\"17\",\"snaker.orderNo\":\"老李-2021-08-23 00:18:39的请假申请\",\"S-ACTOR\":\"16\",\"day\":234234,\"user3\":\"18\"}', 0);
+INSERT INTO `wf_task` VALUES ('e619ab25c38d42d49e41a02886b1ea6a', '2a3773645b214ea0b8fc48d6784e52e9', 'approveDept', '部门经理审批', 0, 0, '17', '2021-08-23 00:19:54', NULL, NULL, '', '039022baeb2147f6abde941cc0de3976', '{}', 0);
 
 -- ----------------------------
 -- Table structure for wf_task_actor
@@ -555,13 +510,7 @@ CREATE TABLE `wf_task_actor`  (
 -- ----------------------------
 -- Records of wf_task_actor
 -- ----------------------------
-INSERT INTO `wf_task_actor` VALUES ('5489c4d51d4a4e95b40d716bf6c0ccaa', 'approveBoss.operator');
-INSERT INTO `wf_task_actor` VALUES ('c12287f093b24889b3514406da4db7ae', 'laker');
-INSERT INTO `wf_task_actor` VALUES ('9c0c8e5abf1347c0a5c55f38cf8fbf2b', 'yang');
-INSERT INTO `wf_task_actor` VALUES ('57a8b088f4554f22afe1488bd8865dbe', 'yang');
-INSERT INTO `wf_task_actor` VALUES ('1d0e94562ecb4aa4bfa1d6b60550182a', 'yang');
-INSERT INTO `wf_task_actor` VALUES ('b791e76f2b374fbd9a539a9d5590f2d9', 'approveBoss.operator');
-INSERT INTO `wf_task_actor` VALUES ('4290a498e5dc488e99edf7a677a11377', '18');
-INSERT INTO `wf_task_actor` VALUES ('6ecaf3f51e994b4ebe3aa393e15acfd2', '18');
+INSERT INTO `wf_task_actor` VALUES ('9566df8655f44676bd840f5a3536a267', '16');
+INSERT INTO `wf_task_actor` VALUES ('e619ab25c38d42d49e41a02886b1ea6a', '17');
 
 SET FOREIGN_KEY_CHECKS = 1;
