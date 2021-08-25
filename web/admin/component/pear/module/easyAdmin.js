@@ -394,7 +394,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 type: 2,
                 title: '新增',
                 shade: 0.1,
-                area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
+                area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '600px'],
                 content: path + '/add.html'
             });
         }

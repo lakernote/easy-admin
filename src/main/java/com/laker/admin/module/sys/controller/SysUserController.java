@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.laker.admin.config.LakerConfig;
 import com.laker.admin.framework.PageResponse;
 import com.laker.admin.framework.Response;
 import com.laker.admin.framework.aop.Metrics;
@@ -46,6 +47,8 @@ public class SysUserController {
     ISysRoleService sysRoleService;
     @Autowired
     ISysUserRoleService sysUserRoleService;
+    @Autowired
+    LakerConfig lakerConfig;
 
     @GetMapping
     @ApiOperation(value = "分页查询")
@@ -122,6 +125,17 @@ public class SysUserController {
         SysUser user = new SysUser();
         user.setUserId(userId);
         user.setPassword(SecureUtil.sha256(param.getNewPassword()));
+        sysUserService.updateById(user);
+        return Response.ok();
+    }
+
+    @PutMapping("/resetPwd/{userId}")
+    @ApiOperation(value = "更新用户密码")
+    @SaCheckPermission("user.reset.pwd")
+    public Response resetPwd(@PathVariable Long userId) {
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        user.setPassword(SecureUtil.sha256(lakerConfig.getDefaultPwd()));
         sysUserService.updateById(user);
         return Response.ok();
     }

@@ -58,9 +58,11 @@
 </script>
 
 <script type="text/html" id="user-bar">
-    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>
+    <button class="pear-btn pear-btn-success pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>
     </button>
     <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i>
+    </button>
+    <button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="resetPwd">重置密码
     </button>
 </script>
 
@@ -144,7 +146,7 @@
                     title: '操作',
                     toolbar: '#user-bar',
                     align: 'center',
-                    width: 130
+                    width: 200
                 }
             ]
         ]
@@ -185,6 +187,9 @@
                     break;
                 case 'edit':
                     easyAdmin.JumpEdit(MODULE_PATH, obj.data.userId)
+                    break;
+                case 'resetPwd':
+                    resetPwd(obj);
                     break;
             }
         });
@@ -239,6 +244,35 @@
             })
         });
 
+        let resetPwd = function (obj) {
+            layer.confirm('确定要重置密码吗？', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                layer.close(index);
+                easyAdmin.http({
+                    url: "/sys/user/resetPwd/" + obj.data['userId'],
+                    dataType: 'json',
+                    type: 'put',
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                time: 2000,
+                                area: ['100px', '80px'],
+                                content: "重置成功"
+                            });
+                        } else {
+                            layer.msg(result.msg, {
+                                icon: 2,
+                                time: 2000,
+                                area: ['260px', '65px'],
+                            });
+                        }
+                    }
+                })
+            });
+        }
 
         window.remove = function (obj) {
             layer.confirm('确定要删除该用户', {

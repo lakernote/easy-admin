@@ -1,16 +1,12 @@
 package com.laker.admin.framework.handler;
 
 import cn.hutool.system.SystemUtil;
-import com.laker.admin.config.AdminConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OpenBrowserHandler implements CommandLineRunner {
-    @Autowired
-    AdminConfig adminConfig;
     @Value("${server.port}")
     private int serverPort;
 

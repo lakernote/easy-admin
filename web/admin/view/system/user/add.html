@@ -13,14 +13,16 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">账号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="userName" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="userName" lay-verify="title|required" autocomplete="off"
+                               placeholder="请输入标题"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="nickName" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="nickName" lay-verify="title|required" autocomplete="off"
+                               placeholder="请输入标题"
                                class="layui-input">
                     </div>
                 </div>
@@ -34,7 +36,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">密码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="password" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="password" lay-verify="title|required" autocomplete="off"
+                               placeholder="请输入标题"
                                class="layui-input">
                     </div>
                 </div>
@@ -69,7 +72,6 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">角色</label>
                     <div id="view11" class="layui-input-block">
-
                     </div>
                 </div>
 
@@ -132,7 +134,7 @@
         })
 
 
-        form.on('submit(user-save)', function (data) {
+        form.on('submit(save)', function (data) {
             let roleIds = "";
             $('input[type=checkbox]:checked').each(function () {
                 roleIds += $(this).val() + ",";

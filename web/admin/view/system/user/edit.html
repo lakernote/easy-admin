@@ -110,12 +110,12 @@
                 type: 'post',
                 success: function (result) {
                     if (result.success) {
-                        layer.msg(result.msg, {icon: 1, time: 1000}, function () {
+                        layer.msg(result.msg, {icon: 1, time: 1000, area: ['100px', '80px']}, function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
                             parent.layui.table.reload("user-table");
                         });
                     } else {
-                        layer.msg(result.msg, {icon: 2, time: 1000});
+                        layer.msg(result.msg, {icon: 2, time: 1000, area: ['260px', '80px']});
                     }
                 }
             })

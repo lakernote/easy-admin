@@ -52,8 +52,4 @@ sa-token:
   token-style: simple-uuid
   # 是否打印操作日志
   is-log: false
-video:
-  url: http://1.1.1.1
-admin:
-  name: 大肥龙
-  port: 111
+  is-print: false
