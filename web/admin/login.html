@@ -35,7 +35,7 @@
         <input type="checkbox" name="" title="记住密码" lay-skin="primary" checked>
     </div>
     <div class="layui-form-item">
-        <button type="button" class="pear-btn pear-btn-success login" lay-submit lay-filter="login">
+        <button type="button" id="loginButton" class="pear-btn pear-btn-success login" lay-submit lay-filter="login">
             登 入
         </button>
     </div>
@@ -118,6 +118,12 @@
             captcha();
         })
 
+        $(document).keydown(function (e) {
+            var curKey = e.which;
+            if (curKey == 13) {
+                $("#loginButton").trigger("click");
+            }
+        });
     })
 </script>
 </body>
