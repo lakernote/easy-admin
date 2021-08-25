@@ -37,11 +37,11 @@ public class Response<T> {
     }
 
     public static <T> Response<T> ok(T data) {
-        return new Response<>("0", "", data);
+        return new Response<>("0", "操作成功", data);
     }
 
     public static <Void> Response<Void> ok() {
-        return new Response<Void>("0", "", null);
+        return new Response<Void>("0", "操作成功", null);
     }
 
     public static <T> Response<T> error(T data) {
