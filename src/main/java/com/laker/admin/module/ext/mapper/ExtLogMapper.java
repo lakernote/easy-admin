@@ -40,4 +40,7 @@ public interface ExtLogMapper extends BaseMapper<ExtLog> {
             "LIMIT 10")
     List<LogStatisticsTop10Vo> selectStatisticsVisitsTop10IP();
 
+    @Select("SELECT count(DISTINCT ip) from ext_log")
+    int selectDistinctIp();
+
 }
