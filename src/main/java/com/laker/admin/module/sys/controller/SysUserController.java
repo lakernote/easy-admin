@@ -14,6 +14,7 @@ import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
+import com.laker.admin.module.sys.pojo.PwdQo;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -100,6 +101,29 @@ public class SysUserController {
             sysUserRoles.add(sysUserRole);
         });
         return sysUserRoleService.saveBatch(sysUserRoles);
+    }
+
+
+    @PutMapping("/updatePwd")
+    @ApiOperation(value = "更新用户密码")
+    @SaCheckPermission("user.update.pwd")
+    public Response updatePwd(@RequestBody PwdQo param) {
+
+        if (!StrUtil.equals(param.getNewPassword(), param.getConfirmPassword())) {
+            return Response.error("500", "两次输入密码不一致");
+        }
+        long userId = StpUtil.getLoginIdAsLong();
+        SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
+                .eq(SysUser::getUserId, userId)
+                .eq(SysUser::getPassword, SecureUtil.sha256(param.getOldPassword())));
+        if (sysUser == null) {
+            return Response.error("500", "用户名密码错误");
+        }
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        user.setPassword(SecureUtil.sha256(param.getNewPassword()));
+        sysUserService.updateById(user);
+        return Response.ok();
     }
 
     @GetMapping("/{id}")

@@ -20,9 +20,11 @@ import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.ext.satoken.MySaTokenListener;
 import com.laker.admin.framework.ext.satoken.OnlineUser;
+import com.laker.admin.module.sys.entity.SysDept;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
+import com.laker.admin.module.sys.service.ISysDeptService;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -52,6 +54,8 @@ public class LoginController {
     ISysUserRoleService sysUserRoleService;
     @Autowired
     ISysRoleService sysRoleService;
+    @Autowired
+    ISysDeptService sysDeptService;
 
     @PostMapping("/api/v1/login")
     @ApiOperationSupport(order = 1)
@@ -103,7 +107,12 @@ public class LoginController {
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前用户信息")
     public Response userInfo() {
-        return Response.ok(sysUserService.getById(StpUtil.getLoginIdAsLong()));
+        SysUser user = sysUserService.getById(StpUtil.getLoginIdAsLong());
+        SysDept dept = sysDeptService.getById(user.getDeptId());
+        if (dept != null) {
+            user.setDeptName(dept.getDeptName());
+        }
+        return Response.ok(user);
     }
 
     @GetMapping("/api/v1/onlineUsers")
