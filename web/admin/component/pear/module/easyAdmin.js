@@ -64,7 +64,6 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                             console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
                             location.href = "login.html";
                         }
-
                         request.setRequestHeader(user.token.name, user.token.value);
                     }
                 },
@@ -74,8 +73,10 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 complete: function () {
                     o.complete && o.complete();
                 },
-                error: function () {
-                    o.error && o.error();
+                error: function (res) {
+                    let data = res.responseJSON;
+                    o.error && o.error(res);
+                    easyAdmin.redirectToLogin(data);
                 }
             });
         };
@@ -95,6 +96,22 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 async: async
             })
         };
+
+        this.redirectToLogin = function (data) {
+            if (!data.success && data.code === '401') {
+                console.log("会话已经过期了")
+                layer.open({
+                    time: 1500,// 自动关闭所需毫秒
+                    content: '会话已过期，即将跳转到登录页',
+                    end: function () {
+                        var login = layui.data('login');
+                        if (top != window) { // 如果不是最外面的壳，则让浏览器的url改变
+                            top.location.href = login.url;
+                        }
+                    }
+                });
+            }
+        }
 
         /**
          * 表格渲染
@@ -138,19 +155,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 headers: headers,
                 error: function (res) {
                     let data = res.responseJSON;
-                    if (!data.success && data.code === '401') {
-                        console.log("会话已经过期了")
-                        layer.open({
-                            content: '会话已过期，点击确定跳转到登录页',
-                            yes: function (index, layero) {
-                                var login = layui.data('login');
-                                if (top != window) { // 如果不是最外面的壳，则让浏览器的url改变
-                                    top.location.href = login.url;
-                                }
-                                layer.close(index); //如果设定了yes回调，需进行手工关闭
-                            }
-                        });
-                    }
+                    easyAdmin.redirectToLogin(data);
                 },
                 url: adminServerUrl + o.url,
                 where: o.where,
