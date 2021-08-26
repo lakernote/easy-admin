@@ -57,6 +57,11 @@
             , value: adminServerUrl
         });
         console.log('服务端地址:' + adminServerUrl);
+
+        layui.data('login', {
+            key: 'url'
+            , value: location.href
+        });
         let easyAdmin = layui.easyAdmin;
         var uid;
         captcha();

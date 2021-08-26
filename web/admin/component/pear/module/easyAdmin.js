@@ -135,6 +135,22 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
             table.render({
                 elem: o.elem, // 对应table的id
                 headers: headers,
+                error: function (res) {
+                    let data = res.responseJSON;
+                    if (!data.success && data.code === '401') {
+                        console.log("会话已经过期了")
+                        layer.open({
+                            content: '会话已过期，点击确定跳转到登录页',
+                            yes: function (index, layero) {
+                                var login = layui.data('login');
+                                if (top != window) { // 如果不是最外面的壳，则让浏览器的url改变
+                                    top.location.href = login.url;
+                                }
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            }
+                        });
+                    }
+                },
                 url: adminServerUrl + o.url,
                 where: o.where,
                 page: o.page, // 分页参数可以自定义

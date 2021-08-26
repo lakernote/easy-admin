@@ -14,7 +14,7 @@
                 <div class="layui-input-inline">
                     <input type="text" name="keyWord" placeholder="" class="layui-input">
                 </div>
-                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="dict-type-query">
+                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="query">
                     <i class="layui-icon layui-icon-search"></i>
                     查询
                 </button>
