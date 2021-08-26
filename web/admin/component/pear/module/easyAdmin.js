@@ -101,6 +101,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
          * @param options
          */
         this.tableRender = function (options) {
+            var load = layer.load();
             var defaults = {
                 elem: '#table',
                 page: true,
@@ -160,6 +161,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 // 自由配置头部工具栏右侧的图标按钮
                 defaultToolbar: o.defaultToolbar
             });
+            layer.close(load);
         }
 
         /**
