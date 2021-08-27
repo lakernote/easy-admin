@@ -171,27 +171,90 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 
 ![](https://images.gitee.com/uploads/images/2021/0813/164746_e1d2e656_709188.gif)
 
-**登录页**
-
-![](https://img-blog.csdnimg.cn/460b237c269f48fba2b49633f094cc76.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
-
-**主页菜单**
-
-![](https://img-blog.csdnimg.cn/9dee2724dc4c4befac3e5bb983fd1726.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
-
-**流程定义**
-
-![](https://img-blog.csdnimg.cn/1c01801cbd434150bb70890be31084d1.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
-
-**应用监控**
-
-![](https://img-blog.csdnimg.cn/60775442c9034987a9c55c2447856c2f.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
-
-**接口文档**
-
-![](https://img-blog.csdnimg.cn/4c016aeead7a44d6a22db8cd14db35a9.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70)
 
 
+<table>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>登录<img src="https://img-blog.csdnimg.cn/2386829492fa4741b871220ab6aaad29.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>首页<img src="https://img-blog.csdnimg.cn/4c466d0ed24743fcb6230fe4328c3f8c.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>在线用户<img src="https://img-blog.csdnimg.cn/09a4a31ef44a41399887d250f430067a.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>待办任务<img src="https://img-blog.csdnimg.cn/024278a0328d401898c262bf7e32e2c0.png"></center>
+        </td>
+    </tr>
+    <tr>
+   	 <td style="font-size: 12px;font-weight: bolder;">
+        <center>已办任务<img src="https://img-blog.csdnimg.cn/cd77ef0d500844dc914a32670e4e32d0.png"></center>
+    </td>
+    <td style="font-size: 12px;font-weight: bolder;">
+        <center>流程图<img src="https://img-blog.csdnimg.cn/e9f117ffdaaa4ad9ae0bb29592d3a608.png"></center>
+    </td>
+    </tr>
+     <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>行为监控<img src="https://img-blog.csdnimg.cn/69525f193a5741cc95094e2121ca4b71.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>应用监控<img src="https://img-blog.csdnimg.cn/0c040c5a9d3f42b7a8cea95bb16396dc.png"></center>
+        </td>
+    </tr>
+     <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>NginxUI<img src="https://img-blog.csdnimg.cn/dbc8a3b0d10b4841990812a82f5580fc.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>请假申请<img src="https://img-blog.csdnimg.cn/d51d3b32b0e84e58aa55423d9299ce40.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>定时任务<img src="https://img-blog.csdnimg.cn/49e61cfd0fcc47078654a80ed65891bf.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>定时任务日志<img src="https://img-blog.csdnimg.cn/b55e4aef91ee470186f8c55c3f6ca68c.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>基本资料<img src="https://img-blog.csdnimg.cn/d07a48218f8349078c4fa8d345ddc848.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>修改密码<img src="https://img-blog.csdnimg.cn/46e2c744a11644b4b021d87b1afb652d.png"></center>
+        </td>
+    </tr>
+     <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>用户管理<img src="https://img-blog.csdnimg.cn/f0c9fc81e116485481d051f79b7ee2a7.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>角色管理<img src="https://img-blog.csdnimg.cn/baf0a3dfd118463d821626977f25c768.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>权限管理<img src="https://img-blog.csdnimg.cn/50e5e190334141cdbaa6dd434e41e662.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>接口文档<img src="https://img-blog.csdnimg.cn/c1c130d423444fadb153041cab047dbc.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>流程定义<img src="https://img-blog.csdnimg.cn/620ea0928e1d4af7a15a502ea4ef279e.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>WebLog<img src="https://img-blog.csdnimg.cn/5c54c137ff3c484db6e09040bdf38a0b.png"></center>
+        </td>
+    </tr>
+</table>   
 
 #### 部署教程
 
