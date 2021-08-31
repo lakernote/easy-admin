@@ -27,8 +27,8 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide-xs"><a href="#"
                                                         class="fullScreen layui-icon layui-icon-screen-full"></a></li>
-<!--            <li class="layui-nav-item layui-hide-xs"><a href="http://www.pearadmin.com"-->
-<!--                                                        class="layui-icon layui-icon-website"></a></li>-->
+            <!--            <li class="layui-nav-item layui-hide-xs"><a href="http://www.pearadmin.com"-->
+            <!--                                                        class="layui-icon layui-icon-website"></a></li>-->
             <li class="layui-nav-item layui-hide-xs message"></li>
             <li class="layui-nav-item user">
                 <!-- 头 像 -->
@@ -37,7 +37,8 @@
                 </a>
                 <!-- 功 能 菜 单 -->
                 <dl class="layui-nav-child">
-                    <dd><a user-menu-url="view/system/user/center.html" user-menu-id="5555" user-menu-title="基本资料">基本资料</a>
+                    <dd><a user-menu-url="view/system/user/center.html" user-menu-id="5555"
+                           user-menu-title="基本资料">基本资料</a>
                     </dd>
                     <dd><a user-menu-url="view/system/user/password.html" user-menu-id="6666" user-menu-title="修改密码">修改密码</a>
                     </dd>
@@ -81,12 +82,14 @@
 <!-- 依 赖 脚 本 -->
 <script src="component/layui/layui.js"></script>
 <script src="component/pear/pear.js"></script>
+<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- 框 架 初 始 化 -->
 <script>
-    layui.use(['admin', 'jquery', 'convert', 'popup', 'easyAdmin'], function () {
+    layui.use(['admin', 'jquery', 'notice', 'popup', 'easyAdmin'], function () {
         var admin = layui.admin;
         var $ = layui.jquery;
-        var convert = layui.convert;
+        var notice = layui.notice;
         var popup = layui.popup;
         var easyAdmin = layui.easyAdmin;
 
@@ -146,6 +149,33 @@
 
         // 实现消息回调 [消息列表点击事件]
         // admin.message(function(id, title, context, form) {});
+
+
+        // 初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
+        notice.options = {
+            closeButton: true,//显示关闭按钮
+            debug: false,//启用debug
+            positionClass: "toast-top-right",//弹出的位置,
+            showDuration: "1000",//显示的时间
+            hideDuration: "1000",//消失的时间
+            timeOut: "10000",//停留的时间
+            extendedTimeOut: "1000",//控制时间
+            showEasing: "swing",//显示时的动画缓冲方式
+            hideEasing: "linear",//消失时的动画缓冲方式
+            iconClass: 'toast-info', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名
+            onclick: null, // 点击关闭回调
+        };
+
+        var url = easyAdmin.GetAdminServerUrl() + '/chatroom?' + easyAdmin.GetTokenQueryString();
+        var sock = new SockJS(url);  //创建SockJS连接。
+        var stomp = Stomp.over(sock);//创建STOMP客户端实例。实际上封装了SockJS,这样就能在WebSocket连接上发送STOMP消息。
+        stomp.connect({}, function (frame) {
+            stomp.subscribe('/topic/status', function (message) {
+                notice.info(JSON.parse(message.body).content);
+            });
+        }, function (frame) {
+            notice.error(frame);
+        });
     })
 </script>
 </body>
