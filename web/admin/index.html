@@ -86,12 +86,13 @@
 <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- 框 架 初 始 化 -->
 <script>
-    layui.use(['admin', 'jquery', 'notice', 'popup', 'easyAdmin'], function () {
+    layui.use(['admin', 'jquery', 'notice', 'popup', 'easyAdmin', 'util'], function () {
         var admin = layui.admin;
         var $ = layui.jquery;
         var notice = layui.notice;
         var popup = layui.popup;
         var easyAdmin = layui.easyAdmin;
+        let util = layui.util;//引入util
 
         // 在登录的时候塞入的值
         var user = layui.data('user');
@@ -150,6 +151,50 @@
         // 实现消息回调 [消息列表点击事件]
         // admin.message(function(id, title, context, form) {});
 
+        //固定块
+        util.fixbar({
+            bar1: true
+            , bar2: true
+            , css: {right: 20, bottom: 20}
+            , bgcolor: '#393D49'
+            , click: function (type) {
+                if (type === 'bar1') {
+                    layer.msg("功能开发中，敬请期待");
+                } else if (type === 'bar2') {
+                    // 公告层
+                    layer.open({
+                        type: 1,
+                        title: false //不显示标题栏
+                        ,
+                        closeBtn: false,
+                        area: '300px;',
+                        shade: 0.8,
+                        id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        ,
+                        btn: ['火速支援', '残忍拒绝'],
+                        btnAlign: 'c',
+                        moveType: 1 //拖拽模式，0或者1
+                        ,
+                        content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 200;">' +
+                            '工作时间久了' +
+                            '<br> 总想搞点骚东西，这是即' +
+                            '<br>写博客csdn:【lakernote】，' +
+                            '<br>搞公众号【Java大厂面试官】的又一个尝试' +
+                            '<br>拒绝白嫖，从我做起<br>' +
+                            '<br>来点个<a style="color: red">star</a>支持下作者吧' +
+                            '</div>'
+                        ,
+                        success: function (layero) {
+                            var btn = layero.find('.layui-layer-btn');
+                            btn.find('.layui-layer-btn0').attr({
+                                href: 'https://gitee.com/lakernote/easy-admin'
+                                , target: '_blank'
+                            });
+                        }
+                    });
+                }
+            }
+        });
 
         // 初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
         notice.options = {
@@ -176,6 +221,8 @@
         }, function (frame) {
             notice.error(frame);
         });
+
+
     })
 </script>
 </body>
