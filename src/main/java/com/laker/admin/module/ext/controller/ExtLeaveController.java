@@ -69,9 +69,12 @@ public class ExtLeaveController extends BaseFlowController {
     public Response saveOrUpdate(@RequestBody ExtLeave param) {
         if (param.getLeaveId() == null) {
             param.setLeaveUserId(StpUtil.getLoginIdAsLong());
-            Map args = new HashMap();
+            Map args = new HashMap(8);
+            // 当前登录人
             args.put("user1", StpUtil.getLoginIdAsString());
+            // 部门经理岗位的人 去用户表查询当前登录人同部门 and 岗位 = 部门经理
             args.put("user2", "17");
+            // 总经理岗位的人   去用户表查询当前登录人同部门 and 岗位 = 总经理
             args.put("user3", "18");
             args.put("day", param.getLeaveDay());
             args.put(SnakerEngine.ID, EasyAdminSecurityUtils.getCurrentUserInfo().getNickName() + "-" + DateUtil.now() + "的请假申请");
