@@ -216,8 +216,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                             layer.msg(result.msg, {
                                 icon: 2,
                                 time: 1000,
-                                area: ['100px', '65px'],
-                                content: "删除失败"
+                                area: ['260px', '65px']
                             });
                         }
                     }
@@ -313,7 +312,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         } else {
                             layer.msg(result.msg, {
                                 icon: 2,
-                                area: ['100px', '65px'],
+                                area: ['260px', '65px'],
                                 time: 1000
                             });
                         }

@@ -239,7 +239,8 @@
                     if (result.success) {
                         layer.msg("操作成功", {icon: 1, time: 1000, area: ['100px', '65px']});
                     } else {
-                        layer.msg(result.msg, {icon: 2, time: 1000, area: ['100px', '65px']});
+                        layer.msg(result.msg, {icon: 2, time: 1000, area: ['260px', '80px']});
+                        table.reload('user-table');
                     }
                 }
             })
@@ -301,8 +302,7 @@
                             layer.msg(result.msg, {
                                 icon: 2,
                                 time: 1000,
-                                area: ['100px', '60px'],
-                                content: "删除失败"
+                                area: ['260px', '80px']
                             });
                         }
                     }
@@ -329,7 +329,7 @@
                 layer.close(index);
                 let loading = layer.load();
                 easyAdmin.http({
-                    url: MODULE_PATH + "batchRemove/" + ids,
+                    url: "/sys/user/batch/" + checkIds,
                     dataType: 'json',
                     type: 'delete',
                     success: function (result) {
@@ -344,6 +344,7 @@
                         } else {
                             layer.msg(result.msg, {
                                 icon: 2,
+                                area: ['260px', '80px'],
                                 time: 1000
                             });
                         }

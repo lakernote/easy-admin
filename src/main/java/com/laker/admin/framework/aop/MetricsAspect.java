@@ -3,8 +3,6 @@ package com.laker.admin.framework.aop;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laker.admin.module.ext.entity.ExtLog;
@@ -83,8 +81,7 @@ public class MetricsAspect {
         if (StrUtil.isNotBlank(response) && response.length() <= 500) {
             logBean.setResponse(response);
         }
-        JSON json = JSONUtil.parse(response);
-        if (json instanceof JSONObject) {
+        if (JSONUtil.isJsonObj(response)) {
             Boolean success = JSONUtil.parseObj(response).getBool("success", true);
             logBean.setStatus(success);
         }

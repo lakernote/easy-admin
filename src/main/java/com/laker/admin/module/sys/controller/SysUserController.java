@@ -2,6 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -167,6 +168,14 @@ public class SysUserController {
             });
         }
         return Response.ok(allRole);
+    }
+
+
+    @DeleteMapping("/batch/{ids}")
+    @ApiOperation(value = "根据批量删除ids删除")
+    @SaCheckPermission("dict.delete")
+    public Response batchRemove(@PathVariable Long[] ids) {
+        return Response.ok(sysUserService.removeByIds(CollUtil.toList(ids)));
     }
 
 }
