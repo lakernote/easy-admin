@@ -17,6 +17,10 @@
         <i class="layui-icon layui-icon-add-1"></i>
         新增
     </button>
+    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+        <i class="layui-icon layui-icon-delete"></i>
+        删除
+    </button>
     <button class="pear-btn pear-btn-success pear-btn-md" lay-event="expandAll">
         <i class="layui-icon layui-icon-spread-left"></i>
         展开
@@ -81,6 +85,7 @@
                     page: false,
                     cols: [
                         [
+                            {type: 'checkbox'},
                             {field: 'title', minWidth: 200, title: '菜单名称'},
                             {field: 'icon', title: '图标', templet: '#icon'},
                             {field: 'type', title: '权限类型', templet: '#power-type'},
@@ -170,11 +175,11 @@
                     success: function (result) {
                         layer.close(loading);
                         if (result.success) {
-                            layer.msg(result.msg, {icon: 1, time: 1000}, function () {
+                            layer.msg(result.msg, {icon: 1, time: 1000, area: ['260px', '65px']}, function () {
                                 obj.del();
                             });
                         } else {
-                            layer.msg(result.msg, {icon: 2, time: 1000});
+                            layer.msg(result.msg, {icon: 2, time: 1000, area: ['260px', '65px']});
                         }
                     }
                 })
