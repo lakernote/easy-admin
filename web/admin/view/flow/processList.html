@@ -41,10 +41,6 @@
         <i class="layui-icon layui-icon-add-1"></i>
         新增
     </button>
-    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
-        <i class="layui-icon layui-icon-delete"></i>
-        删除
-    </button>
 </script>
 
 <script type="text/html" id="user-bar">
@@ -77,9 +73,7 @@
         let common = layui.common;
         let easyAdmin = layui.easyAdmin;
         let cols = [
-            [{
-                type: 'checkbox'
-            },
+            [
                 {
                     title: '名称',
                     field: 'name',
