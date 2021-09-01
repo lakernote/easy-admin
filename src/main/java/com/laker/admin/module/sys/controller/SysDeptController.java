@@ -66,13 +66,17 @@ public class SysDeptController {
 
     @GetMapping("/data")
     public ResultTable data(SysDept param) {
-        List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery().eq(SysDept::getStatus, true));
+        List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery()
+                .eq(SysDept::getStatus, true)
+                .orderByAsc(SysDept::getSort));
         return ResultTable.dataTable(data);
     }
 
     @GetMapping("/tree")
     public ResultTree tree(SysDept param) {
-        List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery().eq(SysDept::getStatus, true));
+        List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery()
+                .eq(SysDept::getStatus, true)
+                .orderByAsc(SysDept::getSort));
         return ResultTree.data(data);
     }
 

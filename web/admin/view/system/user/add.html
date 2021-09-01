@@ -36,7 +36,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">密码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="password" lay-verify="title|required" autocomplete="off"
+                        <input type="password" name="password" lay-verify="required" autocomplete="off"
                                placeholder="请输入标题"
                                class="layui-input">
                     </div>
@@ -125,6 +125,7 @@
             dtree.renderSelect({
                 elem: "#selectParent",
                 data: treeData.data,
+                selectCardHeight: "150",
                 selectInputName: {nodeId: "deptId", context: "deptName"},
                 // skin: "layui",
                 dataFormat: "list",
@@ -162,7 +163,7 @@
                             });
                     } else {
                         layer.msg(result.msg,
-                            {icon: 2, time: 1000, area: ['100px', '80px']}
+                            {icon: 2, time: 1000, area: ['260px', '80px']}
                         );
                     }
                 }

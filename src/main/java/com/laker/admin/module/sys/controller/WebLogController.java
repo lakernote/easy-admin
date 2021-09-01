@@ -3,6 +3,7 @@ package com.laker.admin.module.sys.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.util.StrUtil;
 import com.laker.admin.config.LakerConfig;
+import com.laker.admin.framework.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggerGroup;
@@ -39,7 +40,12 @@ public class WebLogController {
 
     @GetMapping(value = "/file", produces = "text/plain; charset=UTF-8")
     @ResponseBody
+    @SaCheckPermission("weblog.list")
     public Resource logFile(@RequestParam(required = false) String filePath) {
+        if (StrUtil.isNotBlank(filePath)) {
+            throw new BusinessException("演示环境，禁止修改模式文件路径");
+        }
+
         String lookFilePath = lakerConfig.getLogFilePath();
         if (StrUtil.isNotBlank(filePath)) {
             lookFilePath = filePath;

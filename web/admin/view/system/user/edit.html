@@ -13,7 +13,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">账号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="userName" value="854085467" lay-verify="title" autocomplete="off"
+                        <input type="text" name="userName" lay-verify="title" autocomplete="off"
                                placeholder="请输入标题" class="layui-input">
                     </div>
                 </div>
@@ -27,14 +27,14 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">邮箱</label>
                     <div class="layui-input-block">
-                        <input type="text" name="email" value="854085467@qq.com" lay-verify="title" autocomplete="off"
+                        <input type="text" name="email" lay-verify="title" autocomplete="off"
                                placeholder="请输入标题" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">电话</label>
                     <div class="layui-input-block">
-                        <input type="text" name="phone" value="15555555555" lay-verify="title" autocomplete="off"
+                        <input type="text" name="phone" lay-verify="title" autocomplete="off"
                                placeholder="请输入标题" class="layui-input">
                     </div>
                 </div>
@@ -54,7 +54,6 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">角色</label>
                     <div id="view11" class="layui-input-block">
-
                     </div>
                 </div>
             </div>
@@ -85,10 +84,9 @@
 </script>
 
 <script>
-    layui.use(['form', 'jquery', 'dtree', 'easyAdmin', 'popup'], function () {
+    layui.use(['form', 'jquery', 'dtree', 'easyAdmin'], function () {
         let form = layui.form;
         let $ = layui.jquery;
-        var popup = layui.popup;
         let dtree = layui.dtree;
         let easyAdmin = layui.easyAdmin;
         var id;
@@ -137,6 +135,7 @@
                         dtree.renderSelect({
                             elem: "#selectParent",
                             data: treeData.data,
+                            selectCardHeight: "150",
                             method: 'get',
                             selectInputName: {nodeId: "deptId", context: "deptName"},
                             // skin: "layui",

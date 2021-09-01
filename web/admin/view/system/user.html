@@ -155,11 +155,12 @@
             dtree.renderSelect({
                 elem: "#selectParent",
                 data: data.data,
+                selectTips: "请选择部门",
+                selectCardHeight: "150",
                 selectInputName: {nodeId: "deptId", context: "deptName"},
                 // skin: "layui",
                 dataFormat: "list",
-                response: {treeId: "deptId", parentId: "pid", title: "deptName"},
-                selectInitVal: "1"
+                response: {treeId: "deptId", parentId: "pid", title: "deptName"}
             });
         })
 
