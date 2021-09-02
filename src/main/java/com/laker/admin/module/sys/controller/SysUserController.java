@@ -74,6 +74,10 @@ public class SysUserController {
     @SaCheckPermission("user.update")
     public Response saveOrUpdate(@RequestBody SysUser param) {
 
+        if (param.getDeptId() == null) {
+            return Response.error("500", "请选择部门");
+        }
+
         if (param.getUserId() == null) {
             // 只有超级管理员才能创建用户
             if (StpUtil.getLoginIdAsLong() != 1L) {
