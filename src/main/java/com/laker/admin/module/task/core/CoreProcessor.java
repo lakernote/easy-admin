@@ -6,7 +6,7 @@ import cn.hutool.cache.impl.LFUCache;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.laker.admin.framework.SpringUtils;
+import com.laker.admin.framework.utils.SpringUtils;
 import com.laker.admin.module.enums.TaskStateEnum;
 import com.laker.admin.module.task.entity.SysTask;
 import com.laker.admin.module.task.service.ISysTaskService;

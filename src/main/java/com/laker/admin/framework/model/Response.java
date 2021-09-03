@@ -1,4 +1,4 @@
-package com.laker.admin.framework;
+package com.laker.admin.framework.model;
 
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.ApiModel;

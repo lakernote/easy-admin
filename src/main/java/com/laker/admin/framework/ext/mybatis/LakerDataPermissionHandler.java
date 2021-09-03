@@ -2,7 +2,7 @@ package com.laker.admin.framework.ext.mybatis;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
-import com.laker.admin.framework.EasyAdminSecurityUtils;
+import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;

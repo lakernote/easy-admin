@@ -2,10 +2,9 @@ package com.laker.admin.module.sys.controller;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
-import com.laker.admin.framework.Response;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.cache.ICache;
 import com.wf.captcha.ArithmeticCaptcha;
-import com.wf.captcha.ChineseGifCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

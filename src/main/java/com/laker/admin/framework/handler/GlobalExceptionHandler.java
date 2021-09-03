@@ -4,7 +4,7 @@ package com.laker.admin.framework.handler;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.lang.Dict;
-import com.laker.admin.framework.Response;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;

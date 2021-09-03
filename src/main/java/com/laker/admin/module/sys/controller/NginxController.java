@@ -5,7 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.odiszapc.nginxparser.NgxConfig;
 import com.github.odiszapc.nginxparser.NgxDumper;
-import com.laker.admin.framework.Response;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.pojo.NginxQo;
 import com.laker.admin.module.sys.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.laker.admin.module.task.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.framework.PageResponse;
+import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.module.task.entity.SysTasklog;
 import com.laker.admin.module.task.service.ISysTasklogService;
 import io.swagger.annotations.ApiOperation;

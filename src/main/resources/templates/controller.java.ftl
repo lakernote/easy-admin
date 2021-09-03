@@ -9,8 +9,8 @@ import ${package.Service}.${table.serviceName};
 <#else>
     import org.springframework.stereotype.Controller;
 </#if>
-import com.laker.admin.framework.Response;
-import com.laker.admin.framework.PageResponse;
+import com.laker.admin.framework.model.Response;
+import com.laker.admin.framework.model.PageResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

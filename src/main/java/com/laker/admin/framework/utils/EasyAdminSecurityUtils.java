@@ -1,6 +1,7 @@
-package com.laker.admin.framework;
+package com.laker.admin.framework.utils;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 
 /**

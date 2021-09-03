@@ -2,7 +2,7 @@ package com.laker.admin.framework.ext.stomp;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
-import com.laker.admin.framework.EasyAdminSecurityUtils;
+import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.utils.IP2CityUtil;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;

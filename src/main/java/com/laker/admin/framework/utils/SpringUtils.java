@@ -1,4 +1,4 @@
-package com.laker.admin.framework;
+package com.laker.admin.framework.utils;
 
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;

@@ -3,7 +3,7 @@ package com.laker.admin.framework.ext.satoken;
 import cn.dev33.satoken.action.SaTokenActionDefaultImpl;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.laker.admin.framework.EasyAdminSecurityUtils;
+import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.module.enums.DataFilterTypeEnum;
 import org.springframework.stereotype.Component;

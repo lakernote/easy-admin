@@ -1,7 +1,7 @@
 package com.laker.admin.module.task;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
-import com.laker.admin.framework.Response;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.task.core.CoreProcessor;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

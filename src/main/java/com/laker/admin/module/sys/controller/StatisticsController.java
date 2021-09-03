@@ -2,7 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.Dict;
-import com.laker.admin.framework.Response;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.ext.mapper.ExtLogMapper;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import org.snaker.engine.access.QueryFilter;

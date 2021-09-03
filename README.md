@@ -140,7 +140,7 @@ admin:
 
 2.在`web/admin/index.html`处，如下图示例操作，点击图标就可以在浏览器访问了
 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0816/001751_ef56d4c9_709188.png "屏幕截图.png")
+![](https://img-blog.csdnimg.cn/6cd054be980542ff87399212d0b06a1a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 #### 代码生成
 
@@ -191,7 +191,7 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
         </td>
     </tr>
     <tr>
-   	 <td style="font-size: 12px;font-weight: bolder;">
+        <td style="font-size: 12px;font-weight: bolder;">
         <center>已办任务<img src="https://img-blog.csdnimg.cn/cd77ef0d500844dc914a32670e4e32d0.png"></center>
     </td>
     <td style="font-size: 12px;font-weight: bolder;">
@@ -256,6 +256,7 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
     </tr>
 </table>   
 
+
 #### 部署教程
 
 **整体部署规划结构如下：**
@@ -263,7 +264,7 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 
 
 
-![](https://images.gitee.com/uploads/images/2021/0812/141324_9e6528a0_709188.png "屏幕截图.png")
+![](https://img-blog.csdnimg.cn/b60db081da7b400daa5fc9c307098c19.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 ##### 服务端
 
@@ -289,13 +290,24 @@ spring:
 nohup java -jar easy-admin-1.0.0.jar &
 ```
 
+> 由于验证码涉及到java安全协议，建议使用脚本启动 `sh run.sh start`
+
 ##### 前端
+
+**首先修改配置**`web/admin/config/pear.config.yml`，填写你自己服务器实际ip、port
+
+```javascript
+## 配置服务端地址
+admin:
+  server: http://localhost:8080
+```
 
 **按照相对位置放即可**（或者自己弄个nginx丢进去）
 
 ```
 easy-admin.jar
 application.yml
+run.sh
 web
 --admin
 ----admin
@@ -312,6 +324,15 @@ web
 
 ###  ☎️联系方式☎️
 
-**微信公众号** : **Java大厂面试官** , **个人微信: lakernote**
+**个人微信: lakernote**（进群加我拉你）
+
+![](https://img-blog.csdnimg.cn/cf8ed2c013614143b346a453a9082232.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_10,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
+
+------------------------------------------------
+
+
+
+**微信公众号** : **Java大厂面试官** 
 ![img](https://img-blog.csdnimg.cn/2020110915544650.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70#pic_center)
 

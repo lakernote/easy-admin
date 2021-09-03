@@ -1,4 +1,4 @@
-package com.laker.admin.framework;
+package com.laker.admin.framework.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

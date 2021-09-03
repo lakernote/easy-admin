@@ -53,3 +53,7 @@ sa-token:
   # 是否打印操作日志
   is-log: false
   is-print: false
+laker:
+  waf:
+    sql-enabled: true
+    xss-enabled: true

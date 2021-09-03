@@ -1,6 +1,6 @@
-package com.laker.admin.framework;
+package com.laker.admin.framework.ext;
 
-import com.laker.admin.framework.Response;
+import com.laker.admin.framework.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
