@@ -57,3 +57,4 @@ laker:
   waf:
     sql-enabled: true
     xss-enabled: true
+    excludes: /flow/*

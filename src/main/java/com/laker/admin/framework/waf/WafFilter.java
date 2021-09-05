@@ -76,10 +76,10 @@ public class WafFilter implements Filter {
             Pattern p = Pattern.compile("^" + pattern);
             Matcher m = p.matcher(url);
             if (m.find()) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     private boolean getParamConfig(String value) {
