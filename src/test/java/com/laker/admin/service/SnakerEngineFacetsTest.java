@@ -185,4 +185,13 @@ public class SnakerEngineFacetsTest {
 
     }
 
+
+
+
+    @Test
+    public void startInstanceByname() {
+        Process diy = snakerEngineFacets.getEngine().process().getProcessByName("自定义");
+        Order order = snakerEngineFacets.startInstanceById(diy.getId(), "", Dict.create().set("name", "laker"));
+    }
+
 }
