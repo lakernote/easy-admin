@@ -34,7 +34,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/error",
                         "/swagger-resources/**",
                         "/api/v1/login",
-                        "/captcha");
+                        "/captcha",
+                        "/thumbnail");
     }
 
     @Override

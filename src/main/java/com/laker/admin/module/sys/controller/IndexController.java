@@ -1,15 +1,23 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
-import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.model.Response;
+import com.laker.admin.framework.utils.EasyImageUtils;
 import com.wf.captcha.ArithmeticCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * /admin/** 无需check login
@@ -50,4 +58,31 @@ public class IndexController {
 
         return Response.ok(Dict.create().set("uid", uid).set("image", captcha.toBase64()));
     }
+
+    /**
+     * 缩略图
+     * http://localhost:8080/thumbnail?url=http://localhost:8080/admin/admin/images/wx.jpg
+     */
+    @GetMapping("/thumbnail")
+    public void thumbnail(String url, HttpServletResponse response,
+                          @RequestParam(required = false, defaultValue = "1") int type,
+                          @RequestParam(required = false, defaultValue = "100") int width,
+                          @RequestParam(required = false, defaultValue = "100") int height) throws IOException {
+        OutputStream out = new BufferedOutputStream(response.getOutputStream());
+        switch (type) {
+            case 1: // 预览
+                response.setContentType("image/" + FileUtil.getSuffix(url) + "; charset=utf-8");
+                break;
+            case 2: // 下载
+                response.addHeader("Content-Disposition", "attachment;filename="
+                        + new String(FileUtil.mainName(url).getBytes("utf-8"), "iso-8859-1") + "." + FileUtil.getSuffix(url));
+                response.setContentType("application/octet-stream");
+                break;
+            default:
+                response.setContentType("image/" + FileUtil.getSuffix(url) + "; charset=utf-8");
+
+        }
+        EasyImageUtils.compressBysize(url, out, width, height);
+    }
+
 }
