@@ -211,6 +211,49 @@
         window.refresh = function () {
             treetable.reload('#dept-table');
         }
+
+        window.batchRemove = function (obj) {
+
+            var checkIds = easyAdmin.checkField(obj, 'deptId');
+
+            if (checkIds === "") {
+                layer.msg("未选中数据", {
+                    icon: 3,
+                    time: 1000
+                });
+                return false;
+            }
+
+            layer.confirm('确定要删除这些用户', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                layer.close(index);
+                let loading = layer.load();
+                easyAdmin.http({
+                    url: "/sys/dept/batch/" + checkIds,
+                    dataType: 'json',
+                    type: 'delete',
+                    success: function (result) {
+                        layer.close(loading);
+                        if (result.success) {
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                time: 1000
+                            }, function () {
+                                table.reload('user-table');
+                            });
+                        } else {
+                            layer.msg(result.msg, {
+                                icon: 2,
+                                area: ['260px', '80px'],
+                                time: 1000
+                            });
+                        }
+                    }
+                })
+            });
+        }
     })
 </script>
 </body>

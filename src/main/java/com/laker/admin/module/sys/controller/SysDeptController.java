@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -61,6 +62,13 @@ public class SysDeptController {
     @SaCheckPermission("dept.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysDeptService.removeById(id));
+    }
+
+    @DeleteMapping("/batch/{ids}")
+    @ApiOperation(value = "根据批量删除ids删除")
+    @SaCheckPermission("dict.delete")
+    public Response batchRemove(@PathVariable Long[] ids) {
+        return Response.ok(sysDeptService.removeByIds(CollUtil.toList(ids)));
     }
 
 
