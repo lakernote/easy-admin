@@ -2,7 +2,7 @@
 
 > **有用的话请鼓励❤️下作者，右上角☝️watch、star、fork三连点🙏🙏🙏一波**
 
-#### 介绍
+#### 🌵介绍
 
 基于 **SpringBoot2+MybatiPlus+LayUI+Snaker+Mysql**技术，可**前后端分离开发**或者 **前后端一体式开发** ，一款**简单**、**轻量级**的 **后台管理系统脚手架** 。 **内置权限管理、工作流引擎、应用监控、Api文档、行为监控、前后端代码生成、动态定时任务、在线WebLog等** 。可以理解为 **轻量、升级版的若依/RuoYi** 。
 
@@ -22,13 +22,17 @@
 
 **项目地址**：[https://gitee.com/lakernote/easy-admin](https://gitee.com/lakernote/easy-admin)
 
-**配套技术文章**：👉[从零搭建开发脚手架](https://blog.csdn.net/abu935009066/category_10817814.html)
+📕**配套技术文章**：👉[从零搭建开发脚手架](https://blog.csdn.net/abu935009066/category_10817814.html)
 
 > 本开源项目，也是从我的专栏《从零搭建开发脚手架》整理而来
 
-#### 在线演示
+📗**配套视频地址**：👉[B站欢迎一键三连](https://space.bilibili.com/502919442)
 
-💋💋**地址**：[http://101.132.189.23:81/admin/login.html](http://101.132.189.23:81/admin/login.html)💋💋
+> 视频正在实时更新中，欢迎大家批评指导
+
+#### 🌰 在线演示
+
+🌽**地址**：[http://101.132.189.23:81/admin/login.html](http://101.132.189.23:81/admin/login.html)
 
 > **低配机轻点拍**，**穷比**✈️✈️✈️✈️✈️✈️✈️
 
@@ -40,7 +44,7 @@
 
 >  **当前处于开发阶段** ，由于我前端技术小白水平，开发进度较慢，还有很多功能未开发完成，有想一起开发的小伙伴，请加微信☎️【**lakernote**】联系我。
 
-#### 功能列表
+#### 🌴 功能列表
 
 | 功能                                           | 状态 | 相关文档                                                     |
 | ---------------------------------------------- | ---- | ------------------------------------------------------------ |
@@ -58,7 +62,7 @@
 | **前端路由守卫**                               | ❎    |                                                              |
 | **前端按钮控制**                               | ❎    |                                                              |
 
-#### 软件架构
+#### 🌲软件架构
 
 **其他相关文章**
 
@@ -70,7 +74,7 @@
 - [从零搭建开发脚手架 Spring Boot集成Flyway实现数据库版本管理](https://blog.csdn.net/abu935009066/article/details/114586037)
 - [Spring Boot Tomcat临时目录tmp抛错误异常](https://blog.csdn.net/abu935009066/article/details/114596193)
 
-##### 技术选型
+##### 🌳技术选型
 
 **前端**：
 
@@ -96,7 +100,7 @@
 - **mail 邮箱**
 - **snakerflow 国产工作流引擎**
 
-#### 开发教程
+#### 🌼开发教程
 
 ##### 服务端
 
@@ -142,7 +146,7 @@ admin:
 
 ![](https://img-blog.csdnimg.cn/6cd054be980542ff87399212d0b06a1a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_20,color_FFFFFF,t_70,g_se,x_16)
 
-#### 代码生成
+#### 🍄代码生成
 
 执行`CodeGenerator.java`，按照提示输入即可，以下为示例和解释
 
@@ -159,13 +163,13 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 
 生成好后，直接在菜单权限处，配置访问路径`view/ext/log.html`即可访问新建模块
 
-#### 规约
+#### 🍂规约
 
 数据库表命名：模块名+实体，例如：ext_log
 
 数据库字段：主键定义为bigint，且命名为：业务Id,例如：logId
 
-#### 项目截图
+####  🍃项目截图
 
 **在线WebLog**
 
@@ -257,7 +261,8 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 </table>   
 
 
-#### 部署教程
+
+#### 🌺部署教程
 
 **整体部署规划结构如下：**
 
@@ -334,4 +339,3 @@ web
 **微信公众号** : **Java大厂面试官** 
 
 ![](https://img-blog.csdnimg.cn/2020110915544650.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70#pic_center)
-
