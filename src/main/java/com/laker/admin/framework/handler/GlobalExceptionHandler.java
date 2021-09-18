@@ -4,8 +4,8 @@ package com.laker.admin.framework.handler;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.lang.Dict;
-import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.exception.BusinessException;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public Response handleRRException(BusinessException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
-        log.error("业务异常", e);
+        log.error("业务异常", e.getMsg());
         return Response.error(e.getCode() + "", e.getMsg());
     }
 
@@ -132,17 +132,16 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
-    public Response handleNotLoginException(NotLoginException e, HttpServletResponse response) throws IOException {
+    public Response handleNotLoginException(NotLoginException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         return Response.error("401", e.getMessage());
     }
 
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(SaTokenException.class)
     public Response handleMaxSizeException(SaTokenException e, HttpServletResponse response) throws IOException {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         return Response.error("403", e.getMessage());
     }
 
