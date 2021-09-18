@@ -15,7 +15,7 @@ public class OpenBrowserHandler implements CommandLineRunner {
         try {
             //可以指定自己的路径
             if (SystemUtil.getOsInfo().isWindows()) {
-                Runtime.getRuntime().exec("cmd  /c  start   http://localhost:" + serverPort + "/admin");
+                Runtime.getRuntime().exec("cmd  /c  start   http://localhost:" + serverPort + "/admin/login.html");
             } else {
                 String name = SystemUtil.getOsInfo().getName();
                 System.out.println("==================================================注意====================================================");
