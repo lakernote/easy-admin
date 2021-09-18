@@ -12,8 +12,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       initial-size: 1
-      min-idle: 20
-      max-active: 300
+      min-idle: 5
+      max-active: 20
       test-on-borrow: true
       validation-query: select 1
   profiles:
