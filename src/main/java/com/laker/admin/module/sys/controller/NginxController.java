@@ -2,9 +2,11 @@ package com.laker.admin.module.sys.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.odiszapc.nginxparser.NgxConfig;
 import com.github.odiszapc.nginxparser.NgxDumper;
+import com.laker.admin.config.LakerConfig;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.pojo.NginxQo;
 import com.laker.admin.module.sys.service.ISysDeptService;
@@ -28,11 +30,16 @@ import java.util.Date;
 public class NginxController {
     @Autowired
     ISysDeptService sysDeptService;
+    @Autowired
+    LakerConfig lakerConfig;
 
     @GetMapping
-    public Response get(@RequestParam(required = false, defaultValue = "file/nginx.conf") String path) {
+    public Response get(@RequestParam(required = false) String path) {
         NgxConfig conf = null;
         try {
+            if (StrUtil.isBlank(path)) {
+                path = lakerConfig.getNginx().getConfPath();
+            }
             conf = NgxConfig.read(path);
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,10 +52,43 @@ public class NginxController {
     @PostMapping
     public Response update(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
-            nginxQo.setPath("file/nginx.conf");
+            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
         }
         FileUtil.rename(new File(nginxQo.getPath()), "nginx.conf-bak-" + DateUtil.format(new Date(), "yyyy-MM-dd-HH-mm-ss"), true);
         FileUtil.writeString(nginxQo.getContext(), new File(nginxQo.getPath()), "utf-8");
         return Response.ok();
+    }
+
+    @PostMapping("/check")
+    public Response check(@RequestBody NginxQo nginxQo) {
+        if (StrUtil.isBlank(nginxQo.getPath())) {
+            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+        }
+        String res = RuntimeUtil.execForStr("nginx -t -c " + nginxQo.getPath());
+        return Response.ok(res);
+    }
+
+    @PostMapping("/reload")
+    public Response reload(@RequestBody NginxQo nginxQo) {
+        if (StrUtil.isBlank(nginxQo.getPath())) {
+            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+        }
+        String res = RuntimeUtil.execForStr("nginx -s reload -c " + nginxQo.getPath());
+        return Response.ok(res);
+    }
+
+    @PostMapping("/start")
+    public Response start(@RequestBody NginxQo nginxQo) {
+        if (StrUtil.isBlank(nginxQo.getPath())) {
+            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+        }
+        String res = RuntimeUtil.execForStr("nginx -c " + nginxQo.getPath());
+        return Response.ok(res);
+    }
+
+    @PostMapping("/stop")
+    public Response stop() {
+        String res = RuntimeUtil.execForStr("nginx -s quit");
+        return Response.ok(res);
     }
 }

@@ -9,14 +9,16 @@
 <div class="layui-card">
     <div class="layui-card-body">
         <div class="layui-btn-group">
-            <button type="button" class="layui-btn">校验</button>
-            <button type="button" class="layui-btn ">启动</button>
-            <button type="button" class="layui-btn">停止</button>
-            <button type="button" class="layui-btn">热启动</button>
+            <button type="button" class="layui-btn" id="check">校验</button>
+            <button type="button" class="layui-btn" id="start">启动</button>
+            <button type="button" class="layui-btn" id="stop">停止</button>
+            <button type="button" class="layui-btn" id="reload">热启动</button>
         </div>
     </div>
+</div>
+<div class="layui-card">
     <div class="layui-card-body">
-        <form class="layui-form" action="">
+        <form class="layui-form" action="" lay-filter="nginx">
 
             <div class="layui-form-item" style="width: 100%;">
                 <label class="layui-form-label">配置路径</label>
@@ -41,6 +43,7 @@
     </div>
 </div>
 
+
 </body>
 
 <script src="../../component/layui/layui.js"></script>
@@ -53,6 +56,118 @@
         getConfContent();
         $("#getConf").click(function () {
             getConfContent();
+        });
+
+        $("#check").click(function () {
+            easyAdmin.http({
+                url: "/sys/nginx/check",
+                data: JSON.stringify(form.val("nginx")),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'post',
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg,
+                            {
+                                icon: 1,
+                                time: 2000,
+                                area: ['100px', '65px'],
+                                content: "执行成功"
+                            });
+                    } else {
+                        layer.msg(result.msg,
+                            {
+                                icon: 2,
+                                time: 2000,
+                                area: ['220px', '70px']
+                            }
+                        );
+                    }
+                }
+            })
+        });
+        $("#start").click(function () {
+            easyAdmin.http({
+                url: "/sys/nginx/start",
+                data: JSON.stringify(form.val("nginx")),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'post',
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg,
+                            {
+                                icon: 1,
+                                time: 2000,
+                                area: ['100px', '65px'],
+                                content: "执行成功"
+                            });
+                    } else {
+                        layer.msg(result.msg,
+                            {
+                                icon: 2,
+                                time: 2000,
+                                area: ['220px', '70px']
+                            }
+                        );
+                    }
+                }
+            })
+        });
+        $("#stop").click(function () {
+            easyAdmin.http({
+                url: "/sys/nginx/stop",
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'post',
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg,
+                            {
+                                icon: 1,
+                                time: 2000,
+                                area: ['100px', '65px'],
+                                content: "执行成功"
+                            });
+                    } else {
+                        layer.msg(result.msg,
+                            {
+                                icon: 2,
+                                time: 2000,
+                                area: ['220px', '70px']
+                            }
+                        );
+                    }
+                }
+            })
+        });
+        $("#reload").click(function () {
+            easyAdmin.http({
+                url: "/sys/nginx/reload",
+                data: JSON.stringify(form.val("nginx")),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'post',
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg,
+                            {
+                                icon: 1,
+                                time: 2000,
+                                area: ['100px', '65px'],
+                                content: "执行成功"
+                            });
+                    } else {
+                        layer.msg(result.msg,
+                            {
+                                icon: 2,
+                                time: 2000,
+                                area: ['220px', '70px']
+                            }
+                        );
+                    }
+                }
+            })
         });
         form.on('submit(save)', function (data) {
             // 转换

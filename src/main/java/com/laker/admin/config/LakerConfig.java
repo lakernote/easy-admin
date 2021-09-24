@@ -28,6 +28,38 @@ public class LakerConfig {
      */
     private Waf waf = new Waf();
 
+    /**
+     * nginx
+     */
+    private Nginx nginx = new Nginx();
+
+    public static class Nginx {
+        /**
+         * nginx路径
+         */
+        private String path;
+        /**
+         * nginx配置文件路径
+         */
+        private String confPath = "file/nginx.conf";
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getConfPath() {
+            return confPath;
+        }
+
+        public void setConfPath(String confPath) {
+            this.confPath = confPath;
+        }
+    }
+
     public static class Waf {
         private boolean xssEnabled = true;
         private boolean sqlEnabled = true;
