@@ -1,5 +1,6 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RuntimeUtil;
@@ -50,6 +51,7 @@ public class NginxController {
     }
 
     @PostMapping
+    @SaCheckPermission("nginx.update")
     public Response update(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(lakerConfig.getNginx().getConfPath());
@@ -60,6 +62,7 @@ public class NginxController {
     }
 
     @PostMapping("/check")
+    @SaCheckPermission("nginx.check")
     public Response check(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(lakerConfig.getNginx().getConfPath());
@@ -69,6 +72,7 @@ public class NginxController {
     }
 
     @PostMapping("/reload")
+    @SaCheckPermission("nginx.reload")
     public Response reload(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(lakerConfig.getNginx().getConfPath());
@@ -78,6 +82,7 @@ public class NginxController {
     }
 
     @PostMapping("/start")
+    @SaCheckPermission("nginx.start")
     public Response start(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(lakerConfig.getNginx().getConfPath());
@@ -87,6 +92,7 @@ public class NginxController {
     }
 
     @PostMapping("/stop")
+    @SaCheckPermission("nginx.stop")
     public Response stop() {
         String res = RuntimeUtil.execForStr("nginx -s quit");
         return Response.ok(res);

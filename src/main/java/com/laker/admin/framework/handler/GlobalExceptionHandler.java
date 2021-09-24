@@ -24,10 +24,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -139,9 +137,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(SaTokenException.class)
-    public Response handleMaxSizeException(SaTokenException e, HttpServletResponse response) throws IOException {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
-        log.error(e.getMessage());
+    public Response handleMaxSizeException(SaTokenException e) {
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
         return Response.error("403", e.getMessage());
     }
 
