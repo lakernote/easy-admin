@@ -115,7 +115,8 @@
                 // assignee: {name: 'assignee', value: ''},
                 assignee: {
                     name: 'assignee', label: '参与者', value: '', editor: function () {
-                        return new snakerflow.editors.inputEditor();
+
+                        return new snakerflow.editors.selectEditor(snakerflow.config.userJson);
                     }
                 }
                 // ,

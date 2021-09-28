@@ -6,9 +6,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.flow.process.SnakerHelper;
 import com.laker.admin.module.sys.entity.SysUser;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,23 @@ public class SnakerflowFacetsController {
     /**
      * --------- 流程相关 ---------
      */
+
+    /**
+     * 获取流程定义
+     */
+    @GetMapping("/getXml")
+    public Response processEdit(String id) {
+        Process process = snakerEngineFacets.getEngine().process().getProcessById(id);
+        if (process.getDBContent() != null) {
+            try {
+                return Response.ok(new String(process.getDBContent(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return Response.error("500", "xml异常");
+    }
+
 
     @GetMapping("/process/modelJson")
     @ApiOperation(value = "根据流程定义名称获取流程定义json", tags = "流程引擎-流程")
@@ -106,10 +124,14 @@ public class SnakerflowFacetsController {
     @ApiOperation(value = "保存流程定义[web流程设计器]", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/deployXml", method = RequestMethod.POST)
     @SaCheckPermission("flow.update")
-    public boolean processDeploy(String model, String id) {
+    public boolean processDeploy(String model, String id, @RequestParam(required = false, defaultValue = "false") boolean xmlHearder) {
         InputStream input = null;
         try {
-            String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + SnakerHelper.convertXml(model);
+            String xml = "";
+            if (!xmlHearder) {
+                xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
+            }
+            xml = xml + SnakerHelper.convertXml(model);
             System.out.println("model xml=\n" + xml);
             input = StreamHelper.getStreamFromString(xml);
             if (StringUtils.isNotEmpty(id)) {

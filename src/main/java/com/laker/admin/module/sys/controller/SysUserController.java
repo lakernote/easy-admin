@@ -10,12 +10,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.config.LakerConfig;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
+import com.laker.admin.module.sys.pojo.FlowAssigneVo;
 import com.laker.admin.module.sys.pojo.PwdQo;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -66,6 +68,19 @@ public class SysUserController {
         Page pageList = sysUserService.page(roadPage, queryWrapper);
 
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
+    }
+
+
+    @GetMapping("/getAll")
+    @ApiOperation(value = "获取所有用户")
+    public Response getAll() {
+        List<SysUser> list = sysUserService.list();
+        if (CollUtil.isNotEmpty(list)) {
+            List<FlowAssigneVo> collect = list.stream().map(sysUser -> FlowAssigneVo.builder().name(sysUser.getNickName()).value(sysUser.getUserId() + "").build()).collect(Collectors.toList());
+            collect.add(0, FlowAssigneVo.builder().name("请选择").value("").build());
+            return Response.ok(collect);
+        }
+        return Response.ok();
     }
 
     @PostMapping

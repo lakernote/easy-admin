@@ -44,9 +44,11 @@
 </script>
 
 <script type="text/html" id="user-bar">
-    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>
+    <button class="pear-btn pear-btn-success pear-btn-sm" lay-event="editXml">编辑
     </button>
-    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i>
+    <button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="edit">设计
+    </button>
+    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">禁用
     </button>
 </script>
 
@@ -105,8 +107,7 @@
                 {
                     title: '操作',
                     toolbar: '#user-bar',
-                    align: 'center',
-                    width: 130
+                    align: 'center'
                 }
             ]
         ]
@@ -130,6 +131,8 @@
                 window.remove(obj);
             } else if (obj.event === 'edit') {
                 window.edit(obj);
+            } else if (obj.event === 'editXml') {
+                window.editXml(obj);
             }
         });
 
@@ -169,6 +172,17 @@
                 shade: 0.1,
                 area: [common.isModile() ? '100%' : '100%', common.isModile() ? '100%' : '100%'],
                 content: ['design.html?processId=' + data.id, 'no']
+            });
+        }
+
+        window.editXml = function (obj) {
+            var data = obj.data;
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: [common.isModile() ? '100%' : '100%', common.isModile() ? '100%' : '100%'],
+                content: ['editXml.html?processId=' + data.id, 'no']
             });
         }
 
