@@ -204,10 +204,9 @@
                                 icon: 1,
                                 time: 1000,
                                 area: ['100px', '80px'],
-                                content: "删除成功"
-                            }, function () {
-                                obj.del();
+                                content: "操作成功"
                             });
+                            table.reload('user-table');
                         } else {
                             layer.msg(result.msg, {
                                 icon: 2,
