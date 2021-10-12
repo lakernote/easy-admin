@@ -1,6 +1,7 @@
 package com.laker.admin.framework.ext.mybatis;
 
 import com.laker.admin.module.enums.DataFilterTypeEnum;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class UserInfoAndPowers {
     DataFilterTypeEnum filterType = DataFilterTypeEnum.SELF;
     private Long userId;
