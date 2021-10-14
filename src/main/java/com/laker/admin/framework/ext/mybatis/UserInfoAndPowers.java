@@ -1,11 +1,12 @@
 package com.laker.admin.framework.ext.mybatis;
 
-import com.laker.admin.module.enums.DataFilterTypeEnum;
+import com.laker.admin.module.sys.entity.SysDataPower;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoAndPowers {
-    DataFilterTypeEnum filterType = DataFilterTypeEnum.SELF;
     private Long userId;
     private String userName;
     private String nickName;
@@ -25,6 +25,7 @@ public class UserInfoAndPowers {
     private String userTableAlias;
     private String sql;
     private Set<Long> deptIds;
+    private List<SysDataPower> userDataPowers;
 
     public Boolean isSuperAdmin() {
         return userId.longValue() == 1L;

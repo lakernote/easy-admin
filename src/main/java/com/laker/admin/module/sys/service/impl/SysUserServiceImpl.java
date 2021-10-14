@@ -1,12 +1,15 @@
 package com.laker.admin.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.laker.admin.module.sys.entity.SysDataPower;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.mapper.SysDeptMapper;
 import com.laker.admin.module.sys.mapper.SysUserMapper;
 import com.laker.admin.module.sys.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,5 +32,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         user.setDept(deptMapper.selectById(user.getDeptId()));
         return user;
+    }
+
+    @Override
+    public List<SysDataPower> getUserDataPowers(Long userId) {
+        return this.getBaseMapper().getUserDataPowers(userId);
     }
 }

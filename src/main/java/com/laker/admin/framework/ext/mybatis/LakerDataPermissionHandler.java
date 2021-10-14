@@ -1,8 +1,10 @@
 package com.laker.admin.framework.ext.mybatis;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
+import com.laker.admin.module.sys.entity.SysDataPower;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
@@ -16,9 +18,14 @@ import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.schema.Column;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author laker
+ */
 @Slf4j
 public class LakerDataPermissionHandler implements DataPermissionHandler {
 
@@ -30,24 +37,36 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
     @SneakyThrows
     @Override
     public Expression getSqlSegment(Expression where, String mappedStatementId) {
-
-        // TODO 暂时哪些要做过滤
-        if (!StrUtil.contains(mappedStatementId, "ExtLeaveMapper")) {
+        List<String> split = StrUtil.split(mappedStatementId, '.');
+        int index = split.size();
+        String method = split.get(index - 1);
+        String mapper = split.get(index - 2);
+        UserInfoAndPowers userInfoAndPowers = EasyAdminSecurityUtils.getCurrentUserInfo();
+        if (userInfoAndPowers == null) {
+            return where;
+        }
+        if (userInfoAndPowers.isSuperAdmin()) {
+            return where;
+        }
+        List<SysDataPower> userDataPowers = userInfoAndPowers.getUserDataPowers();
+        if (CollUtil.isEmpty(userDataPowers)) {
+            return where;
+        }
+        Optional<SysDataPower> dataPower = userDataPowers.stream()
+                .filter(sysDataPower -> StrUtil.equalsIgnoreCase(mapper, sysDataPower.getMapper())
+                        && StrUtil.equalsIgnoreCase(method, sysDataPower.getMethod()))
+                .findFirst();
+        if (!dataPower.isPresent()) {
             return where;
         }
         try {
             // 1. 获取权限过滤相关信息
-            UserInfoAndPowers userInfoAndPowers = EasyAdminSecurityUtils.getCurrentUserInfo();
-            if (userInfoAndPowers == null) {
-                return where;
-            }
-
-            log.info("开始进行权限过滤,dataFilterMetaData:{} , where: {},mappedStatementId: {}", userInfoAndPowers, where, mappedStatementId);
+            log.info("进行权限过滤,dataPowerFilterType:{} , where: {},mappedStatementId: {}", dataPower.get().getFilterType(), where, mappedStatementId);
             Expression expression = new HexValue(" 1 = 1 ");
             if (where == null) {
                 where = expression;
             }
-            switch (userInfoAndPowers.filterType) {
+            switch (dataPower.get().getFilterType()) {
                 // 查看全部
                 case ALL:
                     return where;
@@ -59,7 +78,9 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                     // 把集合转变为JSQLParser需要的元素列表
                     ItemsList itemsList = new ExpressionList(deptIds.stream().map(LongValue::new).collect(Collectors.toList()));
                     InExpression inExpression = new InExpression(new Column("create_dept_id"), itemsList);
-                    return new AndExpression(where, inExpression);
+                    AndExpression andExpression = new AndExpression(where, inExpression);
+                    log.info(" where {}", andExpression);
+                    return andExpression;
                 // 查看当前部门的数据
                 case DEPT:
                     //  = 表达式
@@ -69,14 +90,18 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                     equalsTo.setRightExpression(new LongValue(userInfoAndPowers.getDeptId()));
                     // 创建 AND 表达式 拼接Where 和 = 表达式
                     // WHERE xxx AND dept_id = 3
-                    return new AndExpression(where, equalsTo);
+                    AndExpression deptAndExpression = new AndExpression(where, equalsTo);
+                    log.info(" where {}", deptAndExpression);
+                    return deptAndExpression;
                 // 查看自己的数据
                 case SELF:
                     // create_by = userId
                     EqualsTo selfEqualsTo = new EqualsTo();
                     selfEqualsTo.setLeftExpression(new Column("create_by"));
                     selfEqualsTo.setRightExpression(new LongValue(userInfoAndPowers.getUserId()));
-                    return new AndExpression(where, selfEqualsTo);
+                    AndExpression selfAndExpression = new AndExpression(where, selfEqualsTo);
+                    log.info(" where {}", selfAndExpression);
+                    return selfAndExpression;
                 case DIY:
                     return new AndExpression(where, new StringValue(userInfoAndPowers.getSql()));
                 default:

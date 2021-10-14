@@ -23,7 +23,14 @@ import java.time.LocalDateTime;
 public class SysRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 菜单权限
+     */
+    public static final Integer ROLE_TYPE_MENU = 1;
+    /**
+     * 数据权限
+     */
+    public static final Integer ROLE_TYPE_DATA = 2;
     @TableId(value = "role_id", type = IdType.AUTO)
     private Long roleId;
 

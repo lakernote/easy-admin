@@ -1,11 +1,14 @@
 package com.laker.admin.module.sys.service;
 
-import com.laker.admin.module.sys.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.laker.admin.module.sys.entity.SysDataPower;
+import com.laker.admin.module.sys.entity.SysUser;
+
+import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author laker
@@ -16,4 +19,11 @@ public interface ISysUserService extends IService<SysUser> {
 
     SysUser getUserAndDeptById(Long userId);
 
+    /**
+     * 根据用户id获取其所拥有的数据权限列表
+     *
+     * @param userId
+     * @return
+     */
+    List<SysDataPower> getUserDataPowers(Long userId);
 }

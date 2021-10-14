@@ -27,7 +27,6 @@ public class SaTokenExtActionImpl extends SaTokenActionDefaultImpl {
     protected void validateAnnotation(AnnotatedElement target) {
         UserInfoAndPowers currentUserInfo = EasyAdminSecurityUtils.getCurrentUserInfo();
         if (currentUserInfo.isSuperAdmin()) {
-            currentUserInfo.setFilterType(DataFilterTypeEnum.ALL);
             return;
         }
         super.validateAnnotation(target);
