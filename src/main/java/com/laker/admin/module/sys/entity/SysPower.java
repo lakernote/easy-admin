@@ -3,6 +3,7 @@ package com.laker.admin.module.sys.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.laker.admin.module.enums.DataFilterTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 系统菜单表
+ * 系统权限表
  * </p>
  *
  * @author laker
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysMenu implements Serializable {
+public class SysPower implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -70,8 +71,15 @@ public class SysMenu implements Serializable {
     private String remark;
 
     private Integer type;
-
+    /**
+     * 如果是数据权限类型，则为数据权限标识 ExtLeaveMapper.selectPage Mapper名称+方法名称
+     */
     private String powerCode;
+
+    /**
+     * 权限类型
+     */
+    private DataFilterTypeEnum dataFilterType;
     /**
      * 创建时间
      */

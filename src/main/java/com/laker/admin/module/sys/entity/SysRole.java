@@ -56,11 +56,10 @@ public class SysRole implements Serializable {
 
     private LocalDateTime createTime;
 
+    /**
+     * 1是菜单接口角色，2为数据角色
+     */
     private Integer roleType;
-
-    private DataFilterTypeEnum dataType;
-
-    private String dataSql;
 
     /**
      * 提供前端 显示

@@ -3,9 +3,8 @@ package com.laker.admin.framework.ext.satoken;
 import cn.dev33.satoken.action.SaTokenActionDefaultImpl;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
-import com.laker.admin.module.enums.DataFilterTypeEnum;
+import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.AnnotatedElement;
@@ -26,7 +25,7 @@ public class SaTokenExtActionImpl extends SaTokenActionDefaultImpl {
     @Override
     protected void validateAnnotation(AnnotatedElement target) {
         UserInfoAndPowers currentUserInfo = EasyAdminSecurityUtils.getCurrentUserInfo();
-        if (currentUserInfo.isSuperAdmin()) {
+        if (currentUserInfo != null && currentUserInfo.isSuperAdmin()) {
             return;
         }
         super.validateAnnotation(target);

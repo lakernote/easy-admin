@@ -2,7 +2,7 @@ package com.laker.admin.framework.ext.satoken;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.laker.admin.module.sys.entity.SysMenu;
+import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.entity.SysRolePower;
 import com.laker.admin.module.sys.entity.SysUserRole;
 import com.laker.admin.module.sys.service.ISysMenuService;
@@ -35,8 +35,8 @@ public class StpInterfaceImpl implements StpInterface {
         List<SysRolePower> rolePowerLists = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().in(SysRolePower::getRoleId, roleIds));
         List<Long> powerIds = rolePowerLists.stream().map(sysRolePower -> sysRolePower.getPowerId()).collect(Collectors.toList());
         // 2是按钮
-        List<SysMenu> sysMenus = menuService.list(Wrappers.<SysMenu>lambdaQuery().in(SysMenu::getMenuId, powerIds).eq(SysMenu::getType, 2));
-        List<String> strings = sysMenus.stream().map(sysMenu -> sysMenu.getPowerCode()).collect(Collectors.toList());
+        List<SysPower> sysPowers = menuService.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getMenuId, powerIds).eq(SysPower::getType, 2));
+        List<String> strings = sysPowers.stream().map(sysMenu -> sysMenu.getPowerCode()).collect(Collectors.toList());
         return strings;
     }
 

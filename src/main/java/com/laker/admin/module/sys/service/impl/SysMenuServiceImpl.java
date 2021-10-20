@@ -3,7 +3,7 @@ package com.laker.admin.module.sys.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.laker.admin.module.sys.entity.SysMenu;
+import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.entity.SysRolePower;
 import com.laker.admin.module.sys.entity.SysUserRole;
 import com.laker.admin.module.sys.mapper.SysMenuMapper;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @since 2021-08-04
  */
 @Service
-public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
+public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysPower> implements ISysMenuService {
 
     @Autowired
     ISysUserRoleService sysUserRoleService;
@@ -43,15 +43,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Override
     public List<MenuVo> menu() {
         Long loginId = StpUtil.getLoginIdAsLong();
-        List<SysMenu> sysMenus = null;
+        List<SysPower> sysPowers = null;
         // 超级管理员开玩笑
         if (loginId.longValue() == 1L) {
-            sysMenus = sysMenuMapper.findAllByStatusOrderBySort(true);
+            sysPowers = sysMenuMapper.findAllByStatusOrderBySort(true);
         } else {
-            sysMenus = getSysMenusPowerByLoginUser(loginId);
+            sysPowers = getSysMenusPowerByLoginUser(loginId);
         }
         List<MenuVo> menuInfo = new ArrayList<>();
-        for (SysMenu e : sysMenus) {
+        for (SysPower e : sysPowers) {
             MenuVo menuVO = new MenuVo();
             menuVO.setId(e.getMenuId());
             menuVO.setPid(e.getPid());
@@ -66,12 +66,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return TreeUtil.toTree(menuInfo, 0L);
     }
 
-    private List<SysMenu> getSysMenusPowerByLoginUser(Long loginId) {
+    private List<SysPower> getSysMenusPowerByLoginUser(Long loginId) {
         List<SysUserRole> userRoles = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, loginId));
         List<Long> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId()).collect(Collectors.toList());
         List<SysRolePower> rolePowerLists = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().in(SysRolePower::getRoleId, roleIds));
         List<Long> powerIds = rolePowerLists.stream().map(sysRolePower -> sysRolePower.getPowerId()).collect(Collectors.toList());
-        return menuService.list(Wrappers.<SysMenu>lambdaQuery().in(SysMenu::getMenuId, powerIds).eq(SysMenu::getEnable, true).orderByAsc(SysMenu::getSort));
+        return menuService.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getMenuId, powerIds).eq(SysPower::getEnable, true).orderByAsc(SysPower::getSort));
     }
 
 }

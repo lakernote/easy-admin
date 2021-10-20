@@ -1,7 +1,7 @@
 package com.laker.admin.module.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.laker.admin.module.sys.entity.SysDataPower;
+import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.module.sys.entity.SysUser;
 
 import java.util.List;
@@ -25,5 +25,5 @@ public interface ISysUserService extends IService<SysUser> {
      * @param userId
      * @return
      */
-    List<SysDataPower> getUserDataPowers(Long userId);
+    List<UserDataPower> getUserDataPowers(Long userId);
 }

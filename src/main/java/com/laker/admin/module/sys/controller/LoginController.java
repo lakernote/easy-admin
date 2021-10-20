@@ -13,15 +13,16 @@ import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.ext.satoken.MySaTokenListener;
 import com.laker.admin.framework.ext.satoken.OnlineUser;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.PageDtoUtil;
-import com.laker.admin.module.sys.entity.SysDataPower;
 import com.laker.admin.module.sys.entity.SysDept;
 import com.laker.admin.module.sys.entity.SysUser;
+import com.laker.admin.module.sys.pojo.LoginDto;
 import com.laker.admin.module.sys.service.ISysDeptService;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
@@ -75,7 +76,7 @@ public class LoginController {
         }
         StpUtil.login(sysUser.getUserId());
         // 获取用户的数据权限
-        List<SysDataPower> userDataPowers = sysUserService.getUserDataPowers(sysUser.getUserId());
+        List<UserDataPower> userDataPowers = sysUserService.getUserDataPowers(sysUser.getUserId());
         UserInfoAndPowers.UserInfoAndPowersBuilder userInfoAndPowersBuilder = UserInfoAndPowers.builder()
                 .deptId(sysUser.getDeptId())
                 .userId(sysUser.getUserId())

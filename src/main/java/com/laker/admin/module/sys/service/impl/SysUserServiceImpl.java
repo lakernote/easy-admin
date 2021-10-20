@@ -1,7 +1,7 @@
 package com.laker.admin.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.laker.admin.module.sys.entity.SysDataPower;
+import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.mapper.SysDeptMapper;
 import com.laker.admin.module.sys.mapper.SysUserMapper;
@@ -35,7 +35,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public List<SysDataPower> getUserDataPowers(Long userId) {
+    public List<UserDataPower> getUserDataPowers(Long userId) {
         return this.getBaseMapper().getUserDataPowers(userId);
     }
 }

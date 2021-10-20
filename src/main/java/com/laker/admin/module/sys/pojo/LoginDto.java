@@ -1,4 +1,4 @@
-package com.laker.admin.module.sys.controller;
+package com.laker.admin.module.sys.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

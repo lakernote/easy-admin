@@ -1,7 +1,7 @@
 package com.laker.admin.module.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.laker.admin.module.sys.entity.SysMenu;
+import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.pojo.MenuVo;
 
 import java.util.List;
@@ -14,6 +14,6 @@ import java.util.List;
  * @author laker
  * @since 2021-08-04
  */
-public interface ISysMenuService extends IService<SysMenu> {
+public interface ISysMenuService extends IService<SysPower> {
     List<MenuVo> menu();
 }

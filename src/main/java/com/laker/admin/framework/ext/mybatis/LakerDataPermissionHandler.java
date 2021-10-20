@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
-import com.laker.admin.module.sys.entity.SysDataPower;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
@@ -48,25 +47,25 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
         if (userInfoAndPowers.isSuperAdmin()) {
             return where;
         }
-        List<SysDataPower> userDataPowers = userInfoAndPowers.getUserDataPowers();
+        List<UserDataPower> userDataPowers = userInfoAndPowers.getUserDataPowers();
         if (CollUtil.isEmpty(userDataPowers)) {
             return where;
         }
-        Optional<SysDataPower> dataPower = userDataPowers.stream()
-                .filter(sysDataPower -> StrUtil.equalsIgnoreCase(mapper, sysDataPower.getMapper())
-                        && StrUtil.equalsIgnoreCase(method, sysDataPower.getMethod()))
+        String powerCode = mapper + "." + method;
+        Optional<UserDataPower> dataPower = userDataPowers.stream()
+                .filter(sysDataPower -> StrUtil.equalsIgnoreCase(powerCode, sysDataPower.getPowerCode()))
                 .findFirst();
         if (!dataPower.isPresent()) {
             return where;
         }
         try {
             // 1. 获取权限过滤相关信息
-            log.info("进行权限过滤,dataPowerFilterType:{} , where: {},mappedStatementId: {}", dataPower.get().getFilterType(), where, mappedStatementId);
+            log.info("进行权限过滤,dataPowerFilterType:{} , where: {},mappedStatementId: {}", dataPower.get().getDataFilterType(), where, mappedStatementId);
             Expression expression = new HexValue(" 1 = 1 ");
             if (where == null) {
                 where = expression;
             }
-            switch (dataPower.get().getFilterType()) {
+            switch (dataPower.get().getDataFilterType()) {
                 // 查看全部
                 case ALL:
                     return where;

@@ -42,9 +42,11 @@
     {{#if (d.type == '0') { }}
     <span style="color: #2dc26b">目录</span>
     {{# }else if(d.type == '1'){ }}
-    <span style="color: #1E9FFF">菜单</span>
+    <span style="color: #1E9FFF">&nbsp&nbsp菜单</span>
     {{# }else if(d.type == '2'){ }}
-    <span style="color: red">按钮</span>
+    <span style="color: #eb7350">&nbsp&nbsp&nbsp&nbsp接口</span>
+    {{# }else if(d.type == '3'){ }}
+    <span style="color: red">&nbsp&nbsp&nbsp&nbsp数据</span>
     {{# } }}
 </script>
 
@@ -86,13 +88,32 @@
                     cols: [
                         [
                             {type: 'checkbox'},
-                            {field: 'title', minWidth: 200, title: '菜单名称'},
-                            {field: 'icon', title: '图标', templet: '#icon'},
+                            {field: 'title', minWidth: 100, title: '名称'},
+                            {field: 'icon', width: 60, title: '图标', templet: '#icon'},
                             {field: 'type', title: '权限类型', templet: '#power-type'},
-                            {field: 'powerCode', title: '权限标识'},
-                            {field: 'enable', title: '是否可用', templet: '#power-enable'},
-                            {field: 'sort', title: '排序'},
-                            {title: '操作', templet: '#power-bar', width: 150, align: 'center'}
+                            {field: 'href', title: '菜单路径', width: 380},
+                            {field: 'powerCode', title: '权限标识', width: 200},
+                            {
+                                title: '数据权限', field: 'dataFilterType', align: 'center',width: 100
+                                , templet: function (d) {
+                                    if (d.dataFilterType === 'ALL') {
+                                        return '<span style="color: red;">全部</span>'
+                                    }
+
+                                    if (d.dataFilterType === 'DEPT') {
+                                        return '<span style="color:red;">本部门</span>'
+                                    }
+
+                                    if (d.dataFilterType === 'SELF') {
+                                        return '<span style="color: red;">本人</span>'
+                                    }
+                                    return ''
+
+                                }
+                            },
+                            {field: 'enable', title: '是否可用', templet: '#power-enable',width: 100},
+                            {field: 'sort', title: '排序', width: 60},
+                            {title: '操作', templet: '#power-bar', width: 150, align: 'center',width: 100}
                         ]
                     ]
                 });
@@ -160,7 +181,7 @@
                 type: 2,
                 title: '修改',
                 shade: 0.1,
-                area: ['450px', '500px'],
+                area: ['500px', '600px'],
                 content: MODULE_PATH + 'edit.html?menuId=' + obj.data.menuId
             });
         }

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.aop.Metrics;
-import com.laker.admin.module.sys.entity.SysMenu;
+import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.pojo.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class SysMenuController {
     public Response pageAll(@RequestParam(required = false, defaultValue = "1") long current,
                             @RequestParam(required = false, defaultValue = "10") long size) {
         Page roadPage = new Page<>(current, size);
-        LambdaQueryWrapper<SysMenu> queryWrapper = new QueryWrapper().lambda();
+        LambdaQueryWrapper<SysPower> queryWrapper = new QueryWrapper().lambda();
         Page pageList = sysMenuService.page(roadPage, queryWrapper);
         return Response.ok(pageList);
     }
@@ -45,14 +45,14 @@ public class SysMenuController {
     @GetMapping("/list")
     @ApiOperation(value = "系统菜单表分页查询")
     public Response list() {
-        List<SysMenu> list = sysMenuService.list(Wrappers.<SysMenu>lambdaQuery().orderByAsc(SysMenu::getSort));
+        List<SysPower> list = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().orderByAsc(SysPower::getSort));
         return Response.ok(list);
     }
 
     @PostMapping
     @ApiOperation(value = "新增或者更新系统菜单表")
     @SaCheckPermission("menu.update")
-    public Response saveOrUpdate(@RequestBody SysMenu param) {
+    public Response saveOrUpdate(@RequestBody SysPower param) {
         return Response.ok(sysMenuService.saveOrUpdate(param));
     }
 

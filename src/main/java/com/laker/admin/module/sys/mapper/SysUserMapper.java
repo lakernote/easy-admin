@@ -1,7 +1,7 @@
 package com.laker.admin.module.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.laker.admin.module.sys.entity.SysDataPower;
+import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.module.sys.entity.SysUser;
 import org.apache.ibatis.annotations.Select;
 
@@ -23,10 +23,10 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param userId
      * @return
      */
-    @Select("select distinct dp.* from sys_data_power dp " +
-            "                   inner join sys_role_power rw on dp.data_power_id = rw.power_id" +
+    @Select("select p.* from sys_power p" +
+            "                   inner join sys_role_power rw on rw.power_id = p.menu_id" +
             "                   inner join sys_user_role ur on rw.role_id = ur.role_id" +
             "                   inner join sys_role r on r.role_id = ur.role_id" +
             "            where ur.user_id = #{userId} and r.role_type = 2")
-    List<SysDataPower> getUserDataPowers(Long userId);
+    List<UserDataPower> getUserDataPowers(Long userId);
 }

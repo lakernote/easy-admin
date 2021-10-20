@@ -1,6 +1,5 @@
 package com.laker.admin.framework.ext.mybatis;
 
-import com.laker.admin.module.sys.entity.SysDataPower;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class UserInfoAndPowers {
     private String userTableAlias;
     private String sql;
     private Set<Long> deptIds;
-    private List<SysDataPower> userDataPowers;
+    private List<UserDataPower> userDataPowers;
 
     public Boolean isSuperAdmin() {
         return userId.longValue() == 1L;

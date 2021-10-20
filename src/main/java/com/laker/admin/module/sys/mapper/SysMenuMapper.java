@@ -1,7 +1,7 @@
 package com.laker.admin.module.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.laker.admin.module.sys.entity.SysMenu;
+import com.laker.admin.module.sys.entity.SysPower;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -14,8 +14,8 @@ import java.util.List;
  * @author laker
  * @since 2021-08-04
  */
-public interface SysMenuMapper extends BaseMapper<SysMenu> {
+public interface SysMenuMapper extends BaseMapper<SysPower> {
 
-    @Select("select * from sys_menu where enable = #{enable} order by sort")
-    List<SysMenu> findAllByStatusOrderBySort(Boolean enable);
+    @Select("select * from sys_power where enable = #{enable} order by sort")
+    List<SysPower> findAllByStatusOrderBySort(Boolean enable);
 }

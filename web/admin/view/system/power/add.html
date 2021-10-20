@@ -16,11 +16,21 @@
                         <ul id="selectParent" name="pid" class="dtree" data-id="-1"></ul>
                     </div>
                 </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label">名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="菜单名称"
+                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="名称"
                                class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block">
+                        <input type="radio" lay-filter="powerType" name="type" value="0" title="目录">
+                        <input type="radio" lay-filter="powerType" name="type" value="1" title="菜单" checked>
+                        <input type="radio" lay-filter="powerType" name="type" value="2" title="接口">
+                        <input type="radio" lay-filter="powerType" name="type" value="3" title="数据">
                     </div>
                 </div>
                 <div class="layui-form-item" id="powerCodeItem">
@@ -30,14 +40,7 @@
                                class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类型</label>
-                    <div class="layui-input-block">
-                        <input type="radio" lay-filter="powerType" name="type" value="0" title="目录">
-                        <input type="radio" lay-filter="powerType" name="type" value="1" title="菜单" checked>
-                        <input type="radio" lay-filter="powerType" name="type" value="2" title="按钮">
-                    </div>
-                </div>
+
                 <div class="layui-form-item" id="powerUrlItem">
                     <label class="layui-form-label">路径</label>
                     <div class="layui-input-block">
@@ -55,12 +58,26 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <div class="layui-form-item" id="iconItem">
                     <label class="layui-form-label">图标</label>
                     <div class="layui-input-block">
                         <input type="text" id="icon" name="icon" lay-filter="icon" class="layui-input">
                     </div>
                 </div>
+
+                <div class="layui-form-item" id="dataFilterType">
+                    <label class="layui-form-label">数据权限</label>
+                    <div class="layui-input-block">
+                        <select name="dataFilterType" lay-filter="dataTypeFilter">
+                            <option value="ALL" selected>全部</option>
+                            <option value="DEPT">本人所在组织机构</option>
+                            <option value="SELF">本人</option>
+                            <!--                            <option value="DEPT_SETS">自定义组织机构</option>-->
+                            <!--                            <option value="DIY">自定义sql过滤</option>-->
+                        </select>
+                    </div>
+                </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>
                     <div class="layui-input-block">
@@ -96,6 +113,9 @@
         $("#powerUrlItem").show();
         $("#powerCodeItem").hide();
         $("#openTypeItem").show();
+        $("#iconItem").hide();
+        $("#dataFilterType").hide();
+        $("#dataFilterType").val("ALL");
         $("#powerCode").val("");
 
         easyAdmin.httpGet("/sys/menu/selectTree", function (result) {
@@ -117,7 +137,9 @@
             if (this.value == '0') {
                 $("#powerUrlItem").hide();
                 $("#powerCodeItem").hide();
+                $("#iconItem").show();
                 $("#openTypeItem").hide();
+                $("#dataFilterType").hide();
                 $("#powerUrl").val("");
                 $("#powerCode").val("");
                 $("#openType").val("");
@@ -125,11 +147,23 @@
                 $("#powerUrlItem").show();
                 $("#powerCodeItem").hide();
                 $("#openTypeItem").show();
+                $("#dataFilterType").hide();
+                $("#iconItem").hide();
                 $("#powerCode").val("");
             } else if (this.value == '2') {
                 $("#powerUrlItem").hide();
                 $("#openTypeItem").hide();
+                $("#dataFilterType").hide();
                 $("#powerCodeItem").show();
+                $("#iconItem").hide();
+                $("#powerUrl").val("");
+                $("#openType").val("");
+            } else if (this.value == '3') {
+                $("#powerUrlItem").hide();
+                $("#openTypeItem").hide();
+                $("#powerCodeItem").show();
+                $("#dataFilterType").show();
+                $("#iconItem").hide();
                 $("#powerUrl").val("");
                 $("#openType").val("");
             }
