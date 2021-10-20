@@ -94,26 +94,27 @@
                             {field: 'href', title: '菜单路径', width: 380},
                             {field: 'powerCode', title: '权限标识', width: 200},
                             {
-                                title: '数据权限', field: 'dataFilterType', align: 'center',width: 100
+                                title: '数据权限', field: 'dataFilterType', align: 'center', width: 100
                                 , templet: function (d) {
-                                    if (d.dataFilterType === 'ALL') {
-                                        return '<span style="color: red;">全部</span>'
+                                    if (d.type === 3) {
+                                        if (d.dataFilterType === 'ALL') {
+                                            return '<span style="color: red;">全部</span>'
+                                        }
+                                        if (d.dataFilterType === 'DEPT') {
+                                            return '<span style="color:red;">本部门</span>'
+                                        }
+                                        if (d.dataFilterType === 'SELF') {
+                                            return '<span style="color: red;">本人</span>'
+                                        }
+                                        return ''
+                                    } else {
+                                        return ''
                                     }
-
-                                    if (d.dataFilterType === 'DEPT') {
-                                        return '<span style="color:red;">本部门</span>'
-                                    }
-
-                                    if (d.dataFilterType === 'SELF') {
-                                        return '<span style="color: red;">本人</span>'
-                                    }
-                                    return ''
-
                                 }
                             },
-                            {field: 'enable', title: '是否可用', templet: '#power-enable',width: 100},
+                            {field: 'enable', title: '是否可用', templet: '#power-enable', width: 100},
                             {field: 'sort', title: '排序', width: 60},
-                            {title: '操作', templet: '#power-bar', width: 150, align: 'center',width: 100}
+                            {title: '操作', templet: '#power-bar', width: 150, align: 'center', width: 100}
                         ]
                     ]
                 });

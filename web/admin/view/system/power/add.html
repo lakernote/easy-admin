@@ -115,7 +115,7 @@
         $("#openTypeItem").show();
         $("#iconItem").hide();
         $("#dataFilterType").hide();
-        $("#dataFilterType").val("ALL");
+        $("#dataFilterType").val("");
         $("#powerCode").val("");
 
         easyAdmin.httpGet("/sys/menu/selectTree", function (result) {
@@ -143,6 +143,7 @@
                 $("#powerUrl").val("");
                 $("#powerCode").val("");
                 $("#openType").val("");
+                $("#dataFilterType").val("");
             } else if (this.value == '1') {
                 $("#powerUrlItem").show();
                 $("#powerCodeItem").hide();
@@ -150,6 +151,7 @@
                 $("#dataFilterType").hide();
                 $("#iconItem").hide();
                 $("#powerCode").val("");
+                $("#dataFilterType").val("");
             } else if (this.value == '2') {
                 $("#powerUrlItem").hide();
                 $("#openTypeItem").hide();
@@ -158,6 +160,7 @@
                 $("#iconItem").hide();
                 $("#powerUrl").val("");
                 $("#openType").val("");
+                $("#dataFilterType").val("");
             } else if (this.value == '3') {
                 $("#powerUrlItem").hide();
                 $("#openTypeItem").hide();
