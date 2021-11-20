@@ -12,12 +12,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.config.LakerConfig;
 import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.model.PageResponse;
+import com.laker.admin.framework.model.PageVO;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
 import com.laker.admin.module.sys.pojo.FlowAssigneVo;
 import com.laker.admin.module.sys.pojo.PwdQo;
+import com.laker.admin.module.sys.pojo.UserDto;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -67,6 +69,14 @@ public class SysUserController {
                         .or().like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord));
         Page pageList = sysUserService.page(roadPage, queryWrapper);
 
+        return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
+    }
+
+    @GetMapping("/pageComplexAll")
+    @ApiOperation(value = "复杂分页查询示例")
+    public PageResponse pageComplexAll(PageVO page, UserDto userDto) {
+        Page roadPage = page.toPage();
+        Page pageList = sysUserService.page(roadPage, userDto.queryWrapper());
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
