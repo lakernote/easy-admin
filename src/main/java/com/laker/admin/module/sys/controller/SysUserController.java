@@ -88,6 +88,7 @@ public class SysUserController {
         if (CollUtil.isNotEmpty(list)) {
             List<FlowAssigneVo> collect = list.stream().map(sysUser -> FlowAssigneVo.builder().name(sysUser.getNickName()).value(sysUser.getUserId() + "").build()).collect(Collectors.toList());
             collect.add(0, FlowAssigneVo.builder().name("请选择").value("").build());
+            collect.add(1, FlowAssigneVo.builder().name("当前用户").value("CurrentUser").build());
             return Response.ok(collect);
         }
         return Response.ok();

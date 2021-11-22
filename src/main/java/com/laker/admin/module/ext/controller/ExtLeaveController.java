@@ -6,10 +6,10 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
+import com.laker.admin.framework.aop.Metrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.module.ext.entity.ExtLeave;
 import com.laker.admin.module.ext.service.IExtLeaveService;
 import com.laker.admin.module.flow.process.BaseFlowController;
@@ -84,8 +84,6 @@ public class ExtLeaveController extends BaseFlowController {
         } else {
             extLeaveService.saveOrUpdate(param);
         }
-
-
         return Response.ok();
     }
 
