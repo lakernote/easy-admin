@@ -151,7 +151,7 @@ public class SysUserController {
                 .eq(SysUser::getUserId, userId)
                 .eq(SysUser::getPassword, SecureUtil.sha256(param.getOldPassword())));
         if (sysUser == null) {
-            return Response.error("500", "用户名密码错误");
+            return Response.error("500", "旧密码错误");
         }
         SysUser user = new SysUser();
         user.setUserId(userId);
