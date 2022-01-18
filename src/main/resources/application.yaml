@@ -4,6 +4,14 @@ server:
     enabled: true
     min-response-size: 1KB
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+  tomcat:
+    max-connections: 8192
+    uri-encoding: UTF-8
+    threads:
+      min-spare: 50
+      max: 1000
+  servlet:
+    context-path: /
 spring:
   datasource:
     username: root
