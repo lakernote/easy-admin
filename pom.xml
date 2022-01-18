@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>easy-admin</artifactId>
+    <artifactId>share-server</artifactId>
     <version>1.0.0</version>
 
     <dependencies>
@@ -94,13 +94,6 @@
             <version>1.87.0</version>
         </dependency>
 
-        <!-- Excel处理-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
-            <version>2.2.8</version>
-        </dependency>
-
         <!-- 邮箱 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -136,36 +129,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
-        <!-- 国产工作流引擎 -->
-        <dependency>
-            <groupId>com.github.snakerflow-starter</groupId>
-            <artifactId>snakerflow-spring-boot-starter</artifactId>
-            <version>1.0.6</version>
-        </dependency>
 
         <!-- 验证码 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
             <version>1.6.2</version>
-        </dependency>
-        <!-- 根据ip获取归属地 -->
-        <dependency>
-            <groupId>org.lionsoul</groupId>
-            <artifactId>ip2region</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-        <!-- nginx配置文件处理 -->
-        <dependency>
-            <groupId>com.github.odiszapc</groupId>
-            <artifactId>nginxparser</artifactId>
-            <version>0.9.6</version>
-        </dependency>
-        <!-- 图片处理 -->
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>0.4.14</version>
         </dependency>
     </dependencies>
 
