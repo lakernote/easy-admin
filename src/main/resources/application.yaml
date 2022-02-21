@@ -66,3 +66,5 @@ laker:
     sql-enabled: true
     xss-enabled: true
     excludes: /flow/*,/sys/nginx/*
+  oss-file:
+    domain: http://localhost:8080

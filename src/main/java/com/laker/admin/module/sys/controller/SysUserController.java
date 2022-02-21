@@ -171,6 +171,18 @@ public class SysUserController {
         return Response.ok();
     }
 
+    @PutMapping("/updateAvatar")
+    @ApiOperation(value = "更新用户头像")
+    @SaCheckPermission("user.updateAvatar")
+    public Response resetPwd(@RequestBody UserDto userDto) {
+        long userId = StpUtil.getLoginIdAsLong();
+        SysUser user = new SysUser();
+        user.setAvatar(userDto.getAvatar());
+        user.setUserId(userId);
+        sysUserService.updateById(user);
+        return Response.ok();
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id查询")
     public Response get(@PathVariable Long id) {

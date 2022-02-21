@@ -116,7 +116,7 @@
             url: "/api/v1/userInfo",
             dataType: 'json',
             success: function (result) {
-                $("#avatar").attr("src", "../../../admin/images/avatar.jpg");
+                $("#avatar").attr("src", result.data.avatar || "../../../admin/images/avatar.jpg");
                 form.val("edit", result.data);
             },
             error: function () {

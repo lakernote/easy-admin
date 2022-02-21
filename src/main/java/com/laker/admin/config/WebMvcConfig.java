@@ -8,11 +8,15 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
 import java.io.File;
 
 @Configuration
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
+    @Resource
+    LakerConfig lakerConfig;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -40,10 +44,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        File file = new File("web");
+        File web = new File("web");
+        String path = lakerConfig.getOssFile().getPath();
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         log.info(file.getAbsolutePath());
         registry.addResourceHandler("/admin/**")
-                .addResourceLocations("file:" + file.getAbsolutePath() + "/admin/");
+                .addResourceLocations("file:" + web.getAbsolutePath() + "/admin/");
+
+        registry.addResourceHandler("/" + path + "/**")
+                .addResourceLocations("file:" + file.getAbsolutePath() + "/");
     }
 
 }

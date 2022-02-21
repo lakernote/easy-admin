@@ -107,7 +107,7 @@
             url: "/api/v1/userInfo",
             dataType: 'json',
             success: function (data) {
-                admin.setAvatar("admin/images/avatar.jpg", data.data.nickName);
+                admin.setAvatar(data.data.avatar, data.data.nickName);
             },
             error: function () {
                 // 用于验证前端信息 对应到不对的会话情况

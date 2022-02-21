@@ -33,6 +33,8 @@ public class LakerConfig {
      */
     private Nginx nginx = new Nginx();
 
+    private OssFile ossFile = new OssFile();
+
     public static class Nginx {
         /**
          * nginx路径
@@ -87,6 +89,36 @@ public class LakerConfig {
 
         public void setExcludes(String excludes) {
             this.excludes = excludes;
+        }
+    }
+
+    public static class OssFile {
+        private String type = "native";
+        private String path = "oss-file";
+        private String domain = "http://localhost:8080";
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getDomain() {
+            return domain;
+        }
+
+        public void setDomain(String domain) {
+            this.domain = domain;
         }
     }
 

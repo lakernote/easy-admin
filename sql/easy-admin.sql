@@ -322,6 +322,7 @@ CREATE TABLE `sys_user`  (
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `enable` int(2) DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE INDEX `user_name`(`user_name`) USING BTREE
@@ -330,11 +331,11 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '30a9c7081b257f80a3f672452decc16dafe717cc54ac510afb77257fb6ee3702', '超级管理员', 14, 1, '11111111111', 1, '935009@98.com', '2021-08-15 11:02:15');
-INSERT INTO `sys_user` VALUES (16, 'laker', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '李哥', 14, 1, '1', 1, '', '2021-08-09 18:25:32');
-INSERT INTO `sys_user` VALUES (17, 'yang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '陈总', 14, 1, '', 1, '', '2021-08-10 10:24:23');
-INSERT INTO `sys_user` VALUES (18, 'zhang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '张总', 15, 2, '', 1, '', '2021-08-10 10:24:38');
-INSERT INTO `sys_user` VALUES (24, 'test', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '测试用户', 15, 1, '18256079743', 1, '98@qq.com', '2021-10-21 10:07:07');
+INSERT INTO `sys_user` VALUES (1, 'admin', '30a9c7081b257f80a3f672452decc16dafe717cc54ac510afb77257fb6ee3702', '超级管理员', 14, 1, '11111111111', 1, '935009@98.com', '', '2021-08-15 11:02:15');
+INSERT INTO `sys_user` VALUES (16, 'laker', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '李哥', 14, 1, '1', 1, '', '', '2021-08-09 18:25:32');
+INSERT INTO `sys_user` VALUES (17, 'yang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '陈总', 14, 1, '', 1, '', '','2021-08-10 10:24:23');
+INSERT INTO `sys_user` VALUES (18, 'zhang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '张总', 15, 2, '', 1, '', '','2021-08-10 10:24:38');
+INSERT INTO `sys_user` VALUES (24, 'test', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '测试用户', 15, 1, '18256079743', 1, '98@qq.com', '', '2021-10-21 10:07:07');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -583,5 +584,18 @@ INSERT INTO `wf_task_actor` VALUES ('dcf1d671aa2e41288aa77bdcb820aeb7', '17');
 INSERT INTO `wf_task_actor` VALUES ('72ca6873d466470486986d8202d5d4bd', '17');
 INSERT INTO `wf_task_actor` VALUES ('366fb54bf32047b3b3296764863a2b71', '17');
 INSERT INTO `wf_task_actor` VALUES ('512d9e14b8004f009a693bb10ff99705', '17');
+
+
+-- ----------------------------
+-- Table structure for sys_file
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_file`;
+CREATE TABLE `sys_file` (
+  `file_id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `file_path` varchar(255) DEFAULT NULL COMMENT '文件路径',
+  `file_name` varchar(255) DEFAULT NULL COMMENT '文件名称',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+   PRIMARY KEY (`file_id`)
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件表' ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;
