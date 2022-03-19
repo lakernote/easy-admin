@@ -1,4 +1,4 @@
-package com.laker.admin.framework.repeatedsubmit;
+package com.laker.admin.framework.aop.repeatedsubmit;
 
 import java.lang.annotation.*;
 

@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
-import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;

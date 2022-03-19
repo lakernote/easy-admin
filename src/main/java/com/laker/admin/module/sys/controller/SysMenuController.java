@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.pojo.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.model.ResultTable;
 import com.laker.admin.framework.model.ResultTree;
-import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.module.sys.entity.SysDept;
 import com.laker.admin.module.sys.service.ISysDeptService;
 import io.swagger.annotations.ApiOperation;

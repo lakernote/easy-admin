@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.framework.aop.Metrics;
+import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;

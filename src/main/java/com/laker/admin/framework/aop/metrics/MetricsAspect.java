@@ -1,4 +1,4 @@
-package com.laker.admin.framework.aop;
+package com.laker.admin.framework.aop.metrics;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
@@ -37,7 +37,7 @@ public class MetricsAspect {
     @Autowired
     IExtLogService extLogService;
 
-    @Pointcut("@annotation(Metrics) || @within(Metrics)")
+    @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.Metrics) || @within(com.laker.admin.framework.aop.metrics.Metrics)")
     public void withAnnotationMetrics() {
     }
 
