@@ -125,6 +125,14 @@ public class SysUserController {
         return Response.ok(sysUserService.saveOrUpdate(param));
     }
 
+
+    @PutMapping("/switch")
+    @ApiOperation(value = "用户启用停用开关")
+    @SaCheckPermission("user.switch")
+    public Response userSwitch(@RequestBody SysUser param) {
+        return Response.ok(sysUserService.updateById(param));
+    }
+
     public boolean saveUserRole(Long userId, List<String> roleIds) {
         sysUserRoleService.remove(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
         List<SysUserRole> sysUserRoles = new ArrayList<>();

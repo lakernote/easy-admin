@@ -227,14 +227,14 @@
         // 触发switch开关 开关被点击时触发
         form.on('switch(user-enable)', function (obj) {
             easyAdmin.http({
-                url: '/sys/user',
+                url: '/sys/user/switch',
                 data: JSON.stringify({
                     userId: this.value,
                     enable: obj.elem.checked ? 1 : 0
                 }),
                 dataType: 'json',
                 contentType: 'application/json',
-                type: 'post',
+                type: 'put',
                 success: function (result) {
                     if (result.success) {
                         layer.msg("操作成功", {icon: 1, time: 1000, area: ['100px', '65px']});
