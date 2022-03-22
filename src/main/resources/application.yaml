@@ -63,8 +63,8 @@ sa-token:
   is-print: false
 laker:
   waf:
-    sql-enabled: true
-    xss-enabled: true
+    sql-enabled: false
+    xss-enabled: false
     excludes: /flow/*,/sys/nginx/*
   oss-file:
     domain: http://localhost:8080

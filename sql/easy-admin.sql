@@ -160,7 +160,7 @@ CREATE TABLE `sys_power`  (
   PRIMARY KEY (`menu_id`) USING BTREE,
   INDEX `title`(`title`) USING BTREE,
   INDEX `href`(`href`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 299 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单权限资源表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 301 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单权限资源表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_power
@@ -195,6 +195,8 @@ INSERT INTO `sys_power` VALUES (294, 270, '列表个人', 'layui-icon ', '', '',
 INSERT INTO `sys_power` VALUES (295, 270, '列表全部', 'layui-icon ', '', '', 2, 1, NULL, NULL, 3, 'ExtLeaveMapper.selectPage', 1);
 INSERT INTO `sys_power` VALUES (296, 270, '列表部门', 'layui-icon ', '', '', 2, 1, NULL, NULL, 3, 'ExtLeaveMapper.selectPage', 2);
 INSERT INTO `sys_power` VALUES (298, 269, '修改密码', 'layui-icon layui-icon ', '', '', 2, 1, NULL, NULL, 2, 'user.update.pwd', 1);
+INSERT INTO `sys_power` VALUES (299, 251, '报表设计', 'layui-icon ', 'http://localhost:8080/ureport/designer', '_iframe', 14, 1, NULL, NULL, 1, '', 1);
+INSERT INTO `sys_power` VALUES (300, 1, '7日报表', 'layui-icon ', 'http://localhost:8080/ureport/preview?_u=file:laker.ureport.xml', '_iframe', 15, 1, NULL, NULL, 1, '', 1);
 
 -- ----------------------------
 -- Table structure for sys_role

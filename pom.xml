@@ -167,6 +167,14 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.14</version>
         </dependency>
+
+        <!-- 报表引擎 -->
+        <dependency>
+            <groupId>com.syyai.spring.boot</groupId>
+            <artifactId>ureport-spring-boot-starter</artifactId>
+            <version>2.2.9</version>
+        </dependency>
+
     </dependencies>
 
     <build>
