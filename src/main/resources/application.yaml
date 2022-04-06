@@ -34,6 +34,9 @@ spring:
       thread-name-prefix: laker-
   freemarker:
     suffix: .ftl
+  servlet:
+    multipart:
+      max-file-size: 20MB
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
   # 支持统配符 * 或者 ; 分割

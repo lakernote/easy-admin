@@ -2,14 +2,15 @@ package com.laker.admin.module.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author laker
@@ -33,6 +34,8 @@ public class SysFile implements Serializable {
      * 文件名称
      */
     private String fileName;
+    private Long userId;
+    private String nickName;
 
     /**
      * 创建时间

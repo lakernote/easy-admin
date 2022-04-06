@@ -11,7 +11,7 @@
  Target Server Version : 50734
  File Encoding         : 65001
 
- Date: 16/12/2021 15:25:28
+ Date: 06/04/2022 22:34:53
 */
 
 SET NAMES utf8mb4;
@@ -23,25 +23,19 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `ext_leave`;
 CREATE TABLE `ext_leave`  (
   `leave_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `leave_day` int(2) DEFAULT NULL COMMENT '请假天数',
-  `leave_reason` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请假原因',
-  `leave_user_id` bigint(20) DEFAULT NULL COMMENT '请假人id',
-  `create_by` bigint(1) DEFAULT NULL COMMENT '创建人',
-  `create_dept_id` bigint(1) DEFAULT NULL COMMENT '创建人部门',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `order_id` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `leave_day` int(2) NULL DEFAULT NULL COMMENT '请假天数',
+  `leave_reason` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请假原因',
+  `leave_user_id` bigint(20) NULL DEFAULT NULL COMMENT '请假人id',
+  `create_by` bigint(1) NULL DEFAULT NULL COMMENT '创建人',
+  `create_dept_id` bigint(1) NULL DEFAULT NULL COMMENT '创建人部门',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `order_id` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`leave_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of ext_leave
 -- ----------------------------
-INSERT INTO `ext_leave` VALUES (14, 3, '正常', 16, 16, 14, '2021-08-22 23:59:08', '4aacacb31f964104b50b8cc814d807ac');
-INSERT INTO `ext_leave` VALUES (15, 5, '测绘', 16, 16, 14, '2021-08-22 23:59:18', '2a3773645b214ea0b8fc48d6784e52e9');
-INSERT INTO `ext_leave` VALUES (16, 234234, '234234', 16, 16, 14, '2021-08-23 00:18:39', '7f0b9b62c76d44258d62eab833e7fa69');
-INSERT INTO `ext_leave` VALUES (17, 23, '4', 16, 16, 14, '2021-08-26 23:44:38', 'cc3e93c80eed4227af20f07325937451');
-INSERT INTO `ext_leave` VALUES (18, 34, '32', 16, 16, 14, '2021-08-26 23:50:38', '9cf10ed2054646708b2f38a0f3239f40');
-INSERT INTO `ext_leave` VALUES (19, 214, '234', 1, 1, 14, '2021-10-14 22:51:58', '7bf249c813054c2fa768b2ccdae76a9c');
 
 -- ----------------------------
 -- Table structure for ext_log
@@ -49,46 +43,49 @@ INSERT INTO `ext_leave` VALUES (19, 214, '234', 1, 1, 14, '2021-10-14 22:51:58',
 DROP TABLE IF EXISTS `ext_log`;
 CREATE TABLE `ext_log`  (
   `log_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
-  `ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'ip地址',
-  `city` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求城市',
-  `client` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '浏览器或者app信息',
-  `uri` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求uri',
-  `method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求方法',
-  `request` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求',
-  `response` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '响应',
-  `status` tinyint(1) DEFAULT NULL COMMENT '状态',
-  `cost` int(10) DEFAULT NULL COMMENT '耗时ms',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户id',
+  `ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'ip地址',
+  `city` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求城市',
+  `client` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '浏览器或者app信息',
+  `uri` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求uri',
+  `method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求方法',
+  `request` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求',
+  `response` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '响应',
+  `status` tinyint(1) NULL DEFAULT NULL COMMENT '状态',
+  `cost` int(10) NULL DEFAULT NULL COMMENT '耗时ms',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8929 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日志' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 9227 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '日志' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of ext_log
 -- ----------------------------
-INSERT INTO `ext_log` VALUES (8501, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userName\":\"admin\",\"nickName\":\"超级管理员\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"11111111111\",\"enable\":1,\"email\":\"935009@98.com\",\"createTime\":\"2021-08-15 11:02:15\",\"roleIds\":null},\"requestId\":\"b826c2ab-e5e1-4d2b-81eb-8a8e12bb4862\",\"success\":true}', 1, 36, '2021-10-20 21:02:06');
-INSERT INTO `ext_log` VALUES (8502, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 57, '2021-10-20 21:02:06');
-INSERT INTO `ext_log` VALUES (8503, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":3}],\"requestId\":\"4224a985-a6f6-40ee-836e-f195215f8546\",\"success\":true,\"count\":10}', 1, 36, '2021-10-20 21:02:08');
-INSERT INTO `ext_log` VALUES (8504, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2021-10-20\",\"value\":4}],\"requestId\":\"1dc0e7a1-5dd1-4d4c-9915-f5d6a2f3a84c\",\"success\":true}', 1, 19, '2021-10-20 21:02:08');
-INSERT INTO `ext_log` VALUES (8505, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/list', 'SysMenuController.list()', '[]', NULL, 1, 66, '2021-10-20 21:02:12');
-INSERT INTO `ext_log` VALUES (8506, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/selectTree', 'SysMenuController.selectTree()', '[]', NULL, 1, 7, '2021-10-20 21:02:19');
-INSERT INTO `ext_log` VALUES (8507, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userName\":\"admin\",\"nickName\":\"超级管理员\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"11111111111\",\"enable\":1,\"email\":\"935009@98.com\",\"createTime\":\"2021-08-15 11:02:15\",\"roleIds\":null},\"requestId\":\"550dd9a5-2feb-46f4-acca-0564bf8f53d3\",\"success\":true}', 1, 35, '2021-10-20 21:06:32');
-INSERT INTO `ext_log` VALUES (8508, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 24, '2021-10-20 21:06:32');
-INSERT INTO `ext_log` VALUES (8509, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/list', 'SysMenuController.list()', '[]', NULL, 1, 21, '2021-10-20 21:06:33');
-INSERT INTO `ext_log` VALUES (8510, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":10}],\"requestId\":\"11b79a28-f26f-4a47-9d2f-f25a79f8be15\",\"success\":true,\"count\":10}', 1, 13, '2021-10-20 21:06:34');
-INSERT INTO `ext_log` VALUES (8511, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2021-10-20\",\"value\":11}],\"requestId\":\"c0cddc6f-a323-461a-be89-99048e99cf7b\",\"success\":true}', 1, 12, '2021-10-20 21:06:34');
-INSERT INTO `ext_log` VALUES (8512, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/287', 'SysMenuController.get(..)', '[287]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"menuId\":287,\"pid\":1,\"title\":\"定时任务\",\"icon\":\"layui-icon \",\"href\":\"view/system/task.html\",\"openType\":\"_iframe\",\"sort\":7,\"enable\":true,\"remark\":null,\"type\":1,\"powerCode\":\"\",\"dataFilterType\":null,\"createTime\":null,\"checkArr\":\"0\"},\"requestId\":\"99e6ef01-1016-4eec-854e-0138f618257f\",\"success\":true}', 1, 12, '2021-10-20 21:06:41');
-INSERT INTO `ext_log` VALUES (8513, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/selectTree', 'SysMenuController.selectTree()', '[]', NULL, 1, 10, '2021-10-20 21:06:41');
-INSERT INTO `ext_log` VALUES (8514, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userName\":\"admin\",\"nickName\":\"超级管理员\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"11111111111\",\"enable\":1,\"email\":\"935009@98.com\",\"createTime\":\"2021-08-15 11:02:15\",\"roleIds\":null},\"requestId\":\"088986f5-b055-49e7-b630-7dde4c944e26\",\"success\":true}', 1, 9, '2021-10-20 21:09:50');
-INSERT INTO `ext_log` VALUES (8515, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 6, '2021-10-20 21:09:50');
-INSERT INTO `ext_log` VALUES (8516, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/list', 'SysMenuController.list()', '[]', NULL, 1, 7, '2021-10-20 21:09:53');
-INSERT INTO `ext_log` VALUES (8517, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":17}],\"requestId\":\"786d0a4d-2a0b-42e9-8d80-8f46dceef59c\",\"success\":true,\"count\":10}', 1, 6, '2021-10-20 21:09:53');
-INSERT INTO `ext_log` VALUES (8518, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2021-10-20\",\"value\":18}],\"requestId\":\"c331e8da-a643-43d3-ac41-99b4ba703438\",\"success\":true}', 1, 6, '2021-10-20 21:09:53');
-INSERT INTO `ext_log` VALUES (8519, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userName\":\"admin\",\"nickName\":\"超级管理员\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"11111111111\",\"enable\":1,\"email\":\"935009@98.com\",\"createTime\":\"2021-08-15 11:02:15\",\"roleIds\":null},\"requestId\":\"21725568-6065-47a9-94ef-b515642104e1\",\"success\":true}', 1, 26, '2021-10-20 21:10:50');
-INSERT INTO `ext_log` VALUES (8520, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 24, '2021-10-20 21:10:50');
-INSERT INTO `ext_log` VALUES (8521, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/list', 'SysMenuController.list()', '[]', NULL, 1, 6, '2021-10-20 21:10:51');
-INSERT INTO `ext_log` VALUES (8522, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":22}],\"requestId\":\"3f865703-2a57-4820-a3fb-27f9ad7ecc04\",\"success\":true,\"count\":10}', 1, 7, '2021-10-20 21:10:51');
-INSERT INTO `ext_log` VALUES (8523, 1, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2021-10-20\",\"value\":23}],\"requestId\":\"85de01df-8061-4330-a8c2-f034ceccd3b0\",\"success\":true}', 1, 9, '2021-10-20 21:10:51');
+INSERT INTO `ext_log` VALUES (9201, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"8c52d104-fecd-4492-aef2-0e3e9eb8e7c1\",\"success\":true}', 1, 3, '2022-04-06 22:33:41');
+INSERT INTO `ext_log` VALUES (9202, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 6, '2022-04-06 22:33:41');
+INSERT INTO `ext_log` VALUES (9203, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":2}],\"requestId\":\"9afa6815-7705-4997-b700-ffd12d4390df\",\"success\":true,\"count\":10}', 1, 2, '2022-04-06 22:33:42');
+INSERT INTO `ext_log` VALUES (9204, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2022-04-06\",\"value\":3}],\"requestId\":\"e50333de-8fa0-404d-bdb7-49e15440588c\",\"success\":true}', 1, 2, '2022-04-06 22:33:42');
+INSERT INTO `ext_log` VALUES (9205, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"e923bd07-34cc-4b81-b2b5-390543368af7\",\"success\":true}', 1, 4, '2022-04-06 22:33:48');
+INSERT INTO `ext_log` VALUES (9206, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/leave?page=1&limit=10', 'ExtLeaveController.pageAll(..)', '[1,10]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[],\"requestId\":\"9f7633d9-8148-4103-85bd-10fddb3d55ee\",\"success\":true,\"count\":0}', 1, 6, '2022-04-06 22:33:51');
+INSERT INTO `ext_log` VALUES (9207, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"1fa7113a-0646-430a-a311-778011c9ae79\",\"success\":true}', 1, 3, '2022-04-06 22:33:57');
+INSERT INTO `ext_log` VALUES (9208, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 7, '2022-04-06 22:33:57');
+INSERT INTO `ext_log` VALUES (9209, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"ece652d8-614c-499d-8323-32b998be747c\",\"success\":true}', 1, 4, '2022-04-06 22:33:57');
+INSERT INTO `ext_log` VALUES (9210, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 6, '2022-04-06 22:33:57');
+INSERT INTO `ext_log` VALUES (9211, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"40d4db1a-c590-43f1-b797-d93701ae5b2c\",\"success\":true}', 1, 4, '2022-04-06 22:33:58');
+INSERT INTO `ext_log` VALUES (9212, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 7, '2022-04-06 22:33:58');
+INSERT INTO `ext_log` VALUES (9213, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/leave?page=1&limit=10', 'ExtLeaveController.pageAll(..)', '[1,10]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[],\"requestId\":\"c40882c7-b2a7-4864-a6a1-aed0b7c6c059\",\"success\":true,\"count\":0}', 1, 3, '2022-04-06 22:33:58');
+INSERT INTO `ext_log` VALUES (9214, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"1d158429-321e-46a5-827e-b22aab3d338a\",\"success\":true}', 1, 4, '2022-04-06 22:33:58');
+INSERT INTO `ext_log` VALUES (9215, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":14}],\"requestId\":\"a713e6bc-5d92-4bb8-ad1e-9248dc007031\",\"success\":true,\"count\":10}', 1, 3, '2022-04-06 22:33:58');
+INSERT INTO `ext_log` VALUES (9216, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2022-04-06\",\"value\":15}],\"requestId\":\"2613dbf5-cd47-4c9d-89ad-eddc3cbc4055\",\"success\":true}', 1, 3, '2022-04-06 22:33:58');
+INSERT INTO `ext_log` VALUES (9217, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"f09e5d78-37e9-4668-b145-880236437951\",\"success\":true}', 1, 3, '2022-04-06 22:34:09');
+INSERT INTO `ext_log` VALUES (9218, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/menu/tree', 'SysMenuController.tree()', '[]', NULL, 1, 7, '2022-04-06 22:34:09');
+INSERT INTO `ext_log` VALUES (9219, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/leave?page=1&limit=10', 'ExtLeaveController.pageAll(..)', '[1,10]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[],\"requestId\":\"a2e7f7de-a540-414d-879a-1233b062f32d\",\"success\":true,\"count\":0}', 1, 4, '2022-04-06 22:34:09');
+INSERT INTO `ext_log` VALUES (9220, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/userInfo', 'LoginController.userInfo()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":{\"userId\":16,\"userName\":\"laker\",\"nickName\":\"李哥\",\"deptId\":14,\"dept\":null,\"deptName\":\"业务部\",\"sex\":1,\"phone\":\"1\",\"enable\":1,\"email\":\"\",\"avatar\":\"\",\"createTime\":\"2021-08-09 18:25:32\",\"roleIds\":null},\"requestId\":\"509722f8-861e-4f26-b364-1e680b00ca00\",\"success\":true}', 1, 3, '2022-04-06 22:34:09');
+INSERT INTO `ext_log` VALUES (9221, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visitsTop10IP?page=1&limit=10', 'ExtLogController.visitsTop10IP()', '[]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"ip\":\"127.0.0.1\",\"city\":null,\"value\":20}],\"requestId\":\"e1ff3884-b82b-474d-bf9d-1624faa20042\",\"success\":true,\"count\":10}', 1, 2, '2022-04-06 22:34:09');
+INSERT INTO `ext_log` VALUES (9222, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log/visits7day', 'ExtLogController.visits7day()', '[]', '{\"code\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"date\":\"2022-04-06\",\"value\":21}],\"requestId\":\"cf824727-6eed-411a-87dd-dcb316125693\",\"success\":true}', 1, 2, '2022-04-06 22:34:09');
+INSERT INTO `ext_log` VALUES (9223, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/ext/log?page=1&limit=10', 'ExtLogController.pageAll(..)', '[1,10,null]', NULL, 1, 15, '2022-04-06 22:34:19');
+INSERT INTO `ext_log` VALUES (9224, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/api/v1/onlineUsers?page=1&limit=10', 'LoginController.onlineUsers(..)', '[1,10]', '{\"code\":\"0\",\"msg\":\"\",\"data\":[{\"loginId\":null,\"userId\":16,\"nickName\":\"李哥\",\"ip\":\"127.0.0.1\",\"os\":\"Windows 10 or Windows Server 2016\",\"city\":\"0.0.内网IP\",\"browser\":\"Chrome\",\"tokenValue\":\"3442eb5f9d454e9bbe7d40e31f01f25b\",\"loginTime\":\"2022-04-06 22:32:09\",\"lastActivityTime\":\"2022-04-06 22:34:23\"}],\"requestId\":\"f5af58d3-8a11-4d13-a420-a919a3ab0e83\",\"success\":true,\"count\":1}', 1, 0, '2022-04-06 22:34:23');
+INSERT INTO `ext_log` VALUES (9225, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/dept/tree', 'SysDeptController.tree(..)', '[{\"deptId\":null,\"deptName\":null,\"address\":null,\"pid\":null,\"status\":null,\"sort\":null}]', NULL, 1, 3, '2022-04-06 22:34:27');
+INSERT INTO `ext_log` VALUES (9226, 16, '127.0.0.1', NULL, 'Windows 10 or Windows Server 2016.Chrome', '/sys/user?page=1&limit=10', 'SysUserController.pageAll(..)', '[1,10,null,null]', NULL, 1, 5, '2022-04-06 22:34:27');
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -96,11 +93,11 @@ INSERT INTO `ext_log` VALUES (8523, 1, '127.0.0.1', NULL, 'Windows 10 or Windows
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`  (
   `dept_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `dept_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `dept_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pid` bigint(11) NOT NULL DEFAULT 0,
-  `status` tinyint(1) DEFAULT NULL,
-  `sort` int(255) DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT NULL,
+  `sort` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`dept_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -125,19 +122,38 @@ INSERT INTO `sys_dept` VALUES (15, '研发部', '闷头猛干', 0, 1, 1);
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict`  (
   `dict_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `dict_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '字典编码',
-  `dict_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '字典名称',
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '字典描述',
-  `dict_data` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '字典数据',
-  `enable` tinyint(1) DEFAULT NULL COMMENT '字典状态',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `dict_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典编码',
+  `dict_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典名称',
+  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典描述',
+  `dict_data` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典数据',
+  `enable` tinyint(1) NULL DEFAULT NULL COMMENT '字典状态',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`dict_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '大法士大夫' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统字典表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_dict
 -- ----------------------------
 INSERT INTO `sys_dict` VALUES (20, '111111', '12', '1', NULL, 1, NULL);
+
+-- ----------------------------
+-- Table structure for sys_file
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_file`;
+CREATE TABLE `sys_file`  (
+  `file_id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(11) NULL DEFAULT NULL,
+  `nick_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `file_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件路径',
+  `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`file_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_file
+-- ----------------------------
+INSERT INTO `sys_file` VALUES (22, 16, '李哥', 'http://localhost:8080/oss-file/偶松.jpg', '偶松.jpg', '2022-04-06 22:34:05');
 
 -- ----------------------------
 -- Table structure for sys_power
@@ -150,17 +166,17 @@ CREATE TABLE `sys_power`  (
   `icon` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '菜单图标',
   `href` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '链接',
   `open_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '链接打开方式',
-  `sort` int(11) DEFAULT 0 COMMENT '菜单排序',
+  `sort` int(11) NULL DEFAULT 0 COMMENT '菜单排序',
   `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态(0:禁用,1:启用)',
-  `remark` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '备注信息',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `type` int(11) DEFAULT NULL COMMENT '权限类型1目录2菜单3接口4数据',
-  `power_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '权限标识，数据权限例ExtLeaveMapper.selectPage',
-  `data_filter_type` int(1) DEFAULT NULL COMMENT '数据权限过滤类型，ALL,DEPT,SELF',
+  `remark` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注信息',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `type` int(11) NULL DEFAULT NULL COMMENT '权限类型1目录2菜单3接口4数据',
+  `power_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限标识，数据权限例ExtLeaveMapper.selectPage',
+  `data_filter_type` int(1) NULL DEFAULT NULL COMMENT '数据权限过滤类型，ALL,DEPT,SELF',
   PRIMARY KEY (`menu_id`) USING BTREE,
   INDEX `title`(`title`) USING BTREE,
   INDEX `href`(`href`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 301 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单权限资源表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 302 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单权限资源表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_power
@@ -197,6 +213,7 @@ INSERT INTO `sys_power` VALUES (296, 270, '列表部门', 'layui-icon ', '', '',
 INSERT INTO `sys_power` VALUES (298, 269, '修改密码', 'layui-icon layui-icon ', '', '', 2, 1, NULL, NULL, 2, 'user.update.pwd', 1);
 INSERT INTO `sys_power` VALUES (299, 251, '报表设计', 'layui-icon ', 'http://localhost:8080/ureport/designer', '_iframe', 14, 1, NULL, NULL, 1, '', 1);
 INSERT INTO `sys_power` VALUES (300, 1, '7日报表', 'layui-icon ', 'http://localhost:8080/ureport/preview?_u=file:laker.ureport.xml', '_iframe', 15, 1, NULL, NULL, 1, '', 1);
+INSERT INTO `sys_power` VALUES (301, 1, '文件管理', 'layui-icon ', 'view/sys/file.html', '_iframe', 15, 1, NULL, NULL, 1, '', 1);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -204,12 +221,12 @@ INSERT INTO `sys_power` VALUES (300, 1, '7日报表', 'layui-icon ', 'http://loc
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
   `role_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '角色名',
-  `role_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Key值',
-  `details` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '描述',
-  `enable` tinyint(1) DEFAULT NULL COMMENT '是否可用',
-  `create_time` datetime DEFAULT NULL,
-  `role_type` int(1) DEFAULT NULL COMMENT '角色类型，1：菜单权限角色 ，2：数据权限角色',
+  `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名',
+  `role_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Key值',
+  `details` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `enable` tinyint(1) NULL DEFAULT NULL COMMENT '是否可用',
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `role_type` int(1) NULL DEFAULT NULL COMMENT '角色类型，1：菜单权限角色 ，2：数据权限角色',
   PRIMARY KEY (`role_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -227,10 +244,10 @@ INSERT INTO `sys_role` VALUES (11, '数据角色员工', '', '', 1, NULL, 2);
 DROP TABLE IF EXISTS `sys_role_power`;
 CREATE TABLE `sys_role_power`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `role_id` bigint(20) DEFAULT NULL,
-  `power_id` bigint(20) DEFAULT NULL,
+  `role_id` bigint(20) NULL DEFAULT NULL,
+  `power_id` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 391 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 419 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_role_power
@@ -243,30 +260,34 @@ INSERT INTO `sys_role_power` VALUES (221, 6, 290);
 INSERT INTO `sys_role_power` VALUES (249, 9, 294);
 INSERT INTO `sys_role_power` VALUES (250, 11, 294);
 INSERT INTO `sys_role_power` VALUES (251, 10, 296);
-INSERT INTO `sys_role_power` VALUES (367, 5, 1);
-INSERT INTO `sys_role_power` VALUES (368, 5, 269);
-INSERT INTO `sys_role_power` VALUES (369, 5, 298);
-INSERT INTO `sys_role_power` VALUES (370, 5, 270);
-INSERT INTO `sys_role_power` VALUES (371, 5, 282);
-INSERT INTO `sys_role_power` VALUES (372, 5, 285);
-INSERT INTO `sys_role_power` VALUES (373, 5, 288);
-INSERT INTO `sys_role_power` VALUES (374, 5, 287);
-INSERT INTO `sys_role_power` VALUES (375, 5, 291);
-INSERT INTO `sys_role_power` VALUES (376, 5, 251);
-INSERT INTO `sys_role_power` VALUES (377, 5, 252);
-INSERT INTO `sys_role_power` VALUES (378, 5, 258);
-INSERT INTO `sys_role_power` VALUES (379, 5, 286);
-INSERT INTO `sys_role_power` VALUES (380, 5, 264);
-INSERT INTO `sys_role_power` VALUES (381, 5, 265);
-INSERT INTO `sys_role_power` VALUES (382, 5, 266);
-INSERT INTO `sys_role_power` VALUES (383, 5, 268);
-INSERT INTO `sys_role_power` VALUES (384, 5, 280);
-INSERT INTO `sys_role_power` VALUES (385, 5, 281);
-INSERT INTO `sys_role_power` VALUES (386, 5, 283);
-INSERT INTO `sys_role_power` VALUES (387, 5, 293);
-INSERT INTO `sys_role_power` VALUES (388, 5, 284);
-INSERT INTO `sys_role_power` VALUES (389, 5, 289);
-INSERT INTO `sys_role_power` VALUES (390, 5, 290);
+INSERT INTO `sys_role_power` VALUES (391, 5, 1);
+INSERT INTO `sys_role_power` VALUES (392, 5, 269);
+INSERT INTO `sys_role_power` VALUES (393, 5, 298);
+INSERT INTO `sys_role_power` VALUES (394, 5, 270);
+INSERT INTO `sys_role_power` VALUES (395, 5, 282);
+INSERT INTO `sys_role_power` VALUES (396, 5, 285);
+INSERT INTO `sys_role_power` VALUES (397, 5, 288);
+INSERT INTO `sys_role_power` VALUES (398, 5, 287);
+INSERT INTO `sys_role_power` VALUES (399, 5, 291);
+INSERT INTO `sys_role_power` VALUES (400, 5, 292);
+INSERT INTO `sys_role_power` VALUES (401, 5, 300);
+INSERT INTO `sys_role_power` VALUES (402, 5, 301);
+INSERT INTO `sys_role_power` VALUES (403, 5, 251);
+INSERT INTO `sys_role_power` VALUES (404, 5, 252);
+INSERT INTO `sys_role_power` VALUES (405, 5, 258);
+INSERT INTO `sys_role_power` VALUES (406, 5, 286);
+INSERT INTO `sys_role_power` VALUES (407, 5, 264);
+INSERT INTO `sys_role_power` VALUES (408, 5, 265);
+INSERT INTO `sys_role_power` VALUES (409, 5, 266);
+INSERT INTO `sys_role_power` VALUES (410, 5, 268);
+INSERT INTO `sys_role_power` VALUES (411, 5, 280);
+INSERT INTO `sys_role_power` VALUES (412, 5, 281);
+INSERT INTO `sys_role_power` VALUES (413, 5, 283);
+INSERT INTO `sys_role_power` VALUES (414, 5, 293);
+INSERT INTO `sys_role_power` VALUES (415, 5, 284);
+INSERT INTO `sys_role_power` VALUES (416, 5, 299);
+INSERT INTO `sys_role_power` VALUES (417, 5, 289);
+INSERT INTO `sys_role_power` VALUES (418, 5, 290);
 
 -- ----------------------------
 -- Table structure for sys_task
@@ -274,13 +295,13 @@ INSERT INTO `sys_role_power` VALUES (390, 5, 290);
 DROP TABLE IF EXISTS `sys_task`;
 CREATE TABLE `sys_task`  (
   `task_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `task_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务的编码 必须全局唯一',
-  `task_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务的名称',
-  `task_class_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务的类名称',
-  `task_cron` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务的cron表达式',
-  `create_time` datetime DEFAULT NULL COMMENT '任务创建时间',
-  `enable` tinyint(1) DEFAULT NULL COMMENT '是否启用',
-  `task_state` int(1) DEFAULT NULL COMMENT '任务状态',
+  `task_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务的编码 必须全局唯一',
+  `task_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务的名称',
+  `task_class_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务的类名称',
+  `task_cron` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务的cron表达式',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '任务创建时间',
+  `enable` tinyint(1) NULL DEFAULT NULL COMMENT '是否启用',
+  `task_state` int(1) NULL DEFAULT NULL COMMENT '任务状态',
   PRIMARY KEY (`task_id`) USING BTREE,
   UNIQUE INDEX `task_code`(`task_code`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -297,12 +318,12 @@ INSERT INTO `sys_task` VALUES (11, 'job1', '第一个任务', 'com.laker.admin.m
 DROP TABLE IF EXISTS `sys_tasklog`;
 CREATE TABLE `sys_tasklog`  (
   `tasklog_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `task_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务编码',
-  `start_time` datetime DEFAULT NULL COMMENT '任务开始时间',
-  `end_time` datetime DEFAULT NULL COMMENT '任务结束时间',
-  `status` int(255) DEFAULT NULL COMMENT '状态正常，异常',
-  `cost` int(10) DEFAULT NULL COMMENT '耗时 ms',
-  `thread_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '线程名称',
+  `task_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务编码',
+  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '任务开始时间',
+  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '任务结束时间',
+  `status` int(255) NULL DEFAULT NULL COMMENT '状态正常，异常',
+  `cost` int(10) NULL DEFAULT NULL COMMENT '耗时 ms',
+  `thread_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '线程名称',
   PRIMARY KEY (`tasklog_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -316,16 +337,16 @@ CREATE TABLE `sys_tasklog`  (
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
   `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `nick_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `dept_id` bigint(20) DEFAULT NULL,
-  `sex` int(2) DEFAULT NULL,
-  `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `enable` int(2) DEFAULT NULL,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `nick_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `dept_id` bigint(20) NULL DEFAULT NULL,
+  `sex` int(2) NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `enable` int(2) NULL DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE INDEX `user_name`(`user_name`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -335,8 +356,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 INSERT INTO `sys_user` VALUES (1, 'admin', '30a9c7081b257f80a3f672452decc16dafe717cc54ac510afb77257fb6ee3702', '超级管理员', 14, 1, '11111111111', 1, '935009@98.com', '', '2021-08-15 11:02:15');
 INSERT INTO `sys_user` VALUES (16, 'laker', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '李哥', 14, 1, '1', 1, '', '', '2021-08-09 18:25:32');
-INSERT INTO `sys_user` VALUES (17, 'yang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '陈总', 14, 1, '', 1, '', '','2021-08-10 10:24:23');
-INSERT INTO `sys_user` VALUES (18, 'zhang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '张总', 15, 2, '', 1, '', '','2021-08-10 10:24:38');
+INSERT INTO `sys_user` VALUES (17, 'yang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '陈总', 14, 1, '', 1, '', '', '2021-08-10 10:24:23');
+INSERT INTO `sys_user` VALUES (18, 'zhang', '4b15d2b3b671209e01202331881af5a6044d342dc624d29a53ed6b4402af6d61', '张总', 15, 2, '', 1, '', '', '2021-08-10 10:24:38');
 INSERT INTO `sys_user` VALUES (24, 'test', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '测试用户', 15, 1, '18256079743', 1, '98@qq.com', '', '2021-10-21 10:07:07');
 
 -- ----------------------------
@@ -345,8 +366,8 @@ INSERT INTO `sys_user` VALUES (24, 'test', '8d969eef6ecad3c29a3a629280e686cf0c3f
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
+  `user_id` bigint(20) NULL DEFAULT NULL,
+  `role_id` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 81 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -377,14 +398,14 @@ CREATE TABLE `wf_hist_order`  (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键ID',
   `process_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '流程定义ID',
   `order_State` tinyint(1) NOT NULL COMMENT '状态',
-  `creator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '发起人',
+  `creator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发起人',
   `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '发起时间',
-  `end_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '完成时间',
-  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '期望完成时间',
-  `priority` tinyint(1) DEFAULT NULL COMMENT '优先级',
-  `parent_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '父流程ID',
-  `order_No` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '流程实例编号',
-  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '附属变量json存储',
+  `end_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '完成时间',
+  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '期望完成时间',
+  `priority` tinyint(1) NULL DEFAULT NULL COMMENT '优先级',
+  `parent_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父流程ID',
+  `order_No` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程实例编号',
+  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附属变量json存储',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IDX_HIST_ORDER_PROCESSID`(`process_Id`) USING BTREE,
   INDEX `IDX_HIST_ORDER_NO`(`order_No`) USING BTREE
@@ -411,15 +432,15 @@ CREATE TABLE `wf_hist_task`  (
   `task_Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务名称',
   `display_Name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务显示名称',
   `task_Type` tinyint(1) NOT NULL COMMENT '任务类型',
-  `perform_Type` tinyint(1) DEFAULT NULL COMMENT '参与类型',
+  `perform_Type` tinyint(1) NULL DEFAULT NULL COMMENT '参与类型',
   `task_State` tinyint(1) NOT NULL COMMENT '任务状态',
-  `operator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务处理人',
+  `operator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务处理人',
   `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务创建时间',
-  `finish_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务完成时间',
-  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务期望完成时间',
-  `action_Url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务处理url',
-  `parent_Task_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '父任务ID',
-  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '附属变量json存储',
+  `finish_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务完成时间',
+  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务期望完成时间',
+  `action_Url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务处理url',
+  `parent_Task_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父任务ID',
+  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附属变量json存储',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IDX_HIST_TASK_ORDER`(`order_Id`) USING BTREE,
   INDEX `IDX_HIST_TASK_TASKNAME`(`task_Name`) USING BTREE,
@@ -482,18 +503,18 @@ INSERT INTO `wf_hist_task_actor` VALUES ('30002727f4c14f81a6cf0d9b4795933f', '1'
 DROP TABLE IF EXISTS `wf_order`;
 CREATE TABLE `wf_order`  (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键ID',
-  `parent_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '父流程ID',
+  `parent_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父流程ID',
   `process_Id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '流程定义ID',
-  `creator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '发起人',
+  `creator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发起人',
   `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '发起时间',
-  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '期望完成时间',
-  `last_Update_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '上次更新时间',
-  `last_Updator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '上次更新人',
-  `priority` tinyint(1) DEFAULT NULL COMMENT '优先级',
-  `parent_Node_Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '父流程依赖的节点名称',
-  `order_No` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '流程实例编号',
-  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '附属变量json存储',
-  `version` int(3) DEFAULT NULL COMMENT '版本',
+  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '期望完成时间',
+  `last_Update_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上次更新时间',
+  `last_Updator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上次更新人',
+  `priority` tinyint(1) NULL DEFAULT NULL COMMENT '优先级',
+  `parent_Node_Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父流程依赖的节点名称',
+  `order_No` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程实例编号',
+  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附属变量json存储',
+  `version` int(3) NULL DEFAULT NULL COMMENT '版本',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IDX_ORDER_PROCESSID`(`process_Id`) USING BTREE,
   INDEX `IDX_ORDER_NO`(`order_No`) USING BTREE
@@ -514,15 +535,15 @@ INSERT INTO `wf_order` VALUES ('cc3e93c80eed4227af20f07325937451', NULL, '6d8fa9
 DROP TABLE IF EXISTS `wf_process`;
 CREATE TABLE `wf_process`  (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键ID',
-  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '流程名称',
-  `display_Name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '流程显示名称',
-  `type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '流程类型',
-  `instance_Url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '实例url',
-  `state` tinyint(1) DEFAULT NULL COMMENT '流程是否可用',
-  `content` longblob COMMENT '流程模型定义',
-  `version` int(2) DEFAULT NULL COMMENT '版本',
-  `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建人',
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程名称',
+  `display_Name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程显示名称',
+  `type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程类型',
+  `instance_Url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '实例url',
+  `state` tinyint(1) NULL DEFAULT NULL COMMENT '流程是否可用',
+  `content` longblob NULL COMMENT '流程模型定义',
+  `version` int(2) NULL DEFAULT NULL COMMENT '版本',
+  `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IDX_PROCESS_NAME`(`name`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程定义表' ROW_FORMAT = Compact;
@@ -544,15 +565,15 @@ CREATE TABLE `wf_task`  (
   `task_Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务名称',
   `display_Name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务显示名称',
   `task_Type` tinyint(1) NOT NULL COMMENT '任务类型',
-  `perform_Type` tinyint(1) DEFAULT NULL COMMENT '参与类型',
-  `operator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务处理人',
-  `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务创建时间',
-  `finish_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务完成时间',
-  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务期望完成时间',
-  `action_Url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '任务处理的url',
-  `parent_Task_Id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '父任务ID',
-  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '附属变量json存储',
-  `version` tinyint(1) DEFAULT NULL COMMENT '版本',
+  `perform_Type` tinyint(1) NULL DEFAULT NULL COMMENT '参与类型',
+  `operator` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务处理人',
+  `create_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务创建时间',
+  `finish_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务完成时间',
+  `expire_Time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务期望完成时间',
+  `action_Url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务处理的url',
+  `parent_Task_Id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父任务ID',
+  `variable` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附属变量json存储',
+  `version` tinyint(1) NULL DEFAULT NULL COMMENT '版本',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IDX_TASK_ORDER`(`order_Id`) USING BTREE,
   INDEX `IDX_TASK_TASKNAME`(`task_Name`) USING BTREE,
@@ -586,18 +607,5 @@ INSERT INTO `wf_task_actor` VALUES ('dcf1d671aa2e41288aa77bdcb820aeb7', '17');
 INSERT INTO `wf_task_actor` VALUES ('72ca6873d466470486986d8202d5d4bd', '17');
 INSERT INTO `wf_task_actor` VALUES ('366fb54bf32047b3b3296764863a2b71', '17');
 INSERT INTO `wf_task_actor` VALUES ('512d9e14b8004f009a693bb10ff99705', '17');
-
-
--- ----------------------------
--- Table structure for sys_file
--- ----------------------------
-DROP TABLE IF EXISTS `sys_file`;
-CREATE TABLE `sys_file` (
-  `file_id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `file_path` varchar(255) DEFAULT NULL COMMENT '文件路径',
-  `file_name` varchar(255) DEFAULT NULL COMMENT '文件名称',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-   PRIMARY KEY (`file_id`)
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件表' ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;

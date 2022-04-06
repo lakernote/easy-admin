@@ -191,7 +191,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
          * @constructor
          */
         this.TableRemove = function (obj, uri) {
-            layer.confirm('确定要删除该用户', {
+            layer.confirm('确定要删除该记录吗？', {
                 icon: 3,
                 title: '提示'
             }, function (index) {

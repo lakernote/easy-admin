@@ -24,7 +24,10 @@
                 </button>
             </div>
         </form>
+
+        <button type="button" class="layui-btn" id="upload1"><i class="layui-icon"></i>上传文件</button>
     </div>
+
 </div>
 <div class="layui-card">
     <div class="layui-card-body">
@@ -35,58 +38,67 @@
 </body>
 
 <script type="text/html" id="record-toolbar">
-    <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">
-        <i class="layui-icon layui-icon-edit"></i>
-    </button>
     <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">
         <i class="layui-icon layui-icon-delete"></i>
     </button>
 </script>
 
 <script type="text/html" id="table-toolbar">
-    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
-        <i class="layui-icon layui-icon-add-1"></i>
-        新增
-    </button>
     <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
         <i class="layui-icon layui-icon-delete"></i>
         删除
     </button>
+
 </script>
 
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['easyAdmin'], function () {
+    layui.use(['easyAdmin', 'upload'], function () {
         let easyAdmin = layui.easyAdmin;
-
+        let upload = layui.upload;
         let cols = [
                 [{
                     type: 'checkbox'
+                }, {
+                    title: '文件名称',
+                    field: 'fileName',
+                    align: 'left',
+                    width: 300
                 },
                     {
                         title: '文件路径',
                         field: 'filePath',
-                        align: 'center',
-                        width: 120
-                    },
+                        align: 'left'
+                    }, {
+                    field: 'url',
+                    title: '照片缩略图',
+                    width: 100,
+                    align: 'center',
+                    templet: function (d) {
+                        //return  "<img src='"+datum.formatUrl(d.url)+"' style='height:50px;'";
+                        var url = d.filePath;
+                        return '<a href="' + url + '" target="_blank " title="点击查看">' +
+                            '<img src="' + url + '" style="height:20px;" />' +
+                            '</a>';
+                    }
+                },
                     {
-                        title: '文件名称',
-                        field: 'fileName',
-                        align: 'center',
-                        width: 120
+                        title: '创建人',
+                        field: 'nickName',
+                        align: 'left', width: 100
                     },
+
+
                     {
                         title: '创建时间',
                         field: 'createTime',
-                        align: 'center',
-                        width: 120
+                        align: 'left', width: 180
                     },
                     {
                         title: '操作',
                         toolbar: '#record-toolbar',
-                        align: 'center',
-                        width: 180
+                        align: 'left', width: 180
                     }
                 ]
             ]
@@ -103,6 +115,38 @@
         easyAdmin.TableTool(uri, module);
         easyAdmin.TableToolBar(uri, module);
         easyAdmin.FormQuery();
+        // 配置服务端地址
+        var adminServerUrl = layui.data('easyAdmin').serverUrl;
+        user = layui.data('user');
+        // 用于判断未登录跳转到登录页
+        if (JSON.stringify(user) == "{}") {
+            console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
+            location.href = "login.html";
+        }
+        var tokenName = user.token.name;
+        var tokenValue = user.token.value;
+        //指定允许上传的文件类型
+        var headers = {};
+        headers[tokenName] = tokenValue;
+        upload.render({
+            elem: '#upload1'
+            , url: adminServerUrl + uri + '/upload' //此处配置你自己的上传接口即可
+            , accept: 'file' //普通文件
+            , data: {
+                id: 1,
+                name: 'laker'
+            },
+            // headers: {token: 'sasasas'}
+            headers: headers
+            , done: function (res) {
+                // layer.msg('上传成功');
+                easyAdmin.TableRefresh();
+                console.log(res)
+            }, error: function () {
+                //请求异常回调
+                layer.msg('上传失败');
+            }
+        });
     })
 </script>
 </html>
