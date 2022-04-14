@@ -12,6 +12,27 @@
 
     <artifactId>easy-admin</artifactId>
     <version>1.0.0</version>
+    
+    <properties>
+        <!-- 1.编译器和JRE的版本默认为1.5,强制指定为1.8 -->
+        <java.version>1.8</java.version>
+        <!--     maven 编译代码使用的jdk版本  -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <!--     maven 执行代码使用的jdk版本  -->
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+
+        <!-- 2.指定编码字符集 解决中文乱码 -->
+        <!--     maven 编译使用的编码  -->
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <!--     maven 进行项目构建使用的编码，避免中文乱码  -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--  maven 生成项目报告使用的编码  -->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- 3.maven打包跳过测试 -->
+        <skipTests>true</skipTests>
+    </properties>
 
     <dependencies>
         <!-- web -->
