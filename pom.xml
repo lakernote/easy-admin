@@ -15,6 +15,7 @@
 
     <properties>
         <!-- 1.编译器和JRE的版本默认为1.5,强制指定为1.8 -->
+        <!--     该配置并非Maven官方的配置,是SpringBoot官方做的,约等于下面2个设置1.8 -->
         <java.version>1.8</java.version>
         <!--     maven 编译代码使用的jdk版本  -->
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -32,6 +33,8 @@
 
         <!-- 3.maven打包跳过测试 -->
         <skipTests>true</skipTests>
+        <!-- 其他依赖组件版本 -->
+        <hutool.version>5.5.2</hutool.version>
     </properties>
 
     <dependencies>
@@ -40,20 +43,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <!-- 工具类 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.5.2</version>
+            <version>${hutool.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-
         <!-- mybatis -->
         <dependency>
             <groupId>com.baomidou</groupId>

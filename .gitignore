@@ -25,4 +25,5 @@ hs_err_pid*
 /target/
 /logs/
 /file/
+/oss-file/
 

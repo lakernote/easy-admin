@@ -65,9 +65,11 @@ sa-token:
   is-log: false
   is-print: false
 laker:
+  # web防火墙配置
   waf:
     sql-enabled: false
     xss-enabled: false
     excludes: /flow/*,/sys/nginx/*
+  # 文件服务endpoint
   oss-file:
     domain: http://localhost:8080
