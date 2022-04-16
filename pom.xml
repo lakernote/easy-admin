@@ -79,13 +79,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <!-- test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- aop -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -194,6 +187,26 @@
             <groupId>com.syyai.spring.boot</groupId>
             <artifactId>ureport-spring-boot-starter</artifactId>
             <version>2.2.9</version>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>2.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- PowerMock Mockito2 API -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>2.0.2</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
