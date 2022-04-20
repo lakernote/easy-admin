@@ -54,7 +54,7 @@ knife4j:
     # 认证密码
     username: laker
   # 是否生产环境 屏蔽所有资源接口,一般这个用于生产环境 屏蔽资源，与上面二选一
-  production: true
+  # production: true
 javamelody:
   enabled: true
   # sa-token配置
