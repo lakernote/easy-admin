@@ -1,8 +1,10 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.config.LakerConfig;
 import com.laker.admin.framework.model.PageResponse;
+import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -11,12 +13,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * @author : [laker]
@@ -26,7 +29,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * @createTime : [2022/4/16 17:52]
  */
 @RunWith(PowerMockRunner.class) // 告诉JUnit使用PowerMockRunner进行测试
-@PrepareForTest({SysUserController.class}) // 所有需要测试的类列在此处
+@PrepareForTest({SysUserController.class,StpUtil.class}) // 所有需要测试的类列在此处
 @Slf4j
 public class SysUserControllerTest {
     /**
@@ -58,4 +61,19 @@ public class SysUserControllerTest {
 
     }
 
+    @Test
+    public void saveOrUpdate() {
+        PowerMockito.mockStatic(StpUtil.class);
+        when(StpUtil.getLoginIdAsLong()).thenReturn(1l);
+        /** 录制 mock操作 */
+        when(sysUserService.save(any()))
+                .thenReturn(Boolean.TRUE);
+        when(sysUserService.saveOrUpdate(any()))
+                .thenReturn(Boolean.TRUE);
+        /** 执行操作 */
+        //执行mock查询操作
+        SysUser parameter = new SysUser();
+        parameter.setDeptId(1L);
+        sysUserController.saveOrUpdate(parameter);
+    }
 }
