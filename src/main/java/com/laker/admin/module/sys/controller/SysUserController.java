@@ -100,7 +100,7 @@ public class SysUserController {
     @SaCheckPermission("user.update")
     public Response saveOrUpdate(@RequestBody SysUser param) {
 
-        if (param.getDeptId() == null) {
+        if (param.getUserId() == null && param.getDeptId() == null) {
             return Response.error("500", "请选择部门");
         }
 
