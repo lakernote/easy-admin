@@ -41,14 +41,16 @@ mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
   # 支持统配符 * 或者 ; 分割
   typeEnumsPackage: com.laker.admin.module.enums
-
+  # 配置日志 #仅控制台输出的日志
+  #  configuration:
+  #  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 knife4j:
   # 开启增强
   enable: true
   # 不是很重要的环境，但是又不想暴露文档可以用这个
   basic:
     # 开启basic认证 输入用户名密码才能访问/doc.html
-    enable: true
+    enable: false
     # 认证用户名
     password: laker
     # 认证密码
@@ -83,3 +85,11 @@ laker:
   # 文件服务endpoint
   oss-file:
     domain: http://localhost:8080
+# actuator
+management:
+  endpoint:
+    health:
+      show-details: always
+info:
+  author: laker
+  version: 1.0.1

@@ -29,14 +29,14 @@
         </rollingPolicy>
     </appender>
 
-    <!-- 日志输出格式 -->
-    <property name="log.pattern"
-              value="%d{HH:mm:ss.SSS} [%thread] %-5level [%X{userId}|%X{requestId}] %logger{20} - [%method,%line] - %msg%n"/>
+    <!-- 日志输出格式 TRACE_LOG_PATTERN-->
+    <property name="TRACE_LOG_PATTERN"
+              value="%d{HH:mm:ss.SSS} [%thread] %-5level [%X{userId}|%X{traceId}] %logger{20} - [%method,%line] - %msg%n"/>
 
 
     <!-- 彩色格式 -->
     <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]) %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx"/>
+              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]) [%X{userId}|%X{traceId}] %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx"/>
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex"
                     converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
@@ -61,6 +61,8 @@
     </logger>
     <!---->
     <logger name="org.snaker.engine" level="ERROR"/>
+    <!-- 不支持通配符 com.laker.admin.module.**.mapper-->
+    <logger name="com.laker.admin.module" level="DEBUG"/>
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="DEFAULT"/>

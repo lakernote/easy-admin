@@ -32,7 +32,7 @@ public class WebSocketEventListener {
     @EventListener
     public void handleConnectListener(SessionConnectedEvent sessionConnectedEvent) {
         EasyPrincipal user = (EasyPrincipal) sessionConnectedEvent.getUser();
-        log.info("建立连接 {} -> {}", user, sessionConnectedEvent);
+        log.debug("建立连接 {} -> {}", user, sessionConnectedEvent);
         // 加入在线用户列表
 
         ThreadUtil.execute(() -> {
@@ -46,7 +46,7 @@ public class WebSocketEventListener {
             stompMessageService.sendMessage(StompConstant.SUB_STATUS, EasyChatMessage.builder()
                     .content("欢迎【" + user.getAddress() + "】老弟体验")
                     .createTime(new Date()).build());
-            log.info("广播消息喽");
+            log.debug("广播消息喽");
         });
 
     }
@@ -61,12 +61,14 @@ public class WebSocketEventListener {
         EasyPrincipal user = (EasyPrincipal) sessionDisconnectEvent.getUser();
         log.debug("断开连接 -> {}", sessionDisconnectEvent);
         // 剔除在线用户列表
-
+        if (user == null) {
+            return;
+        }
         // 广播下线消息
         stompMessageService.sendMessage(StompConstant.SUB_STATUS, EasyChatMessage.builder()
                 .content("期待【" + user.getAddress() + "】老弟再来")
                 .createTime(new Date()).build());
-        log.info("广播消息喽");
+        log.debug("广播消息喽");
     }
 
 }

@@ -52,7 +52,7 @@ public class MySaTokenListener implements SaTokenListener {
                 .tokenValue(StpUtil.getTokenValue())
                 .nickName(sysUserService.getById((Long) loginId).getNickName())
                 .browser(requestUserAgent.getBrowser().getName()).build());
-        log.info("user doLogin,useId:{},token:{}", loginId, StpUtil.getTokenValue());
+        log.debug("user doLogin,useId:{},token:{}", loginId, StpUtil.getTokenValue());
     }
 
     /**
@@ -64,7 +64,7 @@ public class MySaTokenListener implements SaTokenListener {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
-        log.info("user doLogout,useId:{},token:{}", loginId, tokenValue);
+        log.debug("user doLogout,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**
@@ -76,7 +76,7 @@ public class MySaTokenListener implements SaTokenListener {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
-        log.info("user doLogoutByLoginId,useId:{},token:{}", loginId, tokenValue);
+        log.debug("user doLogoutByLoginId,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**
@@ -87,7 +87,7 @@ public class MySaTokenListener implements SaTokenListener {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
-        log.info("user doReplaced,useId:{},token:{}", loginId, tokenValue);
+        log.debug("user doReplaced,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**
@@ -112,7 +112,7 @@ public class MySaTokenListener implements SaTokenListener {
     @Override
     public void doCreateSession(String id) {
         // ...
-        log.info("user doCreateSession,id:{}", id);
+        log.debug("user doCreateSession,id:{}", id);
     }
 
     /**
@@ -121,7 +121,7 @@ public class MySaTokenListener implements SaTokenListener {
     @Override
     public void doLogoutSession(String id) {
         // ...
-        log.info("user doLogoutSession,id:{}", id);
+        log.debug("user doLogoutSession,id:{}", id);
     }
     // --------------------- 定时清理过期数据
 
@@ -148,7 +148,7 @@ public class MySaTokenListener implements SaTokenListener {
         this.refreshFlag = true;
         this.refreshThread = new Thread(() -> {
             for (; ; ) {
-                log.info("定时清理过期会话开始。间隔：{}s,在线人数：{}", SaManager.getConfig().getDataRefreshPeriod() + 5, ONLINE_USERS.size());
+                log.debug("定时清理过期会话开始。间隔：{}s,在线人数：{}", SaManager.getConfig().getDataRefreshPeriod() + 5, ONLINE_USERS.size());
                 try {
                     try {
                         // 如果已经被标记为结束
@@ -163,7 +163,7 @@ public class MySaTokenListener implements SaTokenListener {
                             }
                             return false;
                         });
-                        log.info("定时清理过期会话结束，在线人数：{},耗时：{}ms", ONLINE_USERS.size(), System.currentTimeMillis() - start);
+                        log.debug("定时清理过期会话结束，在线人数：{},耗时：{}ms", ONLINE_USERS.size(), System.currentTimeMillis() - start);
 
                     } catch (Exception e) {
                         e.printStackTrace();

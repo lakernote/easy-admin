@@ -1,6 +1,7 @@
 package com.laker.admin.framework.model;
 
 import cn.hutool.core.util.StrUtil;
+import com.laker.admin.framework.EasyAdminConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -22,18 +23,18 @@ public class Response<T> {
     private final String msg;
     @ApiModelProperty(notes = "响应数据")
     private final T data;
-    @ApiModelProperty(notes = "请求id")
-    private final String requestId;
+    @ApiModelProperty(notes = "traceId")
+    private final String traceId;
 
     @ApiModelProperty(notes = "请求id")
     private final Boolean success;
 
-    public Response(String code, String msg, T data) {
+    protected Response(String code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
         this.success = StrUtil.equals("0", code);
-        this.requestId = MDC.get("requestId");
+        this.traceId = MDC.get(EasyAdminConstants.TRACE_ID);
     }
 
     public static <T> Response<T> ok(T data) {
