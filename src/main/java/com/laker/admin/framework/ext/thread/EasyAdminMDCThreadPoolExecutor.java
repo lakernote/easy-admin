@@ -1,13 +1,13 @@
 package com.laker.admin.framework.ext.thread;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 /**
  * 自定义扩展线程池用于捕获执行中异常，防止异常被吞 + 解决MDC参数问题。
@@ -15,7 +15,7 @@ import java.util.concurrent.*;
  * @author laker
  */
 @Slf4j
-public class EasyAdminMDCThreadPoolExecutor extends ThreadPoolExecutor {
+public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor {
     /**
      * 简易线程池构造器
      *
@@ -24,19 +24,7 @@ public class EasyAdminMDCThreadPoolExecutor extends ThreadPoolExecutor {
      * @param prefix    线程名前缀,e.g:MCP-POOL
      */
     public EasyAdminMDCThreadPoolExecutor(int poolSize, int queueSize, String prefix) {
-        super(poolSize, poolSize, 60, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(queueSize), ThreadUtil
-                        .newNamedThreadFactory(prefix + "-", false),
-                new EasyAdminRejectPolicy());
-        // 非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut(true)，则会也作用于核心线程。
-        this.allowCoreThreadTimeOut(true);
-    }
-
-    public EasyAdminMDCThreadPoolExecutor(int corePoolSize, int maximumPoolSize,
-                                          long keepAliveTime, TimeUnit unit,
-                                          BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                threadFactory, new EasyAdminRejectPolicy());
+        super(poolSize, poolSize, prefix);
         // 非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut(true)，则会也作用于核心线程。
         this.allowCoreThreadTimeOut(true);
     }
