@@ -1,5 +1,6 @@
 package com.laker.admin.module.ext.vo;
 
+import com.laker.admin.module.flow.process.BaseFlowStatus;
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Data;
  * @createTime : [2022/5/8 16:18]
  */
 @Data
-public class LeaveVo {
+public class LeaveVo extends BaseFlowStatus {
     private Long leaveId;
 
     /**
