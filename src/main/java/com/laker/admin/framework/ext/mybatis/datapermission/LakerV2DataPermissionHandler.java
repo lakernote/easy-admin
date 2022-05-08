@@ -1,21 +1,21 @@
-package com.laker.admin.framework.ext.mybatis;
+package com.laker.admin.framework.ext.mybatis.datapermission;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
+import com.laker.admin.framework.ext.mybatis.UserDataPower;
+import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.HexValue;
-import net.sf.jsqlparser.expression.LongValue;
-import net.sf.jsqlparser.expression.StringValue;
+import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,18 +27,25 @@ import java.util.stream.Collectors;
  * 且不支持别名
  */
 @Slf4j
-public class LakerDataPermissionHandler implements DataPermissionHandler {
+public class LakerV2DataPermissionHandler {
 
     public static final String WHERE = " where {}";
 
     /**
-     * @param where             原SQL Where 条件表达式
+     * @param plainSelect       plainSelect
      * @param mappedStatementId Mapper接口方法ID
      * @return
      */
     @SneakyThrows
-    @Override
-    public Expression getSqlSegment(Expression where, String mappedStatementId) {
+    public Expression getSqlSegment(PlainSelect plainSelect, String mappedStatementId) {
+        // 获取原SQL Where 条件表达式
+        Expression where = plainSelect.getWhere();
+        // 获取sql语句的from 主表
+        Table fromItem = (Table) plainSelect.getFromItem();
+        // 有别名用别名，无别名用表名，防止字段冲突报错
+        Alias fromItemAlias = fromItem.getAlias();
+        String mainTableName = fromItemAlias == null ? fromItem.getName() : fromItemAlias.getName();
+
         List<String> split = StrUtil.split(mappedStatementId, '.');
         int index = split.size();
         String method = split.get(index - 1);
@@ -80,7 +87,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                     Set<Long> deptIds = userInfoAndPowers.getDeptIds();
                     // 把集合转变为JSQLParser需要的元素列表
                     ItemsList itemsList = new ExpressionList(deptIds.stream().map(LongValue::new).collect(Collectors.toList()));
-                    InExpression inExpression = new InExpression(new Column("create_dept_id"), itemsList);
+                    InExpression inExpression = new InExpression(new Column(mainTableName + ".create_dept_id"), itemsList);
                     AndExpression andExpression = new AndExpression(where, inExpression);
                     log.info(WHERE, andExpression);
                     return andExpression;
@@ -89,7 +96,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                     //  = 表达式
                     // dept_id = deptId
                     EqualsTo equalsTo = new EqualsTo();
-                    equalsTo.setLeftExpression(new Column("create_dept_id"));
+                    equalsTo.setLeftExpression(new Column(mainTableName + ".create_dept_id"));
                     equalsTo.setRightExpression(new LongValue(userInfoAndPowers.getDeptId()));
                     // 创建 AND 表达式 拼接Where 和 = 表达式
                     // WHERE xxx AND dept_id = 3
@@ -100,7 +107,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
                 case SELF:
                     // create_by = userId
                     EqualsTo selfEqualsTo = new EqualsTo();
-                    selfEqualsTo.setLeftExpression(new Column("create_by"));
+                    selfEqualsTo.setLeftExpression(new Column(mainTableName + ".create_by"));
                     selfEqualsTo.setRightExpression(new LongValue(userInfoAndPowers.getUserId()));
                     AndExpression selfAndExpression = new AndExpression(where, selfEqualsTo);
                     log.info(WHERE, selfAndExpression);
@@ -112,7 +119,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
             }
         } catch (Exception e) {
             log.error("LakerDataPermissionHandler.err", e);
-        } 
+        }
         return where;
     }
 }

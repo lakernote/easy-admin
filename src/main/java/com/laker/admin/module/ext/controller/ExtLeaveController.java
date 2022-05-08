@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.model.PageResponse;
@@ -61,6 +62,25 @@ public class ExtLeaveController extends BaseFlowController {
 
         });
         return PageResponse.ok(records, pageList.getTotal());
+    }
+
+    /**
+     * 暂时是为了测试 多表查询别名情况的数据权限过滤。
+     *
+     * @param page
+     * @param limit
+     * @return
+     */
+    @GetMapping("/v2")
+    @ApiOperation(value = "分页查询")
+    public PageResponse pageAllV2(@RequestParam(required = false, defaultValue = "1") long page,
+                                  @RequestParam(required = false, defaultValue = "10") long limit) {
+        Page roadPage = new Page<>(page, limit);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.ge("l.leave_day",1);
+        queryWrapper.orderByDesc("l.create_time");
+        IPage pageList = extLeaveService.pageV2(roadPage, queryWrapper);
+        return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
     @PostMapping
