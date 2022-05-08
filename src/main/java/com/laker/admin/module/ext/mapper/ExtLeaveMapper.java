@@ -24,10 +24,13 @@ public interface ExtLeaveMapper extends BaseMapper<ExtLeave> {
 
     @Results(id = "pageV2",
             value = {
-                    @Result(property = "dept.name", column = "deptName")
+                    @Result(property = "createUser.nickName", column = "uNickName"),
+                    @Result(property = "createUser.deptName", column = "uDeptName")
             })
-    @Select("select l.* ,u.nick_name uNickName" +
-            "   from ext_leave  l left join sys_user u on u.user_id = l.create_by " +
+    @Select("select l.* ,u.nick_name uNickName,d.dept_name uDeptName" +
+            "   from ext_leave  l " +
+            "       left join sys_user u on u.user_id = l.create_by " +
+            "       left join sys_dept d on d.dept_id = u.dept_id " +
             "${ew.customSqlSegment}")
     IPage<LeaveVo> pageV2(Page page, @Param(Constants.WRAPPER) Wrapper queryWrapper);
 }
