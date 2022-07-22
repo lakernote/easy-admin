@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
@@ -27,12 +26,17 @@ import java.lang.reflect.Method;
 public class LimitSubmitAspect {
     LFUCache<Object, Object> LFUCACHE = CacheUtil.newLFUCache(100, 60 * 1000);
 
-    @Pointcut("@annotation(RepeatSubmitLimit)")
-    private void pointcut() {
-    }
-
-    @Around("pointcut()")
-    public Object handleSubmit(ProceedingJoinPoint joinPoint) throws Throwable {
+    /**
+     *  获取 注解有2中方式
+     *  方式1： repeatSubmitLimitParam
+     *  方式2： method.getAnnotation(RepeatSubmitLimit.class)
+     * @param joinPoint
+     * @param repeatSubmitLimitParam
+     * @return
+     * @throws Throwable
+     */
+    @Around("@annotation(repeatSubmitLimitParam)")
+    public Object handleSubmit(ProceedingJoinPoint joinPoint,RepeatSubmitLimit repeatSubmitLimitParam) throws Throwable {
 
 
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
