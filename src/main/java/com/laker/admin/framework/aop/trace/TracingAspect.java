@@ -19,7 +19,7 @@ public class TracingAspect {
      * execution 方法描述匹配
      * 第一个通配符匹配任何返回值
      * com.laker..*
-     *      匹配com.laker包或子包中的任何类型
+     * 匹配com.laker包或子包中的任何类型
      * 最后一个匹配任何方法名称
      * (..)匹配任意数量的参数（零个或多个）
      * </p>
@@ -27,6 +27,21 @@ public class TracingAspect {
      */
     @Pointcut("execution(public * com.laker..remote..*(..))")
     public void remoteAspect() {
+    }
+
+
+    /**
+     * 拦截【方法】上有@LakerTrace注解
+     */
+    @Pointcut("@annotation(com.laker.admin.framework.aop.trace.LakerTrace)")
+    public void annotationAspect() {
+    }
+
+    /**
+     * 拦截【类】上有@LakerTrace注解
+     */
+    @Pointcut("@within(com.laker.admin.framework.aop.trace.LakerTrace)")
+    public void withinAspect() {
     }
 
     @Pointcut("execution(* com.laker..mapper.*.*(..))")
@@ -41,7 +56,8 @@ public class TracingAspect {
     public void controllerAspect() {
     }
 
-    @Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")
+    //@Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")
+    @Around("withinAspect() || remoteAspect()")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
         Object obj;
         TraceContext.addSpan(pjp);
