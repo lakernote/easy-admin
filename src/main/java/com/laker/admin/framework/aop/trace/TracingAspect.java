@@ -14,7 +14,18 @@ public class TracingAspect {
     @Value("${tracing.time:200}")
     private long time;
 
-    @Pointcut("execution(public * com.laker..remote.*.*(..))")
+    /**
+     * <p>
+     * execution 方法描述匹配
+     * 第一个通配符匹配任何返回值
+     * com.laker..*
+     *      匹配com.laker包或子包中的任何类型
+     * 最后一个匹配任何方法名称
+     * (..)匹配任意数量的参数（零个或多个）
+     * </p>
+     * 任何目录中包含 remote的包
+     */
+    @Pointcut("execution(public * com.laker..remote..*(..))")
     public void remoteAspect() {
     }
 
