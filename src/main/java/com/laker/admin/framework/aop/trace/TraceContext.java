@@ -16,9 +16,13 @@ public class TraceContext {
 
     public static void addSpan(ProceedingJoinPoint pjp) {
         MethodSignature methodSignature = ((MethodSignature) pjp.getSignature());
-
         String className = methodSignature.getMethod().getDeclaringClass().getName();
         String methodName = methodSignature.getMethod().getName();
+        addSpan(className + "." + methodName);
+    }
+
+    public static void addSpan(String spanName) {
+
         Trace trace = null;
         if (null == traceThreadLocal.get()) {
             trace = new Trace();
@@ -26,11 +30,8 @@ public class TraceContext {
         } else {
             trace = traceThreadLocal.get();
         }
-
         Span span = new Span();
-        span.setId(className + "." + methodName);
-        span.setClassName(className);
-        span.setMethodName(methodName);
+        span.setId(spanName);
         span.setStartTime(System.currentTimeMillis());
         trace.addSpan(span);
     }

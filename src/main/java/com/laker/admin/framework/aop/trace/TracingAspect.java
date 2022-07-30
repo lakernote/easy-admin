@@ -6,12 +6,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 @Slf4j
 @Aspect
 public class TracingAspect {
-    @Value("${tracing.time:200}")
+    @Value("${tracing.time:1}")
     private long time;
 
     /**
@@ -44,6 +45,17 @@ public class TracingAspect {
     public void withinAspect() {
     }
 
+    /**
+     * 拦截【方法】上有@LakerIgnoreTrace的注解
+     * 使用场景
+     * - @LakerTrace注解在类上，或者包扫描到了整个类，但是其中的某个方法不想拦截
+     * - 在方法上注解@LakerIgnoreTrace即可
+     */
+    @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.LakerIgnoreTrace)")
+    public void annotationIgnoreAspect() {
+    }
+
+
     @Pointcut("execution(* com.laker..mapper.*.*(..))")
     public void mapperAspect() {
     }
@@ -57,7 +69,7 @@ public class TracingAspect {
     }
 
     //@Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")
-    @Around("withinAspect() || remoteAspect()")
+    @Around("(withinAspect() || annotationAspect()) && annotationIgnoreAspect()")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
         Object obj;
         TraceContext.addSpan(pjp);

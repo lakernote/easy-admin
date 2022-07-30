@@ -1,26 +1,16 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.laker.admin.framework.exception.BusinessException;
-import com.laker.admin.framework.model.ResultTree;
-import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.entity.SysRole;
-import com.laker.admin.module.sys.entity.SysRolePower;
-import com.laker.admin.module.sys.service.ISysMenuService;
-import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Any;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -40,10 +30,6 @@ public class SysRoleControllerTest {
     SysRoleController SysRoleController;
     @Mock
     ISysRoleService sysRoleService;
-    @Mock
-    ISysMenuService sysMenuService;
-    @Mock
-    ISysRolePowerService sysRolePowerService;
 
     @Test
     public void getRolePower() {

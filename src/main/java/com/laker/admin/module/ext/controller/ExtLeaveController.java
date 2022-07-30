@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.aop.metrics.Metrics;
+import com.laker.admin.framework.aop.trace.LakerTrace;
+import com.laker.admin.framework.aop.trace.TraceCodeBlock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
@@ -49,12 +51,17 @@ public class ExtLeaveController extends BaseFlowController {
 
     @GetMapping
     @ApiOperation(value = "分页查询")
+    @LakerTrace
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit) {
         Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<ExtLeave> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.orderByDesc(ExtLeave::getCreateTime);
-        Page pageList = extLeaveService.page(roadPage, queryWrapper);
+//        Page pageList = extLeaveService.page(roadPage, queryWrapper);
+        IPage pageList = TraceCodeBlock.trace("leaveService.page",
+                () -> extLeaveService.page(roadPage, queryWrapper));
+
+        TraceCodeBlock.trace("xxxmodule.xxmethod", value -> System.out.println(DateUtil.now()));
         List<ExtLeave> records = pageList.getRecords();
         records.forEach(extLeave -> {
             extLeave.setCreateUser(sysUserService.getUserAndDeptById(extLeave.getCreateBy()));
@@ -77,7 +84,7 @@ public class ExtLeaveController extends BaseFlowController {
                                   @RequestParam(required = false, defaultValue = "10") long limit) {
         Page roadPage = new Page<>(page, limit);
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.ge("l.leave_day",1);
+        queryWrapper.ge("l.leave_day", 1);
         queryWrapper.orderByDesc("l.create_time");
         IPage pageList = extLeaveService.pageV2(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());

@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.laker.admin.framework.aop.trace.LakerTrace;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.mapper.SysDeptMapper;
@@ -24,6 +25,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     SysDeptMapper deptMapper;
 
+    @LakerTrace
     @Override
     public SysUser getUserAndDeptById(Long userId) {
         SysUser user = this.getById(userId);
