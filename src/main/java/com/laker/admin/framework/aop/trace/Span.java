@@ -16,7 +16,7 @@ public class Span {
     private long endTime;
     private String routeName;
     private long cost;
-    private SpanType methodType;
+    private SpanType spanType;
     private int order;
     private int level = 0;
     private List<Span> childs = new ArrayList<>();

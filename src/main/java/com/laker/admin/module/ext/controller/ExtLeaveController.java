@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.trace.LakerTrace;
+import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceCodeBlock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
@@ -51,7 +52,7 @@ public class ExtLeaveController extends BaseFlowController {
 
     @GetMapping
     @ApiOperation(value = "分页查询")
-    @LakerTrace
+    @LakerTrace(spanType = SpanType.Controller)
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit) {
         Page roadPage = new Page<>(page, limit);

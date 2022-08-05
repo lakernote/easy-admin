@@ -9,7 +9,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.util.Comparator;
 import java.util.List;
 
-@Slf4j(topic = "tracing")
+/**
+ * @author laker
+ */
+@Slf4j(topic = "trace")
 public class TraceContext {
     private static final String BAR = "+";
     private static ThreadLocal<Trace> traceThreadLocal = new ThreadLocal<>();
@@ -18,10 +21,14 @@ public class TraceContext {
         MethodSignature methodSignature = ((MethodSignature) pjp.getSignature());
         String className = methodSignature.getMethod().getDeclaringClass().getName();
         String methodName = methodSignature.getMethod().getName();
-        addSpan(className + "." + methodName);
+        addSpan(className + "." + methodName, TraceUtils.getSpanType(pjp));
     }
 
     public static void addSpan(String spanName) {
+        addSpan(spanName, SpanType.Others);
+    }
+
+    public static void addSpan(String spanName, SpanType spanType) {
 
         Trace trace = null;
         if (null == traceThreadLocal.get()) {
@@ -32,6 +39,7 @@ public class TraceContext {
         }
         Span span = new Span();
         span.setId(spanName);
+        span.setSpanType(spanType);
         span.setStartTime(System.currentTimeMillis());
         trace.addSpan(span);
     }
@@ -56,7 +64,7 @@ public class TraceContext {
         }
         spans.sort(Comparator.comparing(Span::getOrder));
         for (Span span : spans) {
-            log.warn("{}({})[{}]-{}", append + BAR, span.getOrder(), span.getCost(), span.getId());
+            log.warn("{}({})[{}]:[{}]-{}", append + BAR, span.getOrder(), span.getCost(), span.getSpanType(), span.getId());
             logSpan(span.getChilds(), append + BAR);
         }
 
