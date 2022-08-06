@@ -8,6 +8,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author laker
+ */
 @Component
 @Slf4j
 @Aspect

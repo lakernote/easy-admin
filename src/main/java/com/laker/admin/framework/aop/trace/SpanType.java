@@ -1,5 +1,9 @@
 package com.laker.admin.framework.aop.trace;
 
+/**
+ * @author laker
+ */
+
 public enum SpanType {
     Controller,
     Service,

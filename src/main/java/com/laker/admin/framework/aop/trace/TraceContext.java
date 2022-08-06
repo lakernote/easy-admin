@@ -63,8 +63,9 @@ public class TraceContext {
             return;
         }
         spans.sort(Comparator.comparing(Span::getOrder));
+        spans.stream().max(Comparator.comparing(Span::getCost)).get().setMax(true);
         for (Span span : spans) {
-            log.warn("{}({})[{}]:[{}]-{}", append + BAR, span.getOrder(), span.getCost(), span.getSpanType(), span.getId());
+            log.warn("{}{}{}{}({})[{}ms]:[{}]-{}", append + BAR, span.isMax() ? "【" : "[", span.getLevel(), span.isMax() ? "】" : "]", span.getOrder(), span.getCost(), span.getSpanType(), span.getId());
             logSpan(span.getChilds(), append + BAR);
         }
 

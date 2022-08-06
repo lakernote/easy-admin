@@ -69,6 +69,7 @@ public class ExtLeaveController extends BaseFlowController {
             this.setFlowStatusInfo(extLeave);
 
         });
+        sysUserService.getUserDataPowers(StpUtil.getLoginIdAsLong());
         return PageResponse.ok(records, pageList.getTotal());
     }
 

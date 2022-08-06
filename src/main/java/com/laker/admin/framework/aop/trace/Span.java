@@ -6,6 +6,9 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author laker
+ */
 @Data
 public class Span {
     private String id;
@@ -19,5 +22,6 @@ public class Span {
     private SpanType spanType;
     private int order;
     private int level = 0;
+    private boolean max;
     private List<Span> childs = new ArrayList<>();
 }
