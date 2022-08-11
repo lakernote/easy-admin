@@ -24,6 +24,15 @@ public class TraceCodeBlock {
         }
     }
 
+    public static <T> T trace(String spanName, Supplier<T> supplier, SpanType spanType) {
+        try {
+            TraceContext.addSpan(spanName, spanType);
+            return supplier.get();
+        } finally {
+            TraceContext.stopSpan(200);
+        }
+    }
+
     /**
      * 无返回值调用
      */
@@ -31,6 +40,16 @@ public class TraceCodeBlock {
 
         try {
             TraceContext.addSpan(spanName);
+            function.accept(0);
+        } finally {
+            TraceContext.stopSpan(200);
+        }
+    }
+
+    public static void trace(String spanName, IntConsumer function, SpanType spanType) {
+
+        try {
+            TraceContext.addSpan(spanName, spanType);
             function.accept(0);
         } finally {
             TraceContext.stopSpan(200);

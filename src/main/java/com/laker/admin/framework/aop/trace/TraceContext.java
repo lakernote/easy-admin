@@ -19,7 +19,7 @@ public class TraceContext {
 
     public static void addSpan(ProceedingJoinPoint pjp) {
         MethodSignature methodSignature = ((MethodSignature) pjp.getSignature());
-        String className = methodSignature.getMethod().getDeclaringClass().getName();
+        String className = methodSignature.getMethod().getDeclaringClass().getSimpleName();
         String methodName = methodSignature.getMethod().getName();
         addSpan(className + "." + methodName, TraceUtils.getSpanType(pjp));
     }
