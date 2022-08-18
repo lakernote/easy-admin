@@ -46,9 +46,22 @@
     <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+<!--            <pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+            <pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]) [%X{userId}|%X{traceId}] %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx{full,
+                java.lang.reflect.Method,
+                org.apache.catalina,
+                org.springframework.aop,
+                org.springframework.security,
+                org.springframework.transaction,
+                org.springframework.web,
+                sun.reflect,
+                net.sf.cglib,
+                org.springframework.cglib.proxy,
+                net.bull.javamelody
+                }</pattern>
         </encoder>
     </appender>
+
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
