@@ -16,6 +16,8 @@
 package com.laker.admin.framework.ext.mybatis;
 
 import com.baomidou.mybatisplus.core.toolkit.*;
+import com.laker.admin.framework.aop.trace.SpanType;
+import com.laker.admin.framework.aop.trace.TraceContext;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -149,32 +151,36 @@ public class PerformanceInterceptor implements Interceptor {
         if (index > 0) {
             originalSql = originalSql.substring(index);
         }
-
-        // 计算执行 SQL 耗时
-        long start = SystemClock.now();
-        Object result = invocation.proceed();
-        long timing = SystemClock.now() - start;
-
-        // 格式化 SQL 打印执行结果
         Object target = PluginUtils.realTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(target);
         MappedStatement ms = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
-        StringBuilder formatSql = new StringBuilder()
-                .append(" Time：").append(timing)
-                .append(" ms - ID：").append(ms.getId())
-                .append(StringPool.NEWLINE).append("Execute SQL：")
-                .append(SQL_FORMATTER.format(originalSql)).append(StringPool.NEWLINE);
+        // 计算执行 SQL 耗时
+        long start = SystemClock.now();
+        String mapperId = ms.getId();
+        TraceContext.addSpan(mapperId, SpanType.Mapper);
+        Object result = null;
+        try {
+            result = invocation.proceed();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            TraceContext.stopSpan(this.getMaxTime() >= 1 ? this.getMaxTime() : 100);
+            long timing = SystemClock.now() - start;
 
-        if (this.isWriteInLog()) {
-            if (this.getMaxTime() >= 1 && timing > this.getMaxTime()) {
-                log.error(formatSql.toString());
-            } else {
-                log.info(formatSql.toString());
+            // 格式化 SQL 打印执行结果
+            StringBuilder formatSql = new StringBuilder()
+                    .append(" Time：").append(timing)
+                    .append(" ms - ID：").append(mapperId)
+                    .append(StringPool.NEWLINE).append("Execute SQL：")
+                    .append(SQL_FORMATTER.format(originalSql)).append(StringPool.NEWLINE);
+
+            if (this.isWriteInLog()) {
+                if (this.getMaxTime() >= 1 && timing > this.getMaxTime()) {
+                    log.error(formatSql.toString());
+                } else {
+                    log.warn("Execute {}ms,Mapper:{}", timing, mapperId);
+                }
             }
-        } else {
-            System.err.println(formatSql.toString());
-            Assert.isFalse(this.getMaxTime() >= 1 && timing > this.getMaxTime(),
-                    " The SQL execution time is too large, please optimize ! ");
         }
         return result;
     }

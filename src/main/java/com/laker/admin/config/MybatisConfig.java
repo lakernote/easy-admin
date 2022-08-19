@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.laker.admin.framework.ext.mybatis.PerformanceInterceptor;
 import com.laker.admin.framework.ext.mybatis.datapermission.LakerDataPermissionV2Interceptor;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 /**
  * @author laker
@@ -52,13 +52,13 @@ public class MybatisConfig {
      * @return
      */
     @Bean
-    @Profile("test")
+    @ConditionalOnProperty(value = "javamelody.enabled", havingValue = "false")
     public PerformanceInterceptor performanceInterceptor() {
         PerformanceInterceptor interceptor = new PerformanceInterceptor();
         // sql美化打印
         interceptor.setFormat(true);
         // 设置SQL超时时间
-        interceptor.setMaxTime(1000L);
+        interceptor.setMaxTime(100L);
         // 写入日志
         interceptor.setWriteInLog(true);
         return interceptor;
