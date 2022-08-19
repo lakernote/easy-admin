@@ -1,6 +1,7 @@
 package com.laker.admin.config;
 
 import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
+import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -40,6 +41,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/v1/login",
                         "/captcha",
                         "/thumbnail");
+        registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/admin/**",
+                        "/admin/login.html",
+                        "/error",
+                        "/swagger-resources/**");
     }
 
     @Override

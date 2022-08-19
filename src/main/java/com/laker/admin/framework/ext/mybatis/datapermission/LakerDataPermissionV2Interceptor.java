@@ -73,7 +73,7 @@ public class LakerDataPermissionV2Interceptor extends JsqlParserSupport implemen
 
     @Override
     protected void processInsert(Insert insert, int index, String sql, Object obj) {
-        log.info(insert.toString());
+        log.debug(insert.toString());
     }
 
     /**
@@ -82,6 +82,6 @@ public class LakerDataPermissionV2Interceptor extends JsqlParserSupport implemen
 
     @Override
     protected void processDelete(Delete delete, int index, String sql, Object obj) {
-        log.info(delete.toString());
+        log.debug(delete.toString());
     }
 }

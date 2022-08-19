@@ -178,7 +178,7 @@ public class PerformanceInterceptor implements Interceptor {
                 if (this.getMaxTime() >= 1 && timing > this.getMaxTime()) {
                     log.error(formatSql.toString());
                 } else {
-                    log.warn("Execute {}ms,Mapper:{}", timing, mapperId);
+//                    log.warn("Execute {}ms,Mapper:{}", timing, mapperId);
                 }
             }
         }

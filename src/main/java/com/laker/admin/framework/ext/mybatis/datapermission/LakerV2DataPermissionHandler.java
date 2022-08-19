@@ -101,7 +101,7 @@ public class LakerV2DataPermissionHandler {
                     // 创建 AND 表达式 拼接Where 和 = 表达式
                     // WHERE xxx AND dept_id = 3
                     AndExpression deptAndExpression = new AndExpression(where, equalsTo);
-                    log.info(WHERE, deptAndExpression);
+                    log.debug(WHERE, deptAndExpression);
                     return deptAndExpression;
                 // 查看自己的数据
                 case SELF:

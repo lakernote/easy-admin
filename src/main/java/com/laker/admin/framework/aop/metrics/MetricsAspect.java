@@ -75,7 +75,7 @@ public class MetricsAspect {
 
         }
         String response = objectMapper.writeValueAsString(returnValue);
-        log.info("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), HttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(pjp.getArgs()), response);
+        log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), HttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(pjp.getArgs()), response);
         logBean.setCost((int) Duration.between(start, Instant.now()).toMillis());
         logBean.setCreateTime(LocalDateTime.now());
         if (StrUtil.isNotBlank(response) && response.length() <= 500) {

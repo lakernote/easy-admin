@@ -62,7 +62,6 @@ public class ExtLeaveController extends BaseFlowController {
         IPage pageList = TraceCodeBlock.trace("leaveService.page",
                 () -> extLeaveService.page(roadPage, queryWrapper));
 
-        TraceCodeBlock.trace("xxxmodule.xxmethod", value -> System.out.println(DateUtil.now()));
         List<ExtLeave> records = pageList.getRecords();
         records.forEach(extLeave -> {
             extLeave.setCreateUser(sysUserService.getUserAndDeptById(extLeave.getCreateBy()));
