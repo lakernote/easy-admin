@@ -49,10 +49,10 @@ public class DruidConfig {
      * @return
      */
     @Bean
-    public ServletRegistrationBean statViewServletRegistrationBean(DruidStatProperties properties) {
+    public ServletRegistrationBean<StatViewServlet> statViewServletRegistrationBean(DruidStatProperties properties) {
         log.info("init statViewServlet Configuration ,properties:{}", JSONUtil.toJsonPrettyStr(properties));
         DruidStatProperties.StatViewServlet config = properties.getStatViewServlet();
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+        ServletRegistrationBean<StatViewServlet> registrationBean = new ServletRegistrationBean<>();
         registrationBean.setServlet(new StatViewServlet());
         registrationBean.addUrlMappings(config.getUrlPattern() != null ? config.getUrlPattern() : "/druid/*");
         if (config.getAllow() != null) {
@@ -89,10 +89,10 @@ public class DruidConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean webStatFilterRegistrationBean(DruidStatProperties properties) {
+    public FilterRegistrationBean<WebStatFilter> webStatFilterRegistrationBean(DruidStatProperties properties) {
         log.info("init webStatFilter Configuration ,properties:{}", JSONUtil.toJsonPrettyStr(properties));
         DruidStatProperties.WebStatFilter config = properties.getWebStatFilter();
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        FilterRegistrationBean<WebStatFilter> registrationBean = new FilterRegistrationBean<>();
         WebStatFilter filter = new WebStatFilter();
         registrationBean.setFilter(filter);
         registrationBean.addUrlPatterns(config.getUrlPattern() != null ? config.getUrlPattern() : "/*");
@@ -151,17 +151,18 @@ public class DruidConfig {
      */
     @Bean
     @ConditionalOnProperty(name = "spring.datasource.druid.statViewServlet.enabled", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean removeDruidFilterRegistrationBean(DruidStatProperties properties) {
+    public FilterRegistrationBean<Filter> removeDruidFilterRegistrationBean(DruidStatProperties properties) {
         // 获取web监控页面的参数
         DruidStatProperties.StatViewServlet config = properties.getStatViewServlet();
         // 提取common.js的配置路径
         String pattern = config.getUrlPattern() != null ? config.getUrlPattern() : "/druid/*";
-        String commonJsPattern = pattern.replaceAll("\\*", "js/common.js");
+        String commonJsPattern = pattern.replace("\\*", "js/common.js");
         final String filePath = "support/http/resources/js/common.js";
         // 创建filter进行过滤
         Filter filter = new Filter() {
             @Override
             public void init(javax.servlet.FilterConfig filterConfig) throws ServletException {
+                // Do nothing
             }
 
             @Override
@@ -180,9 +181,10 @@ public class DruidConfig {
 
             @Override
             public void destroy() {
+                // Do nothing
             }
         };
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(filter);
         registrationBean.addUrlPatterns(commonJsPattern);
         return registrationBean;

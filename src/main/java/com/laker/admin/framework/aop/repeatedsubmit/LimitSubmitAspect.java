@@ -20,23 +20,30 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
+/**
+ * 保证服务的幂等性和防止重复请求
+ * https://blog.csdn.net/abu935009066/article/details/117471885
+ *
+ * @author laker
+ */
 @Component
 @Aspect
 @Slf4j
 public class LimitSubmitAspect {
-    LFUCache<Object, Object> LFUCACHE = CacheUtil.newLFUCache(100, 60 * 1000);
+    private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 60 * 1000);
 
     /**
-     *  获取 注解有2中方式
-     *  方式1： repeatSubmitLimitParam
-     *  方式2： method.getAnnotation(RepeatSubmitLimit.class)
+     * 获取 注解有2中方式
+     * 方式1： repeatSubmitLimitParam
+     * 方式2： method.getAnnotation(RepeatSubmitLimit.class)
+     *
      * @param joinPoint
      * @param repeatSubmitLimitParam
      * @return
      * @throws Throwable
      */
     @Around("@annotation(repeatSubmitLimitParam)")
-    public Object handleSubmit(ProceedingJoinPoint joinPoint,RepeatSubmitLimit repeatSubmitLimitParam) throws Throwable {
+    public Object handleSubmit(ProceedingJoinPoint joinPoint, RepeatSubmitLimit repeatSubmitLimitParam) throws Throwable {
 
 
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
@@ -44,11 +51,11 @@ public class LimitSubmitAspect {
         RepeatSubmitLimit repeatSubmitLimit = method.getAnnotation(RepeatSubmitLimit.class);
         int limitTime = repeatSubmitLimit.time();
         String key = getLockKey(joinPoint, repeatSubmitLimit);
-        Object result = LFUCACHE.get(key, false);
+        Object result = cache.get(key, false);
         if (result != null) {
             throw new BusinessException("请勿重复访问！");
         }
-        LFUCACHE.put(key, StpUtil.getLoginId(), limitTime * 1000);
+        cache.put(key, StpUtil.getLoginId(), limitTime * 1000);
         try {
             Object proceed = joinPoint.proceed();
             return proceed;
@@ -57,7 +64,7 @@ public class LimitSubmitAspect {
                     joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL", e.getMessage(), e);
             throw e;
         } finally {
-            LFUCACHE.remove(key);
+            cache.remove(key);
         }
     }
 

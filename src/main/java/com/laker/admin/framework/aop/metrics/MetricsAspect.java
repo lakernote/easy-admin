@@ -39,6 +39,7 @@ public class MetricsAspect {
 
     @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.Metrics) || @within(com.laker.admin.framework.aop.metrics.Metrics)")
     public void withAnnotationMetrics() {
+        // do nothing
     }
 
     @Around("withAnnotationMetrics()")

@@ -5,11 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.laker.admin.framework.aop.metrics.Metrics;
+import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.framework.aop.trace.LakerIgnoreTrace;
 import com.laker.admin.framework.aop.trace.LakerTrace;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.mapper.ExtLogMapper;
 import com.laker.admin.module.ext.service.IExtLogService;
@@ -52,6 +53,7 @@ public class ExtLogController {
     @ApiOperation(value = "日志分页查询")
     @SaCheckPermission("log.list")
     @LakerIgnoreTrace
+    @RepeatSubmitLimit(businessKey = "log.list", businessParam = "#keyWord")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 String keyWord) {
