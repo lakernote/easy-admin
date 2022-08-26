@@ -12,9 +12,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.annotation.Resource;
 import java.io.File;
 
+/**
+ * @author laker
+ */
 @Configuration
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
+    private static final String[] exclude_path = {"/admin/**",
+            "/admin/login.html",
+            "/error",
+            "/swagger-resources/**",
+            "/api/v1/login",
+            "/captcha",
+            "/thumbnail"};
+    private static final String[] trace_exclude_path = {"/admin/**",
+            "/admin/login.html",
+            "/error",
+            "/swagger-resources/**"};
     @Resource
     LakerConfig lakerConfig;
 
@@ -34,18 +48,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册注解拦截器，并排除不需要注解鉴权的接口地址 (与登录拦截器无关)
         registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/admin/**",
-                        "/admin/login.html",
-                        "/error",
-                        "/swagger-resources/**",
-                        "/api/v1/login",
-                        "/captcha",
-                        "/thumbnail");
+                .excludePathPatterns(exclude_path);
         registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/admin/**",
-                        "/admin/login.html",
-                        "/error",
-                        "/swagger-resources/**");
+                .excludePathPatterns(trace_exclude_path);
     }
 
     @Override

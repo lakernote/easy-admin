@@ -17,6 +17,10 @@ public class TraceContext {
     private static final String BAR = "+";
     private static ThreadLocal<Trace> traceThreadLocal = new ThreadLocal<>();
 
+    private TraceContext() {
+        // do nothing
+    }
+
     public static void addSpan(ProceedingJoinPoint pjp) {
         MethodSignature methodSignature = ((MethodSignature) pjp.getSignature());
         String className = methodSignature.getMethod().getDeclaringClass().getSimpleName();
@@ -50,7 +54,7 @@ public class TraceContext {
         Span current = trace.current();
         current.setEndTime(System.currentTimeMillis());
         current.setCost(current.getEndTime() - current.getStartTime());
-        if (trace.stopSpan(current)) {
+        if (trace.stopSpan()) {
             if (current.getCost() > time) {
                 logSpan(trace.getSpans(), StringUtils.SPACE);
             }

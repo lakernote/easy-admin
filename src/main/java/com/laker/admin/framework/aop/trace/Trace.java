@@ -47,7 +47,7 @@ public class Trace {
         activeSpanStack.addLast(span);
     }
 
-    public boolean stopSpan(Span current) {
+    public boolean stopSpan() {
         // 出栈
         Span pop = pop();
         // 栈不为空且是第一层栈 则加入到 trace的spans

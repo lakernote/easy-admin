@@ -24,11 +24,11 @@ public class WafFilter implements Filter {
     /**
      * 开启XSS脚本过滤
      */
-    private static boolean xssEnabled = true;
+    private boolean xssEnabled = true;
     /**
      * 开启SQL注入过滤
      */
-    private static boolean sqlEnabled = true;
+    private boolean sqlEnabled = true;
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -42,8 +42,6 @@ public class WafFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
-        // HttpServletResponse res = (HttpServletResponse) response;
-
 
         if (handle(req)) {
             try {

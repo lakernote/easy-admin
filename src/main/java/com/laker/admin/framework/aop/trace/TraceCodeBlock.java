@@ -7,6 +7,11 @@ import java.util.function.Supplier;
  * @author laker
  */
 public class TraceCodeBlock {
+
+    private TraceCodeBlock() {
+        // do nothing
+    }
+
     /**
      * 有返回值
      *

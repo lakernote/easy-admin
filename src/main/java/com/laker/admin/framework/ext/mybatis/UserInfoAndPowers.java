@@ -19,7 +19,7 @@ public class UserInfoAndPowers {
     private String nickName;
     private Long deptId;
     private String deptName;
-    private Map metaData;
+    private Map<String, Object> metaData;
     private String deptTableAlias;
     private String userTableAlias;
     private String sql;

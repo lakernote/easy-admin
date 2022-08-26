@@ -31,6 +31,7 @@ public class TracingAspect {
      */
     @Pointcut("execution(public * com.laker..remote..*(..))")
     public void remoteAspect() {
+        // do nothing
     }
 
 
@@ -39,6 +40,7 @@ public class TracingAspect {
      */
     @Pointcut("@annotation(com.laker.admin.framework.aop.trace.LakerTrace)")
     public void annotationAspect() {
+        // do nothing
     }
 
     /**
@@ -46,6 +48,7 @@ public class TracingAspect {
      */
     @Pointcut("@within(com.laker.admin.framework.aop.trace.LakerTrace)")
     public void withinAspect() {
+        // do nothing
     }
 
     /**
@@ -56,19 +59,23 @@ public class TracingAspect {
      */
     @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.LakerIgnoreTrace)")
     public void annotationIgnoreAspect() {
+        // do nothing
     }
 
 
     @Pointcut("execution(* com.laker..mapper.*.*(..))")
     public void mapperAspect() {
+        // do nothing
     }
 
     @Pointcut("execution(public * com.laker..service.*.*(..)) || execution(public * com.laker..*Service.*(..))")
     public void serviceAspect() {
+        // do nothing
     }
 
     @Pointcut("execution(public * com.laker..controller.*.*(..)) || execution(public * com.laker..*Controller.*(..))")
     public void controllerAspect() {
+        // do nothing
     }
 
     //@Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")

@@ -31,12 +31,12 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginKey) {
         List<SysUserRole> userRoles = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, loginId));
-        List<Long> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId()).collect(Collectors.toList());
+        List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
         List<SysRolePower> rolePowerLists = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().in(SysRolePower::getRoleId, roleIds));
-        List<Long> powerIds = rolePowerLists.stream().map(sysRolePower -> sysRolePower.getPowerId()).collect(Collectors.toList());
+        List<Long> powerIds = rolePowerLists.stream().map(SysRolePower::getPowerId).collect(Collectors.toList());
         // 2是按钮
         List<SysPower> sysPowers = menuService.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getMenuId, powerIds).eq(SysPower::getType, 2));
-        List<String> strings = sysPowers.stream().map(sysMenu -> sysMenu.getPowerCode()).collect(Collectors.toList());
+        List<String> strings = sysPowers.stream().map(SysPower::getPowerCode).collect(Collectors.toList());
         return strings;
     }
 
