@@ -32,7 +32,7 @@ public class DynamicTaskTestController {
     public String startCron() {
 
         future = taskScheduler.schedule(new MyRunnable(), new CronTrigger("0/5 * * * * *"));
-        System.out.println("DynamicTask.startCron()");
+        log.info("DynamicTask.startCron()");
         return "startCron";
     }
 
@@ -43,7 +43,7 @@ public class DynamicTaskTestController {
         if (future != null) {
             future.cancel(true);
         }
-        System.out.println("DynamicTask.stopCron()");
+        log.info("DynamicTask.stopCron()");
         return "stopCron";
     }
 
@@ -53,7 +53,7 @@ public class DynamicTaskTestController {
 
         stopCron();// 先停止，在开启.
         future = taskScheduler.schedule(new MyRunnable(), new CronTrigger("*/10 * * * * *"));
-        System.out.println("DynamicTask.startCron10()");
+        log.info("DynamicTask.startCron10()");
         return "changeCron10";
     }
 
@@ -61,7 +61,7 @@ public class DynamicTaskTestController {
 
         @Override
         public void run() {
-           log.info("DynamicTask.MyRunnable.run()，" + new Date());
+            log.info("DynamicTask.MyRunnable.run()，" + new Date());
         }
     }
 }

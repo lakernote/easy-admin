@@ -45,15 +45,16 @@ public class EasyChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         EasyPrincipal user = (EasyPrincipal) accessor.getUser();
         // 这里只是单纯的打印，可以根据项目的实际情况做业务处理
-        log.info("postSend 中获取httpSession key：" + user.getName());
-
+        if (user != null) {
+            log.info("postSend 中获取httpSession key：" + user.getName());
+        }
         // 忽略心跳消息等非STOMP消息
         if (accessor.getCommand() == null) {
             return;
         }
 
         // 根据连接状态做处理，这里也只是打印了下，可以根据实际场景，对上线，下线，首次成功连接做处理
-        System.out.println(accessor.getCommand());
+        log.info(accessor.getCommand().name());
         switch (accessor.getCommand()) {
             // 首次连接
             case CONNECT:

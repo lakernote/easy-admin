@@ -11,7 +11,9 @@ import java.net.URL;
  * 图片处理类
  */
 public class EasyImageUtils {
-
+    private EasyImageUtils() {
+        // do nothing
+    }
 
     /**
      * 按照宽高尺寸压缩图片，

@@ -6,10 +6,13 @@ import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *
+ * @author laker
  */
 @Slf4j
 public class EasyAdminSecurityUtils {
+    private EasyAdminSecurityUtils() {
+        // do nothing
+    }
 
     public static UserInfoAndPowers getCurrentUserInfo() {
         UserInfoAndPowers userInfoAndPowers = null;

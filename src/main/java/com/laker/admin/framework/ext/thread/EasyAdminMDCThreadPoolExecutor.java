@@ -54,20 +54,17 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
      * @return
      */
     private Runnable wrap(final Runnable runnable, final Map<String, String> threadContext) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                if (threadContext == null) {
-                    MDC.clear();
-                } else {
-                    MDC.setContextMap(threadContext);
-                }
-                setTraceIdIfAbsent();
-                try {
-                    runnable.run();
-                } finally {
-                    MDC.clear();
-                }
+        return () -> {
+            if (threadContext == null) {
+                MDC.clear();
+            } else {
+                MDC.setContextMap(threadContext);
+            }
+            setTraceIdIfAbsent();
+            try {
+                runnable.run();
+            } finally {
+                MDC.clear();
             }
         };
     }
