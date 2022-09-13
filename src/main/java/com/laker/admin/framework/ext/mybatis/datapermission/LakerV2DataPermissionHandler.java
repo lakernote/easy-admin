@@ -15,7 +15,9 @@ import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.SubSelect;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,10 +43,24 @@ public class LakerV2DataPermissionHandler {
         // 获取原SQL Where 条件表达式
         Expression where = plainSelect.getWhere();
         // 获取sql语句的from 主表
-        Table fromItem = (Table) plainSelect.getFromItem();
+        FromItem fromItem = plainSelect.getFromItem();
         // 有别名用别名，无别名用表名，防止字段冲突报错
-        Alias fromItemAlias = fromItem.getAlias();
-        String mainTableName = fromItemAlias == null ? fromItem.getName() : fromItemAlias.getName();
+        String mainTableName = "";
+        // 如果是 table 类型
+        if (fromItem instanceof Table) {
+            Table fromTable = (Table) fromItem;
+            // 有别名用别名，无别名用表名，防止字段冲突报错
+            Alias fromItemAlias = fromItem.getAlias();
+            mainTableName = fromItemAlias == null ? fromTable.getName() : fromItemAlias.getName();
+        } else if (fromItem instanceof SubSelect) {
+            SubSelect fromTable = (SubSelect) fromItem;
+            // 有别名用别名，无别名用表名，防止字段冲突报错
+            Alias fromItemAlias = fromItem.getAlias();
+            mainTableName = fromItemAlias == null ? fromTable.getAlias().getName() : fromItemAlias.getName();
+        } else {
+            Alias fromItemAlias = fromItem.getAlias();
+            mainTableName = fromItemAlias.getName();
+        }
 
         List<String> split = StrUtil.split(mappedStatementId, '.');
         int index = split.size();
