@@ -58,6 +58,7 @@ knife4j:
   # 是否生产环境 屏蔽所有资源接口,一般这个用于生产环境 屏蔽资源，与上面二选一
   # production: true
 javamelody:
+  # javamelody监控的开关
   enabled: false
   # sa-token配置
 sa-token:
@@ -89,6 +90,7 @@ laker:
 management:
   endpoint:
     health:
+      # 生成环境的话注意安全问题
       show-details: always
 info:
   author: laker
