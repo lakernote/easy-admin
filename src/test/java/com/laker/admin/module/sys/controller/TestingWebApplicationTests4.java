@@ -13,15 +13,22 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class TestingWebApplicationTests4 {
+    /**
+     * 这个不会走 filter，只会走controller
+     */
     @Autowired
     SysUserController sysUserController;
+
+    /**
+     * 这个会走 filter，会走controller
+     */
     @Autowired
     TestRestTemplate restTemplate;
 
     @Test
     public void contextLoads() {
         Assert.assertNotNull(sysUserController);
-        Assert.assertTrue(this.restTemplate.getForObject("http://localhost:8080"  + "/",
+        Assert.assertTrue(this.restTemplate.getForObject("http://localhost:8080" + "/",
                 String.class) != null);
     }
 

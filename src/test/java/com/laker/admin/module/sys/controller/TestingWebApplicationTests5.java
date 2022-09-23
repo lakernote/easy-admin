@@ -12,13 +12,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 启动一个真实的tomcat容器
- * WebEnvironment.DEFINED_PORT：用程序定义的端口
- * WebEnvironment.RANDOM_PORT：使用随机端口，配合@LocalServerPort注解使用
+ * 启动了完整的 Spring 应用程序上下文，但没有服务器。
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class TestingWebApplicationTests5 {
+    /**
+     * 会走 filter controller，这个比较仿真
+     */
     @Autowired
     private MockMvc mvc;
 
