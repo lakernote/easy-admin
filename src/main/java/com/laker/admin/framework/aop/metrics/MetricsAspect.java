@@ -58,8 +58,10 @@ public class MetricsAspect {
         logBean.setUri(HttpServletRequestUtil.getRequestURI());
         logBean.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
         UserAgent userAgent = HttpServletRequestUtil.getRequestUserAgent();
-        String client = userAgent.getOs().getName() + "." + userAgent.getBrowser().getName();
-        logBean.setClient(client);
+        if (userAgent != null) {
+            String client = userAgent.getOs().getName() + "." + userAgent.getBrowser().getName();
+            logBean.setClient(client);
+        }
         logBean.setRequest(objectMapper.writeValueAsString(pjp.getArgs()));
         logBean.setMethod(name);
         logBean.setStatus(true);

@@ -48,7 +48,7 @@ public class WafFilter implements Filter {
                 //Request请求过滤
                 chain.doFilter(new WafRequestWrapper(req, xssEnabled, sqlEnabled), response);
             } catch (Exception e) {
-                log.error(" WafFilter exception , requestURL: " + req.getRequestURL());
+                log.error(" WafFilter exception , requestURL: " + req.getRequestURL(), e);
             }
             return;
         }

@@ -28,6 +28,7 @@ import java.io.IOException;
  * @author laker
  */
 @Configuration
+@ConditionalOnProperty(name = "druid.monitor", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class DruidConfig {
     private static final String DEFAULT_ALLOW_IP = "127.0.0.1";

@@ -41,6 +41,9 @@ public class MySaTokenListener implements SaTokenListener {
     @Override
     public void doLogin(String loginType, Object loginId, SaLoginModel loginModel) {
         UserAgent requestUserAgent = HttpServletRequestUtil.getRequestUserAgent();
+        if (requestUserAgent == null) {
+            return;
+        }
         String cityInfo = IP2CityUtil.getCityInfo(HttpServletRequestUtil.getRemoteIP());
         String[] split = cityInfo.split("\\|");
         ONLINE_USERS.add(OnlineUser.builder()

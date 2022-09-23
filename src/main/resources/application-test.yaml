@@ -1,0 +1,6 @@
+knife4j:
+  # 是否生产环境 屏蔽所有资源接口
+  production: true
+
+druid:
+  monitor: false
