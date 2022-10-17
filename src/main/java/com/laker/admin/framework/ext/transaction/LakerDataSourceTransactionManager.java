@@ -37,7 +37,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
         super.doCleanupAfterCompletion(transaction);
         TraceContext.stopSpan();
         Transaction transactionT = dateThreadLocal.get();
-        log.info("transaction:{},time:{}ms", transactionT.name, DateUtil.between(new Date(), transactionT.begin, DateUnit.MS));
+        log.info("事务耗时监控！transaction:{},time:{}ms", transactionT.name, DateUtil.between(new Date(), transactionT.begin, DateUnit.MS));
         dateThreadLocal.remove();
     }
 
