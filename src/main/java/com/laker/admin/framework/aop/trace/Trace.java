@@ -15,6 +15,8 @@ public class Trace {
      *
      */
     private int depth = 0;
+
+    private TreeView treeView = new TreeView(true, "");
     /**
      * 存储 span结果
      */

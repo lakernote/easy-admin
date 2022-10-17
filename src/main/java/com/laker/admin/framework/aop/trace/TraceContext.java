@@ -2,7 +2,6 @@ package com.laker.admin.framework.aop.trace;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -46,17 +45,27 @@ public class TraceContext {
         span.setSpanType(spanType);
         span.setStartTime(System.currentTimeMillis());
         trace.addSpan(span);
+        trace.getTreeView().begin(spanType + "-" + spanName);
+
     }
 
+    public static void stopSpan() {
+        stopSpan(1000);
+    }
 
     public static void stopSpan(long time) {
         Trace trace = traceThreadLocal.get();
         Span current = trace.current();
         current.setEndTime(System.currentTimeMillis());
         current.setCost(current.getEndTime() - current.getStartTime());
+        trace.getTreeView().end();
         if (trace.stopSpan()) {
             if (current.getCost() > time) {
-                logSpan(trace.getSpans(), StringUtils.SPACE);
+                // 打印日志方式一
+//                logSpan(trace.getSpans(), StringUtils.SPACE);
+                // 打印日志方式二
+                String draw = trace.getTreeView().draw();
+                log.info(draw);
             }
             traceThreadLocal.remove();
         }

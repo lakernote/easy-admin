@@ -11,5 +11,6 @@ public enum SpanType {
     Redis,
     Remote,
     Kafka,
+    Transaction,
     Others;
 }
