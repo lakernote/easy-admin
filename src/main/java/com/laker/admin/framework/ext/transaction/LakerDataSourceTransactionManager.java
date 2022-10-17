@@ -17,7 +17,8 @@ import java.util.Date;
  **/
 @Slf4j
 public class LakerDataSourceTransactionManager extends DataSourceTransactionManager {
-    ThreadLocal<Transaction> dateThreadLocal = new ThreadLocal<>();
+
+    transient ThreadLocal<Transaction> dateThreadLocal = new ThreadLocal<>();
 
     public LakerDataSourceTransactionManager(DataSource dataSource) {
         super(dataSource);
