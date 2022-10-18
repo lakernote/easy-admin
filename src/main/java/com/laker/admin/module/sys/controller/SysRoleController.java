@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
@@ -18,11 +17,8 @@ import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,7 +31,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/role")
-@Metrics
 public class SysRoleController {
     @Autowired
     ISysRoleService sysRoleService;
@@ -108,19 +103,8 @@ public class SysRoleController {
     @PutMapping("/saveRolePower")
     @ApiOperation(value = "保存角色权限数据")
     @SaCheckPermission("role.update.power")
-    @Transactional(rollbackFor = Exception.class)
     public Response saveRolePower(Long roleId, String powerIds) {
-        List<String> stringList = Arrays.asList(powerIds.split(","));
-        sysRolePowerService.remove(Wrappers.<SysRolePower>lambdaQuery().eq(SysRolePower::getRoleId, roleId));
-        List<SysRolePower> rolePowers = new ArrayList<>();
-        stringList.forEach(powerId -> {
-            SysRolePower sysRolePower = new SysRolePower();
-            sysRolePower.setRoleId(roleId);
-            sysRolePower.setPowerId(Long.valueOf(powerId));
-            rolePowers.add(sysRolePower);
-        });
-        boolean saveBatch = sysRolePowerService.saveBatch(rolePowers);
-        return Response.ok(saveBatch);
+            return Response.ok(sysRolePowerService.saveRolePower(roleId, powerIds));
     }
 
 

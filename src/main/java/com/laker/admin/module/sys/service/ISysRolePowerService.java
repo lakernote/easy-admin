@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysRolePowerService extends IService<SysRolePower> {
 
+    boolean saveRolePower(Long roleId, String powerIds);
 }

@@ -41,30 +41,24 @@ public class TreeView {
 
         final StringBuilder treeSB = new StringBuilder();
 
-        recursive(0, true, "", root, new Callback() {
-
-            @Override
-            public void callback(int deep, boolean isLast, String prefix,
-                                 Node node) {
-                treeSB.append(prefix).append(
-                        isLast ? STEP_FIRST_CHAR : STEP_NORMAL_CHAR);
-                if (isPrintCost && !node.isRoot()) {
-                    if (node == maxCost) {
-                        // the node with max cost will be highlighted
-                        treeSB.append("[max]:" + node.toString().toString());
-                    } else {
-                        treeSB.append(node.toString());
-                    }
+        recursive(0, true, "", root, (deep, isLast, prefix, node) -> {
+            treeSB.append(prefix).append(
+                    isLast ? STEP_FIRST_CHAR : STEP_NORMAL_CHAR);
+            if (isPrintCost && !node.isRoot()) {
+                if (node == maxCost) {
+                    // the node with max cost will be highlighted
+                    treeSB.append("[max]:" + node);
+                } else {
+                    treeSB.append(node);
                 }
-                treeSB.append(node.data);
-                if (node.mark != null && node.mark.length() != 0) {
-                    treeSB.append(" [").append(node.mark)
-                            .append(node.marks > 1 ? "," + node.marks : "")
-                            .append("]");
-                }
-                treeSB.append("\n");
             }
-
+            treeSB.append(node.data);
+            if (node.mark != null && node.mark.length() != 0) {
+                treeSB.append(" [").append(node.mark)
+                        .append(node.marks > 1 ? "," + node.marks : "")
+                        .append("]");
+            }
+            treeSB.append("\n");
         });
 
         return treeSB.toString();
@@ -94,12 +88,8 @@ public class TreeView {
      * @param node
      */
     private void findMaxCostNode(Node node) {
-        if (!node.isRoot() && !node.parent.isRoot()) {
-            if (maxCost == null) {
-                maxCost = node;
-            } else if (maxCost.totalCost < node.totalCost) {
-                maxCost = node;
-            }
+        if (!node.isRoot() && !node.parent.isRoot() && (maxCost == null || (maxCost.totalCost < node.totalCost))) {
+            maxCost = node;
         }
         if (!node.isLeaf()) {
             for (Node n : node.children) {
@@ -171,9 +161,9 @@ public class TreeView {
         /**
          * 子节点
          */
-        final List<Node> children = new ArrayList<Node>();
+        final List<Node> children = new ArrayList<>();
 
-        final Map<String, Node> map = new HashMap<String, Node>();
+        final Map<String, Node> map = new HashMap<>();
 
         /**
          * 开始时间戳
@@ -237,12 +227,12 @@ public class TreeView {
         }
 
         Node markBegin() {
-            beginTimestamp = System.nanoTime();
+            beginTimestamp = System.currentTimeMillis();
             return this;
         }
 
         Node markEnd() {
-            endTimestamp = System.nanoTime();
+            endTimestamp = System.currentTimeMillis();
 
             long cost = getCost();
             if (cost < minCost) {
@@ -267,24 +257,17 @@ public class TreeView {
             return endTimestamp - beginTimestamp;
         }
 
-        /**
-         * convert nano-seconds to milli-seconds
-         */
-        double getCostInMillis(long nanoSeconds) {
-            return nanoSeconds / 1000000.0;
-        }
-
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             if (times <= 1) {
-                sb.append("[").append(getCostInMillis(getCost()))
+                sb.append("[").append(getCost())
                         .append(TIME_UNIT).append("] ");
             } else {
-                sb.append("[min=").append(getCostInMillis(minCost))
+                sb.append("[min=").append(minCost)
                         .append(TIME_UNIT).append(",max=")
-                        .append(getCostInMillis(maxCost)).append(TIME_UNIT)
-                        .append(",total=").append(getCostInMillis(totalCost))
+                        .append(maxCost).append(TIME_UNIT)
+                        .append(",total=").append(totalCost)
                         .append(TIME_UNIT).append(",count=").append(times)
                         .append("] ");
             }
