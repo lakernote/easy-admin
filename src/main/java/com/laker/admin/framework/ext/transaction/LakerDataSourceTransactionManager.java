@@ -30,7 +30,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
     @Override
     protected void doBegin(Object transaction, TransactionDefinition definition) {
         String name = definition.getName();
-        TraceContext.addSpan("LakerDataSourceTransactionManager.doBegin", SpanType.Transaction);
+        TraceContext.addSpan(name, SpanType.Transaction);
         List<Transaction> transactionList = dateThreadLocal.get();
         // init
         if (CollectionUtils.isEmpty(transactionList)) {
