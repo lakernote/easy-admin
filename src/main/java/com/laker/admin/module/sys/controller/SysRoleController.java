@@ -104,7 +104,7 @@ public class SysRoleController {
     @ApiOperation(value = "保存角色权限数据")
     @SaCheckPermission("role.update.power")
     public Response saveRolePower(Long roleId, String powerIds) {
-            return Response.ok(sysRolePowerService.saveRolePower(roleId, powerIds));
+        return Response.ok(sysRolePowerService.saveRolePower(roleId, powerIds));
     }
 
 
