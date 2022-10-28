@@ -61,9 +61,11 @@ public class TraceContext {
         trace.getTreeView().end();
         if (trace.stopSpan()) {
             if (current.getCost() > time) {
-                // 打印日志方式一
-//                logSpan(trace.getSpans(), StringUtils.SPACE);
-                // 打印日志方式二
+                // 打印日志方式一 每个span 一行日志
+                /**
+                 *  logSpan(trace.getSpans(), StringUtils.SPACE);
+                 */
+                // 打印日志方式二 整体一颗树
                 String draw = trace.getTreeView().draw();
                 log.info(draw);
             }

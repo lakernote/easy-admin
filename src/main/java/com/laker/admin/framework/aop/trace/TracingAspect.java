@@ -78,15 +78,19 @@ public class TracingAspect {
         // do nothing
     }
 
-    //@Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")
+    /**
+     * @param pjp
+     * @return
+     * @throws Throwable
+     * @Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")
+     */
+
     @Around("(withinAspect() || annotationAspect()) && annotationIgnoreAspect()")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
         Object obj;
         TraceContext.addSpan(pjp);
         try {
             obj = pjp.proceed();
-        } catch (Exception e) {
-            throw e;
         } finally {
             TraceContext.stopSpan(time);
         }

@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 长事务监控
+ *
  * @author: laker
  * @date: 2022/10/17
  **/
