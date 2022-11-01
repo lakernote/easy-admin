@@ -1,3 +1,8 @@
 knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: true
+management:
+  endpoint:
+    health:
+      # 生成环境的话注意安全问题
+      show-details: never
