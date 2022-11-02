@@ -13,7 +13,7 @@ public interface Lock {
      * @param expiration 锁过期时间
      * @return 锁定失败返回null
      */
-    String acquire(String key, Duration expiration);
+    LLock acquire(String key, Duration expiration);
 
     /**
      * 释放锁
@@ -22,5 +22,5 @@ public interface Lock {
      * @param token 用于检查是否是这个锁，防止误删
      * @return 是否成功
      */
-    boolean release(String key, String token);
+    boolean release(LLock lock);
 }

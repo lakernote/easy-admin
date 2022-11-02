@@ -2,6 +2,7 @@ package com.laker.admin.framework.lock.core;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.laker.admin.framework.lock.api.LLock;
 import com.laker.admin.framework.lock.api.Lock;
 import org.springframework.scheduling.TaskScheduler;
 
@@ -22,33 +23,32 @@ public abstract class AbstractSimpleLock implements Lock {
     }
 
     @Override
-    public String acquire(final String key, final Duration expiration) {
+    public LLock acquire(final String key, final Duration expiration) {
         final String token = IdUtil.fastSimpleUUID();
         String acquire = acquire(key, token, expiration);
-        if (StrUtil.isNotBlank(acquire)) {
-            // 后台线程定时续租
-            scheduleLockRefresh(key, acquire, expiration);
+        if (StrUtil.isBlank(acquire)) {
+            return null;
         }
-        return acquire;
+        // 后台线程定时续租
+        ScheduledFuture<?> scheduledFuture = scheduleLockRefresh(key, acquire, expiration);
+        return LLock.builder().key(key).token(token).scheduledFuture(scheduledFuture).build();
     }
 
     @Override
-    public boolean release(final String key, final String token) {
-        cancelSchedule(key, token);
-        return release0(key, token);
+    public boolean release(LLock lock) {
+        cancelSchedule(lock);
+        return release0(lock);
     }
 
-    private void scheduleLockRefresh(final String key, final String token, final Duration expiration) {
-        if (expiration != null) {
-            currentThreadLock.put(key + ":" + token, taskScheduler.scheduleAtFixedRate(() -> {
-                refresh(key, token, expiration);
-            }, expiration.toMillis() / 3));
+    private ScheduledFuture<?> scheduleLockRefresh(final String key, final String token, final Duration expiration) {
+        return taskScheduler.scheduleAtFixedRate(() -> {
+            refresh(key, token, expiration);
+        }, expiration.toMillis() / 3);
 
-        }
     }
 
-    private void cancelSchedule(final String key, final String token) {
-        final ScheduledFuture<?> scheduledFuture = currentThreadLock.get(key + ":" + token);
+    private void cancelSchedule(LLock lock) {
+        final ScheduledFuture<?> scheduledFuture = lock.getScheduledFuture();
         if (scheduledFuture != null && !scheduledFuture.isCancelled() && !scheduledFuture.isDone()) {
             scheduledFuture.cancel(true);
         }
@@ -56,7 +56,7 @@ public abstract class AbstractSimpleLock implements Lock {
 
     protected abstract String acquire(String key, String token, Duration expiration);
 
-    protected abstract boolean release0(String key, String token);
+    protected abstract boolean release0(LLock lock);
 
     protected abstract boolean refresh(String key, String token, Duration expiration);
 }

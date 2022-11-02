@@ -1,8 +1,8 @@
 package com.laker.admin.framework.lock.impl.jdbc;
 
+import com.laker.admin.framework.lock.api.LLock;
 import com.laker.admin.framework.lock.core.AbstractSimpleLock;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.transaction.annotation.Isolation;
@@ -17,7 +17,10 @@ import java.time.Duration;
 @Slf4j
 public class MysqlLock extends AbstractSimpleLock {
 
-    public static final String ACQUIRE_FORMATTED_QUERY = "INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);";
+    /**
+     * 原始sql 需要配合DuplicateKeyException使用，不优雅：INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);
+     */
+    public static final String ACQUIRE_FORMATTED_QUERY = "INSERT ignore INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);";
     public static final String RELEASE_FORMATTED_QUERY = "DELETE FROM distribute_lock WHERE lock_key = ? AND token = ?;";
     public static final String DELETE_EXPIRED_FORMATTED_QUERY = "DELETE FROM distribute_lock WHERE expire < ?;";
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
@@ -35,18 +38,16 @@ public class MysqlLock extends AbstractSimpleLock {
         // 这里是为了删除由于一些异常导致的锁,因为db 没有ttl
         final int expired = jdbcTemplate.update(DELETE_EXPIRED_FORMATTED_QUERY, now);
         log.info("Expired {} locks", expired);
-        try {
-            final long expireAt = expiration.toMillis() + System.currentTimeMillis();
-            final int created = jdbcTemplate.update(ACQUIRE_FORMATTED_QUERY, key, token, expireAt, Thread.currentThread().getName());
-            return created == 1 ? token : null;
-        } catch (final DuplicateKeyException e) {
-            return null;
-        }
+        final long expireAt = expiration.toMillis() + System.currentTimeMillis();
+        final int created = jdbcTemplate.update(ACQUIRE_FORMATTED_QUERY, key, token, expireAt, Thread.currentThread().getName());
+        return created == 1 ? token : null;
     }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    protected boolean release0(final String key, final String token) {
+    protected boolean release0(LLock lock) {
+        String key = lock.getKey();
+        String token = lock.getToken();
         final int deleted = jdbcTemplate.update(RELEASE_FORMATTED_QUERY, key, token);
 
         final boolean released = deleted == 1;

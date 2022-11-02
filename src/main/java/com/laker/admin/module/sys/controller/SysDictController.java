@@ -2,12 +2,12 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.exception.BusinessException;
+import com.laker.admin.framework.lock.api.LLock;
 import com.laker.admin.framework.lock.api.Lock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Objects;
 
 /**
  * <p>
@@ -51,8 +52,8 @@ public class SysDictController {
     @ApiOperation(value = "新增或者更新")
     @SaCheckPermission("dict.update")
     public Response saveOrUpdate(@RequestBody SysDict param) {
-        String token = lock.acquire(param.getDictCode(), Duration.ofSeconds(10));
-        if (StrUtil.isBlank(token)) {
+        LLock llock = lock.acquire(param.getDictCode(), Duration.ofSeconds(10));
+        if (Objects.isNull(llock)) {
             throw new BusinessException("其他人正在处理中，请稍后重试");
         }
 
@@ -60,7 +61,7 @@ public class SysDictController {
         try {
             return Response.ok(sysDictService.saveOrUpdate(param));
         } finally {
-            lock.release(param.getDictCode(), token);
+            lock.release(llock);
         }
     }
 
