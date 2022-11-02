@@ -38,9 +38,8 @@ public abstract class AbstractSimpleLock implements Lock {
     }
 
     private ScheduledFuture<?> scheduleLockRefresh(final String key, final String token, final Duration expiration) {
-        return taskScheduler.scheduleAtFixedRate(() -> {
-            refresh(key, token, expiration);
-        }, expiration.toMillis() / 3);
+        return taskScheduler.scheduleAtFixedRate(() ->
+                refresh(key, token, expiration), expiration.toMillis() / 3);
 
     }
 
