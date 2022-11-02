@@ -29,7 +29,7 @@ public abstract class AbstractSimpleLock implements Lock {
         if (StrUtil.isBlank(acquire)) {
             return null;
         }
-        // 后台线程定时续租
+        // 后台线程定时续租 一个锁一个后台线程续约
         ScheduledFuture<?> scheduledFuture = scheduleLockRefresh(key, acquire, expiration);
         return LLock.builder().key(key).token(token).scheduledFuture(scheduledFuture).build();
     }
