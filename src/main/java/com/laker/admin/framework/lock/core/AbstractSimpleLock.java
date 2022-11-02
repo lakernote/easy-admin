@@ -7,8 +7,6 @@ import com.laker.admin.framework.lock.api.Lock;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -16,7 +14,6 @@ import java.util.concurrent.ScheduledFuture;
  */
 public abstract class AbstractSimpleLock implements Lock {
     private TaskScheduler taskScheduler;
-    private final Map<String, ScheduledFuture<?>> currentThreadLock = new ConcurrentHashMap<>();
 
     protected AbstractSimpleLock(TaskScheduler taskScheduler) {
         this.taskScheduler = taskScheduler;
