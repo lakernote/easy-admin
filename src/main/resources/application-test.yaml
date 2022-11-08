@@ -4,3 +4,16 @@ knife4j:
 
 druid:
   monitor: false
+# 测试环境不需要
+management:
+  health:
+    redis:
+      enabled: false
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    timeout: 30s
+lock:
+  type: mysql
