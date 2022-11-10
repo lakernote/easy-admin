@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * parentThreadName:pool-1-thread-9:8  pool-2-thread-4
  * </pre>
  */
-public class InheritableThreadLocalDemoTrace2 {
+public class InheritableThreadLocalDemoTraceCopy {
     /**
      * 模拟tomcat线程池
      */

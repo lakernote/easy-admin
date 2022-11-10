@@ -22,7 +22,7 @@ public class EasyAdminThreadPoolExecutor extends ThreadPoolExecutor {
      */
     public EasyAdminThreadPoolExecutor(int poolSize, int queueSize, String prefix) {
         super(poolSize, poolSize, 60, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(queueSize), ThreadUtil
+                new LinkedBlockingQueue<>(queueSize), ThreadUtil
                         .newNamedThreadFactory(prefix + "-", false),
                 new EasyAdminRejectPolicy());
         // 非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut(true)，则会也作用于核心线程。

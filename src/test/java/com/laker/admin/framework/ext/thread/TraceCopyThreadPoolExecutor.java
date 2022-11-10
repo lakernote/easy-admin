@@ -48,10 +48,11 @@ public class TraceCopyThreadPoolExecutor extends EasyAdminThreadPoolExecutor {
         Trace parentValue = TraceContext.trace();
         return () -> {
             if (parentValue == null) {
+                log.info("ThreadLocal GToadContext is initialized");
                 TraceContext.setTrace(new Trace());
             } else {
                 // 复制 而不是引用
-                log.trace("ThreadLocal childValue is initialized, parent: {}", parentValue);
+                log.info("ThreadLocal childValue is initialized, parent: {}", parentValue);
                 Trace trace = new Trace();
                 trace.setDepth(parentValue.getDepth());
                 trace.setSpans(parentValue.getSpans());
