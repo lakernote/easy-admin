@@ -1,8 +1,12 @@
 package com.laker.admin.framework.aop.trace;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +14,9 @@ import java.util.List;
  * @author laker
  */
 @Data
+@Slf4j
 public class Trace {
+    private static final String BAR = "+";
     /**
      *
      */
@@ -31,17 +37,25 @@ public class Trace {
      *
      * @param span
      */
-    public void addSpan(Span span) {
+    public void addSpan(String spanName, SpanType spanType) {
+        treeView.begin(spanType + "-" + spanName);
+        Span span = new Span();
+        span.setId(spanName);
+        span.setSpanType(spanType);
+        span.setStartTime(System.currentTimeMillis());
         span.setOrder(++depth);
         // 查询出栈中最新的span
         Span latest = current();
-        // 栈为空设置栈leve为 0
+        // 栈为空设置栈leve为 0 也就是 root span
         if (latest == null) {
             span.setLevel(0);
+            span.setLevelDeep(1);
             // 栈不为空
         } else {
             // 设置level 为上个level +1
+//            span.setLevel(latest.getLevel() + 1);
             span.setLevel(latest.getLevel() + 1);
+            span.setLevelDeep(latest.getChilds().size() + 1);
             // 添加进其 子span列表
             latest.getChilds().add(span);
         }
@@ -49,14 +63,30 @@ public class Trace {
         activeSpanStack.addLast(span);
     }
 
-    public boolean stopSpan() {
+    public boolean stopSpan(long time) {
+        Span current = current();
+        current.setEndTime(System.currentTimeMillis());
+        current.setCost(current.getEndTime() - current.getStartTime());
+        treeView.end();
+
         // 出栈
         Span pop = pop();
         // 栈不为空且是第一层栈 则加入到 trace的spans
         if (pop != null && pop.getLevel() == 0) {
             spans.add(pop);
         }
-        return activeSpanStack.isEmpty();
+        boolean empty = activeSpanStack.isEmpty();
+        if (empty && current.getCost() > time) {
+            // 打印日志方式一 每个span 一行日志
+            logSpan(spans, StringUtils.SPACE);
+            /**
+             *  logSpan(trace.getSpans(), StringUtils.SPACE);
+             */
+            // 打印日志方式二 整体一颗树
+            String draw = treeView.draw();
+            log.info(draw);
+        }
+        return empty;
     }
 
     public Span current() {
@@ -74,4 +104,15 @@ public class Trace {
         return activeSpanStack.removeLast();
     }
 
+    private static void logSpan(List<Span> spans, String append) {
+        if (CollectionUtils.isEmpty(spans)) {
+            return;
+        }
+        spans.sort(Comparator.comparing(Span::getOrder));
+        spans.stream().filter(span -> span.getLevel() != 0).max(Comparator.comparing(Span::getCost)).ifPresent(span -> span.setMax(true));
+        for (Span span : spans) {
+            log.warn("{} {}{}{}ms{}:[{}]-{}", span.getLevel() + "." + span.getLevelDeep(), append + BAR, span.isMax() ? "【" : "[", span.getCost(), span.isMax() ? "】" : "]", span.getSpanType(), span.getId());
+            logSpan(span.getChilds(), append + BAR);
+        }
+    }
 }

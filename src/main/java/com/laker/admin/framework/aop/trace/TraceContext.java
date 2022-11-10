@@ -1,19 +1,15 @@
 package com.laker.admin.framework.aop.trace;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * @author laker
  */
 @Slf4j(topic = "trace")
 public class TraceContext {
-    private static final String BAR = "+";
+
     private static ThreadLocal<Trace> traceThreadLocal = new ThreadLocal<>();
 
     private TraceContext() {
@@ -32,7 +28,6 @@ public class TraceContext {
     }
 
     public static void addSpan(String spanName, SpanType spanType) {
-
         Trace trace = null;
         if (null == traceThreadLocal.get()) {
             trace = new Trace();
@@ -40,13 +35,7 @@ public class TraceContext {
         } else {
             trace = traceThreadLocal.get();
         }
-        Span span = new Span();
-        span.setId(spanName);
-        span.setSpanType(spanType);
-        span.setStartTime(System.currentTimeMillis());
-        trace.addSpan(span);
-        trace.getTreeView().begin(spanType + "-" + spanName);
-
+        trace.addSpan(spanName, spanType);
     }
 
     public static void stopSpan() {
@@ -55,34 +44,8 @@ public class TraceContext {
 
     public static void stopSpan(long time) {
         Trace trace = traceThreadLocal.get();
-        Span current = trace.current();
-        current.setEndTime(System.currentTimeMillis());
-        current.setCost(current.getEndTime() - current.getStartTime());
-        trace.getTreeView().end();
-        if (trace.stopSpan()) {
-            if (current.getCost() > time) {
-                // 打印日志方式一 每个span 一行日志
-                /**
-                 *  logSpan(trace.getSpans(), StringUtils.SPACE);
-                 */
-                // 打印日志方式二 整体一颗树
-                String draw = trace.getTreeView().draw();
-                log.info(draw);
-            }
+        if (trace.stopSpan(time)) {
             traceThreadLocal.remove();
         }
-    }
-
-    private static void logSpan(List<Span> spans, String append) {
-        if (CollectionUtils.isEmpty(spans)) {
-            return;
-        }
-        spans.sort(Comparator.comparing(Span::getOrder));
-        spans.stream().filter(span -> span.getLevel() != 0).max(Comparator.comparing(Span::getCost)).ifPresent(span -> span.setMax(true));
-        for (Span span : spans) {
-            log.warn("{}{}{}ms{}:[{}]-{}", append + BAR, span.isMax() ? "【" : "[", span.getCost(), span.isMax() ? "】" : "]", span.getSpanType(), span.getId());
-            logSpan(span.getChilds(), append + BAR);
-        }
-
     }
 }

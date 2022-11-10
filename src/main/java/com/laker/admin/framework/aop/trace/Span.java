@@ -22,6 +22,7 @@ public class Span {
     private SpanType spanType;
     private int order;
     private int level = 0;
+    private int levelDeep = 0;
     private boolean max;
     private List<Span> childs = new ArrayList<>();
 }
