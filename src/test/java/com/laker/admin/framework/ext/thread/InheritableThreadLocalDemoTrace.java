@@ -1,5 +1,7 @@
 package com.laker.admin.framework.ext.thread;
 
+import com.laker.admin.framework.aop.trace.TraceContext;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * parentThreadName:pool-1-thread-9:8  pool-2-thread-4
  * </pre>
  */
-public class InheritableThreadLocalDemo {
+public class InheritableThreadLocalDemoTrace {
     /**
      * 模拟tomcat线程池
      */
@@ -83,10 +85,12 @@ public class InheritableThreadLocalDemo {
 
         @Override
         public void run() {
+            TraceContext.addSpan(Thread.currentThread().getName() + ":" + i);
             System.out.println(Thread.currentThread().getName() + ":" + i);
             requestIdThreadLocal.set(i);
             //使用线程池异步处理任务
             businessExecutors.submit(new BusinessTask(Thread.currentThread().getName()));
+            TraceContext.stopSpan(-1);
 
         }
     }
@@ -103,8 +107,10 @@ public class InheritableThreadLocalDemo {
 
         @Override
         public void run() {
+            TraceContext.addSpan(parentThreadName);
             //如果与上面的能对应上来,则说明正确,否则失败
             System.out.println("parentThreadName:" + parentThreadName + ":" + requestIdThreadLocal.get() + "  " + Thread.currentThread().getName());
+            TraceContext.stopSpan(-1);
         }
     }
 }

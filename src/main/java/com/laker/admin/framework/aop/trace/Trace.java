@@ -3,7 +3,6 @@ package com.laker.admin.framework.aop.trace;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -79,7 +78,6 @@ public class Trace {
         boolean empty = activeSpanStack.isEmpty();
         if (empty && current.getCost() > time) {
             // 打印日志方式一 每个span 一行日志
-            logSpan(spans, StringUtils.SPACE);
             /**
              *  logSpan(trace.getSpans(), StringUtils.SPACE);
              */

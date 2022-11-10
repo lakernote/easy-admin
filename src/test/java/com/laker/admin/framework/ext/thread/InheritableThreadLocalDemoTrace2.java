@@ -1,7 +1,8 @@
 package com.laker.admin.framework.ext.thread;
 
+import com.laker.admin.framework.aop.trace.TraceContext;
+
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,16 +39,16 @@ import java.util.concurrent.TimeUnit;
  * parentThreadName:pool-1-thread-9:8  pool-2-thread-4
  * </pre>
  */
-public class InheritableThreadLocalDemo {
+public class InheritableThreadLocalDemoTrace2 {
     /**
      * 模拟tomcat线程池
      */
-    private static ExecutorService tomcatExecutors = Executors.newFixedThreadPool(10);
+    private static ExecutorService tomcatExecutors = new TraceCopyThreadPoolExecutor(10, 10, "tomcat");
 
     /**
      * 业务线程池,默认Control中异步任务执行线程池
      */
-    private static ExecutorService businessExecutors = Executors.newFixedThreadPool(5);
+    private static ExecutorService businessExecutors = new TraceCopyThreadPoolExecutor(5, 10, "business");
 
     /**
      * 线程上下文环境,模拟在Control这一层,设置环境变量,然后在这里提交一个异步任务,模拟在子线程中,是否可以访问到刚设置的环境变量值
@@ -83,10 +84,12 @@ public class InheritableThreadLocalDemo {
 
         @Override
         public void run() {
+            TraceContext.addSpan(Thread.currentThread().getName() + ":" + i);
             System.out.println(Thread.currentThread().getName() + ":" + i);
             requestIdThreadLocal.set(i);
             //使用线程池异步处理任务
             businessExecutors.submit(new BusinessTask(Thread.currentThread().getName()));
+            TraceContext.stopSpan(-1);
 
         }
     }
@@ -103,8 +106,10 @@ public class InheritableThreadLocalDemo {
 
         @Override
         public void run() {
+            TraceContext.addSpan(parentThreadName);
             //如果与上面的能对应上来,则说明正确,否则失败
             System.out.println("parentThreadName:" + parentThreadName + ":" + requestIdThreadLocal.get() + "  " + Thread.currentThread().getName());
+            TraceContext.stopSpan(-1);
         }
     }
 }
