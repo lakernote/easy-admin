@@ -57,6 +57,7 @@ public class Trace {
             span.setLevel(latest.getLevel() + 1);
             span.setLevelDeep(latest.getChilds().size() + 1);
             // 添加进其 子span列表
+            span.setParent(latest);
             latest.getChilds().add(span);
         }
         // 入栈
@@ -110,8 +111,10 @@ public class Trace {
         }
         spans.sort(Comparator.comparing(Span::getOrder));
         spans.stream().filter(span -> span.getLevel() != 0).max(Comparator.comparing(Span::getCost)).ifPresent(span -> span.setMax(true));
+        int i = 1;
         for (Span span : spans) {
-            log.warn("{} {}{}{}ms{}:[{}]-{}", span.getLevel() + "." + span.getLevelDeep(), append + BAR, span.isMax() ? "【" : "[", span.getCost(), span.isMax() ? "】" : "]", span.getSpanType(), span.getId());
+            span.setName(span.getParent() == null ? "root" : span.getParent().getName() + "." + (i++) + "");
+            log.warn("{} {}{}{}ms{}:[{}]-{}", span.getName(), append + BAR, span.isMax() ? "【" : "[", span.getCost(), span.isMax() ? "】" : "]", span.getSpanType(), span.getId());
             logSpan(span.getChilds(), append + BAR);
         }
     }

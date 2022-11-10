@@ -24,5 +24,6 @@ public class Span {
     private int level = 0;
     private int levelDeep = 0;
     private boolean max;
+    private Span parent;
     private List<Span> childs = new ArrayList<>();
 }
