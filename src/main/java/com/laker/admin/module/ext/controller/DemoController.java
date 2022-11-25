@@ -1,9 +1,9 @@
 package com.laker.admin.module.ext.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
-import com.laker.admin.module.enums.DemoEnum;
 import com.laker.admin.module.enums.DemoTypeEnum;
-import com.laker.admin.module.ext.vo.qo.DemoQo;
+import com.laker.admin.module.enums.Distance;
+import com.laker.admin.module.ext.vo.qo.City;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,21 +36,21 @@ public class DemoController {
 
     @GetMapping("/1")
     @ApiOperation(value = "枚举 - querystring")
-    public void pageAll2(DemoEnum type) {
-        log.info(type.toString());
+    public void pageAll2(Distance distance) {
+        log.info(distance.toString());
     }
 
     @GetMapping("/2")
     @ApiOperation(value = "实体 - querystring")
-    public void pageAll3(DemoQo type) {
-        log.info(type.toString());
+    public void pageAll3(City city) {
+        log.info(city.toString());
     }
 
     @PostMapping("/3")
     @ApiOperation(value = "实体 - json")
-    public DemoQo pageAll4(@RequestBody DemoQo type) {
-        log.info(type.toString());
-        return type;
+    public City pageAll4(@RequestBody City city) {
+        log.info(city.toString());
+        return city;
     }
 
 }

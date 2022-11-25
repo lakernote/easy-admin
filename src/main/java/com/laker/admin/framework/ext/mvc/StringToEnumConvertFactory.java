@@ -15,18 +15,18 @@ public class StringToEnumConvertFactory implements ConditionalGenericConverter {
 
     @Override
     public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return IEnumConvert.class.isAssignableFrom(targetType.getObjectType()) && sourceType.getObjectType() == String.class;
+        return IEnum.class.isAssignableFrom(targetType.getObjectType()) && sourceType.getObjectType() == String.class;
     }
 
     @Override
     public Set<ConvertiblePair> getConvertibleTypes() {
-        return null;// NOSONAR
+        return null;
     }
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        IEnumConvert[] enums = (IEnumConvert[]) targetType.getObjectType().getEnumConstants();
-        for (IEnumConvert anEnum : enums) {
+        IEnum[] enums = (IEnum[]) targetType.getObjectType().getEnumConstants();
+        for (IEnum anEnum : enums) {
             if (Objects.equals(anEnum.getValue(), source)) {
                 return anEnum;
             }
