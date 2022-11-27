@@ -1,6 +1,7 @@
 package com.laker.admin.module.ext.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
 import com.laker.admin.module.ext.vo.qo.City;
@@ -51,6 +52,12 @@ public class DemoController {
     public City pageAll4(@RequestBody City city) {
         log.info(city.toString());
         return city;
+    }
+
+    @PostMapping("/4")
+    @ApiOperation(value = "实体 - json")
+    public void pageAll5(@RequestBody City city, CurrentUser user) {
+        log.info(user.toString());
     }
 
 }

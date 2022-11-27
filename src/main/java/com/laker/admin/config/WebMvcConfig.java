@@ -1,6 +1,7 @@
 package com.laker.admin.config;
 
 import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
+import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
@@ -143,7 +144,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     return null;
                 }
                 // CurrentUser  = from request
-                return new CurrentUser();
+                return CurrentUser.builder().id(StpUtil.getLoginId().toString()).build();
             }
         });
     }
