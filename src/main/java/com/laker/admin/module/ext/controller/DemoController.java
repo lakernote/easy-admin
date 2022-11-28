@@ -2,6 +2,7 @@ package com.laker.admin.module.ext.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
+import com.laker.admin.framework.ext.mvc.PageRequest;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
 import com.laker.admin.module.ext.vo.qo.City;
@@ -60,4 +61,9 @@ public class DemoController {
         log.info(user.toString());
     }
 
+    @GetMapping("/5")
+    @ApiOperation(value = "get - PageRequest-")
+    public void pageAll6(PageRequest user) {
+        log.info(user.toString());
+    }
 }

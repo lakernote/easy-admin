@@ -4,6 +4,7 @@ import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
+import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -127,6 +128,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         // 添加自定义方法参数处理器
+        argumentResolvers.add(new PageRequestArgumentResolver());
         argumentResolvers.add(new HandlerMethodArgumentResolver() {
             @Override
             public boolean supportsParameter(MethodParameter parameter) {
