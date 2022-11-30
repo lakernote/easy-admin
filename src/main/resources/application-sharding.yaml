@@ -1,0 +1,45 @@
+knife4j:
+  # 是否生产环境 屏蔽所有资源接口
+  production: false
+druid:
+  monitor: false
+# 测试环境不需要
+management:
+  health:
+    redis:
+      enabled: false
+    db:
+      enabled: false
+lock:
+  type: mysql
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    timeout: 30s
+  # sharding 配置
+  shardingsphere:
+    datasource:
+      names: ds
+      ds:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbcUrl: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 123456
+    # 是否在日志中打印 SQ
+    mode:
+      type: Standalone
+    sharding:
+      tables:
+        # 配置ext_log的分表的规则
+        ext_log:
+          # 拥有几个分片表0-1
+          actual-data-nodes: ds.ext_log_$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: user_id
+              algorithmExpression: ext_log_${user_id % 2}
+    props:
+      sql.show: true

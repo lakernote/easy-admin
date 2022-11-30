@@ -54,6 +54,15 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- 解决sharding-jdbc导致的LocalDateTimeTypeHandler Exception getObject with type 必须放在 mybatis前面-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-typehandlers-jsr310</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+
         <!-- mybatis -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -174,6 +183,12 @@
             <groupId>com.github.odiszapc</groupId>
             <artifactId>nginxparser</artifactId>
             <version>0.9.6</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>antlr4-runtime</artifactId>
+                    <groupId>org.antlr</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- 图片处理 -->
         <dependency>
@@ -187,6 +202,12 @@
             <groupId>com.syyai.spring.boot</groupId>
             <artifactId>ureport-spring-boot-starter</artifactId>
             <version>2.2.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>antlr4-runtime</artifactId>
+                    <groupId>org.antlr</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- test -->
@@ -217,6 +238,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- 分库分表 -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+            <version>4.1.1</version>
         </dependency>
     </dependencies>
 
