@@ -28,18 +28,30 @@ spring:
         jdbcUrl: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
         username: root
         password: 123456
-    # 是否在日志中打印 SQ
-    mode:
-      type: Standalone
     sharding:
       tables:
         # 配置ext_log的分表的规则
         ext_log:
           # 拥有几个分片表0-1
           actual-data-nodes: ds.ext_log_$->{0..1}
+          # 表达式方式指定
+          #          table-strategy:
+          #            inline:
+          #              sharding-column: user_id
+          #              algorithmExpression: ext_log_${user_id % 2}
+          # 代码逻辑指定
           table-strategy:
-            inline:
-              sharding-column: user_id
-              algorithmExpression: ext_log_${user_id % 2}
+            hint:
+              algorithmClassName: com.laker.admin.framework.ext.sharding.ModuloHintShardingAlgorithm
+#          table-strategy:
+#            standard:
+#              shardingColumn: user_id
+#              preciseAlgorithmClassName: com.laker.admin.framework.ext.sharding.PreciseModuloShardingTableAlgorithm
+          keyGenerator:
+            type: SNOWFLAKE
+            column: log_id
+            props:
+              worker.id: 123
+    # 是否在日志中打印逻辑SQL和实际sql
     props:
       sql.show: true

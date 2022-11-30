@@ -10,6 +10,7 @@ import com.laker.admin.module.ext.service.IExtLogService;
 import com.laker.admin.utils.IP2CityUtil;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.api.hint.HintManager;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -88,7 +89,15 @@ public class MetricsAspect {
             Boolean success = JSONUtil.parseObj(response).getBool("success", true);
             logBean.setStatus(success);
         }
-        extLogService.save(logBean);
+        // hint
+        HintManager hintManager = HintManager.getInstance();
+        hintManager.addTableShardingValue("ext_log", 0L);
+        try {
+            extLogService.save(logBean);
+        } finally {
+            hintManager.close();
+        }
+
         return returnValue;
     }
 }
