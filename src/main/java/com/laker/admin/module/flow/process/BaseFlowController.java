@@ -25,7 +25,9 @@ public class BaseFlowController {
         String orderId = baseFlowStatus.getOrderId();
         // 流程实例状态
         HistoryOrder histOrder = snakerEngineFacets.getEngine().query().getHistOrder(orderId);
-        baseFlowStatus.setOrderState(histOrder.getOrderState());
+        if (histOrder != null) {
+            baseFlowStatus.setOrderState(histOrder.getOrderState());
+        }
         List<WorkItem> workItems = snakerEngineFacets.getEngine().query().getWorkItems(null, new QueryFilter().setOrderId(orderId));
         if (CollUtil.isNotEmpty(workItems)) {
             WorkItem workItem = workItems.get(0);

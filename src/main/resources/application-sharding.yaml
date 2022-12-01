@@ -29,8 +29,9 @@ spring:
         username: root
         password: 123456
     sharding:
+      # 分表规则配置
       tables:
-        # 配置ext_log的分表的规则
+        # 配置ext_log的分表的规则，目前配合 hint做到了 跟列无关的一致写0
         ext_log:
           # 拥有几个分片表0-1
           actual-data-nodes: ds.ext_log_$->{0..1}
@@ -43,15 +44,41 @@ spring:
           table-strategy:
             hint:
               algorithmClassName: com.laker.admin.framework.ext.sharding.ModuloHintShardingAlgorithm
-#          table-strategy:
-#            standard:
-#              shardingColumn: user_id
-#              preciseAlgorithmClassName: com.laker.admin.framework.ext.sharding.PreciseModuloShardingTableAlgorithm
+          #          table-strategy:
+          #            standard:
+          #              shardingColumn: user_id
+          #              preciseAlgorithmClassName: com.laker.admin.framework.ext.sharding.PreciseModuloShardingTableAlgorithm
           keyGenerator:
             type: SNOWFLAKE
             column: log_id
             props:
               worker.id: 123
+        # 测试绑定表
+        wf_hist_order:
+          # 拥有几个分片表0-1
+          actual-data-nodes: ds.wf_hist_order_$->{0..1}
+          # 表达式方式指定
+          table-strategy:
+            inline:
+              sharding-column: id
+              algorithmExpression: wf_hist_order_${Math.abs(id.hashCode()) % 2}
+          keyGenerator:
+            type: SNOWFLAKE
+            column: id
+            props:
+              worker.id: 123
+        # 测试绑定表
+        wf_hist_task:
+          # 拥有几个分片表0-1
+          actual-data-nodes: ds.wf_hist_task_$->{0..1}
+          # 表达式方式指定
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithmExpression: wf_hist_task_${Math.abs(order_id.hashCode())% 2}
+      default-data-source-name: ds
+      default-table-strategy:
+        none:
     # 是否在日志中打印逻辑SQL和实际sql
     props:
       sql.show: true

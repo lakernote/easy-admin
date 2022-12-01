@@ -82,8 +82,8 @@ public class Trace {
              *  logSpan(trace.getSpans(), StringUtils.SPACE);
              */
             // 打印日志方式二 整体一颗树
-            String draw = treeView.draw();
-            log.info(draw);
+//            String draw = treeView.draw();
+//            log.info(draw);
         }
         return empty;
     }

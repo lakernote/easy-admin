@@ -340,7 +340,7 @@ public class SnakerflowFacetsController {
         if (StringHelper.isNotEmpty(displayName)) {
             filter.setDisplayName(displayName);
         }
-        filter.orderBy("create_Time").order(DESC);
+//        filter.orderBy("create_Time").order(DESC);
         snakerEngineFacets.getEngine().query().getHistoryOrders(page, filter);
 
         return PageResponse.ok(JSONUtil.parse(page.getResult()), page.getTotalCount());

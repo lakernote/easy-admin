@@ -55,7 +55,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
             long cost = System.currentTimeMillis() - transaction1.begin;
             dateThreadLocal.remove();
             if (cost > costTime) {
-                log.info("事务耗时监控！transaction:{},time:{}ms", transaction1.name, cost);
+//                log.info("事务耗时监控！transaction:{},time:{}ms", transaction1.name, cost);
             }
         }
         super.doCleanupAfterCompletion(transaction);
