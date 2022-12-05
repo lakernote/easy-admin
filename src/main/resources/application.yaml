@@ -4,11 +4,17 @@ server:
     enabled: true
     min-response-size: 1KB
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+  # tomcat配置
   tomcat:
+    # 允许最大连接数,默认8192,当达到临界值时,系统会基于accept-count继续接受连接
     max-connections: 8192
+    # 当所有线程都在使用时,建立连接的请求的等待队列长度,默认100
+    accept-count: 100
     uri-encoding: UTF-8
     threads:
+      # 线程池的最小工作线程数,默认10
       min-spare: 50
+      # 线程池的最大线程数,默认200
       max: 1000
   servlet:
     context-path: /
