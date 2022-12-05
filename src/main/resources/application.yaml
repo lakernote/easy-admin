@@ -10,6 +10,8 @@ server:
     max-connections: 8192
     # 当所有线程都在使用时,建立连接的请求的等待队列长度,默认100
     accept-count: 100
+    # 连接器在关闭空闲连接之前等待的毫秒数，默认 20000 20s
+    connection-timeout: 20s
     uri-encoding: UTF-8
     threads:
       # 线程池的最小工作线程数,默认10
