@@ -9,11 +9,19 @@ management:
   health:
     redis:
       enabled: false
+  metrics:
+    export:
+      influx:
+        enabled: false
+        password: 12345678
+        user-name: laker
 spring:
   redis:
     host: localhost
     port: 6379
     password:
     timeout: 30s
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
 lock:
   type: mysql
