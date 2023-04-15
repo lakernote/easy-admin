@@ -2,6 +2,8 @@ package com.laker.admin.framework.ext.thread;
 
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.aop.trace.Trace;
+import com.laker.admin.framework.aop.trace.TraceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
@@ -54,17 +56,28 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
      * @return
      */
     private Runnable wrap(final Runnable runnable, final Map<String, String> threadContext) {
+        // 父线程 trace对象
+        Trace trace = TraceContext.getTrace();
         return () -> {
             if (threadContext == null) {
                 MDC.clear();
             } else {
                 MDC.setContextMap(threadContext);
             }
+            // 增加trace对象 父子线程传递 start
+            if (trace == null) {
+                TraceContext.clear();
+            } else {
+                TraceContext.setTrace(trace);
+            }
+            // 增加trace对象 父子线程传递 end
             setTraceIdIfAbsent();
             try {
                 runnable.run();
             } finally {
                 MDC.clear();
+                // 增加trace对象 父子线程传递 这里跟mdc一样任务执行完需要清除。
+                TraceContext.clear();
             }
         };
     }
@@ -78,6 +91,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
      * @return
      */
     private <T> Callable<T> wrap(final Callable<T> callable, final Map<String, String> threadContext) {
+        Trace trace = TraceContext.getTrace();
         return new Callable<T>() {
             @Override
             public T call() throws Exception {
@@ -86,11 +100,22 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
                 } else {
                     MDC.setContextMap(threadContext);
                 }
+
+                // 增加trace对象 父子线程传递 start
+                if (trace == null) {
+                    TraceContext.clear();
+                } else {
+                    TraceContext.setTrace(trace);
+                }
+                // 增加trace对象 父子线程传递 end
+
                 setTraceIdIfAbsent();
                 try {
                     return callable.call();
                 } finally {
                     MDC.clear();
+                    // 增加trace对象 父子线程传递 这里跟mdc一样任务执行完需要清除。
+                    TraceContext.clear();
                 }
             }
         };

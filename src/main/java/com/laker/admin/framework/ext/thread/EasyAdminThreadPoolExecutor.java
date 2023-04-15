@@ -8,6 +8,9 @@ import java.util.concurrent.*;
 
 /**
  * 自定义扩展线程池用于捕获执行中异常，防止异常被吞
+ * <p>
+ * 强烈建议使用EasyAdminMDCThreadPoolExecutor
+ * </p>
  *
  * @author laker
  */
