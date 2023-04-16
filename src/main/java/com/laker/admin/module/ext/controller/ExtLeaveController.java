@@ -11,6 +11,7 @@ import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.trace.LakerTrace;
 import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceCodeBlock;
+import com.laker.admin.framework.ext.thread.EasyAdminMDCThreadPoolExecutor;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -48,7 +51,7 @@ public class ExtLeaveController extends BaseFlowController {
     private SnakerEngineFacets snakerEngineFacets;
     @Autowired
     private ISysUserService sysUserService;
-
+    ThreadPoolExecutor pool = new EasyAdminMDCThreadPoolExecutor(5,5,"laker");
 
     @GetMapping
     @ApiOperation(value = "分页查询")
@@ -67,6 +70,16 @@ public class ExtLeaveController extends BaseFlowController {
             extLeave.setCreateUser(sysUserService.getUserAndDeptById(extLeave.getCreateBy()));
             this.setFlowStatusInfo(extLeave);
 
+        });
+
+        pool.submit(() -> {
+           TraceCodeBlock.trace("1231233",value -> {
+               try {
+                   TimeUnit.MILLISECONDS.sleep(300);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           });
         });
         sysUserService.getUserDataPowers(StpUtil.getLoginIdAsLong());
         return PageResponse.ok(records, pageList.getTotal());

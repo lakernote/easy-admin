@@ -37,10 +37,10 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
         super.execute(wrap(command, MDC.getCopyOfContextMap()));
     }
 
-    @Override
-    public Future<?> submit(Runnable task) {
-        return super.submit(wrap(task, MDC.getCopyOfContextMap()));
-    }
+//    @Override
+//    public Future<?> submit(Runnable task) {
+//        return super.submit(wrap(task, MDC.getCopyOfContextMap()));
+//    }
 
     @Override
     public Future<?> submit(Callable task) {
@@ -57,27 +57,29 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
      */
     private Runnable wrap(final Runnable runnable, final Map<String, String> threadContext) {
         // 父线程 trace对象
-        Trace trace = TraceContext.getTrace();
+//        Trace trace = TraceContext.getTrace();
         return () -> {
             if (threadContext == null) {
                 MDC.clear();
             } else {
                 MDC.setContextMap(threadContext);
             }
-            // 增加trace对象 父子线程传递 start
-            if (trace == null) {
-                TraceContext.clear();
-            } else {
-                TraceContext.setTrace(trace);
-            }
-            // 增加trace对象 父子线程传递 end
+//            // 增加trace对象 父子线程传递 start
+//            if (trace == null) {
+//                TraceContext.clear();
+//            } else {
+//                TraceContext.setTrace(trace);
+//            }
+//            // 增加trace对象 父子线程传递 end
             setTraceIdIfAbsent();
             try {
+                TraceContext.addSpan("thread.run");
                 runnable.run();
             } finally {
+                TraceContext.stopSpan(1);
                 MDC.clear();
-                // 增加trace对象 父子线程传递 这里跟mdc一样任务执行完需要清除。
-                TraceContext.clear();
+//                // 增加trace对象 父子线程传递 这里跟mdc一样任务执行完需要清除。
+//                TraceContext.clear();
             }
         };
     }
