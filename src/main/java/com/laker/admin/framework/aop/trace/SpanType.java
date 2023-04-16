@@ -12,5 +12,6 @@ public enum SpanType {
     Remote,
     Kafka,
     Transaction,
+    Thread,
     Others;
 }

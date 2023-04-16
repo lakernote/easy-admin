@@ -2,6 +2,7 @@ package com.laker.admin.framework.ext.thread;
 
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.Trace;
 import com.laker.admin.framework.aop.trace.TraceContext;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +74,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
 //            // 增加trace对象 父子线程传递 end
             setTraceIdIfAbsent();
             try {
-                TraceContext.addSpan("thread.run");
+                TraceContext.addSpan("subThread.run", SpanType.Thread);
                 runnable.run();
             } finally {
                 TraceContext.stopSpan(1);
