@@ -94,20 +94,20 @@ public class EasyAdminThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
-//        if (t == null && r instanceof Future) {
-//            try {
-////                Object result = ((Future<?>) r).get();
-//                ((Future<?>) r).get();
-//            } catch (CancellationException ce) {
-//                t = ce;
-//            } catch (ExecutionException ee) {
-//                t = ee.getCause();
-//            } catch (InterruptedException ie) {
-//                Thread.currentThread().interrupt(); // ignore/reset
-//            }
-//        }
+        if (t == null && r instanceof Future) {
+            try {
+//                Object result = ((Future<?>) r).get();
+                ((Future<?>) r).get();
+            } catch (CancellationException ce) {
+                t = ce;
+            } catch (ExecutionException ee) {
+                t = ee.getCause();
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt(); // ignore/reset
+            }
+        }
         if (t != null) {
-            log.error("", t);
+            log.error("线程池中的任务执行异常！！！", t);
         }
         log.debug("afterExecute-任务：{}，异常：{}", r, t);
     }
