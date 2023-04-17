@@ -28,7 +28,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
      * @param prefix    线程名前缀,e.g:MCP-POOL
      */
     public EasyAdminMDCThreadPoolExecutor(int poolSize, int queueSize, String prefix) {
-        super(poolSize, poolSize, prefix);
+        super(poolSize, queueSize, prefix);
         // 非核心线程如果处于闲置状态超过该值，就会被销毁。如果设置allowCoreThreadTimeOut(true)，则会也作用于核心线程。
         this.allowCoreThreadTimeOut(true);
     }
