@@ -72,6 +72,16 @@ public class ExtLeaveController extends BaseFlowController {
 
         });
 
+        pool.execute(() -> {
+            TraceCodeBlock.trace("6666666666666666",value -> {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
+
         pool.submit(() -> {
            TraceCodeBlock.trace("1231233",value -> {
                try {

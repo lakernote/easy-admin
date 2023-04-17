@@ -3,14 +3,15 @@ package com.laker.admin.framework.ext.thread;
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.aop.trace.SpanType;
-import com.laker.admin.framework.aop.trace.Trace;
 import com.laker.admin.framework.aop.trace.TraceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 自定义扩展线程池用于捕获执行中异常，防止异常被吞 + 解决MDC参数问题。
@@ -32,20 +33,20 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
         this.allowCoreThreadTimeOut(true);
     }
 
-
+    /**
+     * submit Runnable callable 都会走这里，所以我们只需要改写这里即可。
+     *
+     * @param command
+     */
     @Override
     public void execute(Runnable command) {
-        super.execute(wrap(command, MDC.getCopyOfContextMap()));
-    }
+        if (command instanceof RunnableFuture) {
+            // submit future
+            super.execute(new EasyAdminFuture((RunnableFuture) command, MDC.getCopyOfContextMap()));
+        } else {
+            super.execute(wrapExecuteRunnable(command, MDC.getCopyOfContextMap()));
+        }
 
-//    @Override
-//    public Future<?> submit(Runnable task) {
-//        return super.submit(wrap(task, MDC.getCopyOfContextMap()));
-//    }
-
-    @Override
-    public Future<?> submit(Callable task) {
-        return super.submit(wrap(task, MDC.getCopyOfContextMap()));
     }
 
 
@@ -56,79 +57,84 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
      * @param threadContext
      * @return
      */
-    private Runnable wrap(final Runnable runnable, final Map<String, String> threadContext) {
-        // 父线程 trace对象
-//        Trace trace = TraceContext.getTrace();
+    private static Runnable wrapExecuteRunnable(final Runnable runnable, final Map<String, String> threadContext) {
         return () -> {
             if (threadContext == null) {
                 MDC.clear();
             } else {
                 MDC.setContextMap(threadContext);
             }
-//            // 增加trace对象 父子线程传递 start
-//            if (trace == null) {
-//                TraceContext.clear();
-//            } else {
-//                TraceContext.setTrace(trace);
-//            }
-//            // 增加trace对象 父子线程传递 end
             setTraceIdIfAbsent();
             try {
-                TraceContext.addSpan("subThread.run", SpanType.Thread);
+                TraceContext.addSpan("subThread.executeRunnable", SpanType.Thread);
                 runnable.run();
             } finally {
                 TraceContext.stopSpan(1);
                 MDC.clear();
-//                // 增加trace对象 父子线程传递 这里跟mdc一样任务执行完需要清除。
-//                TraceContext.clear();
             }
         };
     }
 
-    /**
-     * 封装任务，加入TraceId，有返回值
-     *
-     * @param callable
-     * @param threadContext
-     * @param <T>
-     * @return
-     */
-    private <T> Callable<T> wrap(final Callable<T> callable, final Map<String, String> threadContext) {
-        Trace trace = TraceContext.getTrace();
-        return new Callable<T>() {
-            @Override
-            public T call() throws Exception {
-                if (threadContext == null) {
-                    MDC.clear();
-                } else {
-                    MDC.setContextMap(threadContext);
-                }
+    private static class EasyAdminFuture<T> implements RunnableFuture<T> {
+        private RunnableFuture<T> future;
+        private Map<String, String> threadContext;
 
-                // 增加trace对象 父子线程传递 start
-                if (trace == null) {
-                    TraceContext.clear();
-                } else {
-                    TraceContext.setTrace(trace);
-                }
-                // 增加trace对象 父子线程传递 end
+        public EasyAdminFuture(RunnableFuture<T> future, Map<String, String> threadContext) {
+            this.future = future;
+            this.threadContext = threadContext;
+        }
 
-                setTraceIdIfAbsent();
-                try {
-                    return callable.call();
-                } finally {
-                    MDC.clear();
-                    // 增加trace对象 父子线程传递 这里跟mdc一样任务执行完需要清除。
-                    TraceContext.clear();
-                }
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            return this.future.cancel(mayInterruptIfRunning);
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return this.future.isCancelled();
+        }
+
+        @Override
+        public boolean isDone() {
+            return this.future.isDone();
+        }
+
+        @Override
+        public T get() throws InterruptedException, ExecutionException {
+            return this.future.get();
+        }
+
+        @Override
+        public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            return this.future.get(timeout, unit);
+        }
+
+        @Override
+        public void run() {
+            if (threadContext == null) {
+                MDC.clear();
+            } else {
+                MDC.setContextMap(threadContext);
             }
-        };
+            setTraceIdIfAbsent();
+            try {
+                TraceContext.addSpan("subThread.submitRunnableFuture", SpanType.Thread);
+                future.run();
+            } finally {
+                TraceContext.stopSpan(1);
+                MDC.clear();
+            }
+
+        }
+
     }
+
 
     /**
      * 如果traceId不存在，则设置一个随机的traceId
      * 这种场景主要用于后台定时任务类，没有前端生成traceID的情况。
      */
-    private void setTraceIdIfAbsent() {
+    private static void setTraceIdIfAbsent() {
         if (MDC.get(EasyAdminConstants.TRACE_ID) == null) {
             MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
         }
