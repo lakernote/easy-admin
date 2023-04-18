@@ -11,8 +11,9 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
- * ip:port/doc.html
- * @author longli
+ * 接口文档描述，访问地址：http://ip:port/doc.html
+ *
+ * @author laker
  */
 @Configuration
 @EnableSwagger2WebMvc

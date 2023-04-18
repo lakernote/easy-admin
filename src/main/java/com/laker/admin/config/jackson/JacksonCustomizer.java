@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * 自定义扩展jackson序列化和反序列化
+ * @author laker
+ */
 @Component
 public class JacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer {
 

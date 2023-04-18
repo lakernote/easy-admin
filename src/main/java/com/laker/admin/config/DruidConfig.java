@@ -117,13 +117,17 @@ public class DruidConfig {
         return registrationBean;
     }
 
-    // 参见 DruidFilterConfiguration
+    /**
+     * 参见 DruidFilterConfiguration
+     */
     @Bean
     public StatFilter statFilter() {
         return new StatFilter();
     }
 
-    // 参见 DruidSpringAopConfiguration
+    /**
+     * 参见 DruidSpringAopConfiguration
+     */
     @Bean
     public Advice advice() {
         return new DruidStatInterceptor();
