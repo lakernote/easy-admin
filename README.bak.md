@@ -93,7 +93,7 @@
 - **Spring Boot 2.3.7.RELEASE**
 - **hutool-all 工具类**
 - **lombok**
-- **mybatis-plus 3.4.2**
+- **mybatis-plus 3.4.2** 
 - **druid 数据库连接池**
 - **mysql 数据库**
 - **knife4j  Api文档**
@@ -147,7 +147,7 @@ admin:
 
 2.在`web/admin/index.html`处，如下图示例操作，点击图标就可以在浏览器访问了
 
-![](https://oscimg.oschina.net/oscnet/up-9a401367595b08fbef9dbf5d1c8fbb1357f.png)
+![](https://img-blog.csdnimg.cn/6cd054be980542ff87399212d0b06a1a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 #### 🍄代码生成
 
@@ -180,18 +180,101 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 
 
 
-![](https://oscimg.oschina.net/oscnet/up-41ea19b9eef85113b393cb3f9d0e1d81fa8.png)
+<table>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>登录<img src="https://img-blog.csdnimg.cn/2386829492fa4741b871220ab6aaad29.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>首页<img src="https://img-blog.csdnimg.cn/4c466d0ed24743fcb6230fe4328c3f8c.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>在线用户<img src="https://img-blog.csdnimg.cn/09a4a31ef44a41399887d250f430067a.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>待办任务<img src="https://img-blog.csdnimg.cn/024278a0328d401898c262bf7e32e2c0.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+        <center>已办任务<img src="https://img-blog.csdnimg.cn/cd77ef0d500844dc914a32670e4e32d0.png"></center>
+    </td>
+    <td style="font-size: 12px;font-weight: bolder;">
+        <center>流程图<img src="https://img-blog.csdnimg.cn/e9f117ffdaaa4ad9ae0bb29592d3a608.png"></center>
+    </td>
+    </tr>
+     <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>行为监控<img src="https://img-blog.csdnimg.cn/69525f193a5741cc95094e2121ca4b71.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>应用监控<img src="https://img-blog.csdnimg.cn/0c040c5a9d3f42b7a8cea95bb16396dc.png"></center>
+        </td>
+    </tr>
+     <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>NginxUI<img src="https://img-blog.csdnimg.cn/dbc8a3b0d10b4841990812a82f5580fc.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>请假申请<img src="https://img-blog.csdnimg.cn/d51d3b32b0e84e58aa55423d9299ce40.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>定时任务<img src="https://img-blog.csdnimg.cn/49e61cfd0fcc47078654a80ed65891bf.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>定时任务日志<img src="https://img-blog.csdnimg.cn/b55e4aef91ee470186f8c55c3f6ca68c.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>基本资料<img src="https://img-blog.csdnimg.cn/d07a48218f8349078c4fa8d345ddc848.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>修改密码<img src="https://img-blog.csdnimg.cn/46e2c744a11644b4b021d87b1afb652d.png"></center>
+        </td>
+    </tr>
+     <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>用户管理<img src="https://img-blog.csdnimg.cn/f0c9fc81e116485481d051f79b7ee2a7.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>角色管理<img src="https://img-blog.csdnimg.cn/baf0a3dfd118463d821626977f25c768.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>权限管理<img src="https://img-blog.csdnimg.cn/50e5e190334141cdbaa6dd434e41e662.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>接口文档<img src="https://img-blog.csdnimg.cn/c1c130d423444fadb153041cab047dbc.png"></center>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>流程定义<img src="https://img-blog.csdnimg.cn/620ea0928e1d4af7a15a502ea4ef279e.png"></center>
+        </td>
+        <td style="font-size: 12px;font-weight: bolder;">
+            <center>WebLog<img src="https://img-blog.csdnimg.cn/5c54c137ff3c484db6e09040bdf38a0b.png"></center>
+        </td>
+    </tr>
+</table>   
 
-![](https://oscimg.oschina.net/oscnet/up-21e98010b5ca601657e1da49dc0024e4b4d.png)
 
-![](https://oscimg.oschina.net/oscnet/up-0b3a7e263e7f84f824b6e4a653504064f9d.png)
+
 
 
 #### 🌺部署教程
 
 **整体部署规划结构如下：**
 
-![](https://oscimg.oschina.net/oscnet/up-ef25775de080151e89c785ca97282680b29.png)
+
+
+
+![](https://img-blog.csdnimg.cn/b60db081da7b400daa5fc9c307098c19.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 ##### 服务端
 
@@ -255,11 +338,11 @@ web
 
 **个人微信: lakernote**（进群加我拉你，备注：easyadmin）
 
-![](https://oscimg.oschina.net/oscnet/up-6c2d9e46db42d4464e4d2f2a06975f533cf.png)
+![](https://img-blog.csdnimg.cn/cf8ed2c013614143b346a453a9082232.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbGFrZXJub3Rl,size_10,color_FFFFFF,t_70,g_se,x_16#pic_center)
 
 
 ------------------------------------------------
 
-**微信公众号** : **李哥聊架构**
+**微信公众号** : **李哥聊架构** 
 
-![](https://oscimg.oschina.net/oscnet/up-fadd81a96306d5a18f245dcd44d7d545b8a.png)
+![](https://img-blog.csdnimg.cn/2020110915544650.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FidTkzNTAwOTA2Ng==,size_16,color_FFFFFF,t_70#pic_center)
