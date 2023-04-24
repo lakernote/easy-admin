@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<!-- scan:是否动态监控 scanPeriod:监控周期 debug:是否打印logback内部日志 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
     <property name="LOG_HOME" value="logs"/>
     <property name="ENCODING" value="UTF-8"/>
 
