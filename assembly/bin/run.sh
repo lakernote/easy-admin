@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AppName=easy-admin-1.0.0.jar
+AppName=easyAdmin.jar
 
 #JVM参数
 JVM_OPTS="-Dname=$AppName

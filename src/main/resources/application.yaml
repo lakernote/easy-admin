@@ -33,7 +33,7 @@ spring:
       test-on-borrow: true
       validation-query: select 1
   profiles:
-    active: test
+    active: local
   task:
     execution:
       pool:
