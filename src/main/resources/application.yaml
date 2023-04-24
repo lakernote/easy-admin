@@ -33,7 +33,8 @@ spring:
       test-on-borrow: true
       validation-query: select 1
   profiles:
-    active: local
+    # maven启用的profile，默认是local
+    active: @profileActive@
   task:
     execution:
       pool:

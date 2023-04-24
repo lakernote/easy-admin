@@ -6,7 +6,7 @@
 
     <!-- 打包的类型，如果有N个，将会打N个类型的包 -->
     <formats>
-<!--        <format>tar.gz</format>-->
+        <!--        <format>tar.gz</format>-->
         <format>zip</format>
     </formats>
     <!-- 如果为true，打包出来的文件结构第一层为pom.xml里面定义的artifactId-version -->
@@ -36,13 +36,22 @@
             <outputDirectory>config</outputDirectory>
             <fileMode>0644</fileMode>
             <includes>
-                <include>application.yaml</include>
+                <!--                <include>application.yaml</include>-->
                 <include>application-${profileActive}.yaml</include>
-<!--                <include>mapper/**/*.xml</include>-->
-<!--                <include>static/**</include>-->
-<!--                <include>templates/**</include>-->
+                <!--                <include>mapper/**/*.xml</include>-->
+                <!--                <include>static/**</include>-->
+                <!--                <include>templates/**</include>-->
                 <include>*.xml</include>
-<!--                <include>*.properties</include>-->
+                <!--                <include>*.properties</include>-->
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/target/classes</directory>
+            <outputDirectory>config</outputDirectory>
+            <fileMode>0644</fileMode>
+            <includes>
+                <include>application.yaml</include>
             </includes>
         </fileSet>
 
@@ -61,9 +70,9 @@
         <fileSet>
             <directory>${basedir}</directory>
             <includes>
-<!--                <include>NOTICE</include>-->
-<!--                <include>LICENSE</include>-->
-<!--                <include>*.md</include>-->
+                <!--                <include>NOTICE</include>-->
+                <!--                <include>LICENSE</include>-->
+                <!--                <include>*.md</include>-->
                 <include>README.md</include>
             </includes>
         </fileSet>
