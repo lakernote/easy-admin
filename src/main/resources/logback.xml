@@ -6,18 +6,20 @@
     <appender name="DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文件的路径及文件名 -->
         <file>${LOG_HOME}/laker.log</file>
+        <!-- 将日志事件追加到已存在的日志文件中 -->
         <Append>true</Append>
+        <!-- 谨慎模式 默认关闭-->
         <prudent>false</prudent>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--日志打印的格式-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{50} %line - %m%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{50} %line - %m%n</pattern>
             <!--编码格式-->
             <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按天回滚 daily -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天日志归档路径以及格式 -->
-            <FileNamePattern>${LOG_HOME}/laker-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/laker-%i.log</FileNamePattern>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
             <!--日志量最大20GB-->
@@ -47,17 +49,17 @@
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-<!--            <pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(-&#45;&#45;){faint} %clr([%15.15t]) [%X{userId}|%X{traceId}] %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx{full,-->
-<!--                java.lang.reflect.Method,-->
-<!--                org.springframework.aop,-->
-<!--                org.springframework.security,-->
-<!--                org.springframework.transaction,-->
-<!--                org.springframework.web,-->
-<!--                sun.reflect,-->
-<!--                net.sf.cglib,-->
-<!--                org.springframework.cglib.proxy,-->
-<!--                net.bull.javamelody-->
-<!--                }</pattern>-->
+            <!--            <pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(-&#45;&#45;){faint} %clr([%15.15t]) [%X{userId}|%X{traceId}] %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx{full,-->
+            <!--                java.lang.reflect.Method,-->
+            <!--                org.springframework.aop,-->
+            <!--                org.springframework.security,-->
+            <!--                org.springframework.transaction,-->
+            <!--                org.springframework.web,-->
+            <!--                sun.reflect,-->
+            <!--                net.sf.cglib,-->
+            <!--                org.springframework.cglib.proxy,-->
+            <!--                net.bull.javamelody-->
+            <!--                }</pattern>-->
         </encoder>
     </appender>
 
@@ -68,14 +70,15 @@
         </encoder>
     </appender>
 
+    <!-- 以下针对不同的模块需求，设置不同的日志级别去过滤打印-->
     <logger name="com.test.demo" level="DEBUG">
         <appender-ref ref="DEFAULT"/>
     </logger>
-    <!---->
+    <!-- 定义org.snaker.engine模块的包，只输出ERROR级别的日志-->
     <logger name="org.snaker.engine" level="ERROR"/>
     <!-- 不支持通配符 com.laker.admin.module.**.mapper-->
     <logger name="com.laker.admin.module" level="INFO"/>
-    <!-- 日志输出级别 -->
+    <!-- 默认日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="DEFAULT"/>
         <appender-ref ref="console"/>
