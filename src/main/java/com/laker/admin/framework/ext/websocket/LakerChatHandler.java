@@ -1,6 +1,8 @@
 package com.laker.admin.framework.ext.websocket;
 
+import com.laker.admin.framework.ext.actuator.metrics.websocket.WebsocketMetrics;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
@@ -8,41 +10,71 @@ import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorato
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author laker
+ */
+@Service
 @Slf4j
-public class MyHandler extends AbstractWebSocketHandler {
+public class LakerChatHandler extends AbstractWebSocketHandler {
     private final Map<String, WebSocketSession> webSocketSessionMap = new ConcurrentHashMap<>();
+    WebsocketMetrics websocketMetrics;
 
-    //成功连接时
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        super.afterConnectionEstablished(session);
-        // 设置最大报文大小，如果报文过大则会报错的,可以将限制调大。
-        // 会覆盖config中的配置。
-        session.setBinaryMessageSizeLimit(8 * 1024);
-        session.setTextMessageSizeLimit(8 * 1024);
-        webSocketSessionMap.put(session.getId(), new ConcurrentWebSocketSessionDecorator(session, 10 * 1000, 64000));
+    public LakerChatHandler(WebsocketMetrics websocketMetrics) {
+        this.websocketMetrics = websocketMetrics;
+        websocketMetrics.websocketGauge(webSocketSessionMap);
     }
 
-    //处理textmessage
+    /**
+     * 成功连接时
+     *
+     * @param session
+     * @throws Exception
+     */
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        webSocketSessionMap.put(session.getId(), new ConcurrentWebSocketSessionDecorator(session, 10 * 1000, 64000));
+        websocketMetrics.websocketOpenCounter();
+    }
+
+    /**
+     * 处理textmessage
+     *
+     * @param session
+     * @param message
+     * @throws Exception
+     */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        super.handleTextMessage(session, message);
-        // 有消息就广播下
-        for (Map.Entry<String, WebSocketSession> entry : webSocketSessionMap.entrySet()) {
-            String s = entry.getKey();
-            WebSocketSession webSocketSession = entry.getValue();
-            if (webSocketSession.isOpen()) {
-                webSocketSession.sendMessage(new TextMessage(s + ":" + message.getPayload()));
-                log.info("send to {} msg:{}", s, message.getPayload());
+        String exception = "";
+        long start = System.nanoTime();
+        try {
+            // 有消息就广播下
+            for (Map.Entry<String, WebSocketSession> entry : webSocketSessionMap.entrySet()) {
+                String s = entry.getKey();
+                WebSocketSession webSocketSession = entry.getValue();
+                if (webSocketSession.isOpen()) {
+                    webSocketSession.sendMessage(new TextMessage(s + ":" + message.getPayload()));
+                    log.info("send to {} msg:{}", s, message.getPayload());
+                }
             }
+        } catch (Exception e) {
+            exception = e.getClass().getSimpleName();
+            throw e;
+        } finally {
+            websocketMetrics.websocketProcessTimer(System.nanoTime() - start, exception);
         }
     }
 
 
-    //报错时
+    /**
+     * 报错时
+     *
+     * @param session
+     * @param exception
+     * @throws Exception
+     */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        super.handleTransportError(session, exception);
         log.warn("handleTransportError:: sessionId: {} {}", session.getId(), exception.getMessage(), exception);
         if (session.isOpen()) {
             try {
@@ -53,10 +85,16 @@ public class MyHandler extends AbstractWebSocketHandler {
         }
     }
 
-    //连接关闭时
+    /**
+     * 连接关闭时
+     *
+     * @param session
+     * @param status
+     * @throws Exception
+     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        super.afterConnectionClosed(session, status);
+        websocketMetrics.webSocketCloseConnectionCounter(1, status.getCode());
         WebSocketSession concurrentSession = webSocketSessionMap.remove(session.getId());
         if (concurrentSession.isOpen()) {
             try {
