@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 public class TracingAspect {
-    @Value("${tracing.time:1}")
+    @Value("${tracing.time:1000}")
     private long time;
 
     /**

@@ -25,7 +25,7 @@ public class TraceCodeBlock {
             TraceContext.addSpan(spanName);
             return supplier.get();
         } finally {
-            TraceContext.stopSpan(200);
+            TraceContext.stopSpan(1000);
         }
     }
 
@@ -34,7 +34,7 @@ public class TraceCodeBlock {
             TraceContext.addSpan(spanName, spanType);
             return supplier.get();
         } finally {
-            TraceContext.stopSpan(200);
+            TraceContext.stopSpan(1000);
         }
     }
 
@@ -47,7 +47,7 @@ public class TraceCodeBlock {
             TraceContext.addSpan(spanName);
             function.accept(0);
         } finally {
-            TraceContext.stopSpan(200);
+            TraceContext.stopSpan(1000);
         }
     }
 
@@ -57,7 +57,7 @@ public class TraceCodeBlock {
             TraceContext.addSpan(spanName, spanType);
             function.accept(0);
         } finally {
-            TraceContext.stopSpan(200);
+            TraceContext.stopSpan(1000);
         }
     }
 }

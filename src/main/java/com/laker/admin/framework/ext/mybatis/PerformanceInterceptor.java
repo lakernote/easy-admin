@@ -164,7 +164,7 @@ public class PerformanceInterceptor implements Interceptor {
         } catch (Exception e) {
             throw e;
         } finally {
-            TraceContext.stopSpan(this.getMaxTime() >= 1 ? this.getMaxTime() : 100);
+            TraceContext.stopSpan(this.getMaxTime() >= 1 ? this.getMaxTime() : 1000);
             long timing = SystemClock.now() - start;
 
             // 格式化 SQL 打印执行结果

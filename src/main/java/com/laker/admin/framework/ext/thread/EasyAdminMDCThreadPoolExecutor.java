@@ -69,7 +69,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
                 TraceContext.addSpan("subThread.executeRunnable", SpanType.Thread);
                 runnable.run();
             } finally {
-                TraceContext.stopSpan(1);
+                TraceContext.stopSpan(1000);
                 MDC.clear();
             }
         };
@@ -121,7 +121,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
                 TraceContext.addSpan("subThread.submitRunnableFuture", SpanType.Thread);
                 future.run();
             } finally {
-                TraceContext.stopSpan(1);
+                TraceContext.stopSpan(1000);
                 MDC.clear();
             }
 

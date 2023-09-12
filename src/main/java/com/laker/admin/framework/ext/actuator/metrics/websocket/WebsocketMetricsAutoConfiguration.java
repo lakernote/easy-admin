@@ -23,11 +23,11 @@ public class WebsocketMetricsAutoConfiguration {
     }
 
     /**
-     * 日志示例
+     * 日志示例,生产环境放开
      *
      * @return
      */
-    @Bean
+    // @Bean
     public MeterRegistry meterRegistry() {
         return new LoggingMeterRegistry(new LoggingRegistryConfig() {
             @Override

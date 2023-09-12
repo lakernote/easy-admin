@@ -38,6 +38,6 @@ public class TraceAnnotationInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod == false) {
             return;
         }
-        TraceContext.stopSpan(1);
+        TraceContext.stopSpan(1000);
     }
 }
