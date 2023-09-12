@@ -7,7 +7,7 @@ JVM_OPTS="-Dname=$AppName
  -Djava.security.egd=file:/dev/./urandom
  -Duser.timezone=Asia/Shanghai
  -Dfile.encoding=UTF-8
- -Xms100M -Xmx100M
+ -Xms1024M -Xmx1024M
  -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./
  -XX:+UseConcMarkSweepGC"
 APP_HOME=`pwd`
