@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,12 +22,12 @@ public class PageVO implements Serializable {
     /**
      * 每页显示条数，默认 10
      */
-    @ApiModelProperty(value = "每页显示条数，默认 10")
+    @Schema(description = "每页显示条数，默认 10")
     private long size = 10;
     /**
      * 当前页，默认1，第一页
      */
-    @ApiModelProperty(value = "当前页，默认1，第一页")
+    @Schema(description = "当前页，默认1，第一页")
     private long current = 1;
 
     /**
@@ -35,7 +35,7 @@ public class PageVO implements Serializable {
      * 排序字段和排序类型
      * create_time desc,user_no asc.
      */
-    @ApiModelProperty(value = "排序字段和排序类型，例如：create_time desc,user_no asc.")
+    @Schema(description = "排序字段和排序类型，例如：create_time desc,user_no asc.")
     private String orderBy;
 
 

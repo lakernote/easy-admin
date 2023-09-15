@@ -7,6 +7,8 @@ import cn.hutool.core.lang.Dict;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -24,8 +26,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.validation.ConstraintViolationException;
-import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +138,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SaTokenException.class)
     public Response handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e);
         return Response.error("403", e.getMessage());
     }
 
@@ -169,15 +169,6 @@ public class GlobalExceptionHandler {
             result.add(Dict.create().set("field", leafNodeName).set("msg", constraintViolation.getMessage()));
         });
         return Response.error(result);
-    }
-
-    /**
-     * 兜底验证ValidationException
-     */
-    @ExceptionHandler(javax.validation.ValidationException.class)
-    public Response handleValidationException(javax.validation.ValidationException e) {
-        log.error(e.getMessage(), e);
-        return Response.error("500", e.getCause().getMessage());
     }
 
 

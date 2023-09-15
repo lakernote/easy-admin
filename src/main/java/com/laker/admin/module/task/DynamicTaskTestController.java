@@ -1,8 +1,6 @@
 package com.laker.admin.module.task;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
@@ -15,7 +13,6 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 // https://my.oschina.net/sdlvzg/blog/1590946
-@Api(tags = "动态任务原理测试")
 @ApiSupport(order = 1)
 @RestController
 @Slf4j
@@ -28,7 +25,6 @@ public class DynamicTaskTestController {
 
 
     @GetMapping("/startCron")
-    @ApiOperation("开始任务-每5s")
     public String startCron() {
 
         future = taskScheduler.schedule(new MyRunnable(), new CronTrigger("0/5 * * * * *"));
@@ -37,7 +33,6 @@ public class DynamicTaskTestController {
     }
 
     @DeleteMapping("/stopCron")
-    @ApiOperation("取消任务")
     public String stopCron() {
 
         if (future != null) {
@@ -48,7 +43,6 @@ public class DynamicTaskTestController {
     }
 
     @GetMapping("/changeCron10")
-    @ApiOperation("更新任务- 每10s ")
     public String startCron10() {
 
         stopCron();// 先停止，在开启.

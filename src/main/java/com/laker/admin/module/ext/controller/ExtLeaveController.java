@@ -20,7 +20,6 @@ import com.laker.admin.module.ext.service.IExtLeaveService;
 import com.laker.admin.module.flow.process.BaseFlowController;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.sys.service.ISysUserService;
-import io.swagger.annotations.ApiOperation;
 import org.snaker.engine.SnakerEngine;
 import org.snaker.engine.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,6 @@ public class ExtLeaveController extends BaseFlowController {
     ThreadPoolExecutor pool = new EasyAdminMDCThreadPoolExecutor(5,5,"laker");
 
     @GetMapping
-    @ApiOperation(value = "分页查询")
     @LakerTrace(spanType = SpanType.Controller)
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit) {
@@ -103,7 +101,6 @@ public class ExtLeaveController extends BaseFlowController {
      * @return
      */
     @GetMapping("/v2")
-    @ApiOperation(value = "分页查询")
     public PageResponse pageAllV2(@RequestParam(required = false, defaultValue = "1") long page,
                                   @RequestParam(required = false, defaultValue = "10") long limit) {
         Page roadPage = new Page<>(page, limit);
@@ -115,7 +112,6 @@ public class ExtLeaveController extends BaseFlowController {
     }
 
     @PostMapping
-    @ApiOperation(value = "发起请假")
     @Transactional(rollbackFor = Exception.class)
     public Response saveOrUpdate(@RequestBody ExtLeave param) {
         if (param.getLeaveId() == null) {
@@ -139,19 +135,16 @@ public class ExtLeaveController extends BaseFlowController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "根据id查询")
     public Response get(@PathVariable Long id) {
         return Response.ok(extLeaveService.getById(id));
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "根据id删除")
     public Response delete(@PathVariable Long id) {
         return Response.ok(extLeaveService.removeById(id));
     }
 
     @DeleteMapping("/batch/{ids}")
-    @ApiOperation(value = "根据批量删除ids删除")
     public Response batchRemove(@PathVariable Long[] ids) {
         return Response.ok(extLeaveService.removeByIds(CollUtil.toList(ids)));
     }

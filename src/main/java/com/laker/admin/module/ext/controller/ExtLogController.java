@@ -18,7 +18,6 @@ import com.laker.admin.module.ext.vo.LogStatisticsTop10Vo;
 import com.laker.admin.module.ext.vo.LogStatisticsVo;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +49,6 @@ public class ExtLogController {
     ISysUserService sysUserService;
 
     @GetMapping
-    @ApiOperation(value = "日志分页查询")
     @SaCheckPermission("log.list")
     @LakerIgnoreTrace
     @RepeatSubmitLimit(businessKey = "log.list", businessParam = "#keyWord")
@@ -77,14 +75,12 @@ public class ExtLogController {
 
 
     @GetMapping("/visits7day")
-    @ApiOperation(value = "7天访问量")
     public Response visits7day() {
         List<LogStatisticsVo> logStatisticsVo = extLogMapper.selectStatistics7Day();
         return Response.ok(logStatisticsVo);
     }
 
     @GetMapping("/visitsTop10IP")
-    @ApiOperation(value = "visitsTop10IP")
     public PageResponse visitsTop10IP() {
         List<LogStatisticsTop10Vo> logStatisticsVo = extLogMapper.selectStatisticsVisitsTop10IP();
         return PageResponse.ok(logStatisticsVo, 10L);

@@ -1,10 +1,8 @@
 package com.laker.admin.config;
 
-import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.laker.admin.framework.ext.mybatis.PerformanceInterceptor;
-import com.laker.admin.framework.ext.mybatis.datapermission.LakerDataPermissionV2Interceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +29,8 @@ public class MybatisConfig {
 //        // 添加自定义的数据权限处理器
 //        dataPermissionInterceptor.setDataPermissionHandler(lakerDataPermissionHandler);
         // V2版本
-        LakerDataPermissionV2Interceptor dataPermissionInterceptor = new LakerDataPermissionV2Interceptor();
-        interceptor.addInnerInterceptor(dataPermissionInterceptor);
+//        LakerDataPermissionV2Interceptor dataPermissionInterceptor = new LakerDataPermissionV2Interceptor();
+//        interceptor.addInnerInterceptor(dataPermissionInterceptor);
 
 
         // 分页插件
@@ -41,17 +39,13 @@ public class MybatisConfig {
         return interceptor;
     }
 
-    @Bean
-    public ConfigurationCustomizer configurationCustomizer() {
-        return configuration -> configuration.setUseDeprecatedExecutor(false);
-    }
 
     /**
      * SQL执行效率插件
-     *
+     * TODO
      * @return
      */
-    @Bean
+//    @Bean
     @ConditionalOnProperty(value = "javamelody.enabled", havingValue = "false")
     public PerformanceInterceptor performanceInterceptor() {
         PerformanceInterceptor interceptor = new PerformanceInterceptor();

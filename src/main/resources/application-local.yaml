@@ -2,8 +2,6 @@ knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: false
 
-druid:
-  monitor: false
 # 测试环境不需要
 management:
   health:

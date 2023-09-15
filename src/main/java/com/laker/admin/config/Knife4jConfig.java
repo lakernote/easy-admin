@@ -1,14 +1,15 @@
 package com.laker.admin.config;
 
-import io.swagger.annotations.ApiOperation;
+import cn.hutool.core.util.RandomUtil;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 接口文档描述，访问地址：http://ip:port/doc.html
@@ -16,28 +17,40 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  * @author laker
  */
 @Configuration
-@EnableSwagger2WebMvc
 public class Knife4jConfig {
+    /**
+     * 根据@Tag 上的排序，写入x-order
+     *
+     * @return the global open api customizer
+     */
+    @Bean
+    public GlobalOpenApiCustomizer orderGlobalOpenApiCustomizer() {
+        return openApi -> {
+            if (openApi.getTags() != null) {
+                openApi.getTags().forEach(tag -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("x-order", RandomUtil.randomInt(0, 100));
+                    tag.setExtensions(map);
+                });
+            }
+            if (openApi.getPaths() != null) {
+                openApi.addExtension("x-test123", "333");
+                openApi.getPaths().addExtension("x-abb", RandomUtil.randomInt(1, 100));
+            }
 
-    @Bean(value = "defaultApi2")
-    public Docket defaultApi2() {
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(new ApiInfoBuilder()
-                        .title("laker 地图 接口文档")
-                        .description("# swagger-bootstrap-ui-demo RESTful APIs")
-                        .termsOfServiceUrl("http://www.xx.com/")
-                        .contact("xx@qq.com")
+        };
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("XXX用户系统API")
                         .version("1.0")
-                        .build())
-                //分组名称
-                .groupName("laker 1.X版本")
-                .select()
-                //这里指定Controller扫描包路径
-//                .apis(RequestHandlerSelectors.basePackage("com.github.xiaoymin.knife4j.controller"))
-                // 扫描所有有注解的api，用这种方式更灵活
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .paths(PathSelectors.any())
-                .build();
-        return docket;
+
+                        .description("Knife4j集成springdoc-openapi示例")
+                        .termsOfService("http://doc.xiaominfo.com")
+                        .license(new License().name("Apache 2.0")
+                                .url("http://doc.xiaominfo.com")));
     }
 }

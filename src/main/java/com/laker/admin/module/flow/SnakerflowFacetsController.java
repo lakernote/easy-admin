@@ -13,7 +13,7 @@ import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.flow.process.SnakerHelper;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.snaker.engine.access.Page;
@@ -68,7 +68,6 @@ public class SnakerflowFacetsController {
 
 
     @GetMapping("/process/modelJson")
-    @ApiOperation(value = "根据流程定义名称获取流程定义json", tags = "流程引擎-流程")
     @Metrics
     public String getProcess(@RequestParam(required = false) String processId) {
         if (StrUtil.isBlank(processId)) {
@@ -87,7 +86,6 @@ public class SnakerflowFacetsController {
     /**
      * 流程定义查询列表
      */
-    @ApiOperation(value = "根据给定的参数列表args分页查询process", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/list", method = RequestMethod.GET)
     public Response processList(Page<Process> page, String displayName) {
         QueryFilter filter = new QueryFilter();
@@ -106,7 +104,6 @@ public class SnakerflowFacetsController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据流程定义ID，删除流程定义", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/delete/{id}", method = RequestMethod.GET)
     @Metrics
     @SaCheckPermission("flow.delete")
@@ -121,7 +118,6 @@ public class SnakerflowFacetsController {
      * @param model
      * @return
      */
-    @ApiOperation(value = "保存流程定义[web流程设计器]", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/deployXml", method = RequestMethod.POST)
     @SaCheckPermission("flow.update")
     public boolean processDeploy(String model, String id, @RequestParam(required = false, defaultValue = "false") boolean xmlHearder) {
@@ -154,7 +150,6 @@ public class SnakerflowFacetsController {
         return true;
     }
 
-    @ApiOperation(value = "流程定义+流程状态", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/json", method = RequestMethod.GET)
     @Metrics
     public Object json(String processId, String orderId) {
@@ -187,7 +182,6 @@ public class SnakerflowFacetsController {
      * 根据当前用户查询待办任务列表
      */
     @GetMapping("/task/todoList")
-    @ApiOperation(value = "根据当前用户查询待办任务列表", tags = "流程引擎-任务")
     public PageResponse userTaskTodoList() {
         Page<WorkItem> page = new Page<>(30);
         snakerEngineFacets.getEngine().query().getWorkItems(page,
@@ -199,7 +193,7 @@ public class SnakerflowFacetsController {
      * 根据当前用户查询待办任务列表
      */
     @GetMapping("/task/doneList")
-    @ApiOperation(value = "根据当前用户查询已办任务列表", tags = "流程引擎-任务")
+    @Operation(summary = "根据当前用户查询已办任务列表", tags = "流程引擎-任务")
     public PageResponse userTaskdoneList() {
         Page<WorkItem> page = new Page<>(30);
         snakerEngineFacets.getEngine().query().getHistoryWorkItems(page,
@@ -208,7 +202,7 @@ public class SnakerflowFacetsController {
     }
 
     @GetMapping("/task/actor/add")
-    @ApiOperation(value = "根据流程实例id和任务名称，增加任务参与者", tags = "流程引擎-任务")
+    @Operation(summary = "根据流程实例id和任务名称，增加任务参与者", tags = "流程引擎-任务")
     public Response addTaskActor(String orderId, String taskName, String operator) {
         List<Task> tasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOrderId(orderId));
         for (Task task : tasks) {
@@ -220,7 +214,7 @@ public class SnakerflowFacetsController {
     }
 
     @GetMapping("/task/tip")
-    @ApiOperation(value = "根据流程实例id和任务名称,查找当前任务的到达时间和待执行人", tags = "流程引擎-任务")
+    @Operation(summary = "根据流程实例id和任务名称,查找当前任务的到达时间和待执行人", tags = "流程引擎-任务")
     public Response taskTip(String orderId, String taskName) {
         List<Task> tasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOrderId(orderId));
         StringBuilder builder = new StringBuilder();
@@ -268,7 +262,7 @@ public class SnakerflowFacetsController {
      * 活动任务的驳回
      */
     @GetMapping("/task/reject")
-    @ApiOperation(value = "\t 【审批任务】驳回，根据任务主键ID，操作人ID，参数列表执行任务，并且根据nodeName跳转到任意节点\n" +
+    @Operation(summary = "\t 【审批任务】驳回，根据任务主键ID，操作人ID，参数列表执行任务，并且根据nodeName跳转到任意节点\n" +
             "\t 1、nodeName为null时，则跳转至上一步处理\n" +
             "\t 2、nodeName不为null时，则任意跳转，即动态创建转移", tags = "流程引擎-任务")
     public Response activeTaskReject(String taskId, String nodeName, String reason) {
@@ -283,7 +277,7 @@ public class SnakerflowFacetsController {
      * 活动任务的驳回-驳回到发起人
      */
     @GetMapping("/task/rejectToCreate")
-    @ApiOperation(value = "任务的驳回-驳回到发起人", tags = "流程引擎-任务")
+    @Operation(summary = "任务的驳回-驳回到发起人", tags = "流程引擎-任务")
     public Response activeTaskReject(String taskId) {
         List<WorkItem> workItems = snakerEngineFacets.getEngine().query().getWorkItems(null, new QueryFilter().setTaskId(taskId));
         if (CollUtil.isEmpty(workItems)) {
@@ -299,7 +293,7 @@ public class SnakerflowFacetsController {
     }
 
     @RequestMapping(value = "/task/approval", method = RequestMethod.GET)
-    @ApiOperation(value = "【审批任务】同意", tags = "流程引擎-任务")
+    @Operation(summary = "【审批任务】同意", tags = "流程引擎-任务")
     public Response doApproval(String taskId, String reason) {
         snakerEngineFacets.execute(taskId, StpUtil.getLoginIdAsString(), null);
         return Response.ok();
@@ -313,14 +307,14 @@ public class SnakerflowFacetsController {
      * @return
      */
     @GetMapping("/task/undo")
-    @ApiOperation(value = "根据任务主键id、操作人撤回任务", tags = "流程引擎-任务")
+    @Operation(summary = "根据任务主键id、操作人撤回任务", tags = "流程引擎-任务")
     public Response historyTaskUndo(String taskId) {
         snakerEngineFacets.getEngine().task().withdrawTask(taskId, StpUtil.getLoginIdAsString());
         return Response.ok();
     }
 
     @GetMapping("/task/transferMajor")
-    @ApiOperation(value = "转办", tags = "流程引擎-任务")
+    @Operation(summary = "转办", tags = "流程引擎-任务")
     public Response transferMajor(String taskId, String nextOperator) {
         snakerEngineFacets.transferMajor(taskId, StpUtil.getLoginIdAsString(), nextOperator.split(","));
         return Response.ok();
@@ -333,7 +327,7 @@ public class SnakerflowFacetsController {
     /**
      * 流程实例管理
      */
-    @ApiOperation(value = "流程分页查询", tags = "流程引擎-流程实例")
+    @Operation(summary = "流程分页查询", tags = "流程引擎-流程实例")
     @RequestMapping(value = "/order/list", method = RequestMethod.GET)
     public Response orderList(Page<HistoryOrder> page, String displayName) {
         QueryFilter filter = new QueryFilter();

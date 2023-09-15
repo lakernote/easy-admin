@@ -1,12 +1,12 @@
 package com.laker.admin.config;
 
 import com.laker.admin.framework.waf.WafFilter;
+import jakarta.servlet.DispatcherType;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 
-import javax.servlet.DispatcherType;
 import java.util.HashMap;
 import java.util.Map;
 

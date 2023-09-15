@@ -1,15 +1,15 @@
 package com.laker.admin.framework.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author longli
  */
-@ApiModel
+@Schema
 public class PageResponse<T> extends Response<T> {
 
-    @ApiModelProperty(notes = "数量")
+    @Schema(description = "数量")
     private Long count;
 
     public PageResponse(String code, String msg, T data, Long count) {

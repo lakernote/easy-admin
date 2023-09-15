@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @Slf4j
@@ -33,12 +33,6 @@ public class DefaultUncaughtErrorControllor implements ErrorController {
         } catch (Exception e) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-    }
-
-
-    @Override
-    public String getErrorPath() {
-        return null;
     }
 }
 

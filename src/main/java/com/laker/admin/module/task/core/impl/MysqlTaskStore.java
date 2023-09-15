@@ -10,9 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class MysqlTaskStore implements ITaskStore {
 
@@ -26,7 +23,7 @@ public class MysqlTaskStore implements ITaskStore {
 
         BeanUtils.copyProperties(taskDto, task);
         try {
-            int count = taskService.count(Wrappers.<SysTask>lambdaQuery().eq(SysTask::getTaskCode, taskDto.getTaskCode()));
+            long count = taskService.count(Wrappers.<SysTask>lambdaQuery().eq(SysTask::getTaskCode, taskDto.getTaskCode()));
             if (count == 0) {
                 task.setTaskState(TaskStateEnum.START);
                 taskService.save(task);

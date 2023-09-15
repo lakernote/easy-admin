@@ -12,10 +12,10 @@ import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.utils.TreeUtil;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,8 +35,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysPower> imp
     ISysUserRoleService sysUserRoleService;
     @Autowired
     ISysRolePowerService sysRolePowerService;
-    @Autowired
-    ISysMenuService menuService;
     @Resource
     private SysMenuMapper sysMenuMapper;
 
@@ -71,7 +69,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysPower> imp
         List<Long> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId()).collect(Collectors.toList());
         List<SysRolePower> rolePowerLists = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().in(SysRolePower::getRoleId, roleIds));
         List<Long> powerIds = rolePowerLists.stream().map(sysRolePower -> sysRolePower.getPowerId()).collect(Collectors.toList());
-        return menuService.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getMenuId, powerIds).eq(SysPower::getEnable, true).orderByAsc(SysPower::getSort));
+        return this.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getMenuId, powerIds).eq(SysPower::getEnable, true).orderByAsc(SysPower::getSort));
     }
 
 }

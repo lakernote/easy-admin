@@ -10,7 +10,6 @@ import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.pojo.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,6 @@ public class SysMenuController {
     ISysMenuService sysMenuService;
 
     @GetMapping
-    @ApiOperation(value = "系统菜单表分页查询")
     public Response pageAll(@RequestParam(required = false, defaultValue = "1") long current,
                             @RequestParam(required = false, defaultValue = "10") long size) {
         Page roadPage = new Page<>(current, size);
@@ -43,42 +41,36 @@ public class SysMenuController {
 
 
     @GetMapping("/list")
-    @ApiOperation(value = "系统菜单表分页查询")
     public Response list() {
         List<SysPower> list = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().orderByAsc(SysPower::getSort));
         return Response.ok(list);
     }
 
     @PostMapping
-    @ApiOperation(value = "新增或者更新系统菜单表")
     @SaCheckPermission("menu.update")
     public Response saveOrUpdate(@RequestBody SysPower param) {
         return Response.ok(sysMenuService.saveOrUpdate(param));
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "根据id查询系统菜单表")
     public Response get(@PathVariable Long id) {
         return Response.ok(sysMenuService.getById(id));
     }
 
 
     @GetMapping("/tree")
-    @ApiOperation(value = "菜单树")
     public List<MenuVo> tree() {
         return sysMenuService.menu();
     }
 
 
     @GetMapping("/selectTree")
-    @ApiOperation(value = "菜单树")
     public Response selectTree() {
         List<MenuVo> menuVos = sysMenuService.menu();
         return Response.ok(menuVos);
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "根据id删除系统菜单表")
     @SaCheckPermission("menu.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysMenuService.removeById(id));

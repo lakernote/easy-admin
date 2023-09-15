@@ -151,6 +151,7 @@ public class PerformanceInterceptor implements Interceptor {
         if (index > 0) {
             originalSql = originalSql.substring(index);
         }
+        // TODO 启动异常
         Object target = PluginUtils.realTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(target);
         MappedStatement ms = (MappedStatement) metaObject.getValue("delegate.mappedStatement");

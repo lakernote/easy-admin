@@ -23,7 +23,6 @@ import com.laker.admin.module.sys.pojo.UserDto;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +55,6 @@ public class SysUserController {
     LakerConfig lakerConfig;
 
     @GetMapping
-    @ApiOperation(value = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 Long deptId,
@@ -73,7 +71,6 @@ public class SysUserController {
     }
 
     @GetMapping("/pageComplexAll")
-    @ApiOperation(value = "复杂分页查询示例")
     public PageResponse pageComplexAll(PageVO page, UserDto userDto) {
         Page roadPage = page.toPage();
         Page pageList = sysUserService.page(roadPage, userDto.queryWrapper());
@@ -82,7 +79,6 @@ public class SysUserController {
 
 
     @GetMapping("/getAll")
-    @ApiOperation(value = "获取所有用户")
     public Response getAll() {
         List<SysUser> list = sysUserService.list();
         if (CollUtil.isNotEmpty(list)) {
@@ -95,7 +91,6 @@ public class SysUserController {
     }
 
     @PostMapping
-    @ApiOperation(value = "新增或者更新")
     @Transactional
     @SaCheckPermission("user.update")
     public Response saveOrUpdate(@RequestBody SysUser param) {
@@ -127,7 +122,6 @@ public class SysUserController {
 
 
     @PutMapping("/switch")
-    @ApiOperation(value = "用户启用停用开关")
     @SaCheckPermission("user.switch")
     public Response userSwitch(@RequestBody SysUser param) {
         return Response.ok(sysUserService.updateById(param));
@@ -147,7 +141,6 @@ public class SysUserController {
 
 
     @PutMapping("/updatePwd")
-    @ApiOperation(value = "更新用户密码")
     @SaCheckPermission("user.update.pwd")
     public Response updatePwd(@RequestBody PwdQo param) {
 
@@ -169,7 +162,6 @@ public class SysUserController {
     }
 
     @PutMapping("/resetPwd/{userId}")
-    @ApiOperation(value = "更新用户密码")
     @SaCheckPermission("user.reset.pwd")
     public Response resetPwd(@PathVariable Long userId) {
         SysUser user = new SysUser();
@@ -180,7 +172,6 @@ public class SysUserController {
     }
 
     @PutMapping("/updateAvatar")
-    @ApiOperation(value = "更新用户头像")
     @SaCheckPermission("user.updateAvatar")
     public Response resetPwd(@RequestBody UserDto userDto) {
         long userId = StpUtil.getLoginIdAsLong();
@@ -192,13 +183,11 @@ public class SysUserController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "根据id查询")
     public Response get(@PathVariable Long id) {
         return Response.ok(sysUserService.getById(id));
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "根据id删除")
     @SaCheckPermission("user.delete")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysUserService.removeById(id));
@@ -222,7 +211,6 @@ public class SysUserController {
 
 
     @DeleteMapping("/batch/{ids}")
-    @ApiOperation(value = "根据批量删除ids删除")
     @SaCheckPermission("dict.delete")
     public Response batchRemove(@PathVariable Long[] ids) {
         return Response.ok(sysUserService.removeByIds(CollUtil.toList(ids)));

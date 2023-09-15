@@ -2,8 +2,7 @@ package com.laker.admin.framework.model;
 
 import cn.hutool.core.util.StrUtil;
 import com.laker.admin.framework.EasyAdminConstants;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.MDC;
@@ -14,19 +13,18 @@ import org.springframework.context.annotation.DependsOn;
  */
 @Data
 @AllArgsConstructor
-@ApiModel
+@Schema(name = "文件part对象",description = "Part信息")
 @DependsOn
 public class Response<T> {
-    @ApiModelProperty(notes = "响应码，非0 即为异常", example = "0")
+    @Schema(description  = "响应码，非0 即为异常", example = "0")
     private final String code;
-    @ApiModelProperty(notes = "响应消息", example = "提交成功")
+    @Schema(description  = "响应消息", example = "提交成功")
     private final String msg;
-    @ApiModelProperty(notes = "响应数据")
+    @Schema(description  = "响应数据")
     private final T data;
-    @ApiModelProperty(notes = "traceId")
+    @Schema(description  = "traceId")
     private final String traceId;
-
-    @ApiModelProperty(notes = "请求id")
+    @Schema(description  = "请求id")
     private final Boolean success;
 
     protected Response(String code, String msg, T data) {

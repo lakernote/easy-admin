@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.module.task.entity.SysTasklog;
 import com.laker.admin.module.task.service.ISysTasklogService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,6 @@ public class SysTasklogController {
     ISysTasklogService sysTasklogService;
 
     @GetMapping
-    @ApiOperation(value = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 String taskCode) {

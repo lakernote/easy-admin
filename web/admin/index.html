@@ -211,16 +211,16 @@
             onclick: null, // 点击关闭回调
         };
 
-        var url = easyAdmin.GetAdminServerUrl() + '/chatroom?' + easyAdmin.GetTokenQueryString();
-        var sock = new SockJS(url);  //创建SockJS连接。
-        var stomp = Stomp.over(sock);//创建STOMP客户端实例。实际上封装了SockJS,这样就能在WebSocket连接上发送STOMP消息。
-        stomp.connect({}, function (frame) {
-            stomp.subscribe('/topic/status', function (message) {
-                notice.info(JSON.parse(message.body).content);
-            });
-        }, function (frame) {
-            notice.error(frame);
-        });
+        // var url = easyAdmin.GetAdminServerUrl() + '/chatroom?' + easyAdmin.GetTokenQueryString();
+        // var sock = new SockJS(url);  //创建SockJS连接。
+        // var stomp = Stomp.over(sock);//创建STOMP客户端实例。实际上封装了SockJS,这样就能在WebSocket连接上发送STOMP消息。
+        // stomp.connect({}, function (frame) {
+        //     stomp.subscribe('/topic/status', function (message) {
+        //         notice.info(JSON.parse(message.body).content);
+        //     });
+        // }, function (frame) {
+        //     notice.error(frame);
+        // });
 
 
     })

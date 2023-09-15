@@ -1,12 +1,13 @@
 package com.laker.admin.config;
 
-import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
 import org.springframework.format.FormatterRegistry;
@@ -17,8 +18,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/admin/login.html",
             "/error",
             "/swagger-resources/**"};
-    @Resource
+    @Autowired
     LakerConfig lakerConfig;
 
     @Override
@@ -47,8 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 配置跨域访问
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowCredentials(true)
                 .allowedMethods("*")
+                .allowCredentials(false)
                 .maxAge(3600);
     }
 
@@ -58,8 +57,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册注解拦截器，并排除不需要注解鉴权的接口地址 (与登录拦截器无关)
-        registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns(exclude_path);
+//        registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
+//                .excludePathPatterns(exclude_path);
         // 配置自定义拦截器
         registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns(trace_exclude_path);

@@ -1,6 +1,5 @@
 package com.laker.admin.module.sys.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,8 +12,6 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.module.sys.entity.SysFile;
 import com.laker.admin.module.sys.service.ISysFileService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +28,6 @@ import java.time.LocalDateTime;
  * @author laker
  * @since 2022-02-21
  */
-@Api(tags = "文件管理")
 @RestController
 @RequestMapping("/sys/file")
 public class SysFileController {
@@ -41,7 +37,6 @@ public class SysFileController {
     LakerConfig lakerConfig;
 
     @GetMapping
-    @ApiOperation(value = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit) {
         Page roadPage = new Page<>(page, limit);
@@ -51,7 +46,6 @@ public class SysFileController {
     }
 
     @PostMapping("/upload")
-    @ApiOperation(value = "文件上传")
     public Response upload(@RequestParam("file") MultipartFile file, @RequestParam(value = "name", required = false) String name) {
         // 这里实际项目中文件基本都存储在oss上，这里仅做演示
         String fileName = file.getOriginalFilename();
@@ -75,19 +69,16 @@ public class SysFileController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "根据id查询")
     public Response get(@PathVariable Long id) {
         return Response.ok(sysFileService.getById(id));
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "根据id删除")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysFileService.removeById(id));
     }
 
     @DeleteMapping("/batch/{ids}")
-    @ApiOperation(value = "根据批量删除ids删除")
     public Response batchRemove(@PathVariable Long[] ids) {
         return Response.ok(sysFileService.removeByIds(CollUtil.toList(ids)));
     }
