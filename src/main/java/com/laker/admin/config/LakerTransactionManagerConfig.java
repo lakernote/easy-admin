@@ -18,7 +18,7 @@ public class LakerTransactionManagerConfig {
     @Bean
     DataSourceTransactionManager transactionManager(DataSource dataSource,
                                                     ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-        DataSourceTransactionManager transactionManager = new LakerDataSourceTransactionManager(dataSource, 500);
+        DataSourceTransactionManager transactionManager = new LakerDataSourceTransactionManager(dataSource, 100);
         transactionManagerCustomizers.ifAvailable((customizers) -> customizers.customize(transactionManager));
         return transactionManager;
     }
