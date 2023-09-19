@@ -2,6 +2,15 @@
 
 > **有用的话请鼓励❤️下作者，右上角☝️watch、star、fork三连点🙏🙏🙏一波**
 
+
+
+| SpringBoot版本 | JDK版本 | Mysql  | 分支                                                         |
+| -------------- | ------- | ------ | ------------------------------------------------------------ |
+| 2.3.xx         | 8       | 5.7.xx | [master](https://gitee.com/lakernote/easy-admin/tree/master/) |
+| 3.1.xx         | 17      | 8.xx   | [springboot3](https://gitee.com/lakernote/easy-admin/tree/springboot3/) |
+
+
+
 #### 🌵介绍
 
 基于 **SpringBoot2（JDK1.8）+MybatiPlus+LayUI+Snaker+Mysql5.7**技术，可**前后端分离开发**或者 **前后端一体式开发** ，一款**简单**、**轻量级**的 **后台管理系统脚手架** 。 **内置权限管理、工作流引擎、应用监控、Api文档、行为监控、前后端代码生成、动态定时任务、在线WebLog等** 。可以理解为 **轻量、升级版的若依/RuoYi** 。
