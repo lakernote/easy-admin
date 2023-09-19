@@ -4,10 +4,12 @@
 
 
 
-| SpringBoot版本 | JDK版本 | Mysql  | 分支                                                         |
-| -------------- | ------- | ------ | ------------------------------------------------------------ |
-| 2.3.xx         | 8       | 5.7.xx | [master](https://gitee.com/lakernote/easy-admin/tree/master/) |
-| 3.1.xx         | 17      | 8.xx   | [springboot3](https://gitee.com/lakernote/easy-admin/tree/springboot3/) |
+
+
+| SpringBoot版本 | JDK版本 | Mysql  | Tomcat | 分支                                                         |
+| -------------- | ------- | ------ | ------ | ------------------------------------------------------------ |
+| 2.3.xx         | 8       | 5.7.xx | 9.x    | [master](https://gitee.com/lakernote/easy-admin/tree/master/) |
+| 3.1.xx         | 17      | 8.xx   | 10.x   | [springboot3](https://gitee.com/lakernote/easy-admin/tree/springboot3/) |
 
 
 
