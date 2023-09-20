@@ -24,7 +24,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://localhost:3307/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       minimum-idle: 5
@@ -45,8 +45,6 @@ spring:
       max-file-size: 20MB
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
-  # 支持统配符 * 或者 ; 分割
-  typeEnumsPackage: com.laker.admin.module.enums
   # 配置日志 #仅控制台输出的日志
   #  configuration:
   #  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -74,8 +72,6 @@ sa-token:
   timeout: 1800
   # token临时有效期 [指定时间内无操作就视为token过期] (单位: 秒), 默认-1 代表不限制
   activity-timeout: 1800
-  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
-  allow-concurrent-login: true
   # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
   is-share: false
   # token风格
@@ -83,6 +79,8 @@ sa-token:
   # 是否打印操作日志
   is-log: false
   is-print: false
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
 laker:
   # web防火墙配置
   waf:

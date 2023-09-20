@@ -3,6 +3,7 @@ package com.laker.admin.module.ext.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -55,9 +56,11 @@ public class ExtLeaveController extends BaseFlowController {
     @GetMapping
     @LakerTrace(spanType = SpanType.Controller)
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
-                                @RequestParam(required = false, defaultValue = "10") long limit) {
+                                @RequestParam(required = false, defaultValue = "10") long limit,
+                                @RequestParam(required = false) String keyWord) {
         Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<ExtLeave> queryWrapper = new QueryWrapper().lambda();
+        queryWrapper.like(StrUtil.isNotBlank(keyWord),ExtLeave::getLeaveReason,keyWord);
         queryWrapper.orderByDesc(ExtLeave::getCreateTime);
 //        Page pageList = extLeaveService.page(roadPage, queryWrapper);
         IPage pageList = TraceCodeBlock.trace("leaveService.page",
