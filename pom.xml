@@ -36,6 +36,8 @@
         <!-- 其他依赖组件版本 -->
         <hutool.version>5.5.2</hutool.version>
         <mybatis-plus.version>3.5.3</mybatis-plus.version>
+        <!-- sql监控 分析打印 -->
+        <p6spy.version>3.9.1</p6spy.version>
     </properties>
 
     <dependencies>
@@ -61,12 +63,12 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
 
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
+        </dependency>
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
@@ -135,15 +137,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 模板引擎freemarker -->
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
         <!-- 国产工作流引擎 -->
         <dependency>
             <groupId>com.github.snakerflow-starter</groupId>

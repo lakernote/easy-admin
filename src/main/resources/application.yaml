@@ -24,8 +24,8 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3307/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:p6spy:mysql://localhost:3307/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
