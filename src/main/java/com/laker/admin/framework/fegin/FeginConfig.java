@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 
 @Configuration
+@EnableLakerFeignClients(basePackages = "com.laker.admin")
 public class FeginConfig {
     @Bean
     @ConditionalOnProperty(name = "feign.hystrix.enabled", havingValue = "false", matchIfMissing = true)

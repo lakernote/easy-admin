@@ -9,8 +9,7 @@ import java.util.List;
 
 
 @LakerFeignClient(url ="https://api.github.com")
-public
-interface GitHub {
+public interface GitHub {
   @GetMapping("/repos/{owner}/{repo}/contributors")
   List<Contributor> contributors(@PathVariable("owner") String owner, @PathVariable("repo") String repo);
   @PostMapping("/repos/{owner}/{repo}/issues")
