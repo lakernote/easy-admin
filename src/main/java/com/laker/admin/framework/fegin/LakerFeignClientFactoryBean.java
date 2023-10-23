@@ -22,26 +22,22 @@ class LakerFeignClientFactoryBean implements FactoryBean<Object>, InitializingBe
 
     private String url;
 
-
     private ApplicationContext applicationContext;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         Assert.hasText(this.url, "url must be set");
     }
-
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         this.applicationContext = context;
     }
-
     protected Feign.Builder feign() {
         Feign.Builder builder = get(Feign.Builder.class)
                 .contract(new SpringContract())
                 // required values
                 .encoder(get(Encoder.class))
                 .decoder(get(Decoder.class));
-
         // optional values
         Client client = getOptional(Client.class);
         if (client != null) {
@@ -63,15 +59,12 @@ class LakerFeignClientFactoryBean implements FactoryBean<Object>, InitializingBe
         if (options != null) {
             builder.options(options);
         }
-
         Map<String, RequestInterceptor> requestInterceptors = getOptionals(RequestInterceptor.class);
         if (requestInterceptors != null) {
             builder.requestInterceptors(requestInterceptors.values());
         }
-
         return builder;
     }
-
     protected <T> T get(Class<T> type) {
         if (BeanFactoryUtils.beanNamesForTypeIncludingAncestors(applicationContext, type).length > 0) {
             return BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, type);
@@ -79,34 +72,28 @@ class LakerFeignClientFactoryBean implements FactoryBean<Object>, InitializingBe
             throw new IllegalStateException("No bean found of type " + type);
         }
     }
-
     protected <T> T getOptional(Class<T> type) {
         if (BeanFactoryUtils.beanNamesForTypeIncludingAncestors(applicationContext, type).length > 0) {
             return BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, type);
         }
         return null;
     }
-
     protected <T> Map<String, T> getOptionals(Class<T> type) {
         if (BeanFactoryUtils.beanNamesForTypeIncludingAncestors(applicationContext, type).length > 0) {
             return BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, type);
         }
         return null;
     }
-
     @Override
     public Object getObject() throws Exception {
         return feign().target(type, url);
     }
-
     @Override
     public Class<?> getObjectType() {
         return this.type;
     }
-
     @Override
     public boolean isSingleton() {
         return true;
     }
-
 }

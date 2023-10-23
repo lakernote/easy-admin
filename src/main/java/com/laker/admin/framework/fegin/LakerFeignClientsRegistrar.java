@@ -19,29 +19,24 @@ import org.springframework.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
-
     private ResourceLoader resourceLoader;
-
-
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
-
-
     @Override
     public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
         registerFeignClients(metadata, registry);
 
     }
-
-
     public void registerFeignClients(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
         Set<BeanDefinition> candidateComponents = new LinkedHashSet<>();
-        Map<String, Object> attrs = metadata.getAnnotationAttributes(EnableLakerFeignClients.class.getName());
         ClassPathScanningCandidateComponentProvider scanner = getScanner();
         scanner.setResourceLoader(this.resourceLoader);
         scanner.addIncludeFilter(new AnnotationTypeFilter(LakerFeignClient.class));
@@ -49,7 +44,6 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
         for (String basePackage : basePackages) {
             candidateComponents.addAll(scanner.findCandidateComponents(basePackage));
         }
-
         for (BeanDefinition candidateComponent : candidateComponents) {
             if (candidateComponent instanceof AnnotatedBeanDefinition beanDefinition) {
                 // verify annotated class is an interface
@@ -62,8 +56,6 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
             }
         }
     }
-
-
     private void registerFeignClient(String className, Map<String, Object> attributes,
                                      BeanDefinitionRegistry registry) {
         BeanDefinitionBuilder definition = BeanDefinitionBuilder.genericBeanDefinition(LakerFeignClientFactoryBean.class);
@@ -75,8 +67,6 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className, null);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
     }
-
-
     private String resolve(String value) {
         if (StringUtils.hasText(value) && this.resourceLoader instanceof ConfigurableApplicationContext) {
             return ((ConfigurableApplicationContext) this.resourceLoader).getEnvironment()
@@ -84,12 +74,11 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
         }
         return value;
     }
-
     private String getUrl(Map<String, Object> attributes) {
         String url = resolve((String) attributes.get("url"));
         if (StringUtils.hasText(url)) {
             if (!url.contains("://")) {
-                url = "http://" + url;
+                url = "https://" + url;
             }
             try {
                 new URL(url);
@@ -99,8 +88,6 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
         }
         return url;
     }
-
-
     protected ClassPathScanningCandidateComponentProvider getScanner() {
         return new ClassPathScanningCandidateComponentProvider(false) {
             @Override
@@ -115,7 +102,6 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
             }
         };
     }
-
     protected Set<String> getBasePackages(AnnotationMetadata importingClassMetadata) {
         Map<String, Object> attributes = importingClassMetadata
                 .getAnnotationAttributes(EnableLakerFeignClients.class.getCanonicalName());
@@ -128,5 +114,4 @@ public class LakerFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
         }
         return basePackages;
     }
-
 }

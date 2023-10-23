@@ -9,7 +9,6 @@ import java.lang.annotation.*;
 @Documented
 @Import(LakerFeignClientsRegistrar.class)
 public @interface EnableLakerFeignClients {
-
     /**
      * Base packages to scan for annotated components.
      * @return base packages
