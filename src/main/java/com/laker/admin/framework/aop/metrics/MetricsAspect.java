@@ -1,6 +1,7 @@
 package com.laker.admin.framework.aop.metrics;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.json.JSONUtil;
@@ -20,9 +21,12 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bean的优先级设置为最高
@@ -62,13 +66,25 @@ public class MetricsAspect {
             String client = userAgent.getOs().getName() + "." + userAgent.getBrowser().getName();
             logBean.setClient(client);
         }
-        logBean.setRequest(objectMapper.writeValueAsString(pjp.getArgs()));
+        // 获取方法参数
+        Object[] args = pjp.getArgs();
+        // 用于保存修改后的参数
+        List<Object> modifiedArgs = new ArrayList<>();
+        // 移除 HttpServletRequest 类型的参数
+        if (ArrayUtil.isNotEmpty(args))
+            for (Object arg : args) {
+                // 其他类型的参数，保持不变
+                if (!(arg instanceof HttpServletRequest)) {
+                    modifiedArgs.add(arg);
+                }
+            }
+        logBean.setRequest(objectMapper.writeValueAsString(modifiedArgs));
         logBean.setMethod(name);
         logBean.setStatus(true);
         try {
             returnValue = pjp.proceed();
         } catch (Exception ex) {
-            log.info("method:{},fail,cost:{}ms,uri:{},param:{}", name, Duration.between(start, Instant.now()).toMillis(), HttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(pjp.getArgs()));
+            log.info("method:{},fail,cost:{}ms,uri:{},param:{}", name, Duration.between(start, Instant.now()).toMillis(), HttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(modifiedArgs));
             logBean.setCost((int) Duration.between(start, Instant.now()).toMillis());
             logBean.setCreateTime(LocalDateTime.now());
             logBean.setStatus(false);
@@ -78,7 +94,7 @@ public class MetricsAspect {
 
         }
         String response = objectMapper.writeValueAsString(returnValue);
-        log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), HttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(pjp.getArgs()), response);
+        log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), HttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(modifiedArgs), response);
         logBean.setCost((int) Duration.between(start, Instant.now()).toMillis());
         logBean.setCreateTime(LocalDateTime.now());
         if (StrUtil.isNotBlank(response) && response.length() <= 500) {
