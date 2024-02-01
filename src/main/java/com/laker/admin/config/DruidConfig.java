@@ -18,7 +18,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.*;
 import java.io.IOException;
 
@@ -32,14 +31,6 @@ import java.io.IOException;
 @Slf4j
 public class DruidConfig {
     private static final String DEFAULT_ALLOW_IP = "127.0.0.1";
-
-    /**
-     * 解决druid 日志报错：discard long time none received connection:xxx
-     */
-    @PostConstruct
-    public void setUsePingMethod() {
-        System.setProperty("druid.mysql.usePingMethod", "false");
-    }
 
     /**
      * 参见：DruidStatViewServletConfiguration

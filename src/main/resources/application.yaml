@@ -68,7 +68,7 @@ knife4j:
   # production: true
 javamelody:
   # javamelody监控的开关
-  enabled: false
+  enabled: true
   # sa-token配置
 sa-token:
   # token名称 (同时也是cookie名称)

@@ -13,9 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
-/**
- * <a href="https://blog.csdn.net/abu935009066/article/details/123700329">关联文档</a>
- */
 @Aspect
 @Component
 public class RateLimitAspect {
@@ -38,10 +35,14 @@ public class RateLimitAspect {
         LimitType limitType = rateLimit.limitType();
         String key = rateLimit.key() + StringUtils.upperCase(method.getName());
         switch (limitType) {
-            case IP -> key = StrUtil.join("-", HttpServletRequestUtil.getRemoteIP(), key);
-            case USER -> key = StrUtil.join("-", StpUtil.getLoginId(), key);
-            default -> {
-            }
+            case IP:
+                key = StrUtil.join("-", HttpServletRequestUtil.getRemoteIP(), key);
+                break;
+            case USER:
+                key = StrUtil.join("-", StpUtil.getLoginId(), key);
+                break;
+            default:
+                break;
         }
         Limiter limiter = Limiter.builder().limitNum(rateLimit.limit())
                 .seconds(rateLimit.period())

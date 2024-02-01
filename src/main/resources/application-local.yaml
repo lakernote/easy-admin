@@ -25,3 +25,5 @@ spring:
     exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
 lock:
   type: mysql
+ratelimit:
+  type: local

@@ -3,6 +3,8 @@ package com.laker.admin.module.sys.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
+import com.laker.admin.framework.aop.ratelimit.LimitType;
+import com.laker.admin.framework.aop.ratelimit.RateLimit;
 import com.laker.admin.framework.cache.ICache;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyImageUtils;
@@ -40,7 +42,8 @@ public class IndexController {
      */
     @GetMapping("/captcha")
     @ResponseBody
-    public Response captcha() {
+    @RateLimit(key = "captcha", period = 1, limit = 2, limitType = LimitType.IP)
+    public Response<Dict> captcha() {
 //        SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 5);
         // 中文gif类型
 //        ChineseGifCaptcha specCaptcha = new ChineseGifCaptcha(130, 48, 4);
