@@ -85,6 +85,6 @@ public class WafFilter implements Filter {
             //未配置默认 True
             return true;
         }
-        return new Boolean(value);
+        return Boolean.parseBoolean(value);
     }
 }

@@ -4,9 +4,12 @@ package com.laker.admin.framework.handler;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.lang.Dict;
+import com.laker.admin.framework.aop.ratelimit.RateLimitException;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -24,8 +27,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.validation.ConstraintViolationException;
-import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SaTokenException.class)
     public Response handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e);
         return Response.error("403", e.getMessage());
     }
 
@@ -159,7 +160,7 @@ public class GlobalExceptionHandler {
      * 验证参数param类型
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Response handleConstraintViolationException(ConstraintViolationException e) {
+    public Response<List<Map>> handleConstraintViolationException(ConstraintViolationException e) {
         log.error(e.getMessage(), e);
         List<Map> result = new ArrayList<>();
         e.getConstraintViolations().forEach((constraintViolation) -> {
@@ -171,24 +172,23 @@ public class GlobalExceptionHandler {
         return Response.error(result);
     }
 
-    /**
-     * 兜底验证ValidationException
-     */
-    @ExceptionHandler(javax.validation.ValidationException.class)
-    public Response handleValidationException(javax.validation.ValidationException e) {
-        log.error(e.getMessage(), e);
-        return Response.error("500", e.getCause().getMessage());
-    }
-
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public Response handlerNoFoundException(Exception e) {
+    public Response<Void> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
         return Response.error("404", "路径不存在，请检查路径是否正确");
     }
 
+    @ExceptionHandler(RateLimitException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public Response<Void> handleRateLimitException(RateLimitException e) {
+        log.error(e.getMessage(), e);
+        return Response.error("429", "请求过于频繁，请稍后重试");
+    }
+
     @ExceptionHandler(Exception.class)
-    public Response handleException(Exception e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<Void> handleException(Exception e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error("500", "服务器异常");
