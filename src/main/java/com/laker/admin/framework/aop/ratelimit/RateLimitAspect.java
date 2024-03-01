@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
+/**
+ * <a href="https://blog.csdn.net/abu935009066/article/details/123700329">关联文档</a>
+ */
 @Aspect
 @Component
 public class RateLimitAspect {

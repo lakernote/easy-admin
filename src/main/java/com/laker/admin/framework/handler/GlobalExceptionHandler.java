@@ -160,7 +160,7 @@ public class GlobalExceptionHandler {
      * 验证参数param类型
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Response handleConstraintViolationException(ConstraintViolationException e) {
+    public Response<List<Map>> handleConstraintViolationException(ConstraintViolationException e) {
         log.error(e.getMessage(), e);
         List<Map> result = new ArrayList<>();
         e.getConstraintViolations().forEach((constraintViolation) -> {
@@ -174,20 +174,21 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public Response handlerNoFoundException(Exception e) {
+    public Response<Void> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
         return Response.error("404", "路径不存在，请检查路径是否正确");
     }
 
     @ExceptionHandler(RateLimitException.class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    public Response handleRateLimitException(RateLimitException e) {
+    public Response<Void> handleRateLimitException(RateLimitException e) {
         log.error(e.getMessage(), e);
         return Response.error("429", "请求过于频繁，请稍后重试");
     }
 
     @ExceptionHandler(Exception.class)
-    public Response handleException(Exception e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<Void> handleException(Exception e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error("500", "服务器异常");
