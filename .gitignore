@@ -27,3 +27,5 @@ hs_err_pid*
 /file/
 /oss-file/
 
+/easy-admin-server/easy-admin-server.iml
+/easy-admin-server/target/
