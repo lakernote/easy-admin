@@ -20,7 +20,7 @@ public class DefaultUncaughtErrorControllor implements ErrorController {
         HttpStatus statusCode = getHttpStatusCode(request);
         String uri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
         log.error("error,code:{},uri:{}", statusCode.value(), uri);
-        return Response.error(statusCode.value() + "", "未找到接口", uri);
+        return Response.error(statusCode.value(), "未找到接口", uri);
     }
 
     private HttpStatus getHttpStatusCode(HttpServletRequest request) {

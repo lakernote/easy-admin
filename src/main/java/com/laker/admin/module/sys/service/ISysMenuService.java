@@ -15,5 +15,5 @@ import java.util.List;
  * @since 2021-08-04
  */
 public interface ISysMenuService extends IService<SysPower> {
-    List<MenuVo> menu();
+    List<MenuVo> myMenu();
 }

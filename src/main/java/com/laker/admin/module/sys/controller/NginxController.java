@@ -44,7 +44,7 @@ public class NginxController {
             conf = NgxConfig.read(path);
         } catch (IOException e) {
             e.printStackTrace();
-            return Response.error("500", "路径错误：" + path);
+            return Response.error("路径错误：" + path);
         }
         String content = new NgxDumper(conf).dump();
         return Response.ok(content);

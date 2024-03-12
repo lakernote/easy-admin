@@ -1,5 +1,6 @@
 package com.laker.admin.framework.utils;
 
+import cn.dev33.satoken.exception.NotWebContextException;
 import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
@@ -18,6 +19,8 @@ public class EasyAdminSecurityUtils {
         UserInfoAndPowers userInfoAndPowers = null;
         try {
             userInfoAndPowers = (UserInfoAndPowers) StpUtil.getSession().get(EasyAdminConstants.CURRENT_USER);
+
+        } catch (NotWebContextException ignored) {
         } catch (Exception e) {
             log.warn(e.getMessage());
         }

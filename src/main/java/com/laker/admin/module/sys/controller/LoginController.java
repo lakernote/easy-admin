@@ -3,7 +3,6 @@ package com.laker.admin.module.sys.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -51,22 +50,17 @@ public class LoginController {
 
     @PostMapping("/api/v1/login")
     @ApiOperationSupport(order = 1)
-     @Operation(summary = "登录")
+    @Operation(summary = "登录")
     public Response login(@Validated @RequestBody LoginDto loginDto) {
-        // 验证码是否正确
-        String code = iCache.get(loginDto.getUid());
-        if (!StrUtil.equalsIgnoreCase(code, loginDto.getCaptchaCode())) {
-            return Response.error("500", "验证码不正确或已失效");
-        }
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getUserName, loginDto.getUsername())
                 .eq(SysUser::getPassword, SecureUtil.sha256(loginDto.getPassword())));
         if (sysUser == null) {
-            return Response.error("5001", "用户名或密码不正确");
+            return Response.error(401, "用户名或密码不正确");
         }
-        if (sysUser.getEnable().intValue() == 0) {
-            return Response.error("5001", "用户:" + loginDto.getUsername() + "已被禁用");
+        if (sysUser.getEnable() == 0) {
+            return Response.error(401, "用户:" + loginDto.getUsername() + "已被禁用");
         }
         StpUtil.login(sysUser.getUserId());
         // 获取用户的数据权限
@@ -83,7 +77,7 @@ public class LoginController {
 
     @GetMapping("/api/v1/tokenInfo")
     @ApiOperationSupport(order = 2)
-     @Operation(summary = "获取当前会话的token信息")
+    @Operation(summary = "获取当前会话的token信息")
     public Response tokenInfo() {
         return Response.ok(StpUtil.getTokenInfo());
     }
@@ -91,7 +85,7 @@ public class LoginController {
 
     @GetMapping("/api/v1/userInfo")
     @ApiOperationSupport(order = 2)
-     @Operation(summary = "获取当前用户信息")
+    @Operation(summary = "获取当前用户信息")
     public Response userInfo() {
         SysUser user = sysUserService.getById(StpUtil.getLoginIdAsLong());
         SysDept dept = sysDeptService.getById(user.getDeptId());
@@ -104,12 +98,12 @@ public class LoginController {
 
     @GetMapping("/api/v1/kickOffline")
     @ApiOperationSupport(order = 2)
-     @Operation(summary = "踢人下线")
+    @Operation(summary = "踢人下线")
     @SaCheckPermission("online.user.kick")
     public Response kickOffline(String token) {
         log.info("踢人下线，token:{}", token);
         if (StpUtil.getTokenValue().equals(token)) {
-            return Response.error("500", "不能踢自己啊老弟");
+            return Response.error(500, "不能踢自己啊老弟");
         }
         StpUtil.logoutByTokenValue(token);
         return Response.ok();
@@ -117,7 +111,7 @@ public class LoginController {
 
     @GetMapping("/api/v1/loginOut")
     @ApiOperationSupport(order = 3)
-     @Operation(summary = "登出")
+    @Operation(summary = "登出")
     @SaCheckLogin
     public Response loginOut() {
         //获取token

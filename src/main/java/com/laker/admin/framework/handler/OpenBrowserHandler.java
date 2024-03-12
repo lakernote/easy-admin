@@ -3,9 +3,8 @@ package com.laker.admin.framework.handler;
 import cn.hutool.system.SystemUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class OpenBrowserHandler implements CommandLineRunner {
     @Value("${server.port}")
     private int serverPort;

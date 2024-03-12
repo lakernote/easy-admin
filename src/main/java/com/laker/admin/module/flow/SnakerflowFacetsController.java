@@ -63,7 +63,7 @@ public class SnakerflowFacetsController {
                 e.printStackTrace();
             }
         }
-        return Response.error("500", "xml异常");
+        return Response.error("xml异常");
     }
 
 
@@ -281,7 +281,7 @@ public class SnakerflowFacetsController {
     public Response activeTaskReject(String taskId) {
         List<WorkItem> workItems = snakerEngineFacets.getEngine().query().getWorkItems(null, new QueryFilter().setTaskId(taskId));
         if (CollUtil.isEmpty(workItems)) {
-            Response.error("500", "不存在任务喽");
+            Response.error("不存在任务喽");
         }
         WorkItem workItem = workItems.get(0);
         Process process = snakerEngineFacets.getEngine().process().getProcessById(workItem.getProcessId());

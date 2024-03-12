@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     public Response handleRRException(BusinessException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error("业务异常", e.getMsg());
-        return Response.error(e.getCode() + "", e.getMsg());
+        return Response.error(e.getCode(), e.getMsg());
     }
 
 
@@ -119,14 +119,14 @@ public class GlobalExceptionHandler {
     public Response handleDuplicateKeyException(DuplicateKeyException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error("500", "数据库中已存在该记录");
+        return Response.error(500, "数据库中已存在该记录");
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public Response handleMaxSizeException(MaxUploadSizeExceededException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error("500", "File too large!");
+        return Response.error(500, "File too large!");
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -134,13 +134,13 @@ public class GlobalExceptionHandler {
     public Response handleNotLoginException(NotLoginException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage());
-        return Response.error("401", e.getMessage());
+        return Response.error(401, e.getMessage());
     }
 
     @ExceptionHandler(SaTokenException.class)
     public Response handleMaxSizeException(SaTokenException e) {
         log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e);
-        return Response.error("403", e.getMessage());
+        return Response.error(403, e.getMessage());
     }
 
     /**
@@ -176,14 +176,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public Response<Void> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
-        return Response.error("404", "路径不存在，请检查路径是否正确");
+        return Response.error(404, "路径不存在，请检查路径是否正确");
     }
 
     @ExceptionHandler(RateLimitException.class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
     public Response<Void> handleRateLimitException(RateLimitException e) {
         log.error(e.getMessage(), e);
-        return Response.error("429", "请求过于频繁，请稍后重试");
+        return Response.error(429, "请求过于频繁，请稍后重试");
     }
 
     @ExceptionHandler(Exception.class)
@@ -191,6 +191,6 @@ public class GlobalExceptionHandler {
     public Response<Void> handleException(Exception e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error("500", "服务器异常");
+        return Response.error(500, "服务器异常");
     }
 }

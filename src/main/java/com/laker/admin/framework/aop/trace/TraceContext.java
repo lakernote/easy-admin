@@ -9,7 +9,7 @@ import org.aspectj.lang.reflect.MethodSignature;
  */
 @Slf4j(topic = "trace")
 public class TraceContext {
-    private static ThreadLocal<Trace> traceThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Trace> traceThreadLocal = new ThreadLocal<>();
 
     private TraceContext() {
         // do nothing
@@ -27,7 +27,7 @@ public class TraceContext {
     }
 
     public static void addSpan(String spanName, SpanType spanType) {
-        Trace trace = null;
+        Trace trace;
         if (null == traceThreadLocal.get()) {
             trace = new Trace();
             traceThreadLocal.set(trace);

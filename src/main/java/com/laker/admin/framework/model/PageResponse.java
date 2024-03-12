@@ -12,13 +12,13 @@ public class PageResponse<T> extends Response<T> {
     @Schema(description = "数量")
     private Long count;
 
-    public PageResponse(String code, String msg, T data, Long count) {
+    public PageResponse(Integer code, String msg, T data, Long count) {
         super(code, msg, data);
         this.count = count;
     }
 
     public static <T> PageResponse<T> ok(T data, Long count) {
-        return new PageResponse<>("0", "", data, count);
+        return new PageResponse<>(SUCCESS_CODE, "", data, count);
     }
 
     public Long getCount() {

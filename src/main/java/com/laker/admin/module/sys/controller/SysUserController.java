@@ -96,13 +96,13 @@ public class SysUserController {
     public Response saveOrUpdate(@RequestBody SysUser param) {
 
         if (param.getUserId() == null && param.getDeptId() == null) {
-            return Response.error("500", "请选择部门");
+            return Response.error("请选择部门");
         }
 
         if (param.getUserId() == null) {
             // 只有超级管理员才能创建用户
             if (StpUtil.getLoginIdAsLong() != 1L) {
-                return Response.error("403", "只有超级管理员才能创建用户!");
+                return Response.error(403, "只有超级管理员才能创建用户!");
             }
             String password = param.getPassword();
             param.setPassword(SecureUtil.sha256(password));
@@ -145,14 +145,14 @@ public class SysUserController {
     public Response updatePwd(@RequestBody PwdQo param) {
 
         if (!StrUtil.equals(param.getNewPassword(), param.getConfirmPassword())) {
-            return Response.error("500", "两次输入密码不一致");
+            return Response.error( "两次输入密码不一致");
         }
         long userId = StpUtil.getLoginIdAsLong();
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getUserId, userId)
                 .eq(SysUser::getPassword, SecureUtil.sha256(param.getOldPassword())));
         if (sysUser == null) {
-            return Response.error("500", "旧密码错误");
+            return Response.error("旧密码错误");
         }
         SysUser user = new SysUser();
         user.setUserId(userId);
