@@ -74,6 +74,7 @@ public class SysMenuController {
     public Response<List<MyMenuVo>> asideMenus() {
 
         List<MyMenuVo> menuVos = new ArrayList<>();
+        // 1.dashboard
         ArrayList<MyMenuVo> arrayList = new ArrayList<>();
         MyMenuVo dashboard = MyMenuVo.builder()
                 .path("/dashboard").name("Dashboard").component("#")
@@ -100,20 +101,33 @@ public class SysMenuController {
         arrayList.add(workplace);
 
 
-        //
-        ArrayList<MyMenuVo> arrayList1 = new ArrayList<>();
-        MyMenuVo ExternalLink = MyMenuVo.builder()
-                .path("/external-link").name("'ExternalLink'").component("#")
-                .children(arrayList1).build();
-        MyMenuVo document = MyMenuVo.builder()
-                .path("https://element-plus-admin-doc.cn/").name("''DocumentLink''")
+        // 2. 权限管理
+
+        MyMenuVo department = MyMenuVo.builder()
+                .path("department")
+                .component("views/Authorization/Department/Department")
+                .name("Department")
                 .meta(MyMenuVo.Meta.builder()
-                        .title("router.document")
+                        .title("router.department")
                         .icon("clarity:document-solid").build())
                 .children(new ArrayList<>()).build();
-        arrayList1.add(document);
-//        menuVos.add(ExternalLink);
+
+        MyMenuVo authorization = MyMenuVo.builder()
+                .path("/authorization")
+                .name("'Authorization'")
+                .redirect("/authorization/user")
+                .component("#")
+                .meta(MyMenuVo.Meta.builder()
+                        .title("router.authorization")
+                        .icon("ant-design:lock-outlined")
+                        .alwaysShow(true)
+                        .build())
+                .children(new ArrayList<>())
+                .build().addChild(department);
+
         menuVos.add(dashboard);
+        menuVos.add(authorization);
+
         return Response.ok(menuVos);
     }
 

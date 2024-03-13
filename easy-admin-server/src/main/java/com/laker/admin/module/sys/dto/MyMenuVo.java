@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -19,7 +20,14 @@ public class MyMenuVo {
 
     private String name;
 
-    private List<MyMenuVo> children;
+    private String redirect;
+
+    private List<MyMenuVo> children = new ArrayList<>();
+
+    public MyMenuVo addChild(MyMenuVo child) {
+        children.add(child);
+        return this;
+    }
 
     @Data
     @Builder

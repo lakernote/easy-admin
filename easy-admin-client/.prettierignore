@@ -6,4 +6,5 @@
 /src/types/env.d.ts
 /docs/**/*
 /plop/**/*
+/src/**/*
 CHANGELOG
