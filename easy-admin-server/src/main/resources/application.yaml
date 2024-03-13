@@ -1,5 +1,4 @@
 server:
-  port: 8080
   compression:
     enabled: true
     min-response-size: 1KB
@@ -21,11 +20,9 @@ server:
   servlet:
     context-path: /
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
   datasource:
-    username: root
-    password: 123456
-    url: jdbc:p6spy:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
@@ -49,6 +46,7 @@ mybatis-plus:
   #  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     banner: false
+# knife4j的增强配置，不需要增强可以不配
 knife4j:
   # 开启增强
   enable: true
@@ -60,29 +58,47 @@ knife4j:
     password: laker
     # 认证密码
     username: laker
-  # 是否生产环境 屏蔽所有资源接口,一般这个用于生产环境 屏蔽资源，与上面二选一
-  # production: true
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    # 是否开启swagger
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 1.系统模块
+      packages-to-scan: com.laker.admin.module.sys
+    - group: 2.扩展模块
+      packages-to-scan: com.laker.admin.module.ext
+    - group: 3.定时任务模块
+      packages-to-scan: com.laker.admin.module.task
 javamelody:
   # javamelody监控的开关
   enabled: false
   # sa-token配置
 sa-token:
   # token名称 (同时也是cookie名称)
-  token-name: LakerToken
+  token-name: Authorization
+  # token前缀
+#  token-prefix: Bearer
   # token有效期，单位s 默认30天, -1代表永不过期
   timeout: 1800
-  # token临时有效期 [指定时间内无操作就视为token过期] (单位: 秒), 默认-1 代表不限制
-  activity-timeout: 1800
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结 （例如可以设置为 1800 代表 30 分钟内无操作就冻结
+  active-timeout: 1800
   # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
   is-share: false
   # token风格
   token-style: simple-uuid
   # 是否打印操作日志
   is-log: false
+  # 是否在初始化配置时在控制台打印版本字符画
   is-print: false
   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
   is-concurrent: true
-laker:
+easyadmin:
   # web防火墙配置
   waf:
     sql-enabled: false

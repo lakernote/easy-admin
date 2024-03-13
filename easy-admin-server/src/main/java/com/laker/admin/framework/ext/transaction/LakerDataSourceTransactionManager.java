@@ -1,9 +1,9 @@
 package com.laker.admin.framework.ext.transaction;
 
+import cn.hutool.core.collection.CollUtil;
 import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 
@@ -35,7 +35,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
         TraceContext.addSpan(name, SpanType.Transaction);
         List<Transaction> transactionList = dateThreadLocal.get();
         // init
-        if (CollectionUtils.isEmpty(transactionList)) {
+        if (CollUtil.isEmpty(transactionList)) {
             LinkedList<Transaction> linkedList = new LinkedList<>();
             linkedList.add(new Transaction(System.currentTimeMillis(), name));
             dateThreadLocal.set(linkedList);
@@ -48,7 +48,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
         LinkedList<Transaction> transactions = dateThreadLocal.get();
-        if (CollectionUtils.size(transactions) > 1) {
+        if (CollUtil.size(transactions) > 1) {
             transactions.removeLast();
         } else {
             Transaction transaction1 = transactions.get(0);

@@ -1,8 +1,8 @@
 package com.laker.admin.framework.aop.trace;
 
+import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,8 +33,6 @@ public class Trace {
 
     /**
      * 添加 span
-     *
-     * @param span
      */
     public void addSpan(String spanName, SpanType spanType) {
         treeView.begin(spanType + "-" + spanName);
@@ -104,7 +102,7 @@ public class Trace {
     }
 
     private static void logSpan(List<Span> spans, String append) {
-        if (CollectionUtils.isEmpty(spans)) {
+        if (CollUtil.isEmpty(spans)) {
             return;
         }
         spans.sort(Comparator.comparing(Span::getOrder));

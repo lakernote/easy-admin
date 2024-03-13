@@ -19,7 +19,6 @@ public class EasyAdminSecurityUtils {
         UserInfoAndPowers userInfoAndPowers = null;
         try {
             userInfoAndPowers = (UserInfoAndPowers) StpUtil.getSession().get(EasyAdminConstants.CURRENT_USER);
-
         } catch (NotWebContextException ignored) {
         } catch (Exception e) {
             log.warn(e.getMessage());

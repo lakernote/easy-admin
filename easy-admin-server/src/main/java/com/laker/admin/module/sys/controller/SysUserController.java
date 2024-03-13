@@ -9,7 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.LakerConfig;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.laker.admin.config.EasyAdminConfig;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.PageVO;
@@ -17,9 +18,9 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
-import com.laker.admin.module.sys.pojo.FlowAssigneVo;
-import com.laker.admin.module.sys.pojo.PwdQo;
-import com.laker.admin.module.sys.pojo.UserDto;
+import com.laker.admin.module.sys.dto.FlowAssigneVo;
+import com.laker.admin.module.sys.dto.PwdQo;
+import com.laker.admin.module.sys.dto.UserDto;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  * @author laker
  * @since 2021-08-05
  */
+@ApiSupport(order = 1)
 @RestController
 @RequestMapping("/sys/user")
 @Metrics
@@ -52,7 +54,7 @@ public class SysUserController {
     @Autowired
     ISysUserRoleService sysUserRoleService;
     @Autowired
-    LakerConfig lakerConfig;
+    EasyAdminConfig lakerConfig;
 
     @GetMapping
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
@@ -145,7 +147,7 @@ public class SysUserController {
     public Response updatePwd(@RequestBody PwdQo param) {
 
         if (!StrUtil.equals(param.getNewPassword(), param.getConfirmPassword())) {
-            return Response.error( "两次输入密码不一致");
+            return Response.error("两次输入密码不一致");
         }
         long userId = StpUtil.getLoginIdAsLong();
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
@@ -195,7 +197,7 @@ public class SysUserController {
 
     @GetMapping("/getRoles")
     public Response edit(Long userId) {
-        List<SysRole> allRole = sysRoleService.list(null);
+        List<SysRole> allRole = sysRoleService.list();
         if (userId != null) {
             List<SysUserRole> myRole = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
             allRole.forEach(sysRole -> {

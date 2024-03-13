@@ -4,13 +4,13 @@ import type { UserType } from './types'
 interface RoleParams {
   roleName: string
 }
-
+// 登录
 export const loginApi = (data: UserType): Promise<IResponse<UserType>> => {
-  return request.post({ url: '/api/v1/login', data })
+  return request.post({ url: '/sys/auth/v1/login', data })
 }
-
+// 登出
 export const loginOutApi = (): Promise<IResponse> => {
-  return request.get({ url: '/api/v1/loginOut' })
+  return request.delete({ url: '/sys/auth/v1/logout' })
 }
 
 export const getUserListApi = ({ params }: AxiosConfig) => {
@@ -26,7 +26,7 @@ export const getUserListApi = ({ params }: AxiosConfig) => {
 export const getAdminRoleApi = (
   params: RoleParams
 ): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
-  return request.get({ url: '/sys/menu/mytree', params })
+  return request.get({ url: '/sys/menu/v1/asideMenus', params })
 }
 
 export const getTestRoleApi = (params: RoleParams): Promise<IResponse<string[]>> => {

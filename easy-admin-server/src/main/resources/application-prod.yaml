@@ -1,3 +1,18 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 30s
 knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: true

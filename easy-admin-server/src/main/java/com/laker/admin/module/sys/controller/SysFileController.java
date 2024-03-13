@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.LakerConfig;
+import com.laker.admin.config.EasyAdminConfig;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.model.PageResponse;
@@ -34,7 +34,7 @@ public class SysFileController {
     @Autowired
     ISysFileService sysFileService;
     @Autowired
-    LakerConfig lakerConfig;
+    EasyAdminConfig lakerConfig;
 
     @GetMapping
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,

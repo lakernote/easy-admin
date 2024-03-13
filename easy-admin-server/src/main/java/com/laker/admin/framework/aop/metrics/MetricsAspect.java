@@ -7,7 +7,6 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
-import com.laker.admin.utils.IP2CityUtil;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -50,11 +49,6 @@ public class MetricsAspect {
         Instant start = Instant.now();
         ExtLog logBean = new ExtLog();
         logBean.setIp(HttpServletRequestUtil.getRemoteIP());
-        if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
-            String cityInfo = IP2CityUtil.getCityInfo(logBean.getIp());
-            String[] split = cityInfo.split("\\|");
-            logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
-        }
         logBean.setUri(HttpServletRequestUtil.getRequestURI());
         logBean.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
         UserAgent userAgent = HttpServletRequestUtil.getRequestUserAgent();

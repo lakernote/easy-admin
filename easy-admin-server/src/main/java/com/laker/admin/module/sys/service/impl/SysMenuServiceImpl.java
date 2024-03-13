@@ -7,7 +7,7 @@ import com.laker.admin.module.sys.entity.SysPower;
 import com.laker.admin.module.sys.entity.SysRolePower;
 import com.laker.admin.module.sys.entity.SysUserRole;
 import com.laker.admin.module.sys.mapper.SysMenuMapper;
-import com.laker.admin.module.sys.pojo.MenuVo;
+import com.laker.admin.module.sys.dto.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;

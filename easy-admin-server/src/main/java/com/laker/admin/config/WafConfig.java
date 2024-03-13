@@ -23,7 +23,7 @@ public class WafConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean<WafFilter> xssFilterRegistration(LakerConfig lakerConfig) {
+    public FilterRegistrationBean<WafFilter> xssFilterRegistration(EasyAdminConfig lakerConfig) {
         FilterRegistrationBean<WafFilter> registration = new FilterRegistrationBean<>();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new WafFilter());

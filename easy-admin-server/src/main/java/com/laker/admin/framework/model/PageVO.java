@@ -53,7 +53,10 @@ public class PageVO implements Serializable {
                 }
                 String order = orderAndSort.get(0);
                 String sort = orderAndSort.get(1);
-                orders.add(new OrderItem(order, StrUtil.equalsIgnoreCase("ASC", sort)));
+                OrderItem orderItem = new OrderItem();
+                orderItem.setColumn(order);
+                orderItem.setAsc(StrUtil.equalsIgnoreCase("ASC", sort));
+                orders.add(orderItem);
             }
             page.setOrders(orders);
         }

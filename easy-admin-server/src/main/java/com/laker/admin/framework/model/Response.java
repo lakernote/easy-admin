@@ -5,15 +5,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.MDC;
-import org.springframework.context.annotation.DependsOn;
 
 /**
  * @author longli
  */
 @Data
 @AllArgsConstructor
-@Schema(name = "文件part对象", description = "Part信息")
-@DependsOn
 public class Response<T> {
     public static final Integer SUCCESS_CODE = 0;
     @Schema(description = "响应码，非0 即为异常", example = "0")
@@ -24,14 +21,11 @@ public class Response<T> {
     private final T data;
     @Schema(description = "traceId")
     private final String traceId;
-    @Schema(description = "请求id")
-    private final Boolean success;
 
     protected Response(Integer code, String msg, T data) {
         this.code = code;
         this.message = msg;
         this.data = data;
-        this.success = code == 0;
         this.traceId = MDC.get(EasyAdminConstants.TRACE_ID);
     }
 

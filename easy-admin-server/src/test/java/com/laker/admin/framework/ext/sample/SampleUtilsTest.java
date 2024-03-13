@@ -1,6 +1,7 @@
 package com.laker.admin.framework.ext.sample;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * @date: 2022/11/17

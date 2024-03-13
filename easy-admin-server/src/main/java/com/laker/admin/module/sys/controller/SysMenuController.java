@@ -7,11 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.model.Response;
+import com.laker.admin.module.sys.dto.MenuVo;
+import com.laker.admin.module.sys.dto.MyMenuVo;
 import com.laker.admin.module.sys.entity.SysPower;
-import com.laker.admin.module.sys.pojo.MenuVo;
-import com.laker.admin.module.sys.pojo.MyMenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
-import lombok.SneakyThrows;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +27,9 @@ import java.util.List;
  * @author laker
  * @since 2021-08-04
  */
+@Tag(name = "系统-菜单")
 @RestController
-@RequestMapping("/sys/menu")
+@RequestMapping("/sys/menu/v1")
 @Metrics
 public class SysMenuController {
     @Autowired
@@ -66,9 +68,10 @@ public class SysMenuController {
         return sysMenuService.myMenu();
     }
 
-    @SneakyThrows
-    @GetMapping("/mytree")
-    public Response mytree() {
+
+    @Operation(summary = "获取侧边栏动态菜单")
+    @GetMapping("/asideMenus")
+    public Response<List<MyMenuVo>> asideMenus() {
 
         List<MyMenuVo> menuVos = new ArrayList<>();
         ArrayList<MyMenuVo> arrayList = new ArrayList<>();
@@ -109,7 +112,7 @@ public class SysMenuController {
                         .icon("clarity:document-solid").build())
                 .children(new ArrayList<>()).build();
         arrayList1.add(document);
-        menuVos.add(ExternalLink);
+//        menuVos.add(ExternalLink);
         menuVos.add(dashboard);
         return Response.ok(menuVos);
     }
