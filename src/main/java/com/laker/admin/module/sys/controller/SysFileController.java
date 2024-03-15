@@ -1,7 +1,8 @@
 package com.laker.admin.module.sys.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -54,7 +55,9 @@ public class SysFileController {
     @ApiOperation(value = "文件上传")
     public Response upload(@RequestParam("file") MultipartFile file, @RequestParam(value = "name", required = false) String name) {
         // 这里实际项目中文件基本都存储在oss上，这里仅做演示
-        String fileName = file.getOriginalFilename();
+        // png/jpg
+        String suffix = FileUtil.getSuffix(file.getOriginalFilename());
+        String fileName = IdUtil.fastSimpleUUID() + "." + suffix;
         File dest = new File(new File(lakerConfig.getOssFile().getPath()).getAbsolutePath() + "/" + fileName);
         String filePath = lakerConfig.getOssFile().getDomain() + "/" + lakerConfig.getOssFile().getPath() + "/" + fileName;
         try {
@@ -64,7 +67,7 @@ public class SysFileController {
             sysFile.setUserId(currentUserInfo.getUserId());
             sysFile.setNickName(currentUserInfo.getNickName());
             sysFile.setFilePath(filePath);
-            sysFile.setFileName(fileName);
+            sysFile.setFileName(file.getOriginalFilename());
             sysFile.setCreateTime(LocalDateTime.now());
             sysFileService.save(sysFile);
         } catch (IOException e) {
