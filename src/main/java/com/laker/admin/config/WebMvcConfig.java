@@ -33,8 +33,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/error",
             "/swagger-resources/**",
             "/api/v1/login",
-            "/captcha",
-            "/thumbnail"};
+            "/captcha"};
     private static final String[] trace_exclude_path = {"/admin/**",
             "/admin/login.html",
             "/error",

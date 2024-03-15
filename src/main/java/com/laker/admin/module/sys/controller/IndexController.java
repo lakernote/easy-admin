@@ -3,9 +3,11 @@ package com.laker.admin.module.sys.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
+import com.laker.admin.config.LakerConfig;
 import com.laker.admin.framework.aop.ratelimit.LimitType;
 import com.laker.admin.framework.aop.ratelimit.RateLimit;
 import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyImageUtils;
 import com.wf.captcha.ArithmeticCaptcha;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 
 /**
  * /admin/** 无需check login
@@ -29,6 +32,8 @@ import java.io.OutputStream;
 public class IndexController {
     @Autowired
     ICache iCache;
+    @Autowired
+    LakerConfig config;
 
     @GetMapping({"/admin", "/admin/index", "/admin/"})
     public String adminIndex() {
@@ -71,18 +76,28 @@ public class IndexController {
                           @RequestParam(required = false, defaultValue = "1") int type,
                           @RequestParam(required = false, defaultValue = "100") int width,
                           @RequestParam(required = false, defaultValue = "100") int height) throws IOException {
+        // 确保它是以"http://"或"https://"开头的
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+            throw new BusinessException("仅允许http/https文件");
+        }
+
+        if (!config.getSecurity().getAllowList().contains(new URL(url).getHost())) {
+            throw new BusinessException("仅允许访问白名单文件");
+        }
         OutputStream out = new BufferedOutputStream(response.getOutputStream());
+        // png /jpg
+        String suffix = FileUtil.getSuffix(url);
         switch (type) {
             case 1: // 预览
-                response.setContentType("image/" + FileUtil.getSuffix(url) + "; charset=utf-8");
+                response.setContentType("image/" + suffix + "; charset=utf-8");
                 break;
             case 2: // 下载
                 response.addHeader("Content-Disposition", "attachment;filename="
-                        + new String(FileUtil.mainName(url).getBytes("utf-8"), "iso-8859-1") + "." + FileUtil.getSuffix(url));
+                        + new String(FileUtil.mainName(url).getBytes("utf-8"), "iso-8859-1") + "." + suffix);
                 response.setContentType("application/octet-stream");
                 break;
             default:
-                response.setContentType("image/" + FileUtil.getSuffix(url) + "; charset=utf-8");
+                response.setContentType("image/" + suffix + "; charset=utf-8");
 
         }
         EasyImageUtils.compressBysize(url, out, width, height);

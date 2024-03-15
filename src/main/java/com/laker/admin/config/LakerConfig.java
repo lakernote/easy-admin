@@ -1,8 +1,11 @@
 package com.laker.admin.config;
 
+import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * 自定义配置
@@ -34,6 +37,8 @@ public class LakerConfig {
     private Nginx nginx = new Nginx();
 
     private OssFile ossFile = new OssFile();
+
+    private Security security = new Security();
 
     public static class Nginx {
         /**
@@ -122,4 +127,8 @@ public class LakerConfig {
         }
     }
 
+    @Data
+    public static class Security {
+        private List<String> allowList = CollUtil.newArrayList("localhost");
+    }
 }
