@@ -3,10 +3,12 @@ package com.laker.admin.framework.ext.satoken;
 import cn.dev33.satoken.stp.StpInterface;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.laker.admin.module.sys.entity.SysPower;
+import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysRolePower;
 import com.laker.admin.module.sys.entity.SysUserRole;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
+import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class StpInterfaceImpl implements StpInterface {
     ISysRolePowerService sysRolePowerService;
     @Autowired
     ISysMenuService menuService;
+    @Autowired
+    ISysRoleService roleService;
 
     /**
      * 返回一个账号所拥有的权限码集合
@@ -46,9 +50,11 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginKey) {
 
-        List<SysUserRole> userRoles = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, loginId));
-        List<String> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId() + "").collect(Collectors.toList());
-
-        return roleIds;
+        List<SysUserRole> userRoles = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery()
+                .eq(SysUserRole::getUserId, loginId));
+        List<String> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId() + "")
+                .collect(Collectors.toList());
+        List<SysRole> sysRoles = roleService.list(Wrappers.<SysRole>lambdaQuery().in(SysRole::getRoleId, roleIds));
+        return sysRoles.stream().map(role -> role.getRoleCode()).collect(Collectors.toList());
     }
 }

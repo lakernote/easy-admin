@@ -1,12 +1,18 @@
 package com.laker.admin.config;
 
+import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
+import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
+import com.laker.admin.framework.model.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
 import org.springframework.format.FormatterRegistry;
@@ -62,6 +68,49 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 配置自定义拦截器
         registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns(trace_exclude_path);
+    }
+
+    /**
+     * 注册 Sa-Token 全局过滤器 是过滤器层面的
+     * 为了解决 ureport不是Controller而使用
+     */
+    @Bean
+    public SaServletFilter getSaServletFilter() {
+        return new SaServletFilter()
+                // 拦截路由
+                .addInclude("/ureport/**")
+                // 放行路由
+//                .addExclude("/favicon.ico", "/actuator/**")
+                // 鉴权方法：每次访问进入
+                .setAuth(obj -> {
+                    // 登录校验 -- 拦截所有路由
+                    SaRouter.match("/**").exe(() -> {
+                        StpUtil.checkRole("admin");
+                    });
+                    SaRouter.match("/ureport/preview").exe(() -> {
+                        // 检查是否登录 是否有token
+                        StpUtil.checkLogin();
+                    });
+                })
+                .setError(e ->
+                        {
+                            log.error(e.getMessage(), e);
+                            return JSONUtil.toJsonStr(Response.error("401", "认证失败，无法访问系统资源"));
+                        }
+                )
+                // 前置函数：在每次认证函数之前执行
+                .setBeforeAuth(r -> {
+                    // ---------- 设置一些安全响应头----------
+                    SaHolder.getResponse()
+                            // 服务器名称
+                            .setServer("supervise-server")
+                            // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
+                            .setHeader("X-Frame-Options", "SAMEORIGIN")
+                            // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
+                            .setHeader("X-Frame-Options", "1; mode=block")
+                            // 禁用浏览器内容嗅探
+                            .setHeader("X-Content-Type-Options", "nosniff");
+                });
     }
 
     @Override
