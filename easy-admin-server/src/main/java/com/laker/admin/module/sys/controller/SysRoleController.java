@@ -15,6 +15,8 @@ import com.laker.admin.module.sys.entity.SysRolePower;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysRoleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +30,9 @@ import java.util.List;
  * @author laker
  * @since 2021-08-11
  */
+@Tag(name = "系统-角色")
 @RestController
-@RequestMapping("/sys/role")
+@RequestMapping("/v1/sys/role")
 public class SysRoleController {
     @Autowired
     ISysRoleService sysRoleService;
@@ -39,6 +42,7 @@ public class SysRoleController {
     ISysRolePowerService sysRolePowerService;
 
     @GetMapping
+    @Operation(summary = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long current,
                                 @RequestParam(required = false, defaultValue = "10") long size,
                                 Integer roleType) {

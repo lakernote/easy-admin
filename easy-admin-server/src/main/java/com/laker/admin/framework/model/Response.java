@@ -4,6 +4,7 @@ import com.laker.admin.framework.EasyAdminConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
 
 /**
@@ -11,6 +12,7 @@ import org.slf4j.MDC;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor(force = true)
 public class Response<T> {
     public static final Integer SUCCESS_CODE = 0;
     @Schema(description = "响应码，非0 即为异常", example = "0")

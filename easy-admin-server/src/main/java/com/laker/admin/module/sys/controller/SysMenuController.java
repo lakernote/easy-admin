@@ -112,6 +112,15 @@ public class SysMenuController {
                         .icon("clarity:document-solid").build())
                 .children(new ArrayList<>()).build();
 
+        MyMenuVo role = MyMenuVo.builder()
+                .path("role")
+                .component("views/Authorization/Role/Role")
+                .name("Role")
+                .meta(MyMenuVo.Meta.builder()
+                        .title("router.role")
+                        .icon("clarity:document-solid").build())
+                .children(new ArrayList<>()).build();
+
         MyMenuVo authorization = MyMenuVo.builder()
                 .path("/authorization")
                 .name("'Authorization'")
@@ -123,7 +132,7 @@ public class SysMenuController {
                         .alwaysShow(true)
                         .build())
                 .children(new ArrayList<>())
-                .build().addChild(department);
+                .build().addChild(department).addChild(role);
 
         menuVos.add(dashboard);
         menuVos.add(authorization);

@@ -71,6 +71,7 @@ public class EasyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar,
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         AbstractBeanDefinition beanDefinition = definition.getBeanDefinition();
         beanDefinition.setPrimary(false);
+        beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className, null);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
     }

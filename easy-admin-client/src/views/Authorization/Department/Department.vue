@@ -1,23 +1,18 @@
 <script setup lang="tsx">
-import { ContentWrap } from '@/components/ContentWrap'
-import { Search } from '@/components/Search'
-import { Dialog } from '@/components/Dialog'
-import { useI18n } from '@/hooks/web/useI18n'
-import { ElTag } from 'element-plus'
-import { Table } from '@/components/Table'
-import {
-  getDepartmentApi,
-  getDepartmentTableApi,
-  saveDepartmentApi,
-  deleteDepartmentApi
-} from '@/api/department'
-import type { DepartmentItem } from '@/api/department/types'
-import { useTable } from '@/hooks/web/useTable'
-import { ref, unref, reactive } from 'vue'
+import {ContentWrap} from '@/components/ContentWrap'
+import {Search} from '@/components/Search'
+import {Dialog} from '@/components/Dialog'
+import {useI18n} from '@/hooks/web/useI18n'
+import {ElTag} from 'element-plus'
+import {Table} from '@/components/Table'
+import {deleteDepartmentApi, getDepartmentApi, getDepartmentTableApi, saveDepartmentApi} from '@/api/department'
+import type {DepartmentItem} from '@/api/department/types'
+import {useTable} from '@/hooks/web/useTable'
+import {reactive, ref, unref} from 'vue'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
-import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
-import { BaseButton } from '@/components/Button'
+import {CrudSchema, useCrudSchemas} from '@/hooks/web/useCrudSchemas'
+import {BaseButton} from '@/components/Button'
 
 const ids = ref<string[]>([])
 
@@ -25,12 +20,15 @@ const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { currentPage, pageSize } = tableState
     const res = await getDepartmentTableApi({
-      pageIndex: unref(currentPage),
-      pageSize: unref(pageSize),
+      // 设置请求的分页
+      current: unref(currentPage),
+      // 设置每页的sieze
+      size: unref(pageSize),
       ...unref(searchParams)
     })
     return {
-      list: res.data.list,
+      // 设置响应的数据
+      list: res.data.records,
       total: res.data.total
     }
   },
@@ -86,21 +84,21 @@ const crudSchemas = reactive<CrudSchema[]>([
     table: {
       slots: {
         default: (data: any) => {
-          return <>{data.row.departmentName}</>
+          return <>{data.row.deptName}</>
         }
       }
     },
     form: {
       component: 'TreeSelect',
       componentProps: {
-        nodeKey: 'id',
+        nodeKey: 'deptId', // 设置返回值的 id
         props: {
-          label: 'departmentName'
+          label: 'deptName' // 设置返回值的名称
         }
       },
       optionApi: async () => {
         const res = await getDepartmentApi()
-        return res.data.list
+        return res.data.records // 返回列表设置
       }
     },
     detail: {

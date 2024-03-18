@@ -19,8 +19,8 @@ const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const res = await getRoleListApi()
     return {
-      list: res.data.list || [],
-      total: res.data.total
+      list: res.list || [],
+      total: res.total
     }
   }
 })
