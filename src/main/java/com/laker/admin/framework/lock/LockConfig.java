@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * @author: laker
@@ -18,18 +17,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  **/
 @Configuration
 public class LockConfig {
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ThreadPoolTaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(20);
-        threadPoolTaskScheduler.setThreadNamePrefix("lakerscheduler-");
-        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
-        threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
-        return threadPoolTaskScheduler;
-    }
-
 
     @Bean
     @ConditionalOnMissingBean
