@@ -2,16 +2,10 @@
 
 > **有用的话请鼓励❤️下作者，右上角☝️watch、star、fork三连点🙏🙏🙏一波**
 
-
-
-
-
 | SpringBoot版本 | JDK版本 | Mysql  | Tomcat | 分支                                                         |
 | -------------- | ------- | ------ | ------ | ------------------------------------------------------------ |
 | 2.3.xx         | 8       | 5.7.xx | 9.x    | [master](https://gitee.com/lakernote/easy-admin/tree/master/) |
 | 3.1.xx         | 17      | 8.xx   | 10.x   | [springboot3](https://gitee.com/lakernote/easy-admin/tree/springboot3/) |
-
-
 
 #### 🌵介绍
 
@@ -197,16 +191,17 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 
 ![](https://oscimg.oschina.net/oscnet/up-0b3a7e263e7f84f824b6e4a653504064f9d.png)
 
-
 #### 🌺部署教程
 
-**整体部署规划结构如下：**
+1.执行`mvn clean package`，会生成一个包含前后端和、配置、启动脚本的ZIP.
+
+> 目录为：`target/easyAdmin-local-1.0.0.zip`
+
+**easyAdmin.zip目录结构如下：**
 
 ![](https://oscimg.oschina.net/oscnet/up-ef25775de080151e89c785ca97282680b29.png)
 
 ##### 服务端
-
-> 先使用`mvn clean package`命令进行打包成Jar.
 
 **1.执行**`easy-admin.sql`
 
@@ -240,21 +235,7 @@ admin:
   server: http://localhost:8080
 ```
 
-**按照相对位置放即可**（或者自己弄个nginx丢进去）
-
-```
-easy-admin.jar
-application.yml
-run.sh
-web
---admin
-----admin
-----compoment
-----config
-----view
-----index.html
-----login.html
-```
+> 也可以把前端放在Nginx中。
 
 ##### 校验
 
