@@ -1,10 +1,11 @@
-# 启动命令 docker-compose up -d
+# 启动命令 docker-compose up 在后台执行该服务可以加上 -d,docker-compose up -d
 # 停止命令 docker-compose down
 version: "3.4"
 # 项目名称
 name: easy-admin
 
 services:
+  # 定义了mysql数据库
   mysql:
     # 容器名
     container_name: mysql8
@@ -27,7 +28,7 @@ services:
       #  表示将宿主机中的 ./sql/mysql/ruoyi-vue-pro.sql 文件挂载到容器内的 /docker-entrypoint-initdb.d/ruoyi-vue-pro.sql 文件，
       #  同时设置挂载为只读模式 (ro，即 read-only)。这个配置通常用于向 MySQL 数据库容器中初始化数据，比如在容器启动时执行 SQL 脚本以创建数据库表和插入初始数据。
       - ./sql/easy-admin.sql:/docker-entrypoint-initdb.d/easy-admin.sql:ro
-
+  # 定义了redis
   redis:
     container_name: redis6
     image: redis:6-alpine
@@ -36,7 +37,7 @@ services:
       - "6379:6379"
     volumes:
       - redisdata:/data
-
+  # 定义了服务
   easyadmin-server:
     container_name: easyadmin-server
     # 构建镜像
@@ -52,6 +53,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: local
     # 一个服务依赖于其他服务启动完成后才能启动
+    # 即当mysql和redis服务启动后，才启动easyadmin-server服务
+    # 注意：easyadmin-server 服务不会等待 mysql redis 完全启动之后才启动。
     depends_on:
       - mysql
       - redis
