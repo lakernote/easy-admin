@@ -1,0 +1,61 @@
+# 启动命令 docker-compose up -d
+# 停止命令 docker-compose down
+version: "3.4"
+# 项目名称
+name: easy-admin
+
+services:
+  mysql:
+    # 容器名
+    container_name: mysql8
+    # 镜像
+    image: mysql:8
+    # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    restart: unless-stopped
+    # 映射端口
+    ports:
+      - "3306:3306"
+    # 设置环境变量,相当于docker run命令中的-e
+    environment:
+      MYSQL_DATABASE: laker
+      MYSQL_ROOT_PASSWORD: 123456
+    # 数据卷挂载路径设置,将本机目录映射到容器目录
+    volumes:
+      # 将宿主机的 /var/lib/mysql/ 目录挂载到容器内的 /var/lib/mysql/ 目录
+      # 这样做的目的通常是为了将 MySQL 数据库的持久化存储在宿主机的数据卷中，以防止容器删除后数据丢失。
+      - /var/lib/mysql/:/var/lib/mysql/
+      #  表示将宿主机中的 ./sql/mysql/ruoyi-vue-pro.sql 文件挂载到容器内的 /docker-entrypoint-initdb.d/ruoyi-vue-pro.sql 文件，
+      #  同时设置挂载为只读模式 (ro，即 read-only)。这个配置通常用于向 MySQL 数据库容器中初始化数据，比如在容器启动时执行 SQL 脚本以创建数据库表和插入初始数据。
+      - ./sql/easy-admin.sql:/docker-entrypoint-initdb.d/easy-admin.sql:ro
+
+  redis:
+    container_name: redis6
+    image: redis:6-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+  easyadmin-server:
+    container_name: easyadmin-server
+    # 构建镜像
+    build:
+      # Dockerfile上下文路径
+      context: ./
+      # 指定 Dockerfile 文件的路径 Dockerfile中的路径 基于上面配置的`context`路径
+      dockerfile: Dockerfile
+    image: easyadmin-server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+    # 一个服务依赖于其他服务启动完成后才能启动
+    depends_on:
+      - mysql
+      - redis
+
+volumes:
+  # 自定义的卷名,存储的路径不好找
+  redisdata:
