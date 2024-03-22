@@ -30,7 +30,7 @@ public class StatisticsController {
                 .getActiveTasks(new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
         List<HistoryTask> historyTasks = snakerEngineFacets.getEngine().query()
                 .getHistoryTasks(new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
-        List<String> sessionIds = StpUtil.searchTokenValue(null, -1, 1000);
+        List<String> sessionIds = StpUtil.searchTokenValue(null, -1, 1000, true);
         Dict res = Dict.create().set("todo", activeTasks.size())
                 .set("done", historyTasks.size())
                 .set("ip", extLogMapper.selectDistinctIp())

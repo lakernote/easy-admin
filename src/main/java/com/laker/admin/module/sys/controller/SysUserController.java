@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.LakerConfig;
+import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.PageVO;
@@ -53,7 +53,7 @@ public class SysUserController {
     @Autowired
     ISysUserRoleService sysUserRoleService;
     @Autowired
-    LakerConfig lakerConfig;
+    EasyConfig easyConfig;
 
     @GetMapping
     @ApiOperation(value = "分页查询")
@@ -174,7 +174,7 @@ public class SysUserController {
     public Response resetPwd(@PathVariable Long userId) {
         SysUser user = new SysUser();
         user.setUserId(userId);
-        user.setPassword(SecureUtil.sha256(lakerConfig.getDefaultPwd()));
+        user.setPassword(SecureUtil.sha256(easyConfig.getDefaultPwd()));
         sysUserService.updateById(user);
         return Response.ok();
     }

@@ -31,11 +31,11 @@ public class MDCFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         try {
 
-            String keyTokenName = StpUtil.stpLogic.getTokenName();
-            SaTokenConfig config = StpUtil.stpLogic.getConfig();
+            String keyTokenName = StpUtil.getStpLogic().getTokenName();
+            SaTokenConfig config = StpUtil.getStpLogic().getConfigOrGlobal();
             String tokenValue = null;
             // 3. 尝试从header里读取
-            if (config.getIsReadHead()) {
+            if (config.getIsReadHeader()) {
                 tokenValue = httpServletRequest.getHeader(keyTokenName);
             }
             // 4. 尝试从cookie里读取

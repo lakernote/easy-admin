@@ -7,7 +7,7 @@ import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.odiszapc.nginxparser.NgxConfig;
 import com.github.odiszapc.nginxparser.NgxDumper;
-import com.laker.admin.config.LakerConfig;
+import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.pojo.NginxQo;
 import com.laker.admin.module.sys.service.ISysDeptService;
@@ -32,14 +32,14 @@ public class NginxController {
     @Autowired
     ISysDeptService sysDeptService;
     @Autowired
-    LakerConfig lakerConfig;
+    EasyConfig easyConfig;
 
     @GetMapping
     public Response get(@RequestParam(required = false) String path) {
         NgxConfig conf = null;
         try {
             if (StrUtil.isBlank(path)) {
-                path = lakerConfig.getNginx().getConfPath();
+                path = easyConfig.getNginx().getConfPath();
             }
             conf = NgxConfig.read(path);
         } catch (IOException e) {
@@ -54,7 +54,7 @@ public class NginxController {
     @SaCheckPermission("nginx.update")
     public Response update(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
-            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+            nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
         FileUtil.rename(new File(nginxQo.getPath()), "nginx.conf-bak-" + DateUtil.format(new Date(), "yyyy-MM-dd-HH-mm-ss"), true);
         FileUtil.writeString(nginxQo.getContext(), new File(nginxQo.getPath()), "utf-8");
@@ -65,7 +65,7 @@ public class NginxController {
     @SaCheckPermission("nginx.check")
     public Response check(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
-            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+            nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
         String res = RuntimeUtil.execForStr("nginx -t -c " + nginxQo.getPath());
         return Response.ok(res);
@@ -75,7 +75,7 @@ public class NginxController {
     @SaCheckPermission("nginx.reload")
     public Response reload(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
-            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+            nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
         String res = RuntimeUtil.execForStr("nginx -s reload -c " + nginxQo.getPath());
         return Response.ok(res);
@@ -85,7 +85,7 @@ public class NginxController {
     @SaCheckPermission("nginx.start")
     public Response start(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
-            nginxQo.setPath(lakerConfig.getNginx().getConfPath());
+            nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
         String res = RuntimeUtil.execForStr("nginx -c " + nginxQo.getPath());
         return Response.ok(res);

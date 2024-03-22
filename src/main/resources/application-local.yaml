@@ -1,7 +1,8 @@
+server:
+  port: 8080
 knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: false
-
 druid:
   monitor: false
 # 测试环境不需要
@@ -9,20 +10,16 @@ management:
   health:
     redis:
       enabled: false
-  metrics:
-    export:
-      influx:
-        enabled: false
-        password: 12345678
-        user-name: laker
 spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   redis:
     host: localhost
     port: 6379
     password:
     timeout: 30s
-  autoconfigure:
-    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
 lock:
   type: mysql
 ratelimit:

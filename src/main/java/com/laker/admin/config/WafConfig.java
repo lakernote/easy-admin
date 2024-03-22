@@ -23,7 +23,7 @@ public class WafConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean<WafFilter> xssFilterRegistration(LakerConfig lakerConfig) {
+    public FilterRegistrationBean<WafFilter> xssFilterRegistration(EasyConfig easyConfig) {
         FilterRegistrationBean<WafFilter> registration = new FilterRegistrationBean<>();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new WafFilter());
@@ -31,9 +31,9 @@ public class WafConfig {
         registration.setName("wafFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         Map<String, String> initParameters = new HashMap<>();
-        initParameters.put("excludes", lakerConfig.getWaf().getExcludes());
-        initParameters.put("xssEnabled", lakerConfig.getWaf().isXssEnabled() + "");
-        initParameters.put("sqlEnabled", lakerConfig.getWaf().isSqlEnabled() + "");
+        initParameters.put("excludes", easyConfig.getWaf().getExcludes());
+        initParameters.put("xssEnabled", easyConfig.getWaf().isXssEnabled() + "");
+        initParameters.put("sqlEnabled", easyConfig.getWaf().isSqlEnabled() + "");
         registration.setInitParameters(initParameters);
         return registration;
     }

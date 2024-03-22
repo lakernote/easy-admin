@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,6 +42,9 @@ public class SysFile implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    @TableField(exist = false)
+    private String url;
 
 
 }

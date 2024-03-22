@@ -2,7 +2,6 @@ package com.laker.admin.config;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.filter.SaServletFilter;
-import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONUtil;
@@ -10,6 +9,7 @@ import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
+import com.laker.admin.framework.ext.satoken.EasySaInterceprot;
 import com.laker.admin.framework.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +45,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/error",
             "/swagger-resources/**"};
     @Resource
-    LakerConfig lakerConfig;
+    EasyConfig easyConfig;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -62,9 +62,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 注册注解拦截器，并排除不需要注解鉴权的接口地址 (与登录拦截器无关)
-        registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
+        // 注册注解拦截器，并排除不需要注解鉴权的接口地址
+        registry.addInterceptor(new EasySaInterceprot(handler -> {
+            SaRouter.match("/**", r -> StpUtil.checkLogin());
+        }).isAnnotation(true)).addPathPatterns("/**")
                 .excludePathPatterns(exclude_path);
+
         // 配置自定义拦截器
         registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns(trace_exclude_path);
@@ -83,14 +86,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                .addExclude("/favicon.ico", "/actuator/**")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
-                    // 登录校验 -- 拦截所有路由
-                    SaRouter.match("/**").exe(() -> {
-                        StpUtil.checkRole("admin");
-                    });
-                    SaRouter.match("/ureport/preview").exe(() -> {
+                    if (StpUtil.getLoginIdAsLong() != 1) {
+                        // 登录校验 -- 拦截所有路由
+                        SaRouter.match("/**").check(() -> StpUtil.checkRole("admin"));
                         // 检查是否登录 是否有token
-                        StpUtil.checkLogin();
-                    });
+                        SaRouter.match("/ureport/preview").check(StpUtil::checkLogin);
+                    }
                 })
                 .setError(e ->
                         {
@@ -117,17 +118,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 配置静态资源，自定义虚拟磁盘功能
         File web = new File("web");
-        String path = lakerConfig.getOssFile().getPath();
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdirs();
+        EasyConfig.Local local = easyConfig.getStorage().getLocal();
+        if (local.isEnable()) {
+            String path = local.getStoragePath();
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            log.info(file.getAbsolutePath());
+            registry.addResourceHandler("/" + path + "/**")
+                    .addResourceLocations("file:" + file.getAbsolutePath() + "/");
         }
-        log.info(file.getAbsolutePath());
+
         registry.addResourceHandler("/admin/**")
                 .addResourceLocations("file:" + web.getAbsolutePath() + "/admin/");
 
-        registry.addResourceHandler("/" + path + "/**")
-                .addResourceLocations("file:" + file.getAbsolutePath() + "/");
     }
 
 //    @Override

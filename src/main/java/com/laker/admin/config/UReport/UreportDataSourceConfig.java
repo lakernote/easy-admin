@@ -1,4 +1,4 @@
-package com.laker.admin.config;
+package com.laker.admin.config.UReport;
 
 import com.bstek.ureport.definition.datasource.BuildinDatasource;
 import lombok.extern.slf4j.Slf4j;

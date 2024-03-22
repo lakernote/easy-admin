@@ -71,6 +71,9 @@
         </encoder>
     </appender>
 
+    <!-- 关闭logback启动时的一堆日志,只有碰到问题时才注释它 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
     <!-- 以下针对不同的模块需求，设置不同的日志级别去过滤打印-->
     <logger name="com.test.demo" level="DEBUG">
         <appender-ref ref="DEFAULT"/>

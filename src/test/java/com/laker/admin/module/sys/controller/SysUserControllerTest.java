@@ -2,7 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.LakerConfig;
+import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysRoleService;
@@ -47,7 +47,7 @@ public class SysUserControllerTest {
     @Autowired
     ISysUserRoleService sysUserRoleService;
     @Autowired
-    LakerConfig lakerConfig;
+    EasyConfig easyConfig;
 
     @Test
     public void pageAll() {

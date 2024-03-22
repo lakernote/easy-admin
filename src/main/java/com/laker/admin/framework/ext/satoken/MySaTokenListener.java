@@ -39,7 +39,7 @@ public class MySaTokenListener implements SaTokenListener {
      * 每次登录时触发
      */
     @Override
-    public void doLogin(String loginType, Object loginId, SaLoginModel loginModel) {
+    public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginModel loginModel) {
         UserAgent requestUserAgent = HttpServletRequestUtil.getRequestUserAgent();
         if (requestUserAgent == null) {
             return;
@@ -70,11 +70,8 @@ public class MySaTokenListener implements SaTokenListener {
         log.debug("user doLogout,useId:{},token:{}", loginId, tokenValue);
     }
 
-    /**
-     * 每次被踢下线时触发
-     */
     @Override
-    public void doLogoutByLoginId(String loginType, Object loginId, String tokenValue, String device) {
+    public void doKickout(String loginType, Object loginId, String tokenValue) {
         // ...
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
@@ -82,31 +79,32 @@ public class MySaTokenListener implements SaTokenListener {
         log.debug("user doLogoutByLoginId,useId:{},token:{}", loginId, tokenValue);
     }
 
-    /**
-     * 每次被顶下线时触发
-     */
     @Override
-    public void doReplaced(String loginType, Object loginId, String tokenValue, String device) {
+    public void doReplaced(String loginType, Object loginId, String tokenValue) {
         ONLINE_USERS.removeIf(onlineUser ->
                 onlineUser.getTokenValue().equals(tokenValue)
         );
         log.debug("user doReplaced,useId:{},token:{}", loginId, tokenValue);
     }
 
-    /**
-     * 每次被封禁时触发
-     */
     @Override
-    public void doDisable(String loginType, Object loginId, long disableTime) {
-        // ... 
+    public void doDisable(String loginType, Object loginId, String service, int level, long disableTime) {
+
     }
 
-    /**
-     * 每次被解封时触发
-     */
     @Override
-    public void doUntieDisable(String loginType, Object loginId) {
-        // ... 
+    public void doUntieDisable(String loginType, Object loginId, String service) {
+
+    }
+
+    @Override
+    public void doOpenSafe(String loginType, String tokenValue, String service, long safeTime) {
+
+    }
+
+    @Override
+    public void doCloseSafe(String loginType, String tokenValue, String service) {
+
     }
 
     /**
@@ -125,6 +123,11 @@ public class MySaTokenListener implements SaTokenListener {
     public void doLogoutSession(String id) {
         // ...
         log.debug("user doLogoutSession,id:{}", id);
+    }
+
+    @Override
+    public void doRenewTimeout(String tokenValue, Object loginId, long timeout) {
+
     }
     // --------------------- 定时清理过期数据
 
@@ -160,7 +163,7 @@ public class MySaTokenListener implements SaTokenListener {
                         }
                         long start = System.currentTimeMillis();
                         ONLINE_USERS.removeIf(onlineUser -> {
-                            long timeout = StpUtil.stpLogic.getTokenActivityTimeoutByToken(onlineUser.getTokenValue());
+                            long timeout = StpUtil.getStpLogic().getTokenActiveTimeoutByToken(onlineUser.getTokenValue());
                             if (timeout == SaTokenDao.NOT_VALUE_EXPIRE) {
                                 return true;
                             }

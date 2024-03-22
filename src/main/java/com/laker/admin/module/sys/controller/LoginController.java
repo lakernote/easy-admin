@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Api(tags = "认证授权")
@@ -112,14 +111,11 @@ public class LoginController {
     @ApiOperation(value = "获取在线用户信息")
     public PageResponse onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false, defaultValue = "10") int limit) {
-        List<String> sessionIds = StpUtil.searchTokenValue(null, -1, 1000);
-        log.info("当前用户：{}", Arrays.toString(sessionIds.toArray()));
         MySaTokenListener.ONLINE_USERS.sort((o1, o2) -> DateUtil.compare(o2.getLoginTime(), o1.getLoginTime()));
         PageDtoUtil pageDto = PageDtoUtil.getPageDto(MySaTokenListener.ONLINE_USERS, page, limit);
-        log.warn("stp用户数：{}，memory用户数：{}", sessionIds.size(), pageDto.getTotal());
         List<OnlineUser> pageList = (List<OnlineUser>) pageDto.getPageList();
         pageList.forEach(onlineUser -> {
-            String keyLastActivityTime = StpUtil.stpLogic.splicingKeyLastActivityTime(onlineUser.getTokenValue());
+            String keyLastActivityTime = StpUtil.getStpLogic().splicingKeyLastActiveTime(onlineUser.getTokenValue());
             String lastActivityTimeString = SaManager.getSaTokenDao().get(keyLastActivityTime);
             if (lastActivityTimeString != null) {
                 long lastActivityTime = Long.parseLong(lastActivityTimeString);

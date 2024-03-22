@@ -3,7 +3,7 @@ package com.laker.admin.module.sys.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
-import com.laker.admin.config.LakerConfig;
+import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.aop.ratelimit.LimitType;
 import com.laker.admin.framework.aop.ratelimit.RateLimit;
 import com.laker.admin.framework.cache.ICache;
@@ -33,7 +33,7 @@ public class IndexController {
     @Autowired
     ICache iCache;
     @Autowired
-    LakerConfig config;
+    EasyConfig config;
 
     @GetMapping({"/admin", "/admin/index", "/admin/"})
     public String adminIndex() {
