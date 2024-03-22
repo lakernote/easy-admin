@@ -30,7 +30,7 @@
                         <i class="layui-icon layui-icon-search"></i>
                         查询
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button id="reset" type="reset" class="pear-btn pear-btn-md">
                         <i class="layui-icon layui-icon-refresh"></i>
                         重置
                     </button>
@@ -96,9 +96,10 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'common', 'dtree', 'easyAdmin'], function () {
+    layui.use(['table', 'form', 'jquery','common', 'dtree', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
+        let $ = layui.jquery;
         let common = layui.common;
         let dtree = layui.dtree;
         let easyAdmin = layui.easyAdmin;
@@ -209,6 +210,13 @@
                     break;
             }
         });
+
+        // 重置事件 解决点击重置时，输入框被重置为空，而select元素并没有被重置。
+        $("#reset").click(function () {
+            // 通过选择器找到隐藏的input元素，并将其值设置为空
+            $('input[name="deptId"]').val('');
+        })
+
 
         // 触发submit提交 按钮点击或者表单被执行提交时触发
         form.on('submit(user-query)', function (data) {

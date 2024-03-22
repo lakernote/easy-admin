@@ -66,7 +66,7 @@ public class SysUserController {
         queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId)
                 .and(StrUtil.isNotBlank(keyWord), i -> i.
                         like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord)
-                        .or().like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord));
+                        .or().like(StrUtil.isNotBlank(keyWord), SysUser::getNickName, keyWord));
         Page pageList = sysUserService.page(roadPage, queryWrapper);
 
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
