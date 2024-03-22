@@ -66,7 +66,12 @@
         var uid;
         captcha();
         // 登 录 提 交
+        var isLoggingIn = false; // 添加标志位 防止多次登录问题
         form.on('submit(login)', function (data) {
+            if (isLoggingIn) {
+                return false;
+            }
+            isLoggingIn = true;
             /// 登录
             data.field.uid = uid;
             easyAdmin.http({
@@ -97,14 +102,18 @@
                                 popup.success("登录成功", function () {
 
                                     location.href = "index.html"
+                                    isLoggingIn = false; // 重置标志位
                                 });
                             }
                         })
+
+
                     } else {
                         captcha();
                         layer.msg(result.msg,
                             {icon: 2, time: 2000, area: ['230px', '80px']}
                         );
+                        isLoggingIn = false; // 重置标志位
                     }
                 }
             })
