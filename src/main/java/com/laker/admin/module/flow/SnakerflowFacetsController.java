@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.aop.metrics.Metrics;
+import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
@@ -124,6 +125,7 @@ public class SnakerflowFacetsController {
     @ApiOperation(value = "保存流程定义[web流程设计器]", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/deployXml", method = RequestMethod.POST)
     @SaCheckPermission("flow.update")
+    @RepeatSubmitLimit(businessKey = "savemodel", businessParam = "#model")
     public boolean processDeploy(String model, String id, @RequestParam(required = false, defaultValue = "false") boolean xmlHearder) {
         InputStream input = null;
         try {
@@ -132,7 +134,6 @@ public class SnakerflowFacetsController {
                 xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
             }
             xml = xml + SnakerHelper.convertXml(model);
-            System.out.println("model xml=\n" + xml);
             input = StreamHelper.getStreamFromString(xml);
             if (StringUtils.isNotEmpty(id)) {
                 snakerEngineFacets.getEngine().process().redeploy(id, input);

@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.LFUCache;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.laker.admin.framework.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 /**
- * 保证服务的幂等性和防止重复请求
+ * 保证服务的防止重复请求
  * https://blog.csdn.net/abu935009066/article/details/117471885
  *
  * @author laker
@@ -30,7 +31,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Slf4j
 public class LimitSubmitAspect {
-    private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 60 * 1000);
+    private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 20 * 1000);
 
     /**
      * 获取 注解有2中方式
@@ -53,18 +54,15 @@ public class LimitSubmitAspect {
         String key = getLockKey(joinPoint, repeatSubmitLimit);
         Object result = cache.get(key, false);
         if (result != null) {
-            throw new BusinessException("请勿重复访问！");
+            throw new BusinessException("请勿重复操作！");
         }
-        cache.put(key, StpUtil.getLoginId(), limitTime * 1000);
+        cache.put(key, StpUtil.getLoginId(), limitTime * 1000L);
         try {
-            Object proceed = joinPoint.proceed();
-            return proceed;
+            return joinPoint.proceed();
         } catch (Throwable e) {
-            log.error("Exception in {}.{}() with cause = \'{}\' and exception = \'{}\'", joinPoint.getSignature().getDeclaringTypeName(),
+            log.error("Exception in {}.{}() with cause = '{}' and exception = '{}'", joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL", e.getMessage(), e);
             throw e;
-        } finally {
-            cache.remove(key);
         }
     }
 
@@ -84,7 +82,7 @@ public class LimitSubmitAspect {
             Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
             EvaluationContext context = new MethodBasedEvaluationContext(null, method, joinPoint.getArgs(), NAME_DISCOVERER);
             String key = PARSER.parseExpression(businessParam).getValue(context, String.class);
-            businessKey = businessKey + ":" + key;
+            businessKey = businessKey + ":" + DigestUtil.md5Hex(key);
         }
         return businessKey;
     }

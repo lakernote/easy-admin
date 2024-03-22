@@ -26,7 +26,7 @@ public @interface RepeatSubmitLimit {
     boolean userLimit() default true;
 
     /**
-     * 锁时间 默认10s
+     * 锁时间 默认2s
      */
-    int time() default 10;
+    int time() default 2;
 }

@@ -83,6 +83,9 @@
                     userJson = result.data;
                 }
             }, true, false);
+
+            var isSubmitting = false; // 添加一个变量用于标记是否正在提交中
+
             $('#snakerflow').snakerflow({
                 basePath: "../../component/snaker/",
                 ctxPath: "/",
@@ -92,8 +95,12 @@
                 tools: {
                     save: {
                         onclick: function (data) {
-                            // alert(data);
+                            if (isSubmitting) {
+                                return false; // 如果正在提交中，则不执行后续代码
+                            }
+                            isSubmitting = true; // 设置为正在提交中状态
                             saveModel(data);
+                            isSubmitting = false; // 处理完成后重置提交状态
                         }
                     }
                 }

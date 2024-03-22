@@ -10,10 +10,12 @@ services:
     # 容器名
     container_name: mysql8
     # 镜像
-    image: mysql:8
+    image: mysql:8.3
     # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     restart: unless-stopped
     command: [ "--max_connections=300","--default-authentication-plugin=mysql_native_password" ]
+    networks:
+      - app_net
     # 映射端口
     ports:
       - "3306:3306"
@@ -36,7 +38,7 @@ services:
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 3
 
   # 定义了redis
@@ -44,10 +46,13 @@ services:
     container_name: redis6
     image: redis:6-alpine
     restart: unless-stopped
+    networks:
+      - app_net
     ports:
       - "6379:6379"
     volumes:
       - redisData:/data
+      - redisData:/etc/redis/redis.conf
   # 定义了服务
   easyadmin-server:
     container_name: easyadmin-server
@@ -61,6 +66,8 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
+    networks:
+      - app_net
     environment:
       SPRING_PROFILES_ACTIVE: local
       # 使用服务名称 mysql 替代 localhost 来访问 MySQL 服务
@@ -78,3 +85,13 @@ volumes:
   # 自定义的卷名,存储的路径不好找
   redisData:
   mysqlData:
+
+networks:
+  # 配置docker network
+  app_net:
+    # 桥接模式是 Docker 默认的网络驱动程序，用于在容器间创建桥接网络，使它们能够相互通信
+    driver: bridge
+    ipam:
+      config:
+        # 子网络
+        - subnet: 178.18.0.0/16

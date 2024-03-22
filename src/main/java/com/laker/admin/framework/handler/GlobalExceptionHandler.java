@@ -43,8 +43,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public Response handleRRException(BusinessException e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
-        log.error("业务异常", e.getMsg());
-        return Response.error(e.getCode() + "", e.getMsg());
+        log.error("业务异常:{}", e.getMsg());
+        return Response.error(String.valueOf(e.getCode()), e.getMsg());
     }
 
 
