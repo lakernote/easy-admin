@@ -75,7 +75,7 @@
     <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
 
     <!-- 以下针对不同的模块需求，设置不同的日志级别去过滤打印-->
-    <logger name="com.test.demo" level="DEBUG">
+    <logger name="com.laker.admin.framework.ext.satoken" level="WARN">
         <appender-ref ref="DEFAULT"/>
     </logger>
     <!-- 定义org.snaker.engine模块的包，只输出ERROR级别的日志-->

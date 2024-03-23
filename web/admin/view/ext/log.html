@@ -87,10 +87,17 @@
                         }
                     },
                     {
-                        title: '归属',
+                        title: '部门',
+                        field: 'DeptName',
+                        align: 'center',
+                        width: 80,
+                        templet: '<div>{{d.user.dept.deptName}}</div>'
+                    },
+                    {
+                        title: '城市',
                         field: 'city',
                         align: 'center',
-                        width: 160
+                        width: 140
                     },
                     {
                         title: '请求URI',

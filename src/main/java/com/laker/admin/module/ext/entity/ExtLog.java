@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.laker.admin.module.sys.entity.SysDept;
 import com.laker.admin.module.sys.entity.SysUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,8 +36,12 @@ public class ExtLog implements Serializable {
      * 用户id
      */
     private Long userId;
+
     @TableField(exist = false)
     private SysUser user;
+
+    @TableField(exist = false)
+    private SysDept dept;
 
     /**
      * ip地址

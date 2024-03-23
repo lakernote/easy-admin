@@ -52,10 +52,10 @@ public class MySaTokenListener implements SaTokenListener {
                 .loginTime(new Date())
                 .os(requestUserAgent.getOs().getName())
                 .userId((Long) loginId)
-                .tokenValue(StpUtil.getTokenValue())
+                .tokenValue(tokenValue)
                 .nickName(sysUserService.getById((Long) loginId).getNickName())
                 .browser(requestUserAgent.getBrowser().getName()).build());
-        log.debug("user doLogin,useId:{},token:{}", loginId, StpUtil.getTokenValue());
+        log.debug("user doLogin,useId:{},token:{}", loginId, tokenValue);
     }
 
     /**

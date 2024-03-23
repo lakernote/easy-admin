@@ -16,7 +16,6 @@ import com.laker.admin.module.ext.mapper.ExtLogMapper;
 import com.laker.admin.module.ext.service.IExtLogService;
 import com.laker.admin.module.ext.vo.LogStatisticsTop10Vo;
 import com.laker.admin.module.ext.vo.LogStatisticsVo;
-import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,17 +59,15 @@ public class ExtLogController {
         Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<ExtLog> queryWrapper = new QueryWrapper().lambda();
         if (StrUtil.isNotBlank(keyWord)) {
-            queryWrapper.like(ExtLog::getRequest, keyWord);
+            queryWrapper.like(ExtLog::getUri, keyWord);
         }
         queryWrapper.orderByDesc(ExtLog::getCreateTime);
         Page pageList = extLogService.page(roadPage, queryWrapper);
         List<ExtLog> records = pageList.getRecords();
         records.forEach(extLog -> {
             if (extLog.getUserId() != null) {
-                SysUser sysUser = sysUserService.getById(extLog.getUserId());
-                extLog.setUser(sysUser);
+                extLog.setUser(sysUserService.getUserAndDeptById(extLog.getUserId()));
             }
-
         });
         return PageResponse.ok(records, pageList.getTotal());
     }

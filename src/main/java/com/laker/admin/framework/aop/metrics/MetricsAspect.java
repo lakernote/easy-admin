@@ -54,6 +54,7 @@ public class MetricsAspect {
         Instant start = Instant.now();
         ExtLog logBean = new ExtLog();
         logBean.setIp(HttpServletRequestUtil.getRemoteIP());
+        logBean.setCity("未知");
         if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
             String cityInfo = IP2CityUtil.getCityInfo(logBean.getIp());
             String[] split = cityInfo.split("\\|");
