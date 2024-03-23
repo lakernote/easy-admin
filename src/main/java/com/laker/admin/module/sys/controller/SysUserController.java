@@ -112,20 +112,15 @@ public class SysUserController {
             param.setPassword(SecureUtil.sha256(password));
             param.setCreateTime(LocalDateTime.now());
             sysUserService.save(param);
-            if (StrUtil.isNotBlank(param.getRoleIds())) {
-                ArrayList<String> list = CollUtil.newArrayList(param.getRoleIds().split(","));
-                list.add(param.getDataRoleId());
-                this.saveUserRole(param.getUserId(), list);
-            }
         } else {
             sysUserService.saveOrUpdate(param);
-            if (StrUtil.isNotBlank(param.getRoleIds())) {
-                ArrayList<String> list = CollUtil.newArrayList(param.getRoleIds().split(","));
-                list.add(param.getDataRoleId());
-                this.saveUserRole(param.getUserId(), list);
-            }
         }
-        return Response.ok(sysUserService.saveOrUpdate(param));
+        if (StrUtil.isNotBlank(param.getRoleIds())) {
+            ArrayList<String> list = CollUtil.newArrayList(param.getRoleIds().split(","));
+            list.add(param.getDataRoleId());
+            this.saveUserRole(param.getUserId(), list);
+        }
+        return Response.ok();
     }
 
 
