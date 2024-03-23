@@ -11,16 +11,18 @@
         <div class="main-container">
             <div class="main-container">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色名称</label>
+                    <label class="layui-form-label"><span style="color:red;">*</span>角色名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="roleName" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="roleName" lay-verify="title|required" autocomplete="off"
+                               placeholder="请输入角色名称"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色标识</label>
+                    <label class="layui-form-label"><span style="color:red;">*</span>角色编码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="roleCode" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="roleCode" lay-verify="title|required" autocomplete="off"
+                               placeholder="请输入角色编码"
                                class="layui-input">
                     </div>
                 </div>
@@ -31,7 +33,7 @@
                         <input type="radio" name="enable" value="false" title="关闭">
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <div class="layui-form-item layui-hide">
                     <label class="layui-form-label"><span style="color:red;">*</span>类型</label>
                     <div class="layui-input-block">
                         <input type="radio" name="roleType" lay-filter="roleType" value="1" title="菜单" checked>
@@ -66,6 +68,10 @@
     layui.use(['form', 'jquery', 'easyAdmin'], function () {
         let form = layui.form;
         let easyAdmin = layui.easyAdmin;
+        let $ = layui.jquery;
+        // 获取跳转过来的源头
+        var currentTab = easyAdmin.getQueryString("currentTab");
+        $('input[name="roleType"][value="' + currentTab + '"]').prop('checked', true); // 设置对应的radio按钮为选中状态
 
         form.on('submit(role-save)', function (data) {
             easyAdmin.http({
@@ -79,6 +85,7 @@
                         layer.msg(result.msg, {icon: 1, time: 1000}, function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
                             parent.layui.table.reload("role-table");
+                            parent.layui.table.reload("data-role-table");
                         });
                     } else {
                         layer.msg(result.msg, {icon: 2, time: 1000});

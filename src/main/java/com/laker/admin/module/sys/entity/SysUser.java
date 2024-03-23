@@ -57,5 +57,7 @@ public class SysUser implements Serializable {
     @TableField(exist = false)
     private String roleIds;
 
+    @TableField(exist = false)
+    private String dataRoleId;
 
 }

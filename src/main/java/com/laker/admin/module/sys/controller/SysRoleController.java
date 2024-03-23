@@ -43,7 +43,7 @@ public class SysRoleController {
     @ApiOperation(value = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long current,
                                 @RequestParam(required = false, defaultValue = "10") long size,
-                                Integer roleType) {
+                                Integer roleType) { // 1是菜单接口角色，2为数据角色
         Page roadPage = new Page<>(current, size);
         LambdaQueryWrapper<SysRole> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.eq(roleType != null, SysRole::getRoleType, roleType);

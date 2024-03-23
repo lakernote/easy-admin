@@ -18,16 +18,16 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色名称</label>
+                    <label class="layui-form-label"><span style="color:red;">*</span>角色名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="roleName" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="roleName" lay-verify="title|required" autocomplete="off" placeholder="请输入角色名称"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色标识</label>
+                    <label class="layui-form-label"><span style="color:red;">*</span>角色编码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="roleCode" lay-verify="title" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="roleCode" lay-verify="title|required" autocomplete="off" placeholder="请输入角色编码"
                                class="layui-input">
                     </div>
                 </div>
@@ -36,13 +36,6 @@
                     <div class="layui-input-block">
                         <input type="radio" name="enable" value="true" title="开启" checked>
                         <input type="radio" name="enable" value="false" title="关闭">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类型</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="roleType" lay-filter="roleType" value="1" title="菜单" checked>
-                        <input type="radio" name="roleType" lay-filter="roleType" value="2" title="数据">
                     </div>
                 </div>
 
@@ -88,6 +81,7 @@
                         layer.msg(result.msg, {icon: 1, time: 1000}, function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
                             parent.layui.table.reload("role-table");
+                            parent.layui.table.reload("data-role-table");
                         });
                     } else {
                         layer.msg(result.msg, {icon: 2, time: 1000});

@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,12 +113,16 @@ public class SysUserController {
             param.setCreateTime(LocalDateTime.now());
             sysUserService.save(param);
             if (StrUtil.isNotBlank(param.getRoleIds())) {
-                this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+                ArrayList<String> list = CollUtil.newArrayList(param.getRoleIds().split(","));
+                list.add(param.getDataRoleId());
+                this.saveUserRole(param.getUserId(), list);
             }
         } else {
             sysUserService.saveOrUpdate(param);
             if (StrUtil.isNotBlank(param.getRoleIds())) {
-                this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+                ArrayList<String> list = CollUtil.newArrayList(param.getRoleIds().split(","));
+                list.add(param.getDataRoleId());
+                this.saveUserRole(param.getUserId(), list);
             }
         }
         return Response.ok(sysUserService.saveOrUpdate(param));
@@ -205,10 +208,11 @@ public class SysUserController {
     }
 
     @GetMapping("/getRoles")
-    public Response edit(Long userId) {
-        List<SysRole> allRole = sysRoleService.list(null);
+    public Response edit(Long userId, Integer roleType) {
+        List<SysRole> allRole = sysRoleService.list(Wrappers.<SysRole>lambdaQuery().eq(SysRole::getRoleType, roleType));
         if (userId != null) {
-            List<SysUserRole> myRole = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
+            List<SysUserRole> myRole = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery()
+                    .eq(SysUserRole::getUserId, userId));
             allRole.forEach(sysRole -> {
                 myRole.forEach(sysUserRole -> {
                     if (sysRole.getRoleId().equals(sysUserRole.getRoleId())) {
@@ -216,6 +220,15 @@ public class SysUserController {
                     }
                 });
             });
+        } else {
+            allRole.stream()
+                    .filter(sysRole -> sysRole.getRoleType() == 1)
+                    .findFirst()
+                    .ifPresent(sysRole -> sysRole.setChecked(true));
+            allRole.stream()
+                    .filter(sysRole -> sysRole.getRoleType() == 2)
+                    .findFirst()
+                    .ifPresent(sysRole -> sysRole.setChecked(true));
         }
         return Response.ok(allRole);
     }
