@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.model.PageResponse;
@@ -23,6 +24,7 @@ import com.laker.admin.module.sys.pojo.UserDto;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,8 @@ import java.util.stream.Collectors;
  * @author laker
  * @since 2021-08-05
  */
+@Api(tags = "系统-用户管理")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("/sys/user")
 @Metrics

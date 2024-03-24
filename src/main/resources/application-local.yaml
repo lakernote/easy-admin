@@ -21,6 +21,11 @@ spring:
     password:
     timeout: 30s
 lock:
+  # redis/mysql
   type: mysql
 ratelimit:
+  # redis/local
+  type: local
+cache:
+  # redis/local
   type: local

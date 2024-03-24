@@ -1,4 +1,4 @@
-package com.laker.admin.config;
+package com.laker.admin.config.websocket;
 
 import com.laker.admin.framework.ext.websocket.LakerChatHandler;
 import com.laker.admin.framework.ext.websocket.LakerSessionHandshakeInterceptor;
@@ -27,7 +27,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
             // 设置运行跨域
             .setAllowedOrigins("*");
     }
-       
+
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();

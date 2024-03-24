@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseFlowController {
+public abstract class BaseFlowController {
     @Autowired
     private SnakerEngineFacets snakerEngineFacets;
     @Autowired

@@ -2,12 +2,10 @@ package com.laker.admin.framework.cache;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.LFUCache;
-import org.springframework.stereotype.Component;
 
 /**
  * @author laker
  */
-@Component
 public class JvmCache implements ICache {
     LFUCache<String, Object> CACHE = CacheUtil.newLFUCache(1000);
 

@@ -1,4 +1,4 @@
-package com.laker.admin.framework.ext.filter;
+package com.laker.admin.framework.ext.filter.cachebody;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.core.Ordered;
@@ -14,10 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author laker
+ */
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
-@WebFilter(filterName = "ContentCachingFilter", urlPatterns = "/*")
-public class ContentCachingFilter extends OncePerRequestFilter {
+@WebFilter(filterName = "CacheBodyFilter", urlPatterns = "/*")
+public class CacheBodyFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {

@@ -3,6 +3,7 @@ package com.laker.admin.module.sys.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.aop.ratelimit.LimitType;
 import com.laker.admin.framework.aop.ratelimit.RateLimit;
@@ -11,6 +12,7 @@ import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyImageUtils;
 import com.wf.captcha.ArithmeticCaptcha;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ import java.net.URL;
 /**
  * /admin/** 无需check login
  */
+@Api(tags = "系统-验证码等")
+@ApiSupport(order = 5)
 @Controller
 @Slf4j
 public class IndexController {

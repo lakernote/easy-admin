@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class TaskDto {
+public class TaskJob {
     /**
      * 任务的编码 必须全局唯一
      */
@@ -33,7 +33,7 @@ public class TaskDto {
      */
     private Boolean enable;
 
-    public TaskDto() {
+    public TaskJob() {
 
     }
 

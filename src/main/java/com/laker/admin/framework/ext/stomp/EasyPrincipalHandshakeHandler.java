@@ -4,7 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.utils.IP2CityUtil;
-import com.laker.admin.utils.http.HttpServletRequestUtil;
+import com.laker.admin.utils.http.EasyRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -27,7 +27,7 @@ public class EasyPrincipalHandshakeHandler extends DefaultHandshakeHandler {
         log.info("确定用户");
         //握手成功后调用，可以在这里保存用户id
         String userName = ((ServletServerHttpRequest) request).getServletRequest().getParameter("userName");
-        String remoteIP = HttpServletRequestUtil.getRemoteIP();
+        String remoteIP = EasyRequestUtil.getRemoteIP();
         String address;
         if (!StrUtil.equals(remoteIP, "127.0.0.1")) {
             String cityInfo = IP2CityUtil.getCityInfo(remoteIP);

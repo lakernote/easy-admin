@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.module.task.core.CoreProcessor;
+import com.laker.admin.module.task.core.processor.EasyTaskProcessor;
 import com.laker.admin.module.task.entity.SysTask;
 import com.laker.admin.module.task.service.ISysTaskService;
 import io.swagger.annotations.Api;
@@ -16,21 +16,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "定时任务管理")
-@ApiSupport(order = 1)
+/**
+ * @author laker
+ */
+@Api(tags = "定时任务-任务管理")
+@ApiSupport(order = 20)
 @RestController
 @RequestMapping("/sys/task")
 @Slf4j
 public class TaskManagerController {
 
     @Autowired
-    private CoreProcessor coreProcessor;
+    private EasyTaskProcessor easyTaskProcessor;
 
     @Autowired
     ISysTaskService sysTaskService;
 
     @GetMapping
-    @ApiOperation(value = "分页查询")
+    @ApiOperation(value = "定义任务分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit) {
         Page roadPage = new Page<>(page, limit);
@@ -57,14 +60,14 @@ public class TaskManagerController {
     @ApiOperation("开始任务")
     @SaCheckPermission("task.start")
     public Response start(String taskCode) {
-        coreProcessor.startJob(taskCode);
+        easyTaskProcessor.startJob(taskCode);
         return Response.ok();
     }
 
     @GetMapping("/stop")
     @ApiOperation("暂停任务")
     public Response stopCron(String taskCode) {
-        coreProcessor.stopJob(taskCode);
+        easyTaskProcessor.stopJob(taskCode);
         return Response.ok();
     }
 

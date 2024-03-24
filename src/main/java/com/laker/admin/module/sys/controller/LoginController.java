@@ -36,11 +36,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = "认证授权")
+@Api(tags = "系统-认证授权")
 @ApiSupport(order = 2)
 @RestController
 @Slf4j
 @Metrics
+@RequestMapping("/sys/auth")
 public class LoginController {
 
     @Autowired
@@ -54,12 +55,13 @@ public class LoginController {
     @Autowired
     ISysDeptService sysDeptService;
 
-    @PostMapping("/api/v1/login")
+    @PostMapping("/v1/login")
     @ApiOperationSupport(order = 1)
-    @ApiOperation(value = "登录")
+    @ApiOperation(value = "登录-用户名密码")
     public Response login(@Validated @RequestBody LoginDto loginDto) {
         // 验证码是否正确
         String code = iCache.get(loginDto.getUid());
+        iCache.remove(loginDto.getUid());
         if (!StrUtil.equalsIgnoreCase(code, loginDto.getCaptchaCode())) {
             return Response.error("500", "验证码不正确或已失效");
         }
@@ -86,7 +88,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/api/v1/tokenInfo")
+    @GetMapping("/v1/tokenInfo")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前会话的token信息")
     public Response tokenInfo() {
@@ -94,7 +96,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/api/v1/userInfo")
+    @GetMapping("/v1/userInfo")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前用户信息")
     public Response userInfo() {
@@ -106,7 +108,7 @@ public class LoginController {
         return Response.ok(user);
     }
 
-    @GetMapping("/api/v1/onlineUsers")
+    @GetMapping("/v1/onlineUsers")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取在线用户信息")
     public PageResponse onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
@@ -125,7 +127,7 @@ public class LoginController {
         return PageResponse.ok(pageList, (long) pageDto.getTotal());
     }
 
-    @GetMapping("/api/v1/kickOffline")
+    @GetMapping("/v1/kickOffline")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "踢人下线")
     @SaCheckPermission("online.user.kick")
@@ -138,7 +140,7 @@ public class LoginController {
         return Response.ok();
     }
 
-    @GetMapping("/api/v1/loginOut")
+    @GetMapping("/v1/logout")
     @ApiOperationSupport(order = 3)
     @ApiOperation(value = "登出")
     @SaCheckLogin

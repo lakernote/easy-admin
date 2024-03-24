@@ -10,10 +10,6 @@ spring:
     port: 6379
     password:
     timeout: 30s
-lock:
-  type: mysql
-ratelimit:
-  type: local
 knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: true
@@ -22,3 +18,13 @@ management:
     health:
       # 生成环境的话注意安全问题
       show-details: never
+lock:
+  # redis/mysql
+  type: mysql
+ratelimit:
+  # redis/local
+  type: redis
+cache:
+  # redis/local
+  type: redis
+

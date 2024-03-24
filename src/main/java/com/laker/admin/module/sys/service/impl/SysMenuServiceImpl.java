@@ -11,7 +11,7 @@ import com.laker.admin.module.sys.pojo.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
-import com.laker.admin.utils.TreeUtil;
+import com.laker.admin.utils.EasyTreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +63,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysPower> imp
             menuVO.setPowerCode(e.getPowerCode());
             menuInfo.add(menuVO);
         }
-        return TreeUtil.toTree(menuInfo, 0L);
+        return EasyTreeUtil.toTree(menuInfo, 0L);
     }
 
     private List<SysPower> getSysMenusPowerByLoginUser(Long loginId) {

@@ -2,8 +2,10 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.util.StrUtil;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.exception.BusinessException;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggerGroup;
@@ -27,6 +29,8 @@ import java.io.File;
  * @author laker
  * @since 2021-08-05
  */
+@Api(tags = "系统-web日志")
+@ApiSupport(order = 5)
 @Controller
 @RequestMapping("/sys/weblog")
 public class WebLogController {

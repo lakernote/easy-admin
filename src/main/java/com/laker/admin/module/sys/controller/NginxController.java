@@ -7,10 +7,12 @@ import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.odiszapc.nginxparser.NgxConfig;
 import com.github.odiszapc.nginxparser.NgxDumper;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.pojo.NginxQo;
 import com.laker.admin.module.sys.service.ISysDeptService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,8 @@ import java.util.Date;
  * @author laker
  * @since 2021-08-11
  */
+@Api(tags = "系统-nginx管理")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("/sys/nginx")
 public class NginxController {

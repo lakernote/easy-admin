@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
@@ -15,6 +16,7 @@ import com.laker.admin.module.sys.entity.SysRolePower;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysRoleService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,8 @@ import java.util.List;
  * @author laker
  * @since 2021-08-11
  */
+@Api(tags = "系统-角色管理")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("/sys/role")
 public class SysRoleController {
@@ -83,9 +87,11 @@ public class SysRoleController {
         List<SysPower> allPower = null;
         // 菜单角色
         if (role.getRoleType().equals(SysRole.ROLE_TYPE_MENU)) {
-            allPower = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().ne(SysPower::getType, 3));
+            // 菜单
+            allPower = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getType, 0, 1, 2));
         } else {
-            allPower = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().ne(SysPower::getType, 2));
+            // 数据
+            allPower = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getType, 0, 1, 3));
         }
 
         List<SysRolePower> myPower = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().eq(SysRolePower::getRoleId, roleId));

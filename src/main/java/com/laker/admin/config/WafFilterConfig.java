@@ -1,6 +1,6 @@
 package com.laker.admin.config;
 
-import com.laker.admin.framework.waf.WafFilter;
+import com.laker.admin.framework.ext.filter.waf.WafFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +16,9 @@ import java.util.Map;
  * @author laker
  */
 @Configuration
-public class WafConfig {
+public class WafFilterConfig {
     /**
-     * 要在 cachefilter后边
+     * 要在 Cachefilter后边
      *
      * @return
      */

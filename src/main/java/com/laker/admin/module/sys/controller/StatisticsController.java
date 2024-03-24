@@ -2,9 +2,11 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.Dict;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.ext.mapper.ExtLogMapper;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
+import io.swagger.annotations.Api;
 import org.snaker.engine.access.QueryFilter;
 import org.snaker.engine.entity.HistoryTask;
 import org.snaker.engine.entity.Task;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Api(tags = "系统-数据报表")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("/sys/statistics")
 public class StatisticsController {

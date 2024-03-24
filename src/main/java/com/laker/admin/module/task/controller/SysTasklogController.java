@@ -3,9 +3,11 @@ package com.laker.admin.module.task.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.module.task.entity.SysTasklog;
 import com.laker.admin.module.task.service.ISysTasklogService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author laker
  * @since 2021-08-18
  */
+@Api(tags = "定时任务-任务日志")
+@ApiSupport(order = 22)
 @RestController
 @RequestMapping("/sys/tasklog")
 public class SysTasklogController {

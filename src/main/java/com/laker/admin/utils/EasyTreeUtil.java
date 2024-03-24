@@ -5,7 +5,10 @@ import com.laker.admin.module.sys.pojo.MenuVo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeUtil {
+/**
+ * @author laker
+ */
+public class EasyTreeUtil {
 
     public static List<MenuVo> toTree(List<MenuVo> treeList, Long pid) {
         List<MenuVo> retList = new ArrayList<MenuVo>();

@@ -5,12 +5,14 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.lock.api.Lock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysDict;
 import com.laker.admin.module.sys.service.ISysDictService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
  * @author laker
  * @since 2021-08-16
  */
+@Api(tags = "系统-字典管理")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("/sys/dict")
 @Metrics

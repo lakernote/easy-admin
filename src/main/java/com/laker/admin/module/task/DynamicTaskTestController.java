@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 // https://my.oschina.net/sdlvzg/blog/1590946
-@Api(tags = "动态任务原理测试")
-@ApiSupport(order = 1)
+@Api(tags = "定时任务-动态任务原理测试")
+@ApiSupport(order = 22)
 @RestController
 @Slf4j
 public class DynamicTaskTestController {

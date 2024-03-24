@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.trace.LakerTrace;
 import com.laker.admin.framework.aop.trace.SpanType;
@@ -20,6 +21,7 @@ import com.laker.admin.module.ext.service.IExtLeaveService;
 import com.laker.admin.module.flow.process.BaseFlowController;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.sys.service.ISysUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.snaker.engine.SnakerEngine;
 import org.snaker.engine.entity.Order;
@@ -41,6 +43,8 @@ import java.util.concurrent.TimeUnit;
  * @author laker
  * @since 2021-08-19
  */
+@Api(tags = "示例-请假流程示例")
+@ApiSupport(order = 100)
 @RestController
 @RequestMapping("/ext/leave")
 @Metrics

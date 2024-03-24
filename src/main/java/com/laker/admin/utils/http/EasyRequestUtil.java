@@ -17,9 +17,11 @@ import java.util.*;
 
 /**
  * request 工具类
+ *
+ * @author laker
  */
 @Slf4j
-public class HttpServletRequestUtil {
+public class EasyRequestUtil {
 
     /**
      * 获取request对象
@@ -27,9 +29,7 @@ public class HttpServletRequestUtil {
      * @return
      */
     public static HttpServletRequest getRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        return request;
-
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
     /**
@@ -130,11 +130,12 @@ public class HttpServletRequestUtil {
 
     public static String getAllRequestInfo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("请求详情为：").append(StrUtil.CRLF);
+        sb.append("Detail").append(StrUtil.CRLF);
         sb.append("RemoteAddress: ").append(getRemoteIP()).append(StrUtil.CRLF);
         sb.append("Method: ").append(getRequest().getMethod()).append(StrUtil.CRLF);
-        sb.append("URI: ").append(getRequestURI()).append(StrUtil.CRLF);
-        sb.append("Headers: ").append(StrUtil.join(StrUtil.CRLF + "         ", mapToList(getHeaders()))).append(StrUtil.CRLF);
+        sb.append("Uri: ").append(getRequestURI()).append(StrUtil.CRLF);
+        sb.append("Headers: ").append(StrUtil.join(StrUtil.CRLF + "         ",
+                mapToList(getHeaders()))).append(StrUtil.CRLF);
         sb.append("Body: ").append(getBody()).append(StrUtil.CRLF);
         return sb.toString();
     }

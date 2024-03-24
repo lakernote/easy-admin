@@ -21,8 +21,8 @@ import java.util.List;
  * @author laker
  * @since 2021-08-16
  */
-@Api(tags = "示例controller")// 在doc.html中的名称
-@ApiSupport(order = 0, author = "laker") // 在doc.html中的顺序
+@Api(tags = "示例-各种请求参数示例")
+@ApiSupport(order = 100)
 @RestController
 @RequestMapping("/ext/demo")
 @Slf4j

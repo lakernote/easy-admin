@@ -1,37 +1,38 @@
-package com.laker.admin.module.task.core;
+package com.laker.admin.module.task.core.processor;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.LFUCache;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.utils.SpringUtils;
 import com.laker.admin.module.enums.TaskStateEnum;
+import com.laker.admin.module.task.core.IJob;
+import com.laker.admin.module.task.core.TaskJob;
+import com.laker.admin.module.task.core.listener.JobListener;
+import com.laker.admin.module.task.core.taskstore.ITaskStore;
 import com.laker.admin.module.task.entity.SysTask;
 import com.laker.admin.module.task.service.ISysTaskService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author laker
+ */
 @Component
 @Slf4j
-public class CoreProcessor implements CommandLineRunner {
+public class EasyTaskProcessor {
 
-    @Autowired
-    ApplicationContext applicationContext;
 
     @Autowired
     private ThreadPoolTaskScheduler threadPoolTaskScheduler;
@@ -40,7 +41,7 @@ public class CoreProcessor implements CommandLineRunner {
     private ITaskStore taskStore;
 
     @Autowired
-    private List<ICallBack> callBacks;
+    private List<JobListener> callBacks;
 
     @Autowired
     private ISysTaskService sysTaskService;
@@ -51,49 +52,26 @@ public class CoreProcessor implements CommandLineRunner {
     private final static LFUCache<String, ScheduledFuture> JVM_RUNNING_TASK = CacheUtil.newLFUCache(1000, TimeUnit.DAYS.toMillis(3));
 
 
-    @Override
-    public void run(String... args) throws Exception {
-        // 获取所有实现了IJob接口的类
-        Map<String, IJob> beansOfType = applicationContext.getBeansOfType(IJob.class);
-        if (MapUtil.isEmpty(beansOfType)) {
-            log.warn("未查询到IJob实现类");
-            return;
-        }
-        // 遍历加入到任务执行器中
-        beansOfType.forEach((s, job) -> {
-            Job annotation = AnnotationUtils.findAnnotation(job.getClass(), Job.class);
-            if (annotation != null) {
-                String cron = annotation.cron();
-                String taskName = annotation.taskName();
-                String taskCode = annotation.taskCode();
-                TaskDto taskDto = TaskDto.builder()
-                        .taskCode(taskCode)
-                        .taskName(taskName)
-                        .taskCron(cron)
-                        .taskClassName(job.getClass().getName()).build();
-                taskStore.saveTask(taskDto);
-                TaskDto storeTask = taskStore.findByTaskCode(taskCode);
-                if (storeTask.getEnable() && storeTask.getTaskState().equals(TaskStateEnum.START)) {
-                    this.startJVMJob(storeTask, null);
-                }
-            }
-        });
-    }
-
     /**
      * 将任务加入到JVM执行器中
      *
      * @return
      */
-    private void startJVMJob(TaskDto task, Map param) {
+    private void startJVMJob(TaskJob task, Map param) {
         String taskCron = task.getTaskCron();
         // TODO taskCron CHECK
         if (StrUtil.isNotBlank(taskCron) && !StrUtil.equals(taskCron, "-")) {
             ScheduledFuture<?> future = threadPoolTaskScheduler
                     .schedule(() -> {
                                 try {
-                                    callBacks.forEach(iCallBack -> {
-                                        iCallBack.start(task);
+                                    String traceId = MDC.get(EasyAdminConstants.TRACE_ID);
+                                    if (StrUtil.isBlank(traceId)) {
+                                        traceId = IdUtil.simpleUUID();
+                                    }
+                                    MDC.put(EasyAdminConstants.TRACE_ID, traceId);
+
+                                    callBacks.forEach(jobListener -> {
+                                        jobListener.start(task);
                                     });
                                     String taskClassName = task.getTaskClassName();
                                     Map<String, IJob> beansOfType = SpringUtils.getBeansOfType(IJob.class);
@@ -105,13 +83,14 @@ public class CoreProcessor implements CommandLineRunner {
                                     }
 
                                 } catch (Exception e) {
-                                    callBacks.forEach(iCallBack -> {
-                                        iCallBack.exception(task, e);
+                                    callBacks.forEach(jobListener -> {
+                                        jobListener.exception(task, e);
                                     });
                                 } finally {
-                                    callBacks.forEach(iCallBack -> {
-                                        iCallBack.end(task);
+                                    callBacks.forEach(jobListener -> {
+                                        jobListener.end(task);
                                     });
+                                    MDC.clear();
                                 }
                             },
                             new CronTrigger(taskCron));
@@ -129,7 +108,7 @@ public class CoreProcessor implements CommandLineRunner {
         JVM_RUNNING_TASK.remove(taskCode);
     }
 
-    public List jvmTaskList() {
+    public List runningTaskList() {
         List res = new ArrayList();
         Iterator<CacheObj<String, ScheduledFuture>> cacheObjIterator = JVM_RUNNING_TASK.cacheObjIterator();
         while (cacheObjIterator.hasNext()) {
@@ -141,12 +120,20 @@ public class CoreProcessor implements CommandLineRunner {
         return res;
     }
 
+    public void init(TaskJob taskJob) {
+        taskStore.storeTask(taskJob);
+        TaskJob storeTask = taskStore.findByTaskCode(taskJob.getTaskCode());
+        if (storeTask.getEnable() && storeTask.getTaskState().equals(TaskStateEnum.START)) {
+            this.startJVMJob(storeTask, new HashMap());
+        }
+    }
+
 
     public synchronized void startJob(String taskCode) {
-        TaskDto taskDto = taskStore.findByTaskCode(taskCode);
-        if (taskDto.getEnable()) {
+        TaskJob taskJob = taskStore.findByTaskCode(taskCode);
+        if (taskJob.getEnable()) {
             removeJvmTask(taskCode);
-            startJVMJob(taskDto, null);
+            startJVMJob(taskJob, null);
             sysTaskService.update(Wrappers.<SysTask>lambdaUpdate().set(SysTask::getTaskState, TaskStateEnum.START).eq(SysTask::getTaskCode, taskCode));
         }
 
@@ -157,6 +144,5 @@ public class CoreProcessor implements CommandLineRunner {
         removeJvmTask(taskCode);
         sysTaskService.update(Wrappers.<SysTask>lambdaUpdate().set(SysTask::getTaskState, TaskStateEnum.STOP).eq(SysTask::getTaskCode, taskCode));
     }
-
 
 }

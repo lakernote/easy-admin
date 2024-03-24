@@ -1,5 +1,5 @@
 
-package com.laker.admin.framework.waf;
+package com.laker.admin.framework.ext.filter.waf;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;

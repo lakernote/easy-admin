@@ -7,6 +7,9 @@ import cn.dev33.satoken.stp.StpUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author laker
+ */
 public class EasySaInterceprot extends SaInterceptor {
 
     /**

@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysFile;
@@ -20,7 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
  * @author laker
  * @since 2022-02-21
  */
-@Api(tags = "文件管理")
+@Api(tags = "系统-文件管理")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("/sys/file")
 public class SysFileController {

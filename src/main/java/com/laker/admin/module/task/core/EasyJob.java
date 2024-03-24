@@ -12,13 +12,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface Job {
+public @interface EasyJob {
 
     @AliasFor(annotation = Component.class)
     String value() default "";
 
     /**
-     * cron 表达式默认不"-"代表不执行
+     * cron表达式,默认"-",代表不执行
      */
     String cron() default "-";
 

@@ -38,7 +38,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/admin/login.html",
             "/error",
             "/swagger-resources/**",
-            "/api/v1/login",
+            "/sys/auth/v1/login",
+            "/favicon.ico",
             "/captcha"};
     private static final String[] trace_exclude_path = {"/admin/**",
             "/admin/login.html",
@@ -58,18 +59,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 注册sa-token的拦截器，打开注解式鉴权功能 (如果您不需要此功能，可以删除此类)
+     * 注册sa-token的拦截器，打开注解式鉴权功能
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册注解拦截器，并排除不需要注解鉴权的接口地址
         registry.addInterceptor(new EasySaInterceprot(handler -> {
             SaRouter.match("/**", r -> StpUtil.checkLogin());
-        }).isAnnotation(true)).addPathPatterns("/**")
+        }).isAnnotation(true))
+                .addPathPatterns("/**")
                 .excludePathPatterns(exclude_path);
 
-        // 配置自定义拦截器
-        registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
+        // 配置自定义Trace拦截器
+        registry.addInterceptor(new TraceAnnotationInterceptor())
+                .addPathPatterns("/**")
                 .excludePathPatterns(trace_exclude_path);
     }
 
@@ -83,7 +86,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 // 拦截路由
                 .addInclude("/ureport/**")
                 // 放行路由
-//                .addExclude("/favicon.ico", "/actuator/**")
+                .addExclude("/favicon.ico", "/actuator/**")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     if (StpUtil.getLoginIdAsLong() != 1) {
@@ -108,7 +111,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                             // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
                             .setHeader("X-Frame-Options", "SAMEORIGIN")
                             // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
-                            .setHeader("X-Frame-Options", "1; mode=block")
+//                            .setHeader("X-Frame-Options", "1; mode=block")
                             // 禁用浏览器内容嗅探
                             .setHeader("X-Content-Type-Options", "nosniff");
                 });
@@ -169,6 +172,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // formatters和converters用于对日期格式进行转换，默认已注册了Number和Date类型的formatters，
         // 支持@NumberFormat和@DateTimeFormat注解，需要自定义formatters和converters可以实现addFormatters方法。
 //        registry.addFormatter(new DateFormatter("yyyy-MM-dd"));
+        // 添加请求参数枚举类型支持
         registry.addConverter(new StringToEnumConvertFactory());
     }
 
@@ -181,7 +185,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         // 添加自定义方法参数处理器
+        // 添加请求参数的PageRequest对象自动填充
         argumentResolvers.add(new PageRequestArgumentResolver());
+        // 添加请求参数 CurrentUser对象自动填充
         argumentResolvers.add(new HandlerMethodArgumentResolver() {
             @Override
             public boolean supportsParameter(MethodParameter parameter) {

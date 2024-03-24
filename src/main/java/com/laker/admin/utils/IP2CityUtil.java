@@ -9,6 +9,9 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.InputStream;
 
+/**
+ * @author laker
+ */
 @Slf4j
 public class IP2CityUtil {
     public static String getCityInfo(String ip) {
@@ -20,7 +23,7 @@ public class IP2CityUtil {
             DataBlock dataBlock = searcher.memorySearch(ip);
             return dataBlock.getRegion();
         } catch (Exception e) {
-            log.error("", e);
+            log.error("getCityInfo error.", e);
         }
         return null;
     }

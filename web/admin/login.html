@@ -75,7 +75,7 @@
             /// 登录
             data.field.uid = uid;
             easyAdmin.http({
-                url: '/api/v1/login',
+                url: '/sys/auth/v1/login',
                 sendToken: false,
                 data: JSON.stringify(data.field),
                 dataType: 'json',

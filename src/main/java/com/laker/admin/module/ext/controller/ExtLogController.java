@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.framework.aop.trace.LakerIgnoreTrace;
@@ -17,6 +18,7 @@ import com.laker.admin.module.ext.service.IExtLogService;
 import com.laker.admin.module.ext.vo.LogStatisticsTop10Vo;
 import com.laker.admin.module.ext.vo.LogStatisticsVo;
 import com.laker.admin.module.sys.service.ISysUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,8 @@ import java.util.List;
  * @author laker
  * @since 2021-08-16
  */
+@Api(tags = "示例-请求日志示例")
+@ApiSupport(order = 100)
 @RestController
 @RequestMapping("/ext/log")
 @Metrics

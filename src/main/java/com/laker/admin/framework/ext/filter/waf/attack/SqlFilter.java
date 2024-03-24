@@ -1,4 +1,4 @@
-package com.laker.admin.framework.waf.attack;
+package com.laker.admin.framework.ext.filter.waf.attack;
 
 public class SqlFilter {
 

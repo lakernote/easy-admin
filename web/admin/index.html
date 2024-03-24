@@ -104,7 +104,7 @@
 
         // 获取用户信息，用户名、昵称、头像等
         easyAdmin.http({
-            url: "/api/v1/userInfo",
+            url: "/sys/auth/v1/userInfo",
             dataType: 'json',
             success: function (data) {
                 admin.setAvatar(data.data.avatar, data.data.nickName);
@@ -133,7 +133,7 @@
         // 登出逻辑
         admin.logout(function () {
 
-            easyAdmin.httpGet("/api/v1/loginOut");
+            easyAdmin.httpGet("/sys/auth/v1/logout");
 
 
             popup.success("注销成功", function () {

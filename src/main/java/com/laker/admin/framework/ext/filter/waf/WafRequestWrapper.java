@@ -1,10 +1,10 @@
 
-package com.laker.admin.framework.waf;
+package com.laker.admin.framework.ext.filter.waf;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import com.laker.admin.framework.waf.attack.HTMLFilter;
-import com.laker.admin.framework.waf.attack.SqlFilter;
+import com.laker.admin.framework.ext.filter.waf.attack.HTMLFilter;
+import com.laker.admin.framework.ext.filter.waf.attack.SqlFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 

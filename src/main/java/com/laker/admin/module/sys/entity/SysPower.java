@@ -70,6 +70,9 @@ public class SysPower implements Serializable {
      */
     private String remark;
 
+    /**
+     * 权限类型0目录1菜单2接口3数据
+     */
     private Integer type;
     /**
      * 如果是数据权限类型，则为数据权限标识 ExtLeaveMapper.selectPage Mapper名称+方法名称
@@ -77,7 +80,7 @@ public class SysPower implements Serializable {
     private String powerCode;
 
     /**
-     * 权限类型
+     * 当时数据权限时，过滤类型
      */
     private DataFilterTypeEnum dataFilterType;
     /**

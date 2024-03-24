@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import com.laker.admin.module.sys.service.ISysUserService;
 import com.laker.admin.utils.IP2CityUtil;
-import com.laker.admin.utils.http.HttpServletRequestUtil;
+import com.laker.admin.utils.http.EasyRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,14 +40,14 @@ public class MySaTokenListener implements SaTokenListener {
      */
     @Override
     public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginModel loginModel) {
-        UserAgent requestUserAgent = HttpServletRequestUtil.getRequestUserAgent();
+        UserAgent requestUserAgent = EasyRequestUtil.getRequestUserAgent();
         if (requestUserAgent == null) {
             return;
         }
-        String cityInfo = IP2CityUtil.getCityInfo(HttpServletRequestUtil.getRemoteIP());
+        String cityInfo = IP2CityUtil.getCityInfo(EasyRequestUtil.getRemoteIP());
         String[] split = cityInfo.split("\\|");
         ONLINE_USERS.add(OnlineUser.builder()
-                .ip(HttpServletRequestUtil.getRemoteIP())
+                .ip(EasyRequestUtil.getRemoteIP())
                 .city(StrUtil.format("{}.{}.{}", split[0], split[2], split[3]))
                 .loginTime(new Date())
                 .os(requestUserAgent.getOs().getName())

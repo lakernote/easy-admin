@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Dict;
 import com.laker.admin.framework.aop.ratelimit.RateLimitException;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.utils.http.HttpServletRequestUtil;
+import com.laker.admin.utils.http.EasyRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public Response handleRRException(BusinessException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("业务异常:{}", e.getMsg());
         return Response.error(String.valueOf(e.getCode()), e.getMsg());
     }
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public Response handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("方法参数类型不匹配", e);
         return Response.error("方法参数类型不匹配");
     }
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Response handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("缺少请求参数", e);
         return Response.error("缺少请求参数");
     }
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Response handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("参数解析失败", e);
         return Response.error("参数解析失败");
     }
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public Response handleValidationException(ValidationException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("参数验证失败", e);
         return Response.error("参数验证失败");
     }
@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Response handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("不支持当前请求方法", e);
         return Response.error("不支持当前请求方法");
     }
@@ -110,21 +110,21 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public Response handleHttpMediaTypeNotSupportedException(Exception e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error("不支持当前媒体类型", e);
         return Response.error("不支持当前媒体类型");
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
     public Response handleDuplicateKeyException(DuplicateKeyException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error("500", "数据库中已存在该记录");
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public Response handleMaxSizeException(MaxUploadSizeExceededException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error("500", "File too large!");
     }
@@ -132,14 +132,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
     public Response handleNotLoginException(NotLoginException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error(e.getMessage());
         return Response.error("401", e.getMessage());
     }
 
     @ExceptionHandler(SaTokenException.class)
     public Response handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e);
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyRequestUtil.getRequestURI(), EasyRequestUtil.getRequest().getMethod(), e);
         return Response.error("403", e.getMessage());
     }
 
@@ -188,7 +188,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Response handleException(Exception e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
+        log.info(EasyRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error("500", "服务器异常");
     }

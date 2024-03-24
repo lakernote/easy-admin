@@ -37,6 +37,7 @@
         let easyAdmin = layui.easyAdmin;
         // 根据menuId获取详情，用于数据回显
         var roleId = easyAdmin.getQueryString("roleId");
+
         easyAdmin.httpGet("/sys/role/getRolePower?roleId=" + roleId, function (result) {
             dtree.render({
                 elem: "#role-power",

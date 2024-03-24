@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
-public class LakerTransactionManagerConfig {
+public class EasyTransactionManagerConfig {
 
     @Bean
     DataSourceTransactionManager transactionManager(DataSource dataSource,

@@ -1,11 +1,13 @@
 package com.laker.admin.module.flow;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.framework.model.PageResponse;
@@ -14,6 +16,7 @@ import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.flow.process.SnakerHelper;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -37,9 +40,12 @@ import java.util.Map;
 
 import static org.snaker.engine.access.QueryFilter.DESC;
 
+@Api(tags = "流程引擎-流程管理")// 在doc.html中的名称
+@ApiSupport(order = 200, author = "laker") // 在doc.html中的顺序
 @RestController
 @RequestMapping("/flow")
 @Slf4j
+@SaCheckLogin
 public class SnakerflowFacetsController {
 
     @Autowired
@@ -175,8 +181,6 @@ public class SnakerflowFacetsController {
             List<HistoryTask> historyTasks = snakerEngineFacets.getEngine().query().getHistoryTasks(new QueryFilter().setOrderId(orderId));
             jsonMap.put("state", SnakerHelper.getStateJson(model, tasks, historyTasks));
         }
-        log.info(jsonMap.get("state"));
-        //{"historyRects":{"rects":[{"paths":["TO 任务1"],"name":"开始"},{"paths":["TO 分支"],"name":"任务1"},{"paths":["TO 任务3","TO 任务4","TO 任务2"],"name":"分支"}]}}
         return jsonMap;
     }
 
