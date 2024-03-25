@@ -81,5 +81,14 @@
         <fileSet>
             <directory>${basedir}/web</directory>
         </fileSet>
+
+        <!-- 复制存储目录 -->
+        <fileSet>
+            <directory>${basedir}/storage</directory>
+            <includes>
+                <include>*.xml</include>
+                <include>*.conf</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
