@@ -5,6 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.laker.admin.framework.ext.filter.waf.escape.JavaScriptEscape;
 import com.laker.admin.framework.ext.filter.waf.escape.SqlEscape;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import java.util.Map;
  * @author hubin
  * @since 2014-5-8
  */
+@Slf4j
 public class WafRequestWrapper extends HttpServletRequestWrapper {
 
     private final boolean filterXSS;
@@ -101,10 +104,10 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
         }
 
         // xss过滤
+        log.info("web防火墙处理-前：{}", json);
         json = filterParamString(json).trim();
-        System.out.println("web防火墙处理后的结果如下：");
-        System.out.println(json);
-        final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
+        log.info("web防火墙处理-后：{}", json);
+        final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {

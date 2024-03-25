@@ -82,6 +82,7 @@
     <logger name="org.snaker.engine" level="ERROR"/>
     <!-- 不支持通配符 com.laker.admin.module.**.mapper-->
     <logger name="com.laker.admin.module" level="INFO"/>
+    <logger name="com.laker.admin.framework" level="INFO"/>
     <!-- 默认日志输出级别 -->
     <root level="WARN">
         <appender-ref ref="DEFAULT"/>

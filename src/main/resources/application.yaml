@@ -89,8 +89,8 @@ sa-token:
 easy:
   # web防火墙配置
   waf:
-    sql-enabled: false
-    xss-enabled: false
+    sql-enabled: true
+    xss-enabled: true
     excludes: /flow/*,/sys/nginx/*
 # actuator
 management:
