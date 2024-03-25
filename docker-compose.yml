@@ -1,5 +1,5 @@
 # 启动命令 docker-compose up 在后台执行该服务可以加上 -d,docker-compose up -d
-# 停止命令 docker-compose down
+# 停止命令 docker-compose down 同时删除卷docker-compose down -v
 version: "3.4"
 # 项目名称
 name: easy-admin
@@ -92,6 +92,7 @@ networks:
     # 桥接模式是 Docker 默认的网络驱动程序，用于在容器间创建桥接网络，使它们能够相互通信
     driver: bridge
     ipam:
+      driver: default
       config:
         # 子网络
         - subnet: 178.18.0.0/16
