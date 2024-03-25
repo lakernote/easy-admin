@@ -66,7 +66,7 @@ public class ExtLogController {
             queryWrapper.like(ExtLog::getUri, keyWord);
         }
         queryWrapper.orderByDesc(ExtLog::getCreateTime);
-        Page pageList = extLogService.page(roadPage, queryWrapper);
+        Page<ExtLog> pageList = extLogService.page(roadPage, queryWrapper);
         List<ExtLog> records = pageList.getRecords();
         records.forEach(extLog -> {
             if (extLog.getUserId() != null) {
@@ -79,14 +79,14 @@ public class ExtLogController {
 
     @GetMapping("/visits7day")
     @ApiOperation(value = "7天访问量")
-    public Response visits7day() {
+    public Response<List<LogStatisticsVo>> visits7day() {
         List<LogStatisticsVo> logStatisticsVo = extLogMapper.selectStatistics7Day();
         return Response.ok(logStatisticsVo);
     }
 
     @GetMapping("/visitsTop10IP")
     @ApiOperation(value = "visitsTop10IP")
-    public PageResponse visitsTop10IP() {
+    public PageResponse<List<LogStatisticsTop10Vo>> visitsTop10IP() {
         List<LogStatisticsTop10Vo> logStatisticsVo = extLogMapper.selectStatisticsVisitsTop10IP();
         return PageResponse.ok(logStatisticsVo, 10L);
     }
