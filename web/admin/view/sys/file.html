@@ -116,32 +116,40 @@
         easyAdmin.TableToolBar(uri, module);
         easyAdmin.FormQuery();
         // 配置服务端地址
-        var adminServerUrl = layui.data('easyAdmin').serverUrl;
-        user = layui.data('user');
+        const adminServerUrl = layui.data('easyAdmin').serverUrl;
+        const user = layui.data('user');
         // 用于判断未登录跳转到登录页
-        if (JSON.stringify(user) == "{}") {
+        if (JSON.stringify(user) === "{}") {
             console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
             location.href = "login.html";
         }
-        var tokenName = user.token.name;
-        var tokenValue = user.token.value;
+        const tokenName = user.token.name;
+        const tokenValue = user.token.value;
         //指定允许上传的文件类型
-        var headers = {};
+        const headers = {};
         headers[tokenName] = tokenValue;
         upload.render({
             elem: '#upload1'
             , url: adminServerUrl + uri + '/upload' //此处配置你自己的上传接口即可
-            , accept: 'file' //普通文件
+            , accept: 'images' //图片类型
+            , acceptMime: 'image/jpeg, image/png'
+            , exts: 'jpg|png|jpeg' // 限制后缀
             , data: {
                 id: 1,
                 name: 'laker'
             },
             // headers: {token: 'sasasas'}
             headers: headers
-            , done: function (res) {
+            , done: function (result) {
                 // layer.msg('上传成功');
                 easyAdmin.TableRefresh();
-                console.log(res)
+                if (!result.success) {
+                    layer.msg(result.msg, {
+                        icon: 2,
+                        time: 1000,
+                        area: ['260px', '65px']
+                    });
+                }
             }, error: function () {
                 //请求异常回调
                 layer.msg('上传失败');

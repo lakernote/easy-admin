@@ -182,10 +182,10 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
         }
         String tmpStr = rawValue;
         if (this.filterXSS) {
-            tmpStr = SqlFilter.strip(rawValue);
+            tmpStr = HTMLFilter.htmlSpecialChars(tmpStr);
         }
         if (this.filterSQL) {
-            tmpStr = HTMLFilter.htmlSpecialChars(tmpStr);
+            tmpStr = SqlFilter.strip(rawValue);
         }
         return tmpStr;
     }
