@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,20 +40,24 @@ public class WafFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException,
             ServletException {
-        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if (handle(req)) {
+        // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
+        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+
+        if (handle(request)) {
             try {
                 //Request请求过滤
-                chain.doFilter(new WafRequestWrapper(req, xssEnabled, sqlEnabled), response);
+                chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
             } catch (Exception e) {
-                log.error(" WafFilter exception , requestURL: " + req.getRequestURL(), e);
+                log.error(" WafFilter exception , requestURL: " + request.getRequestURL(), e);
             }
             return;
         }
-        chain.doFilter(request, response);
+        chain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

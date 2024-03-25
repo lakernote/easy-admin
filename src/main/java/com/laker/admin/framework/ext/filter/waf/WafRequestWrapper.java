@@ -3,8 +3,8 @@ package com.laker.admin.framework.ext.filter.waf;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import com.laker.admin.framework.ext.filter.waf.attack.HTMLFilter;
-import com.laker.admin.framework.ext.filter.waf.attack.SqlFilter;
+import com.laker.admin.framework.ext.filter.waf.escape.JavaScriptEscape;
+import com.laker.admin.framework.ext.filter.waf.escape.SqlEscape;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -27,9 +27,9 @@ import java.util.Map;
  */
 public class WafRequestWrapper extends HttpServletRequestWrapper {
 
-    private boolean filterXSS = true;
+    private final boolean filterXSS;
 
-    private boolean filterSQL = true;
+    private final boolean filterSQL;
 
 
     public WafRequestWrapper(HttpServletRequest request, boolean filterXSS, boolean filterSQL) {
@@ -66,7 +66,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    public Map getParameterMap() {
+    public Map<String, String[]> getParameterMap() {
         Map<String, String[]> primary = super.getParameterMap();
         Map<String, String[]> result = new HashMap<String, String[]>(primary.size());
         for (Map.Entry<String, String[]> entry : primary.entrySet()) {
@@ -121,7 +121,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
             }
 
             @Override
-            public int read() throws IOException {
+            public int read() {
                 return bis.read();
             }
         };
@@ -138,7 +138,6 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * @param name 过滤内容
-     * @return
      * @since 请求头过滤
      */
     @Override
@@ -148,7 +147,6 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
 
     /**
-     * @return
      * @since Cookie内容过滤
      */
     @Override
@@ -173,7 +171,6 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * @param rawValue 待处理内容
-     * @return
      * @since 过滤字符串内容
      */
     protected String filterParamString(String rawValue) {
@@ -182,10 +179,10 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
         }
         String tmpStr = rawValue;
         if (this.filterXSS) {
-            tmpStr = HTMLFilter.htmlSpecialChars(tmpStr);
+            tmpStr = JavaScriptEscape.escape(tmpStr);
         }
         if (this.filterSQL) {
-            tmpStr = SqlFilter.strip(rawValue);
+            tmpStr = SqlEscape.escape(tmpStr);
         }
         return tmpStr;
     }
