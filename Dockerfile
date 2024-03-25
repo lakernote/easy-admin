@@ -12,6 +12,8 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY target/*.jar app.jar
 # 复制前端web到容器内的 /laker/web
 COPY /web /laker/web
+# 复制存储storage到容器内的 /laker/storage
+COPY /storage /laker/storage
 # 暴露8080端口
 EXPOSE 8080
 # 指定docker容器启动时运行jar包
