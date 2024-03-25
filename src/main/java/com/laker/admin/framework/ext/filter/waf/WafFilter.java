@@ -3,6 +3,8 @@ package com.laker.admin.framework.ext.filter.waf;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -47,11 +49,21 @@ public class WafFilter implements Filter {
 
         // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
         response.setHeader("X-Frame-Options", "SAMEORIGIN");
+        // 禁用浏览器内容嗅探
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
+        response.setHeader("X-XSS-Protection", "1; mode=block");
 
         if (handle(request)) {
             try {
                 //Request请求过滤
-                chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
+                String header = request.getHeader(HttpHeaders.CONTENT_TYPE);
+                if (MediaType.MULTIPART_FORM_DATA_VALUE.equalsIgnoreCase(header)) {
+                    // todo 文件上传请求
+                    chain.doFilter(servletRequest, servletResponse);
+                } else {
+                    chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
+                }
             } catch (Exception e) {
                 log.error(" WafFilter exception , requestURL: " + request.getRequestURL(), e);
             }

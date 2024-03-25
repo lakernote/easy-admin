@@ -49,7 +49,6 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * @param parameter 过滤参数
-     * @return
      * @since 数组参数过滤
      */
     @Override
@@ -71,7 +70,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public Map<String, String[]> getParameterMap() {
         Map<String, String[]> primary = super.getParameterMap();
-        Map<String, String[]> result = new HashMap<String, String[]>(primary.size());
+        Map<String, String[]> result = new HashMap<>(primary.size());
         for (Map.Entry<String, String[]> entry : primary.entrySet()) {
             result.put(entry.getKey(), filterEntryString(entry.getValue()));
         }
@@ -82,7 +81,6 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * @param parameter 过滤参数
-     * @return
      * @since 参数过滤
      */
     @Override
@@ -156,8 +154,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
     public Cookie[] getCookies() {
         Cookie[] existingCookies = super.getCookies();
         if (existingCookies != null) {
-            for (int i = 0; i < existingCookies.length; ++i) {
-                Cookie cookie = existingCookies[i];
+            for (Cookie cookie : existingCookies) {
                 cookie.setValue(filterParamString(cookie.getValue()));
             }
         }
