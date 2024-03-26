@@ -1,10 +1,10 @@
-
 package com.laker.admin.framework.ext.filter.waf;
 
 import cn.hutool.core.util.StrUtil;
+import com.laker.admin.framework.model.Response;
+import com.laker.admin.framework.utils.EasyHttpResponseUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +42,7 @@ public class WafFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException,
-            ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -54,22 +53,30 @@ public class WafFilter implements Filter {
         // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
         response.setHeader("X-XSS-Protection", "1; mode=block");
 
+        // 只处理 POST PUT DELETE
+        if (!request.getMethod().equals("POST")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (ServletFileUpload.isMultipartContent(request)) {
+            Response<Void> check = MultipartRequestChecker.check(request);
+            if (!check.getSuccess()) {
+                EasyHttpResponseUtil.json(response, check);
+                return;
+            }
+            chain.doFilter(request, response);
+            return;
+        }
+
         if (handle(request)) {
             try {
                 //Request请求过滤
-                String header = request.getHeader(HttpHeaders.CONTENT_TYPE);
-                if (MediaType.MULTIPART_FORM_DATA_VALUE.equalsIgnoreCase(header)) {
-                    // todo 文件上传请求
-                    chain.doFilter(servletRequest, servletResponse);
-                } else {
-                    chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
-                }
+                chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
             } catch (Exception e) {
                 log.error(" WafFilter exception , requestURL: " + request.getRequestURL(), e);
             }
-            return;
         }
-        chain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

@@ -163,11 +163,12 @@
             <artifactId>easy-captcha</artifactId>
             <version>1.6.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjdk.nashorn</groupId>
-            <artifactId>nashorn-core</artifactId>
-            <version>15.4</version>
-        </dependency>
+        <!-- java8不需要 -->
+<!--        <dependency>-->
+<!--            <groupId>org.openjdk.nashorn</groupId>-->
+<!--            <artifactId>nashorn-core</artifactId>-->
+<!--            <version>15.4</version>-->
+<!--        </dependency>-->
         <!-- 根据ip获取归属地 -->
         <dependency>
             <groupId>org.lionsoul</groupId>

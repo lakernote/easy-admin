@@ -29,7 +29,7 @@ public class StatisticsController {
 
 
     @GetMapping("/console")
-    public Response get() {
+    public Response<Dict> get() {
         List<Task> activeTasks = snakerEngineFacets.getEngine().query()
                 .getActiveTasks(new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
         List<HistoryTask> historyTasks = snakerEngineFacets.getEngine().query()

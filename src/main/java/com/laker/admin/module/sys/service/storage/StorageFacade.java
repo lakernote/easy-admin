@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
@@ -42,12 +41,12 @@ public class StorageFacade {
         return sysFile;
     }
 
-    public Page page(Page page, String keyWord) {
-        LambdaQueryWrapper<SysFile> queryWrapper = new QueryWrapper().lambda();
+    public Page<SysFile> page(Page<SysFile> page, String keyWord) {
+        LambdaQueryWrapper<SysFile> queryWrapper = new LambdaQueryWrapper<>();
         if (StrUtil.isNotBlank(keyWord)) {
             queryWrapper.like(SysFile::getFileName, keyWord);
         }
-        Page pageList = sysFileService.page(page, queryWrapper);
+        Page<SysFile> pageList = sysFileService.page(page, queryWrapper);
         List<SysFile> records = page.getRecords();
         records.forEach(sysFile -> {
             sysFile.setFilePath(storage.getUrl(sysFile.getFilePath()));
@@ -62,6 +61,7 @@ public class StorageFacade {
         storage.delete(sysFile.getFilePath());
     }
 
+    @Transactional
     public void delete(Long[] ids) {
         for (Long id : ids) {
             delete(id);

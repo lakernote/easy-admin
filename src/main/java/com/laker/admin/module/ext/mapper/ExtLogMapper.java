@@ -19,41 +19,30 @@ import java.util.List;
 public interface ExtLogMapper extends BaseMapper<ExtLog> {
 
 
-    //    @Select("select DATE_FORMAT(create_time,'%Y-%m-%d') date,count(*) value from ext_log where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= create_time  group by date ORDER BY create_time ")
     @Select("SELECT\n" +
-            "\tdate,\n" +
-            "\tcount(*) value\n" +
+            "    DATE_FORMAT(t.create_time, '%Y-%m-%d') AS date,\n" +
+            "    COUNT(*) AS value\n" +
             "FROM\n" +
-            "\t(\n" +
-            "\tselect\n" +
-            "\t\tDATE_FORMAT(create_time, '%Y-%m-%d') date\n" +
-            "\tFROM\n" +
-            "\t\text_log\n" +
-            "\tWHERE\n" +
-            "\t\tDATE_SUB(CURDATE(), INTERVAL 7 DAY) <= create_time\n" +
-            "\tORDER BY\n" +
-            "\t\tcreate_time ) tmp\n" +
+            "    ext_log t\n" +
+            "WHERE\n" +
+            "    t.create_time >= CURDATE() - INTERVAL 7 DAY\n" +
             "GROUP BY\n" +
-            "\tdate\n" +
-            "\t")
+            "    date")
     List<LogStatisticsVo> selectStatistics7Day();
 
     @Select("SELECT\n" +
-            "\tw.ip,\n" +
-            "\tcity,\n" +
-            "\tcount( * ) \n" +
-            "\tVALUE\t\n" +
+            "    w.ip,\n" +
+            "    city,\n" +
+            "    COUNT(*) AS value\n" +
             "FROM\n" +
-            "\text_log w \n" +
+            "    ext_log w\n" +
             "WHERE\n" +
-            "\tDATE_SUB( CURDATE( ), INTERVAL 1 day ) <= w.create_time \n" +
+            "    w.create_time >= CURDATE() - INTERVAL 1 DAY\n" +
             "GROUP BY\n" +
-            "\tw.ip,city \n" +
+            "    w.ip, city\n" +
             "ORDER BY\n" +
-            "\t\n" +
-            "VALUE\n" +
-            "DESC \n" +
-            "LIMIT 10")
+            "    value DESC\n" +
+            "LIMIT 10\n")
     List<LogStatisticsTop10Vo> selectStatisticsVisitsTop10IP();
 
     @Select("SELECT count(DISTINCT ip) from ext_log")
