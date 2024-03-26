@@ -3,7 +3,7 @@ package com.laker.admin.service;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import com.laker.admin.utils.IP2CityUtil;
+import com.laker.admin.framework.utils.IP2CityUtil;
 
 public class Test {
 

@@ -12,7 +12,13 @@ public class JavaScriptEscape {
             char c = input.charAt(i);
             switch (c) {
                 case '<':
+                    escaped.append("&lt;");
+                    break;
                 case '>':
+                    escaped.append("&gt;");
+                    break;
+                case '&':
+                    escaped.append("&amp;");
                     break;
                 default:
                     escaped.append(c);

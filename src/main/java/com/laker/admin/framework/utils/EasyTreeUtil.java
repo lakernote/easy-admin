@@ -1,4 +1,4 @@
-package com.laker.admin.utils;
+package com.laker.admin.framework.utils;
 
 import com.laker.admin.module.sys.pojo.MenuVo;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class EasyTreeUtil {
 
     public static List<MenuVo> toTree(List<MenuVo> treeList, Long pid) {
-        List<MenuVo> retList = new ArrayList<MenuVo>();
+        List<MenuVo> retList = new ArrayList<>();
         for (MenuVo parent : treeList) {
             if (pid.equals(parent.getPid())) {
                 retList.add(findChildren(parent, treeList));
@@ -19,6 +19,7 @@ public class EasyTreeUtil {
         }
         return retList;
     }
+
     private static MenuVo findChildren(MenuVo parent, List<MenuVo> treeList) {
         for (MenuVo child : treeList) {
             if (parent.getId().equals(child.getPid())) {

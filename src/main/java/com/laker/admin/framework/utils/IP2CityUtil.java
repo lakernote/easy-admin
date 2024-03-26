@@ -1,4 +1,4 @@
-package com.laker.admin.utils;
+package com.laker.admin.framework.utils;
 
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;

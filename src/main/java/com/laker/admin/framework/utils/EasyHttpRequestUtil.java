@@ -1,4 +1,4 @@
-package com.laker.admin.utils.http;
+package com.laker.admin.framework.utils;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
@@ -12,7 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -21,12 +21,10 @@ import java.util.*;
  * @author laker
  */
 @Slf4j
-public class EasyRequestUtil {
+public class EasyHttpRequestUtil {
 
     /**
      * 获取request对象
-     *
-     * @return
      */
     public static HttpServletRequest getRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -49,13 +47,10 @@ public class EasyRequestUtil {
 
     /**
      * 获取getRequestURI
-     *
-     * @return
      */
     public static UserAgent getRequestUserAgent() {
         HttpServletRequest request = getRequest();
-        UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
-        return userAgent;
+        return UserAgentUtil.parse(request.getHeader("User-Agent"));
 
     }
 
@@ -92,10 +87,10 @@ public class EasyRequestUtil {
     /**
      * 取得请求头信息 name:value
      */
-    public static Map getHeaders() {
+    public static Map<String, String> getHeaders() {
         HttpServletRequest request = getRequest();
         Map<String, String> map = new HashMap<>(32);
-        Enumeration headerNames = request.getHeaderNames();
+        Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String key = (String) headerNames.nextElement();
             String value = request.getHeader(key);
@@ -112,9 +107,8 @@ public class EasyRequestUtil {
         InputStream inputStream = null;
         try {
             inputStream = request.getInputStream();
-            return StreamUtils.copyToString(inputStream, Charset.forName("utf-8"));
+            return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
             log.error("HttpServletRequest.getBody", e);
         } finally {
             if (inputStream != null) {
@@ -129,19 +123,18 @@ public class EasyRequestUtil {
     }
 
     public static String getAllRequestInfo() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Detail").append(StrUtil.CRLF);
-        sb.append("RemoteAddress: ").append(getRemoteIP()).append(StrUtil.CRLF);
-        sb.append("Method: ").append(getRequest().getMethod()).append(StrUtil.CRLF);
-        sb.append("Uri: ").append(getRequestURI()).append(StrUtil.CRLF);
-        sb.append("Headers: ").append(StrUtil.join(StrUtil.CRLF + "         ",
-                mapToList(getHeaders()))).append(StrUtil.CRLF);
-        sb.append("Body: ").append(getBody()).append(StrUtil.CRLF);
-        return sb.toString();
+        return "Detail" + StrUtil.CRLF +
+                "RemoteAddress: " + getRemoteIP() + StrUtil.CRLF +
+                "Method: " + getRequest().getMethod() + StrUtil.CRLF +
+                "Uri: " + getRequestURI() + StrUtil.CRLF +
+                "Headers: " + StrUtil.join(StrUtil.CRLF + "         ",
+                mapToList(getHeaders())) +
+                StrUtil.CRLF +
+                "Body: " + getBody() + StrUtil.CRLF;
     }
 
-    private static List mapToList(Map parameters) {
-        List parametersList = new ArrayList();
+    private static List<String> mapToList(Map<String, String> parameters) {
+        List<String> parametersList = new ArrayList<>();
         parameters.forEach((name, value) -> {
             parametersList.add(name + "=" + value);
         });

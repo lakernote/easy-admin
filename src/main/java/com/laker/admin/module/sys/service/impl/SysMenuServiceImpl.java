@@ -11,7 +11,7 @@ import com.laker.admin.module.sys.pojo.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
-import com.laker.admin.utils.EasyTreeUtil;
+import com.laker.admin.framework.utils.EasyTreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

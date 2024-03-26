@@ -2,7 +2,7 @@ package com.laker.admin.framework.aop.ratelimit;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
-import com.laker.admin.utils.http.EasyRequestUtil;
+import com.laker.admin.framework.utils.EasyHttpRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,7 +36,7 @@ public class RateLimitAspect {
         String key = rateLimit.key() + StringUtils.upperCase(method.getName());
         switch (limitType) {
             case IP:
-                key = StrUtil.join("-", EasyRequestUtil.getRemoteIP(), key);
+                key = StrUtil.join("-", EasyHttpRequestUtil.getRemoteIP(), key);
                 break;
             case USER:
                 key = StrUtil.join("-", StpUtil.getLoginId(), key);

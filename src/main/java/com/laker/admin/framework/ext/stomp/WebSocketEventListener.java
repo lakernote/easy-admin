@@ -11,6 +11,7 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,13 +27,11 @@ public class WebSocketEventListener {
 
     /**
      * 建立连接监听
-     *
-     * @param sessionConnectedEvent
      */
     @EventListener
     public void handleConnectListener(SessionConnectedEvent sessionConnectedEvent) {
         EasyPrincipal user = (EasyPrincipal) sessionConnectedEvent.getUser();
-        log.debug("建立连接 {} -> {}", user, sessionConnectedEvent);
+        log.warn("建立连接 {} -> {}", user, sessionConnectedEvent);
         // 加入在线用户列表
 
         ThreadUtil.execute(() -> {
@@ -44,7 +43,7 @@ public class WebSocketEventListener {
             }
             // 广播上线消息
             stompMessageService.sendMessage(StompConstant.SUB_STATUS, EasyChatMessage.builder()
-                    .content("欢迎【" + user.getAddress() + "】老弟体验")
+                    .content("欢迎【" + Objects.requireNonNull(user).getAddress() + "】老弟体验")
                     .createTime(new Date()).build());
             log.debug("广播消息喽");
         });
@@ -53,13 +52,11 @@ public class WebSocketEventListener {
 
     /**
      * 断开连接监听
-     *
-     * @param sessionDisconnectEvent
      */
     @EventListener
     public void handleDisconnectListener(SessionDisconnectEvent sessionDisconnectEvent) {
         EasyPrincipal user = (EasyPrincipal) sessionDisconnectEvent.getUser();
-        log.debug("断开连接 -> {}", sessionDisconnectEvent);
+        log.warn("断开连接 -> {}", sessionDisconnectEvent);
         // 剔除在线用户列表
         if (user == null) {
             return;

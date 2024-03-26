@@ -14,7 +14,7 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        //为/chatroom路径启用SockJS功能
+        // 为/chatroom路径启用SockJS功能
         registry.addEndpoint("/chatroom")
                 .setAllowedOrigins("*")
                 // 握手处理，主要是连接的时候认证获取其他数据验证等

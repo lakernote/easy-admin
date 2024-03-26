@@ -8,8 +8,8 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
-import com.laker.admin.utils.IP2CityUtil;
-import com.laker.admin.utils.http.EasyRequestUtil;
+import com.laker.admin.framework.utils.IP2CityUtil;
+import com.laker.admin.framework.utils.EasyHttpRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -53,16 +53,16 @@ public class MetricsAspect {
         Object returnValue;
         Instant start = Instant.now();
         ExtLog logBean = new ExtLog();
-        logBean.setIp(EasyRequestUtil.getRemoteIP());
+        logBean.setIp(EasyHttpRequestUtil.getRemoteIP());
         logBean.setCity("未知");
         if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
             String cityInfo = IP2CityUtil.getCityInfo(logBean.getIp());
             String[] split = cityInfo.split("\\|");
             logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
         }
-        logBean.setUri(EasyRequestUtil.getRequestURI());
+        logBean.setUri(EasyHttpRequestUtil.getRequestURI());
         logBean.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
-        UserAgent userAgent = EasyRequestUtil.getRequestUserAgent();
+        UserAgent userAgent = EasyHttpRequestUtil.getRequestUserAgent();
         if (userAgent != null) {
             String client = userAgent.getOs().getName() + "." + userAgent.getBrowser().getName();
             logBean.setClient(client);
@@ -85,7 +85,7 @@ public class MetricsAspect {
         try {
             returnValue = pjp.proceed();
         } catch (Exception ex) {
-            log.info("method:{},fail,cost:{}ms,uri:{},param:{}", name, Duration.between(start, Instant.now()).toMillis(), EasyRequestUtil.getRequestURI(), objectMapper.writeValueAsString(modifiedArgs));
+            log.info("method:{},fail,cost:{}ms,uri:{},param:{}", name, Duration.between(start, Instant.now()).toMillis(), EasyHttpRequestUtil.getRequestURI(), objectMapper.writeValueAsString(modifiedArgs));
             logBean.setCost((int) Duration.between(start, Instant.now()).toMillis());
             logBean.setCreateTime(LocalDateTime.now());
             logBean.setStatus(false);
@@ -95,7 +95,7 @@ public class MetricsAspect {
 
         }
         String response = objectMapper.writeValueAsString(returnValue);
-        log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), EasyRequestUtil.getRequestURI(), objectMapper.writeValueAsString(modifiedArgs), response);
+        log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), EasyHttpRequestUtil.getRequestURI(), objectMapper.writeValueAsString(modifiedArgs), response);
         logBean.setCost((int) Duration.between(start, Instant.now()).toMillis());
         logBean.setCreateTime(LocalDateTime.now());
         if (StrUtil.isNotBlank(response) && response.length() <= 500) {

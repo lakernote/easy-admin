@@ -58,10 +58,11 @@ public class WafFilter implements Filter {
             return;
         }
 
-        // 处理文件上传请求
+        // 处理文件上传请求 脚本攻击检测
         if (ServletFileUpload.isMultipartContent(request)) {
             Response<Void> check = MultipartRequestChecker.check(request);
             if (!check.getSuccess()) {
+                log.warn(" WafFilter exception , multipart requestURL: " + request.getRequestURL());
                 EasyHttpResponseUtil.json(response, check);
                 return;
             }
@@ -69,7 +70,7 @@ public class WafFilter implements Filter {
             return;
         }
 
-
+        // 拦截请求  脚本攻击转义
         if (shouldHandleRequest(request)) {
             try {
                 //Request请求过滤

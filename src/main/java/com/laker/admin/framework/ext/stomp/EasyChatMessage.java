@@ -1,6 +1,5 @@
 package com.laker.admin.framework.ext.stomp;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
