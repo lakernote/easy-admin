@@ -72,7 +72,7 @@ public class LoginController {
         if (sysUser == null) {
             return Response.error("5001", "用户名或密码不正确");
         }
-        if (sysUser.getEnable().intValue() == 0) {
+        if (sysUser.getEnable() == 0) {
             return Response.error("5001", "用户:" + loginDto.getUsername() + "已被禁用");
         }
         StpUtil.login(sysUser.getUserId());

@@ -5,12 +5,14 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyHttpResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.http.HttpMethod;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +22,8 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class WafFilter implements Filter {
+    private static final List<HttpMethod> ALLOW_METHODS = Arrays.asList(HttpMethod.POST,
+            HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH);
     /**
      * 排除链接
      */
@@ -35,8 +39,7 @@ public class WafFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        String excludesUrls = config.getInitParameter("excludes");
-        excludes = StrUtil.split(excludesUrls, ',');
+        excludes = StrUtil.split(config.getInitParameter("excludes"), ',');
         xssEnabled = getParamConfig(config.getInitParameter("xssEnabled"));
         sqlEnabled = getParamConfig(config.getInitParameter("sqlEnabled"));
     }
@@ -46,19 +49,16 @@ public class WafFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
-        response.setHeader("X-Frame-Options", "SAMEORIGIN");
-        // 禁用浏览器内容嗅探
-        response.setHeader("X-Content-Type-Options", "nosniff");
-        // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
-        response.setHeader("X-XSS-Protection", "1; mode=block");
+        // 设置安全响应头
+        setSecurityHeaders(response);
 
-        // 只处理 POST PUT DELETE
-        if (!request.getMethod().equals("POST")) {
+        // 只处理 POST PUT DELETE PATCH
+        if (!ALLOW_METHODS.contains(HttpMethod.resolve(request.getMethod()))) {
             chain.doFilter(request, response);
             return;
         }
 
+        // 处理文件上传请求
         if (ServletFileUpload.isMultipartContent(request)) {
             Response<Void> check = MultipartRequestChecker.check(request);
             if (!check.getSuccess()) {
@@ -69,7 +69,8 @@ public class WafFilter implements Filter {
             return;
         }
 
-        if (handle(request)) {
+
+        if (shouldHandleRequest(request)) {
             try {
                 //Request请求过滤
                 chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
@@ -84,8 +85,16 @@ public class WafFilter implements Filter {
         log.warn(" WafFilter destroy .");
     }
 
+    private void setSecurityHeaders(HttpServletResponse response) {
+        // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
+        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+        // 禁用浏览器内容嗅探
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
+        response.setHeader("X-XSS-Protection", "1; mode=block");
+    }
 
-    private boolean handle(HttpServletRequest request) {
+    private boolean shouldHandleRequest(HttpServletRequest request) {
         if (!xssEnabled && !sqlEnabled) {
             return false;
         }

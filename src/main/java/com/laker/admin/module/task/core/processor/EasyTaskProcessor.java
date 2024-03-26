@@ -7,7 +7,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.laker.admin.framework.EasyAdminConstants;
-import com.laker.admin.framework.utils.SpringUtils;
+import com.laker.admin.framework.utils.EasySpringUtils;
 import com.laker.admin.module.enums.TaskStateEnum;
 import com.laker.admin.module.task.core.IJob;
 import com.laker.admin.module.task.core.TaskJob;
@@ -74,7 +74,7 @@ public class EasyTaskProcessor {
                                         jobListener.start(task);
                                     });
                                     String taskClassName = task.getTaskClassName();
-                                    Map<String, IJob> beansOfType = SpringUtils.getBeansOfType(IJob.class);
+                                    Map<String, IJob> beansOfType = EasySpringUtils.getBeansOfType(IJob.class);
                                     for (IJob iJob : beansOfType.values()) {
                                         if (StrUtil.equals(taskClassName, iJob.getClass().getName())) {
                                             iJob.execute(param);

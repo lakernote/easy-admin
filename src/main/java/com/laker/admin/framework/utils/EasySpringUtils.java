@@ -13,13 +13,13 @@ import java.util.Arrays;
 import java.util.Map;
 
 @Component
-public class SpringUtils implements ApplicationContextAware {
+public class EasySpringUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        SpringUtils.applicationContext = applicationContext;
+        EasySpringUtils.applicationContext = applicationContext;
     }
 
     /**
