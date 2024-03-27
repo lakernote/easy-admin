@@ -54,7 +54,7 @@ public class WafFilter implements Filter {
 
         // 只处理 POST PUT DELETE PATCH
         if (!ALLOW_METHODS.contains(HttpMethod.resolve(request.getMethod()))) {
-            chain.doFilter(request, response);
+            chain.doFilter(servletRequest, servletResponse);
             return;
         }
 
@@ -66,7 +66,7 @@ public class WafFilter implements Filter {
                 EasyHttpResponseUtil.json(response, check);
                 return;
             }
-            chain.doFilter(request, response);
+            chain.doFilter(servletRequest, servletResponse);
             return;
         }
 
@@ -75,10 +75,13 @@ public class WafFilter implements Filter {
             try {
                 //Request请求过滤
                 chain.doFilter(new WafRequestWrapper(request, xssEnabled, sqlEnabled), servletResponse);
+                return;
             } catch (Exception e) {
                 log.error(" WafFilter exception , requestURL: " + request.getRequestURL(), e);
             }
         }
+
+        chain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
