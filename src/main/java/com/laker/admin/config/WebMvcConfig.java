@@ -42,6 +42,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/swagger-resources/**",
             "/sys/auth/v1/login",
             "/favicon.ico",
+            "/ureport/preview",
+            "/ureport/res/**",
             "/captcha"};
     private static final String[] trace_exclude_path = {"/admin/**",
             "/admin/login.html",
@@ -78,14 +80,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 // 拦截路由
                 .addInclude("/ureport/**")
                 // 放行路由
-                .addExclude("/favicon.ico", "/actuator/**")
+                .addExclude("/ureport/preview", "/ureport/res/**")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     if (StpUtil.getLoginIdAsLong() != 1) {
                         // 登录校验 -- 拦截所有路由
                         SaRouter.match("/**").check(() -> StpUtil.checkRole("admin"));
                         // 检查是否登录 是否有token
-                        SaRouter.match("/ureport/preview").check(StpUtil::checkLogin);
+//                        SaRouter.match("/ureport/preview").check(StpUtil::checkLogin);
                     }
                 })
                 .setError(e ->
