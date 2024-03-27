@@ -1,4 +1,4 @@
-package com.laker.admin.module.task;
+package com.laker.admin.module.task.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 // https://my.oschina.net/sdlvzg/blog/1590946
-@Api(tags = "定时任务-动态任务原理测试")
-@ApiSupport(order = 22)
+@Api(tags = "示例-动态任务原理测试")
+@ApiSupport(order = 100)
 @RestController
 @Slf4j
 public class DynamicTaskTestController {

@@ -1,4 +1,4 @@
-package com.laker.admin.module.task;
+package com.laker.admin.module.task.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.model.Response;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author laker
  */
-@Api(tags = "定时任务-任务监控")
-@ApiSupport(order = 22)
+@Api(tags = "示例-任务监控")
+@ApiSupport(order = 100)
 @RestController
 @RequestMapping("/task-manager-monitor")
 @Slf4j

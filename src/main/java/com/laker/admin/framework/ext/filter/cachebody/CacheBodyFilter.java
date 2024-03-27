@@ -24,7 +24,8 @@ public class CacheBodyFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        // 不能拦截 application/x-www-form-urlencoded 和 multipart/form-data请求，否则会出现参数丢失，因为都是是http body中的 它们2个只能从流读取一次，后面解析的时候会出现问题。
+        // 不能拦截 application/x-www-form-urlencoded 和 multipart/form-data请求，
+        // 否则会出现参数丢失，因为都是从http body中的 它们2个只能从流读取一次，后面解析的时候会出现问题。
         if (StrUtil.contains(httpServletRequest.getContentType(), MediaType.APPLICATION_JSON_VALUE)) {
             CachedBodyHttpServletRequestWrapper cachedBodyHttpServletRequest = new CachedBodyHttpServletRequestWrapper(httpServletRequest);
             filterChain.doFilter(cachedBodyHttpServletRequest, httpServletResponse);

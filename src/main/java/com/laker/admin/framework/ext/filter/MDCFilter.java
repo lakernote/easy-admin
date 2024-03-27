@@ -23,6 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * <p>
+ *
+ * </p>
+ *
  * @author laker
  */
 @Order(value = Ordered.HIGHEST_PRECEDENCE + 100)
@@ -37,16 +41,16 @@ public class MDCFilter extends OncePerRequestFilter {
             String keyTokenName = StpUtil.getStpLogic().getTokenName();
             SaTokenConfig config = StpUtil.getStpLogic().getConfigOrGlobal();
             String tokenValue = null;
-            // 3. 尝试从header里读取
+            // 1. 尝试从header里读取
             if (config.getIsReadHeader()) {
                 tokenValue = httpServletRequest.getHeader(keyTokenName);
             }
-            // 4. 尝试从cookie里读取
+            // 2. 尝试从cookie里读取
             if (tokenValue == null && config.getIsReadCookie()) {
                 tokenValue = this.getCookieValue(httpServletRequest, keyTokenName);
             }
 
-            // 5. 如果打开了前缀模式
+            // 3. 如果打开了前缀模式 则裁剪掉它, 否则视为未提供token
             String tokenPrefix = config.getTokenPrefix();
             if (!SaFoxUtil.isEmpty(tokenPrefix) && !SaFoxUtil.isEmpty(tokenValue)) {
                 // 如果token以指定的前缀开头, 则裁剪掉它, 否则视为未提供token
@@ -56,11 +60,14 @@ public class MDCFilter extends OncePerRequestFilter {
                     tokenValue = null;
                 }
             }
+            // 设置MDC userId
             MDC.put(EasyAdminConstants.USER_ID, (String) StpUtil.getLoginIdByToken(tokenValue));
+            // 如果请求头没有携带traceId，则由后端生成一个
             String traceId = httpServletRequest.getHeader(EasyAdminConstants.TRACE_ID);
             if (StrUtil.isBlank(traceId)) {
                 traceId = IdUtil.simpleUUID();
             }
+            // 设置MDC traceId
             MDC.put(EasyAdminConstants.TRACE_ID, traceId);
         } catch (Exception e) {
             //
@@ -77,17 +84,12 @@ public class MDCFilter extends OncePerRequestFilter {
     private String getCookieValue(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
-            Cookie[] var3 = cookies;
-            int var4 = cookies.length;
-
-            for (int var5 = 0; var5 < var4; ++var5) {
-                Cookie cookie = var3[var5];
+            for (Cookie cookie : cookies) {
                 if (cookie != null && name.equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
         }
-
         return null;
     }
 }

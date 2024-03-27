@@ -11,11 +11,14 @@ import java.io.*;
 
 /**
  * @author laker
+ * 这里有个内置类参见
+ * @see org.springframework.web.util.ContentCachingResponseWrapper
+ * 缓存请求体
  */
 @Slf4j
 public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-    private byte[] cachedBody;
+    private final byte[] cachedBody;
 
     public CachedBodyHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
@@ -24,19 +27,19 @@ public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapp
     }
 
     @Override
-    public ServletInputStream getInputStream() throws IOException {
+    public ServletInputStream getInputStream() {
         return new CachedBodyServletInputStream(this.cachedBody);
     }
 
     @Override
-    public BufferedReader getReader() throws IOException {
+    public BufferedReader getReader() {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.cachedBody);
         return new BufferedReader(new InputStreamReader(byteArrayInputStream));
     }
 
-    public class CachedBodyServletInputStream extends ServletInputStream {
+    private static class CachedBodyServletInputStream extends ServletInputStream {
 
-        private InputStream cachedBodyInputStream;
+        private final InputStream cachedBodyInputStream;
 
         public CachedBodyServletInputStream(byte[] cachedBody) {
             this.cachedBodyInputStream = new ByteArrayInputStream(cachedBody);

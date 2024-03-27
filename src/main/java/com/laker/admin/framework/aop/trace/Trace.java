@@ -33,8 +33,6 @@ public class Trace {
 
     /**
      * 添加 span
-     *
-     * @param span
      */
     public void addSpan(String spanName, SpanType spanType) {
         treeView.begin(spanType + "-" + spanName);
@@ -78,12 +76,9 @@ public class Trace {
         boolean empty = activeSpanStack.isEmpty();
         if (empty && current.getCost() > time) {
             // 打印日志方式一 每个span 一行日志
-            /**
-             *  logSpan(trace.getSpans(), StringUtils.SPACE);
-             */
             // 打印日志方式二 整体一颗树
             String draw = treeView.draw();
-            log.info(draw);
+            log.warn(draw);
         }
         return empty;
     }

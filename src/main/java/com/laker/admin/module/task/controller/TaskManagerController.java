@@ -1,4 +1,4 @@
-package com.laker.admin.module.task;
+package com.laker.admin.module.task.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

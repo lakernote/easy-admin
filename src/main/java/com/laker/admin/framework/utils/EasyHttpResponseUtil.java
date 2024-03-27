@@ -13,9 +13,11 @@ public class EasyHttpResponseUtil {
         response.setStatus(HttpServletResponse.SC_OK);
         // 防止json 中文乱码
         response.setContentType("application/json; charset=UTF-8");
-        ObjectMapper objectMapper = EasySpringUtils.getBean(ObjectMapper.class);
         PrintWriter out = response.getWriter();
-        out.print(objectMapper.writeValueAsString(check));
+        if (check != null) {
+            ObjectMapper objectMapper = EasySpringUtils.getBean(ObjectMapper.class);
+            out.print(objectMapper.writeValueAsString(check));
+        }
         out.flush();
     }
 

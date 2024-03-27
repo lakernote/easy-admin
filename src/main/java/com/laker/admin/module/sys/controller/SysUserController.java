@@ -6,7 +6,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -60,26 +59,28 @@ public class SysUserController {
 
     @GetMapping
     @ApiOperation(value = "分页查询")
-    public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
-                                @RequestParam(required = false, defaultValue = "10") long limit,
-                                Long deptId,
-                                String keyWord) {
-        Page roadPage = new Page<>(page, limit);
-        LambdaQueryWrapper<SysUser> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId)
-                .and(StrUtil.isNotBlank(keyWord), i -> i.
-                        like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord)
-                        .or().like(StrUtil.isNotBlank(keyWord), SysUser::getNickName, keyWord));
-        Page pageList = sysUserService.page(roadPage, queryWrapper);
+    public PageResponse<List<SysUser>> pageAll(@RequestParam(required = false, defaultValue = "1") long page,
+                                               @RequestParam(required = false, defaultValue = "10") long limit,
+                                               Long deptId,
+                                               String keyWord) {
+        Page<SysUser> roadPage = new Page<>(page, limit);
 
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId)
+                .and(StrUtil.isNotBlank(keyWord), i ->
+                        i.like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord)
+                                .or()
+                                .like(StrUtil.isNotBlank(keyWord), SysUser::getNickName, keyWord));
+
+        Page<SysUser> pageList = sysUserService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
     @GetMapping("/pageComplexAll")
     @ApiOperation(value = "复杂分页查询示例")
-    public PageResponse pageComplexAll(PageVO page, UserDto userDto) {
-        Page roadPage = page.toPage();
-        Page pageList = sysUserService.page(roadPage, userDto.queryWrapper());
+    public  PageResponse<List<SysUser>>  pageComplexAll(PageVO page, UserDto userDto) {
+        Page<SysUser>  roadPage = page.toPage();
+        Page<SysUser>  pageList = sysUserService.page(roadPage, userDto.queryWrapper());
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
@@ -89,7 +90,8 @@ public class SysUserController {
     public Response getAll() {
         List<SysUser> list = sysUserService.list();
         if (CollUtil.isNotEmpty(list)) {
-            List<FlowAssigneVo> collect = list.stream().map(sysUser -> FlowAssigneVo.builder().name(sysUser.getNickName()).value(sysUser.getUserId() + "").build()).collect(Collectors.toList());
+            List<FlowAssigneVo> collect = list.stream().map(sysUser -> FlowAssigneVo.builder()
+                    .name(sysUser.getNickName()).value(String.valueOf(sysUser.getUserId())).build()).collect(Collectors.toList());
             collect.add(0, FlowAssigneVo.builder().name("请选择").value("").build());
             collect.add(1, FlowAssigneVo.builder().name("当前用户").value("CurrentUser").build());
             return Response.ok(collect);
