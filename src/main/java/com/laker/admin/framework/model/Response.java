@@ -42,22 +42,33 @@ public class Response<T> {
     }
 
     public static <Void> Response<Void> ok() {
-        return new Response<Void>("0", "操作成功", null);
+        return new Response<>("0", "操作成功", null);
     }
 
     public static <T> Response<T> error(T data) {
         return new Response<>("400", "", data);
     }
-
-    public static <T> Response<T> error400(String msg) {
-        return new Response<>("400", msg, null);
-    }
-
     public static <T> Response<T> error(String code, String msg, T data) {
         return new Response<>(code, msg, data);
     }
 
     public static <T> Response<T> error(String code, String msg) {
         return new Response<>(code, msg, null);
+    }
+
+    public static <T> Response<T> error400(String msg) {
+        return new Response<>("400", msg, null);
+    }
+
+    public static <T> Response<T> error401(String msg) {
+        return new Response<>("401", msg, null);
+    }
+
+    public static <T> Response<T> error403(String msg) {
+        return new Response<>("403", msg, null);
+    }
+
+    public static <T> Response<T> error500(String msg) {
+        return new Response<>("500", msg, null);
     }
 }

@@ -25,6 +25,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.naming.NoPermissionException;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class GlobalExceptionHandler {
      * 处理自定义异常
      */
     @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response handleRRException(BusinessException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("业务异常:{}", e.getMsg());
@@ -56,7 +58,7 @@ public class GlobalExceptionHandler {
     public Response handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("方法参数类型不匹配", e);
-        return Response.error("方法参数类型不匹配");
+        return Response.error400("方法参数类型不匹配");
     }
 
     /**
@@ -67,7 +69,7 @@ public class GlobalExceptionHandler {
     public Response handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("缺少请求参数", e);
-        return Response.error("缺少请求参数");
+        return Response.error400("缺少请求参数");
     }
 
     /**
@@ -78,7 +80,7 @@ public class GlobalExceptionHandler {
     public Response handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("参数解析失败", e);
-        return Response.error("参数解析失败");
+        return Response.error400("参数解析失败");
     }
 
 
@@ -90,7 +92,7 @@ public class GlobalExceptionHandler {
     public Response handleValidationException(ValidationException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("参数验证失败", e);
-        return Response.error("参数验证失败");
+        return Response.error400("参数验证失败");
     }
 
     /**
@@ -101,7 +103,7 @@ public class GlobalExceptionHandler {
     public Response handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("不支持当前请求方法", e);
-        return Response.error("不支持当前请求方法");
+        return Response.error400("不支持当前请求方法");
     }
 
     /**
@@ -112,35 +114,45 @@ public class GlobalExceptionHandler {
     public Response handleHttpMediaTypeNotSupportedException(Exception e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error("不支持当前媒体类型", e);
-        return Response.error("不支持当前媒体类型");
+        return Response.error400("不支持当前媒体类型");
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
     public Response handleDuplicateKeyException(DuplicateKeyException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error("500", "数据库中已存在该记录");
+        return Response.error500("数据库中已存在该记录");
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public Response handleMaxSizeException(MaxUploadSizeExceededException e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error("500", "File too large!");
+        return Response.error500("File too large!");
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
     public Response handleNotLoginException(NotLoginException e) {
-        log.info(EasyHttpRequestUtil.getAllRequestInfo());
-        log.error(e.getMessage());
-        return Response.error("401", e.getMessage());
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
+                EasyHttpRequestUtil.getRequest().getMethod(), e.getMessage());
+        return Response.error401(e.getMessage());
+    }
+
+    @ExceptionHandler(NoPermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Response handleMaxSizeException(NoPermissionException e) {
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
+                EasyHttpRequestUtil.getRequest().getMethod(), e.getMessage());
+        return Response.error403(e.getMessage());
     }
 
     @ExceptionHandler(SaTokenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public Response handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(), EasyHttpRequestUtil.getRequest().getMethod(), e);
-        return Response.error("403", e.getMessage());
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
+                EasyHttpRequestUtil.getRequest().getMethod(), e.getMessage());
+        return Response.error403(e.getMessage());
     }
 
     /**
@@ -174,22 +186,24 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public Response handlerNoFoundException(Exception e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response<Void> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
         return Response.error("404", "路径不存在，请检查路径是否正确");
     }
 
     @ExceptionHandler(RateLimitException.class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    public Response handleRateLimitException(RateLimitException e) {
+    public Response<Void> handleRateLimitException(RateLimitException e) {
         log.error(e.getMessage(), e);
-        return Response.error("429", "请求过于频繁，请稍后重试");
+        return Response.error("429", "操作过于频繁，请稍后重试");
     }
 
     @ExceptionHandler(Exception.class)
-    public Response handleException(Exception e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<Void> handleException(Exception e) {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error("500", "服务器异常");
+        return Response.error400("服务器异常");
     }
 }

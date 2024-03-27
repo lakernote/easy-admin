@@ -124,21 +124,9 @@
                 data: "model=" + data + "&id=" + id,
                 async: false,
                 globle: false,
-                error: function () {
-                    alert('数据处理错误！');
-                    return false;
-                },
                 success: function (data) {
-                    if (data == true) {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
-                        parent.layui.table.reload("user-table");
-                    } else {
-                        layer.msg("没有修改权限哦！flow.update", {
-                            icon: 2,
-                            time: 1000,
-                            area: ['300px', '65px']
-                        });
-                    }
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                    parent.layui.table.reload("user-table");
                 }
             });
 
