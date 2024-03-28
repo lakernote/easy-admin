@@ -5,13 +5,14 @@
     <title>登录页</title>
     <!-- 样 式 文 件 -->
     <link rel="stylesheet" href="component/pear/css/pear.css"/>
-    <!-- 登录页样式 背景等样式 -->
+    <!-- 新的样式文件 -->
     <link rel="stylesheet" href="admin/css/login/old_style.css"/>
 </head>
 <!-- 代 码 结 构 -->
+<!--<body background="admin/images/background.svg" style="background-size: cover;">-->
 <form class="layui-form" action="javascript:void(0);">
     <div class="layui-form-item">
-        <img class="logo" src="admin/images/logo2.png" alt="logo"/>
+        <img class="logo" src="admin/images/logo.png"/>
         <div class="title">Easy Admin</div>
         <div class="desc">
             Easy Admin 打造最易入门的admin脚手架
@@ -32,10 +33,15 @@
         <input placeholder="验证码 : " hover name="captchaCode" lay-verify="required"
                autocomplete="off"
                class="code layui-input layui-input-inline"/>
-        <img id="captcha" class="codeImage"/>
+        <img id="captcha" class="codeImage" alt="验证码" src=""/>
     </div>
     <div class="layui-form-item">
         <input type="checkbox" name="" title="记住密码" lay-skin="primary" checked>
+    </div>
+    <div class="layui-form-item">
+        <!-- 开关按钮 -->
+        <label class="layui-form-label">切换风格:</label>
+        <input type="checkbox" name="switch" lay-skin="switch" lay-text="商务|休闲" id="styleSwitch">
     </div>
     <div class="layui-form-item">
         <button type="button" id="loginButton" class="pear-btn pear-btn-success login" lay-submit lay-filter="login">
@@ -117,6 +123,15 @@
                 }
             })
             return false;
+        });
+
+        // 切换风格
+        form.on('switch', function (data) {
+            if (data.elem.checked) {
+                $('link[href="admin/css/login/old_style.css"]').attr('href', 'admin/css/login/new_style.css');
+            } else {
+                $('link[href="admin/css/login/new_style.css"]').attr('href', 'admin/css/login/old_style.css');
+            }
         });
 
         function captcha() {
