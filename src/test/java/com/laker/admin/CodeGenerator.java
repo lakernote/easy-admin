@@ -15,33 +15,25 @@ import java.util.*;
 
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
-    // 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名
+    // 1.父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名,一般无需改动
     private static final String PARENT_PACKAGE = "com.laker.admin";
+    // 2.每个生成类的作者
+    private static final String AUTHOR = "laker";
+    // 3.数据库连接地址
+    private static final String MYSQL_URL = "localhost:3306/laker";
+    // 4.数据库连接用户
+    private static final String MYSQL_USER = "root";
+    // 5.数据库连接密码
+    private static final String MYSQL_PWD = "123456";
     // 生成文件的输出目录 System.getProperty("user.dir") + OUT_FILE_PATH + "/src/main/java"
     // 如果是多moudle，则为：/moudle,不是多moudle，则为：空串
     private static final String OUT_FILE_PATH = "";
-    public static final String MYSQL_URL = "localhost:3306/laker";
-    public static final String MYSQL_PWD = "123456";
 
     /**
-     * <p>
-     * 读取控制台内容
-     * </p>
+     * 运行并根据提示生成代码
+     *
+     * @param args
      */
-    public static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入" + tip + "：");
-        System.out.println(help.toString());
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotBlank(ipt)) {
-                return ipt;
-            }
-        }
-        throw new MybatisPlusException("请输入正确的" + tip + "！");
-    }
-
     public static void main(String[] args) {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
@@ -58,6 +50,7 @@ public class CodeGenerator {
         // 策略配置
         String[] tables = strategyConfig(mpg, pc);
 
+        // 自定义配置
         diyConfig(mpg, projectPath, pc, tables);
 
         // 配置模板
@@ -73,10 +66,13 @@ public class CodeGenerator {
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
-
+        // 设置引擎为Freemarker
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
+
+        // 执行
         mpg.execute();
 
+        // 生成对应前端html js代码
         try {
             CodeWebGenerator.web(mpg);
         } catch (Exception e) {
@@ -152,7 +148,8 @@ public class CodeGenerator {
 //        strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
 //        strategy.setSuperEntityColumns("id");
-        String[] table = scanner("表名，多个英文逗号分割").split(",");
+        System.err.println("--------3.数据库表名，多个就用英文逗号分割，例如：sys_user,sys_dept");
+        String[] table = scanner("数据库表名").split(",");
         strategy.setInclude(table);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
@@ -163,13 +160,16 @@ public class CodeGenerator {
     private static PackageConfig packageConfig(AutoGenerator mpg) {
         PackageConfig pc = new PackageConfig();
         // sys 父包模块名
-        pc.setModuleName(scanner("模块名"));
+        System.err.println("--------2.建表请遵循规范，规范为表名为模块名_表名，例如 sys_user");
+        String moduleName = scanner("模块名(该表隶属的模块，例如:sys)");
+        // 要保证带上module. 例如module.ext
+        pc.setModuleName(moduleName.contains("module.") ? moduleName : "module." + moduleName);
         // 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名
         pc.setParent(PARENT_PACKAGE);
 
         /**
          * 上面的代码生成位置及包名称
-         * com.ahjkii.hicp.datacollect.sys
+         * com.laker.admin.module.sys
          */
         mpg.setPackageInfo(pc);
         return pc;
@@ -177,10 +177,10 @@ public class CodeGenerator {
 
     private static void dataSourceConfig(AutoGenerator mpg) {
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://" + MYSQL_URL + "?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false");
+        dsc.setUrl("jdbc:mysql://" + MYSQL_URL + "?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
+        dsc.setUsername(MYSQL_USER);
         dsc.setPassword(MYSQL_PWD);
         mpg.setDataSource(dsc);
     }
@@ -190,15 +190,14 @@ public class CodeGenerator {
         String projectPath = System.getProperty("user.dir") + OUT_FILE_PATH;
         // 生成文件的输出目录
         gc.setOutputDir(projectPath + "/src/main/java");
-        System.out.println("--------生成文件输出目录---------");
+        System.err.println("--------1.当前代码生成输出目录为：");
         System.out.println(projectPath + "/src/main/java");
-        System.out.println("-----------------");
         // 作者姓名
-        gc.setAuthor("laker");
+        gc.setAuthor(AUTHOR);
         // 是否打开输出目录
         gc.setOpen(true);
         // 实体属性 Swagger2 注解
-//        gc.setSwagger2(true);
+        gc.setSwagger2(true);
         // 是否覆盖已有文件
         gc.setFileOverride(false);
         // 开启 BaseResultMap
@@ -210,4 +209,23 @@ public class CodeGenerator {
         return projectPath;
     }
 
+
+    /**
+     * <p>
+     * 读取控制台内容
+     * </p>
+     */
+    private static String scanner(String tip) {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder help = new StringBuilder();
+        help.append("请输入" + tip + "：");
+        System.out.println(help.toString());
+        if (scanner.hasNext()) {
+            String ipt = scanner.next();
+            if (StringUtils.isNotBlank(ipt)) {
+                return ipt;
+            }
+        }
+        throw new MybatisPlusException("请输入正确的" + tip + "！");
+    }
 }
