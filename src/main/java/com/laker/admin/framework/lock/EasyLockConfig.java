@@ -16,7 +16,7 @@ import org.springframework.scheduling.TaskScheduler;
  * @date: 2022/11/1
  **/
 @Configuration
-public class LockConfig {
+public class EasyLockConfig {
 
     @Bean
     @ConditionalOnMissingBean

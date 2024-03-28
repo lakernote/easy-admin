@@ -12,7 +12,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.aop.metrics.Metrics;
-import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.cache.IEasyCache;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.ext.satoken.MySaTokenListener;
@@ -47,7 +47,7 @@ public class LoginController {
     @Autowired
     ISysUserService sysUserService;
     @Autowired
-    ICache iCache;
+    IEasyCache iEasyCache;
     @Autowired
     ISysUserRoleService sysUserRoleService;
     @Autowired
@@ -60,8 +60,8 @@ public class LoginController {
     @ApiOperation(value = "登录-用户名密码")
     public Response login(@Validated @RequestBody LoginDto loginDto) {
         // 验证码是否正确
-        String code = iCache.get(loginDto.getUid());
-        iCache.remove(loginDto.getUid());
+        String code = iEasyCache.get(loginDto.getUid());
+        iEasyCache.remove(loginDto.getUid());
         if (!StrUtil.equalsIgnoreCase(code, loginDto.getCaptchaCode())) {
             return Response.error("500", "验证码不正确或已失效");
         }

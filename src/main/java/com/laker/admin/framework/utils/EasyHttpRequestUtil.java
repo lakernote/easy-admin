@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * request 工具类
@@ -27,7 +30,7 @@ public class EasyHttpRequestUtil {
      * 获取request对象
      */
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
     }
 
     /**
@@ -56,9 +59,6 @@ public class EasyHttpRequestUtil {
 
     public static String getRemoteIP() {
         HttpServletRequest request = getRequest();
-        if (request == null) {
-            return "unknown";
-        }
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
@@ -89,10 +89,10 @@ public class EasyHttpRequestUtil {
      */
     public static Map<String, String> getHeaders() {
         HttpServletRequest request = getRequest();
-        Map<String, String> map = new HashMap<>(32);
+        Map<String, String> map = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
+            String key = headerNames.nextElement();
             String value = request.getHeader(key);
             map.put(key, value);
         }
@@ -123,21 +123,8 @@ public class EasyHttpRequestUtil {
     }
 
     public static String getAllRequestInfo() {
-        return "Detail" + StrUtil.CRLF +
-                "RemoteAddress: " + getRemoteIP() + StrUtil.CRLF +
+        return "RemoteAddress: " + getRemoteIP() + StrUtil.CRLF +
                 "Method: " + getRequest().getMethod() + StrUtil.CRLF +
-                "Uri: " + getRequestURI() + StrUtil.CRLF +
-                "Headers: " + StrUtil.join(StrUtil.CRLF + "         ",
-                mapToList(getHeaders())) +
-                StrUtil.CRLF +
-                "Body: " + getBody() + StrUtil.CRLF;
-    }
-
-    private static List<String> mapToList(Map<String, String> parameters) {
-        List<String> parametersList = new ArrayList<>();
-        parameters.forEach((name, value) -> {
-            parametersList.add(name + "=" + value);
-        });
-        return parametersList;
+                "Uri: " + getRequestURI() + StrUtil.CRLF;
     }
 }

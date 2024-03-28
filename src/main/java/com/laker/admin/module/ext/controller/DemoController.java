@@ -33,7 +33,7 @@ public class DemoController {
     public void pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                         @RequestParam(required = false, defaultValue = "10") long limit,
                         @RequestParam(required = false) List<DemoTypeEnum> types) {
-        log.info(types.toString());
+        log.info("page:{},limit:{},types:{}", page, limit, types.toString());
     }
 
     @GetMapping("/1")
@@ -43,7 +43,7 @@ public class DemoController {
     }
 
     @GetMapping("/2")
-    @ApiOperation(value = "实体 - querystring")
+    @ApiOperation(value = "对象 - querystring")
     public void pageAll3(City city) {
         log.info(city.toString());
     }
@@ -58,12 +58,18 @@ public class DemoController {
     @PostMapping("/4")
     @ApiOperation(value = "实体 - json")
     public void pageAll5(@RequestBody City city, CurrentUser user) {
-        log.info(user.toString());
+        log.info("city:{},user{}", city, user.toString());
     }
 
     @GetMapping("/5")
-    @ApiOperation(value = "get - PageRequest-")
+    @ApiOperation(value = "请求参数的PageRequest对象自动填充 - PageRequest")
     public void pageAll6(PageRequest user) {
         log.info(user.toString());
+    }
+
+    @PostMapping("/6")
+    @ApiOperation(value = "请求参数的CurrentUser对象自动填充 - CurrentUser")
+    public void pageAll5(CurrentUser user) {
+        log.info("user{}", user.toString());
     }
 }

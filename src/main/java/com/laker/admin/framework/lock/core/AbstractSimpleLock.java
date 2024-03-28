@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledFuture;
  * @author laker
  */
 public abstract class AbstractSimpleLock implements Lock {
-    private TaskScheduler taskScheduler;
+    private final TaskScheduler taskScheduler;
 
     protected AbstractSimpleLock(TaskScheduler taskScheduler) {
         this.taskScheduler = taskScheduler;

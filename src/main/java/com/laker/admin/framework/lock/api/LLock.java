@@ -12,7 +12,13 @@ import java.util.concurrent.ScheduledFuture;
 @Data
 @Builder
 public class LLock {
+    /**
+     * 锁定的key
+     */
     private String key;
+    /**
+     * 用于检查是否是这个锁，防止误删
+     */
     private String token;
     private ScheduledFuture<?> scheduledFuture;
 }

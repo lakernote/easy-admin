@@ -85,7 +85,7 @@ public class SysDeptController {
     }
 
     @GetMapping("/tree")
-    public ResultTree tree(SysDept param) {
+    public ResultTree tree() {
         List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery()
                 .eq(SysDept::getStatus, true)
                 .orderByAsc(SysDept::getSort));

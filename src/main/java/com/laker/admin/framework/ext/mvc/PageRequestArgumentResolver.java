@@ -30,8 +30,10 @@ public class PageRequestArgumentResolver implements HandlerMethodArgumentResolve
 
         String[] directionParameter = webRequest.getParameterValues("sort");
         List<PageRequest.Order> allOrders = new ArrayList<>();
-        builder.page(Integer.valueOf(page))
-                .size(Integer.valueOf(pageSize))
+        assert pageSize != null;
+        assert page != null;
+        builder.page(Integer.parseInt(page))
+                .size(Integer.parseInt(pageSize))
                 .orders(allOrders);
         if (ArrayUtil.isNotEmpty(directionParameter)) {
             for (String part : directionParameter) {
@@ -39,7 +41,7 @@ public class PageRequestArgumentResolver implements HandlerMethodArgumentResolve
                 if (part == null) {
                     continue;
                 }
-                String[] elements = Arrays.stream(part.split(",")) //
+                String[] elements = Arrays.stream(part.split(","))
                         .toArray(String[]::new);
                 allOrders.add(PageRequest.Order.builder()
                         .property(elements[0])

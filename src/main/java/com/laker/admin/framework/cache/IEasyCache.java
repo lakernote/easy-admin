@@ -1,13 +1,11 @@
 package com.laker.admin.framework.cache;
 
-public interface ICache {
+public interface IEasyCache {
 
 
     void put(String key, Object value);
 
     /**
-     * @param key
-     * @param value
      * @param timeout 单位：秒 s
      */
     void put(String key, Object value, long timeout);

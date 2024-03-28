@@ -19,8 +19,6 @@ import java.util.Map;
 public class WafFilterConfig {
     /**
      * 要在 Cachefilter后边
-     *
-     * @return
      */
     @Bean
     public FilterRegistrationBean<WafFilter> xssFilterRegistration(EasyConfig easyConfig) {
@@ -32,8 +30,8 @@ public class WafFilterConfig {
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         Map<String, String> initParameters = new HashMap<>();
         initParameters.put("excludes", easyConfig.getWaf().getExcludes());
-        initParameters.put("xssEnabled", easyConfig.getWaf().isXssEnabled() + "");
-        initParameters.put("sqlEnabled", easyConfig.getWaf().isSqlEnabled() + "");
+        initParameters.put("xssEnabled", String.valueOf(easyConfig.getWaf().isXssEnabled()));
+        initParameters.put("sqlEnabled", String.valueOf(easyConfig.getWaf().isSqlEnabled()));
         registration.setInitParameters(initParameters);
         return registration;
     }

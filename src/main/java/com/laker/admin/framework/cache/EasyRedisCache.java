@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author laker
  */
-public class RedisCache implements ICache {
-    
+public class EasyRedisCache implements IEasyCache {
+
     RedisTemplate<String, Object> cacheRedisTemplate;
 
-    public RedisCache(RedisTemplate<String, Object> cacheRedisTemplate) {
+    public EasyRedisCache(RedisTemplate<String, Object> cacheRedisTemplate) {
         this.cacheRedisTemplate = cacheRedisTemplate;
     }
 

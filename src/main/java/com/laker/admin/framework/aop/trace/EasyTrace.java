@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface LakerTrace {
+public @interface EasyTrace {
     SpanType spanType() default SpanType.Others;
 }

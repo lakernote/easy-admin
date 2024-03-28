@@ -7,7 +7,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.config.EasyConfig;
 import com.laker.admin.framework.aop.ratelimit.LimitType;
 import com.laker.admin.framework.aop.ratelimit.RateLimit;
-import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.cache.IEasyCache;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyImageUtils;
@@ -25,6 +25,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * /admin/** 无需check login
@@ -35,7 +36,7 @@ import java.net.URL;
 @Slf4j
 public class IndexController {
     @Autowired
-    ICache iCache;
+    IEasyCache iEasyCache;
     @Autowired
     EasyConfig config;
 
@@ -66,7 +67,7 @@ public class IndexController {
         log.info("当前uid:{},验证码：{}", uid, verCode);
         // 前后端分离，这时还未有会话信息，用于确定uid和验证码的一一映射关系，防止多人串码
         // 把uuid和图片码一起给前端，验证的时候再一起回来
-        iCache.put(uid, verCode, 3 * 60);
+        iEasyCache.put(uid, verCode, 3 * 60);
 
         return Response.ok(Dict.create().set("uid", uid).set("image", captcha.toBase64()));
     }
@@ -97,7 +98,7 @@ public class IndexController {
                 break;
             case 2: // 下载
                 response.addHeader("Content-Disposition", "attachment;filename="
-                        + new String(FileUtil.mainName(url).getBytes("utf-8"), "iso-8859-1") + "." + suffix);
+                        + new String(FileUtil.mainName(url).getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1) + "." + suffix);
                 response.setContentType("application/octet-stream");
                 break;
             default:

@@ -1,11 +1,12 @@
 package com.laker.admin.framework.aop.trace;
 
+import com.laker.admin.config.EasyConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @Aspect
-public class TracingAspect {
-    @Value("${tracing.time:1000}")
-    private long time;
+public class EasyTraceAspect {
+    @Autowired
+    EasyConfig easyConfig;
 
     /**
      * <p>
@@ -36,17 +37,17 @@ public class TracingAspect {
 
 
     /**
-     * 拦截【方法】上有@LakerTrace注解
+     * 拦截【方法】上有@EasyTrace注解
      */
-    @Pointcut("@annotation(com.laker.admin.framework.aop.trace.LakerTrace)")
+    @Pointcut("@annotation(com.laker.admin.framework.aop.trace.EasyTrace)")
     public void annotationAspect() {
         // do nothing
     }
 
     /**
-     * 拦截【类】上有@LakerTrace注解
+     * 拦截【类】上有@EasyTrace注解
      */
-    @Pointcut("@within(com.laker.admin.framework.aop.trace.LakerTrace)")
+    @Pointcut("@within(com.laker.admin.framework.aop.trace.EasyTrace)")
     public void withinAspect() {
         // do nothing
     }
@@ -54,10 +55,10 @@ public class TracingAspect {
     /**
      * 拦截【方法】上有@LakerIgnoreTrace的注解
      * 使用场景
-     * - @LakerTrace注解在类上，或者包扫描到了整个类，但是其中的某个方法不想拦截
+     * - @EasyTrace注解在类上，或者包扫描到了整个类，但是其中的某个方法不想拦截
      * - 在方法上注解@LakerIgnoreTrace即可
      */
-    @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.LakerIgnoreTrace)")
+    @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.EasyTraceIgnore)")
     public void annotationIgnoreAspect() {
         // do nothing
     }
@@ -92,7 +93,7 @@ public class TracingAspect {
         try {
             obj = pjp.proceed();
         } finally {
-            TraceContext.stopSpan(time);
+            TraceContext.stopSpan(easyConfig.getTrace().getTimeout());
         }
         return obj;
     }

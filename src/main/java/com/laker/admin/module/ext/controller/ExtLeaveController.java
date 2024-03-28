@@ -9,8 +9,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
-import com.laker.admin.framework.aop.trace.LakerTrace;
-import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceCodeBlock;
 import com.laker.admin.framework.ext.thread.EasyAdminMDCThreadPoolExecutor;
 import com.laker.admin.framework.model.PageResponse;
@@ -18,6 +16,7 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.module.ext.entity.ExtLeave;
 import com.laker.admin.module.ext.service.IExtLeaveService;
+import com.laker.admin.module.ext.vo.LeaveVo;
 import com.laker.admin.module.flow.process.BaseFlowController;
 import com.laker.admin.module.flow.process.SnakerEngineFacets;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -33,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -55,18 +53,16 @@ public class ExtLeaveController extends BaseFlowController {
     private SnakerEngineFacets snakerEngineFacets;
     @Autowired
     private ISysUserService sysUserService;
-    ThreadPoolExecutor pool = new EasyAdminMDCThreadPoolExecutor(5,5,"laker");
+    ThreadPoolExecutor pool = new EasyAdminMDCThreadPoolExecutor(5, 5, "laker");
 
     @GetMapping
     @ApiOperation(value = "分页查询")
-    @LakerTrace(spanType = SpanType.Controller)
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit) {
-        Page roadPage = new Page<>(page, limit);
-        LambdaQueryWrapper<ExtLeave> queryWrapper = new QueryWrapper().lambda();
+        Page<ExtLeave> roadPage = new Page<>(page, limit);
+        LambdaQueryWrapper<ExtLeave> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(ExtLeave::getCreateTime);
-//        Page pageList = extLeaveService.page(roadPage, queryWrapper);
-        IPage pageList = TraceCodeBlock.trace("leaveService.page",
+        IPage<ExtLeave> pageList = TraceCodeBlock.trace("leaveService.page",
                 () -> extLeaveService.page(roadPage, queryWrapper));
 
         List<ExtLeave> records = pageList.getRecords();
@@ -75,27 +71,6 @@ public class ExtLeaveController extends BaseFlowController {
             this.setFlowStatusInfo(extLeave);
 
         });
-
-        pool.execute(() -> {
-            TraceCodeBlock.trace("6666666666666666",value -> {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(400);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
-
-        pool.submit(() -> {
-           TraceCodeBlock.trace("1231233",value -> {
-               try {
-                   TimeUnit.MILLISECONDS.sleep(300);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-           });
-        });
-        sysUserService.getUserDataPowers(StpUtil.getLoginIdAsLong());
         return PageResponse.ok(records, pageList.getTotal());
     }
 
@@ -110,11 +85,11 @@ public class ExtLeaveController extends BaseFlowController {
     @ApiOperation(value = "分页查询")
     public PageResponse pageAllV2(@RequestParam(required = false, defaultValue = "1") long page,
                                   @RequestParam(required = false, defaultValue = "10") long limit) {
-        Page roadPage = new Page<>(page, limit);
-        QueryWrapper queryWrapper = new QueryWrapper();
+        Page<ExtLeave> roadPage = new Page<>(page, limit);
+        QueryWrapper<ExtLeave> queryWrapper = new QueryWrapper<>();
         queryWrapper.ge("l.leave_day", 1);
         queryWrapper.orderByDesc("l.create_time");
-        IPage pageList = extLeaveService.pageV2(roadPage, queryWrapper);
+        IPage<LeaveVo> pageList = extLeaveService.pageV2(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
@@ -124,7 +99,7 @@ public class ExtLeaveController extends BaseFlowController {
     public Response saveOrUpdate(@RequestBody ExtLeave param) {
         if (param.getLeaveId() == null) {
             param.setLeaveUserId(StpUtil.getLoginIdAsLong());
-            Map args = new HashMap(8);
+            Map<String, Object> args = new HashMap<>();
             // 当前登录人
             args.put("user1", StpUtil.getLoginIdAsString());
             // 部门经理岗位的人 去用户表查询当前登录人同部门 and 岗位 = 部门经理

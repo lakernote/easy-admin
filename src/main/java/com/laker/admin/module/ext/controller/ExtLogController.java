@@ -3,13 +3,11 @@ package com.laker.admin.module.ext.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
-import com.laker.admin.framework.aop.trace.LakerIgnoreTrace;
-import com.laker.admin.framework.aop.trace.LakerTrace;
+import com.laker.admin.framework.aop.trace.EasyTraceIgnore;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.ext.entity.ExtLog;
@@ -41,7 +39,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/ext/log")
 @Metrics
-@LakerTrace
 public class ExtLogController {
     @Autowired
     IExtLogService extLogService;
@@ -55,13 +52,13 @@ public class ExtLogController {
     @GetMapping
     @ApiOperation(value = "日志分页查询")
     @SaCheckPermission("log.list")
-    @LakerIgnoreTrace
+    @EasyTraceIgnore
     @RepeatSubmitLimit(businessKey = "log.list", businessParam = "#keyWord")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 String keyWord) {
         Page roadPage = new Page<>(page, limit);
-        LambdaQueryWrapper<ExtLog> queryWrapper = new QueryWrapper().lambda();
+        LambdaQueryWrapper<ExtLog> queryWrapper = new LambdaQueryWrapper<>();
         if (StrUtil.isNotBlank(keyWord)) {
             queryWrapper.like(ExtLog::getUri, keyWord);
         }

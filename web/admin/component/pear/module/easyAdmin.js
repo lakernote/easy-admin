@@ -131,7 +131,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
             if (!data.success && data.code === '403') {
                 layer.msg(data.msg, {
                     icon: 2,
-                    area: ['260px', '80px'],
+                    area: ['260px', '65px'],
                     time: 1500 // 自动关闭所需毫秒
                 });
             }
@@ -141,7 +141,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
             if (!data.success) {
                 layer.msg(data.msg, {
                     icon: 2,
-                    area: ['260px', '50px'],
+                    area: ['260px', '65px'],
                     time: 1500 // 自动关闭所需毫秒
                 });
             }
@@ -238,7 +238,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         if (result.success) {
                             layer.msg(result.msg, {
                                 icon: 1,
-                                time: 1000,
+                                time: 1500,
                                 area: ['100px', '65px'],
                                 content: "删除成功"
                             }, function () {
@@ -247,7 +247,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         } else {
                             layer.msg(result.msg, {
                                 icon: 2,
-                                time: 1000,
+                                time: 1500,
                                 area: ['260px', '65px']
                             });
                         }

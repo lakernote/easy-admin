@@ -22,7 +22,7 @@ public class Knife4jConfig {
 
     @Bean(value = "defaultApi2")
     public Docket defaultApi2() {
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
                         .title("EasyAdmin 1.0 接口文档")
                         .description("EasyAdmin RESTful APIs")
@@ -39,6 +39,5 @@ public class Knife4jConfig {
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
 }

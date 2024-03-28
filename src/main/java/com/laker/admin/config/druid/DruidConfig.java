@@ -1,4 +1,4 @@
-package com.laker.admin.config;
+package com.laker.admin.config.druid;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.druid.filter.stat.StatFilter;
@@ -6,7 +6,6 @@ import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatPropertie
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.alibaba.druid.support.spring.stat.DruidStatInterceptor;
-import com.alibaba.druid.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Advisor;
@@ -18,8 +17,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.*;
-import java.io.IOException;
+import javax.servlet.Filter;
 
 /**
  * durid 监控页面配置 默认地址 localhost:8080/druid/login.html
@@ -141,9 +139,6 @@ public class DruidConfig {
 
     /**
      * 去除底部广告
-     *
-     * @param properties
-     * @return
      */
     @Bean
     @ConditionalOnProperty(name = "spring.datasource.druid.statViewServlet.enabled", havingValue = "true", matchIfMissing = true)
@@ -153,35 +148,8 @@ public class DruidConfig {
         // 提取common.js的配置路径
         String pattern = config.getUrlPattern() != null ? config.getUrlPattern() : "/druid/*";
         String commonJsPattern = pattern.replace("\\*", "js/common.js");
-        final String filePath = "support/http/resources/js/common.js";
-        // 创建filter进行过滤
-        Filter filter = new Filter() {
-            @Override
-            public void init(javax.servlet.FilterConfig filterConfig) throws ServletException {
-                // Do nothing
-            }
-
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-                    throws IOException, ServletException {
-                chain.doFilter(request, response);
-                // 重置缓冲区，响应头不会被重置
-                response.resetBuffer();
-                // 获取common.js
-                String text = Utils.readFromResource(filePath);
-                // 正则替换banner, 除去底部的广告信息
-                text = text.replaceAll("<a.*?banner\"></a><br/>", "");
-                text = text.replaceAll("powered.*?shrek.wang</a>", "");
-                response.getWriter().write(text);
-            }
-
-            @Override
-            public void destroy() {
-                // Do nothing
-            }
-        };
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(filter);
+        registrationBean.setFilter(new EasyDruidFilter());
         registrationBean.addUrlPatterns(commonJsPattern);
         return registrationBean;
     }

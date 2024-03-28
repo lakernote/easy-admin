@@ -6,7 +6,7 @@ import cn.hutool.cache.impl.LFUCache;
 /**
  * @author laker
  */
-public class JvmCache implements ICache {
+public class EasyMapCache implements IEasyCache {
     LFUCache<String, Object> CACHE = CacheUtil.newLFUCache(1000);
 
     @Override

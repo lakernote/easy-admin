@@ -46,6 +46,7 @@ public class WebLogController {
     @ResponseBody
     @SaCheckPermission("weblog.list")
     public Resource logFile(@RequestParam(required = false) String filePath) {
+        // 这里只能做枚举，开放几个文件，否则会有安全问题。
         if (StrUtil.isNotBlank(filePath)) {
             throw new BusinessException("演示环境，禁止修改模式文件路径");
         }
@@ -55,7 +56,7 @@ public class WebLogController {
             lookFilePath = filePath;
         }
         Resource logFileResource = new FileSystemResource(new File(lookFilePath));
-        if (logFileResource == null || !logFileResource.isReadable()) {
+        if (!logFileResource.isReadable()) {
             return null;
         }
         return logFileResource;

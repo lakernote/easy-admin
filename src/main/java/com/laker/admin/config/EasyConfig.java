@@ -43,6 +43,10 @@ public class EasyConfig {
      * 安全
      */
     private Security security = new Security();
+    /**
+     * 链路追踪
+     */
+    private Trace trace = new Trace();
 
     @Data
     public static class Nginx {
@@ -89,6 +93,11 @@ public class EasyConfig {
         private String accessKeyId;
         private String accessKeySecret;
         private String bucketName;
+    }
+
+    @Data
+    public static class Trace {
+        private long timeout = 1000L;
     }
 
 }

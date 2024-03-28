@@ -2,7 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import com.laker.admin.framework.cache.ICache;
+import com.laker.admin.framework.cache.IEasyCache;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,7 +31,7 @@ public class SysUserController_APITest {
     private MockMvc mvc;
 
     @MockBean
-    ICache iCache;
+    IEasyCache iEasyCache;
 
     /**
      * 不需要user的测试

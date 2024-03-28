@@ -1,7 +1,7 @@
 package com.laker.admin.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.laker.admin.framework.aop.trace.LakerTrace;
+import com.laker.admin.framework.aop.trace.EasyTrace;
 import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceCodeBlock;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
@@ -22,13 +22,12 @@ import java.util.List;
  * @author laker
  * @since 2021-08-05
  */
-@LakerTrace(spanType = SpanType.Service)
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
     @Autowired
     SysDeptMapper deptMapper;
 
-    @LakerTrace(spanType = SpanType.Service)
+    @EasyTrace(spanType = SpanType.Service)
     @Override
     public SysUser getUserAndDeptById(Long userId) {
         SysUser user = this.getById(userId);

@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +54,8 @@ public class SnakerflowFacetsController {
     @Autowired
     private ISysUserService sysUserService;
 
-    /**
-     * --------- 流程相关 ---------
-     */
+    // ---------流程相关 ---------
+
 
     /**
      * 获取流程定义
@@ -64,11 +64,7 @@ public class SnakerflowFacetsController {
     public Response processEdit(String id) {
         Process process = snakerEngineFacets.getEngine().process().getProcessById(id);
         if (process.getDBContent() != null) {
-            try {
-                return Response.ok(new String(process.getDBContent(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            return Response.ok(new String(process.getDBContent(), StandardCharsets.UTF_8));
         }
         return Response.error("500", "xml异常");
     }
@@ -85,8 +81,7 @@ public class SnakerflowFacetsController {
         AssertHelper.notNull(process);
         ProcessModel processModel = process.getModel();
         if (processModel != null) {
-            String json = SnakerHelper.getModelJson(processModel);
-            return json;
+            return SnakerHelper.getModelJson(processModel);
         }
         return null;
     }

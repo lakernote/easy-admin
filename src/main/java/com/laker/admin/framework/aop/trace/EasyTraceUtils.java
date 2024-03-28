@@ -13,14 +13,13 @@ import java.lang.reflect.Method;
 /**
  * @author laker
  */
-public class TraceUtils {
-
+public class EasyTraceUtils {
     public static final String CONTROLLER = "controller";
     public static final String SERVICE = "service";
     public static final String MAPPER = "mapper";
     public static final String REMOTE = "remote";
 
-    private TraceUtils() {
+    private EasyTraceUtils() {
         // 私有构造器
     }
 
@@ -30,24 +29,25 @@ public class TraceUtils {
         String className = method.getDeclaringClass().getSimpleName().toLowerCase();
         Class<?> targetClass = pjp.getTarget().getClass();
         // 1.优先级1 先根据类上的注解判断是什么类型的服务
-        if (AnnotationUtils.findAnnotation(targetClass, Controller.class) != null || AnnotationUtils.findAnnotation(targetClass, RestController.class) != null) {
+        if (AnnotationUtils.findAnnotation(targetClass, Controller.class) != null ||
+                AnnotationUtils.findAnnotation(targetClass, RestController.class) != null) {
             return SpanType.Controller;
         }
-        // 1.1 service先看有没有LakerTrace注解，有：用，无：用service
+        // 1.1 service先看有没有EasyTrace注解，有：用，无：用service
         if (AnnotationUtils.findAnnotation(targetClass, Service.class) != null) {
-            SpanType lakerTrace = getSpanTypeFromLakerTrace(method, targetClass);
-            if (lakerTrace != null) {
-                return lakerTrace;
+            SpanType EasyTrace = getSpanTypeFromEasyTrace(method, targetClass);
+            if (EasyTrace != null) {
+                return EasyTrace;
             }
             return SpanType.Service;
         }
         if (AnnotationUtils.findAnnotation(targetClass, Mapper.class) != null) {
             return SpanType.Mapper;
         }
-        // 2.优先级2 使用LakerTrace
-        SpanType lakerTrace = getSpanTypeFromLakerTrace(method, targetClass);
-        if (lakerTrace != null) {
-            return lakerTrace;
+        // 2.优先级2 使用EasyTrace
+        SpanType EasyTrace = getSpanTypeFromEasyTrace(method, targetClass);
+        if (EasyTrace != null) {
+            return EasyTrace;
         }
         // 3.优先级3 使用类名称是否包含关键字
         if (className.contains(CONTROLLER)) {
@@ -64,12 +64,12 @@ public class TraceUtils {
 
     }
 
-    private static SpanType getSpanTypeFromLakerTrace(Method method, Class<?> targetClass) {
-        LakerTrace methodViewTrace = AnnotationUtils.findAnnotation(method, LakerTrace.class);
+    private static SpanType getSpanTypeFromEasyTrace(Method method, Class<?> targetClass) {
+        EasyTrace methodViewTrace = AnnotationUtils.findAnnotation(method, EasyTrace.class);
         if (methodViewTrace != null) {
             return methodViewTrace.spanType();
         }
-        LakerTrace classViewTrace = AnnotationUtils.findAnnotation(targetClass, LakerTrace.class);
+        EasyTrace classViewTrace = AnnotationUtils.findAnnotation(targetClass, EasyTrace.class);
         if (classViewTrace != null) {
             return classViewTrace.spanType();
         }

@@ -13,16 +13,15 @@ public class EasyCacheConfig {
 
     @Bean
     @ConditionalOnProperty(name = "cache.type", havingValue = "local", matchIfMissing = true)
-    public ICache jvmCache() {
-        return new JvmCache();
+    public IEasyCache jvmCache() {
+        return new EasyMapCache();
     }
 
 
     @Bean
     @ConditionalOnProperty(name = "cache.type", havingValue = "redis")
-    public ICache redisCache(RedisTemplate<String, Object> cacheRedisTemplate) {
-
-        return new RedisCache(cacheRedisTemplate);
+    public IEasyCache redisCache(RedisTemplate<String, Object> cacheRedisTemplate) {
+        return new EasyRedisCache(cacheRedisTemplate);
     }
 
     @Bean
