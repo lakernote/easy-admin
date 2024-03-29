@@ -25,18 +25,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 这种只能处理查询 不能处理 cud
- * 且不支持别名
+ * <p>这种只能处理查询 不能处理 cud
+ * 支持表别名
+ * </p>
  */
 @Slf4j
-public class LakerV2DataPermissionHandler {
+public class EasyV2DataPermissionHandler {
 
-    public static final String WHERE = " where {}";
+    private static final String WHERE = " where {}";
 
     /**
      * @param plainSelect       plainSelect
      * @param mappedStatementId Mapper接口方法ID
-     * @return
      */
     @SneakyThrows
     public Expression getSqlSegment(PlainSelect plainSelect, String mappedStatementId) {
@@ -45,7 +45,7 @@ public class LakerV2DataPermissionHandler {
         // 获取sql语句的from 主表
         FromItem fromItem = plainSelect.getFromItem();
         // 有别名用别名，无别名用表名，防止字段冲突报错
-        String mainTableName = "";
+        String mainTableName;
         // 如果是 table 类型
         if (fromItem instanceof Table) {
             Table fromTable = (Table) fromItem;
@@ -134,8 +134,18 @@ public class LakerV2DataPermissionHandler {
                     break;
             }
         } catch (Exception e) {
-            log.error("LakerDataPermissionHandler.err", e);
+            log.error("EasyDataPermissionHandler err.", e);
         }
         return where;
+    }
+
+
+    public boolean support(String tableName) {
+        // TODO 这里仅仅用ext_leave表来示例
+        log.warn("数据鉴权之-CUD记录鉴权，表名为:{}", tableName);
+        if (StrUtil.equalsIgnoreCase(tableName, "ext_leave")) {
+            return true;
+        }
+        return false;
     }
 }

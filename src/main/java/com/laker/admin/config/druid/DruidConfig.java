@@ -3,6 +3,8 @@ package com.laker.admin.config.druid;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
+import com.alibaba.druid.spring.boot.autoconfigure.stat.DruidStatViewServletConfiguration;
+import com.alibaba.druid.spring.boot.autoconfigure.stat.DruidWebStatFilterConfiguration;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.alibaba.druid.support.spring.stat.DruidStatInterceptor;
@@ -31,12 +33,11 @@ public class DruidConfig {
     private static final String DEFAULT_ALLOW_IP = "127.0.0.1";
 
     /**
-     * 参见：DruidStatViewServletConfiguration
+     * 参见：
+     *
+     * @see DruidStatViewServletConfiguration
      * 黑白名单
      * 登录用户名-密码
-     *
-     * @param properties
-     * @return
      */
     @Bean
     public ServletRegistrationBean<StatViewServlet> statViewServletRegistrationBean(DruidStatProperties properties) {
@@ -72,11 +73,10 @@ public class DruidConfig {
     }
 
     /**
-     * 参见：DruidWebStatFilterConfiguration
-     * 跳过静态资源
+     * 参见：
      *
-     * @param properties
-     * @return
+     * @see DruidWebStatFilterConfiguration
+     * 跳过静态资源
      */
     @Bean
     public FilterRegistrationBean<WebStatFilter> webStatFilterRegistrationBean(DruidStatProperties properties) {
