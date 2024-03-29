@@ -25,7 +25,7 @@ public class CodeGenerator {
     private static final String MYSQL_USER = "root";
     // 5.数据库连接密码
     private static final String MYSQL_PWD = "123456";
-    // 生成文件的输出目录 System.getProperty("user.dir") + OUT_FILE_PATH + "/src/main/java"
+    // 6.生成文件的输出目录 System.getProperty("user.dir") + OUT_FILE_PATH + "/src/main/java"
     // 如果是多moudle，则为：/moudle,不是多moudle，则为：空串
     private static final String OUT_FILE_PATH = "";
 
@@ -148,7 +148,7 @@ public class CodeGenerator {
 //        strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
 //        strategy.setSuperEntityColumns("id");
-        System.err.println("--------3.数据库表名，多个就用英文逗号分割，例如：sys_user,sys_dept");
+        System.out.println("[※3.数据库表名，多个就用英文逗号分割，例如：sys_user,sys_dept]");
         String[] table = scanner("数据库表名").split(",");
         strategy.setInclude(table);
         strategy.setControllerMappingHyphenStyle(true);
@@ -160,16 +160,16 @@ public class CodeGenerator {
     private static PackageConfig packageConfig(AutoGenerator mpg) {
         PackageConfig pc = new PackageConfig();
         // sys 父包模块名
-        System.err.println("--------2.建表请遵循规范，规范为表名为模块名_表名，例如 sys_user");
+        System.out.println("[※2.建表请遵循规范，规范为表名为模块名_表名，例如 sys_user]");
         String moduleName = scanner("模块名(该表隶属的模块，例如:sys)");
         // 要保证带上module. 例如module.ext
         pc.setModuleName(moduleName.contains("module.") ? moduleName : "module." + moduleName);
         // 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名
         pc.setParent(PARENT_PACKAGE);
 
-        /**
-         * 上面的代码生成位置及包名称
-         * com.laker.admin.module.sys
+        /*
+          上面的代码生成位置及包名称
+          com.laker.admin.module.sys
          */
         mpg.setPackageInfo(pc);
         return pc;
@@ -190,7 +190,7 @@ public class CodeGenerator {
         String projectPath = System.getProperty("user.dir") + OUT_FILE_PATH;
         // 生成文件的输出目录
         gc.setOutputDir(projectPath + "/src/main/java");
-        System.err.println("--------1.当前代码生成输出目录为：");
+        System.out.println("[※1.当前代码生成输出目录为：]");
         System.out.println(projectPath + "/src/main/java");
         // 作者姓名
         gc.setAuthor(AUTHOR);
@@ -217,9 +217,7 @@ public class CodeGenerator {
      */
     private static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入" + tip + "：");
-        System.out.println(help.toString());
+        System.out.println("请输入" + tip + "：");
         if (scanner.hasNext()) {
             String ipt = scanner.next();
             if (StringUtils.isNotBlank(ipt)) {
