@@ -1,7 +1,7 @@
 package com.laker.admin.config.websocket;
 
-import com.laker.admin.framework.ext.websocket.LakerChatHandler;
-import com.laker.admin.framework.ext.websocket.LakerSessionHandshakeInterceptor;
+import com.laker.admin.framework.ext.websocket.EasyChatHandler;
+import com.laker.admin.framework.ext.websocket.EasySessionHandshakeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,13 +18,13 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
-    LakerChatHandler webSocketHandler;
+    EasyChatHandler webSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler, "/websocket/**")
                 // 添加拦截器，可以获取连接的param和 header 用作认证鉴权
-                .addInterceptors(new LakerSessionHandshakeInterceptor())
+                .addInterceptors(new EasySessionHandshakeInterceptor())
                 // 设置运行跨域
                 .setAllowedOrigins("*");
     }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.laker.admin.module.sys.mapper.SysRolePowerMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.laker.admin.module.sys.entity.SysRolePower">
-        <id column="id" property="id" />
-        <result column="role_id" property="roleId" />
-        <result column="power_id" property="powerId" />
+        <id column="id" property="id"/>
+        <result column="role_id" property="roleId"/>
+        <result column="power_id" property="powerId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -14,4 +13,15 @@
         id, role_id, power_id
     </sql>
 
+    <select id="getPowerCodesByUserIdAndPowerType" resultType="java.lang.String">
+        select p.power_code
+        from sys_role_power rp
+                 inner join sys_power p on rp.power_id = p.menu_id
+                 inner join sys_role r on rp.role_id = r.role_id
+        where p.type = #{type}
+          and rp.role_id in
+              (select ur.role_id
+               from sys_user_role ur
+               where ur.user_id = #{userId})
+    </select>
 </mapper>

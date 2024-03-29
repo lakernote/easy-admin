@@ -18,13 +18,13 @@ import java.util.List;
  * @date: 2022/10/17
  **/
 @Slf4j
-public class LakerDataSourceTransactionManager extends DataSourceTransactionManager {
+public class EasyDataSourceTransactionManager extends DataSourceTransactionManager {
 
 
     transient ThreadLocal<LinkedList<Transaction>> dateThreadLocal = new ThreadLocal<>();
-    private transient long costTime;
+    private final transient long costTime;
 
-    public LakerDataSourceTransactionManager(DataSource dataSource, long costTime) {
+    public EasyDataSourceTransactionManager(DataSource dataSource, long costTime) {
         super(dataSource);
         this.costTime = costTime;
     }
@@ -62,7 +62,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
         TraceContext.stopSpan(costTime);
     }
 
-    class Transaction {
+    static class Transaction {
         long begin;
         String name;
 

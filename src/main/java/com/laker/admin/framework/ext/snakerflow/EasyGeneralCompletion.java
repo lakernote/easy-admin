@@ -11,18 +11,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class GeneralCompletion implements Completion {
+public class EasyGeneralCompletion implements Completion {
 
     @Override
     public void complete(HistoryTask task) {
-
         log.info("The task[{}] has been user[{}] has completed", task, task.getOperator());
     }
 
     @Override
     public void complete(HistoryOrder order) {
-
-
         log.info("The order[{}] has completed", order);
     }
 }

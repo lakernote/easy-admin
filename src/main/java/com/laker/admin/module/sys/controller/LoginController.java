@@ -15,7 +15,7 @@ import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.cache.IEasyCache;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
-import com.laker.admin.framework.ext.satoken.MySaTokenListener;
+import com.laker.admin.framework.ext.satoken.EasySaTokenListener;
 import com.laker.admin.framework.ext.satoken.OnlineUser;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
@@ -113,8 +113,8 @@ public class LoginController {
     @ApiOperation(value = "获取在线用户信息")
     public PageResponse onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false, defaultValue = "10") int limit) {
-        MySaTokenListener.ONLINE_USERS.sort((o1, o2) -> DateUtil.compare(o2.getLoginTime(), o1.getLoginTime()));
-        PageDtoUtil pageDto = PageDtoUtil.getPageDto(MySaTokenListener.ONLINE_USERS, page, limit);
+        EasySaTokenListener.ONLINE_USERS.sort((o1, o2) -> DateUtil.compare(o2.getLoginTime(), o1.getLoginTime()));
+        PageDtoUtil pageDto = PageDtoUtil.getPageDto(EasySaTokenListener.ONLINE_USERS, page, limit);
         List<OnlineUser> pageList = (List<OnlineUser>) pageDto.getPageList();
         pageList.forEach(onlineUser -> {
             String keyLastActivityTime = StpUtil.getStpLogic().splicingKeyLastActiveTime(onlineUser.getTokenValue());

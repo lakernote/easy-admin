@@ -15,11 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 @Slf4j
-public class LakerChatHandler extends AbstractWebSocketHandler {
+public class EasyChatHandler extends AbstractWebSocketHandler {
     private final Map<String, WebSocketSession> webSocketSessionMap = new ConcurrentHashMap<>();
     WebsocketMetrics websocketMetrics;
 
-    public LakerChatHandler(WebsocketMetrics websocketMetrics) {
+    public EasyChatHandler(WebsocketMetrics websocketMetrics) {
         this.websocketMetrics = websocketMetrics;
         websocketMetrics.websocketGauge(webSocketSessionMap);
     }

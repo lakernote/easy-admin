@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class PageResponse<T> extends Response<T> {
 
-    @ApiModelProperty(notes = "数量")
+    @ApiModelProperty(notes = "总记录数量")
     private Long count;
 
     public PageResponse(String code, String msg, T data, Long count) {

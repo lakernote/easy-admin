@@ -1,4 +1,4 @@
-package com.laker.admin.framework.ext.step;
+package com.laker.admin.framework.ext.actuator.step;
 
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import io.micrometer.core.instrument.util.TimeUtils;
@@ -10,33 +10,34 @@ import java.util.concurrent.*;
 
 /**
  * 按步长 定期存储到任意位置，例如db
+ *
  * @author laker
  */
 @Slf4j
-public class LakerMeterRegistry {
+public class EasyMeterRegistry {
     private final Object meterMapLock = new Object();
-    private Duration step;
+    private final Duration step;
     private ScheduledExecutorService scheduledExecutorService;
 
     private final ConcurrentMap<String, StepCounterTuple> meterMap = new ConcurrentHashMap<>();
 
-    public LakerMeterRegistry() {
+    public EasyMeterRegistry() {
         this(Duration.ofMillis(1));
     }
 
 
-    public LakerMeterRegistry(Duration step) {
+    public EasyMeterRegistry(Duration step) {
         this(step, new NamedThreadFactory("laker-metrics-publisher"));
     }
 
-    private LakerMeterRegistry(Duration step, ThreadFactory threadFactory) {
+    private EasyMeterRegistry(Duration step, ThreadFactory threadFactory) {
         this.step = step;
         start(threadFactory);
     }
 
 
     public StepCounterTuple counter(String videoId) {
-        String id = "laker:" + videoId;
+        String id = "easy:" + videoId;
         StepCounterTuple multiStepCounter = meterMap.get(id);
         if (multiStepCounter == null) {
             synchronized (meterMapLock) {
@@ -57,7 +58,7 @@ public class LakerMeterRegistry {
     protected void publish() {
         Collection<StepCounterTuple> values = meterMap.values();
         log.info("---- start 当前map 容量" + values.size());
-        values.stream().forEach(multiStepCounter -> {
+        values.forEach(multiStepCounter -> {
             long count1 = multiStepCounter.count1();
             long count2 = multiStepCounter.count2();
             // if 存在无效的数据则删除掉 防止占内存，或者 这个另起一个定时任务去删除 定时时长 更久些。
@@ -82,7 +83,6 @@ public class LakerMeterRegistry {
 
         log.info("---- end 结束后 map 容量 " + values.size());
 
-
     }
 
 
@@ -93,7 +93,6 @@ public class LakerMeterRegistry {
             log.warn("Unexpected exception thrown", e);
         }
     }
-
 
     public void start(ThreadFactory threadFactory) {
         if (scheduledExecutorService != null) {

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.Map;
 
-public class LakerSessionHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
+public class EasySessionHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
     // 拦截器返回false，则不会进行websocket协议的转换
     // 可以获取请求参数做认证鉴权
     @Override

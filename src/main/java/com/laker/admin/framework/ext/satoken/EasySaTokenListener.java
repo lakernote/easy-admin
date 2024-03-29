@@ -7,9 +7,9 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
-import com.laker.admin.module.sys.service.ISysUserService;
-import com.laker.admin.framework.utils.IP2CityUtil;
 import com.laker.admin.framework.utils.EasyHttpRequestUtil;
+import com.laker.admin.framework.utils.IP2CityUtil;
+import com.laker.admin.module.sys.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,13 +18,14 @@ import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 自定义侦听器的实现
  */
 @Component
 @Slf4j
-public class MySaTokenListener implements SaTokenListener {
+public class EasySaTokenListener implements SaTokenListener {
     public static final List<OnlineUser> ONLINE_USERS = new CopyOnWriteArrayList<>();
 
     @Autowired
@@ -158,7 +159,7 @@ public class MySaTokenListener implements SaTokenListener {
                 try {
                     try {
                         // 如果已经被标记为结束
-                        if (refreshFlag == false) {
+                        if (!refreshFlag) {
                             return;
                         }
                         long start = System.currentTimeMillis();
@@ -180,9 +181,9 @@ public class MySaTokenListener implements SaTokenListener {
                         dataRefreshPeriod = 1;
                     }
                     dataRefreshPeriod = dataRefreshPeriod + 5;
-                    Thread.sleep(dataRefreshPeriod * 1000);
+                    TimeUnit.SECONDS.sleep(dataRefreshPeriod);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("定时清理过期会话异常", e);
                 }
             }
         });

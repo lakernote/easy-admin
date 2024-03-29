@@ -1,6 +1,6 @@
 package com.laker.admin.config;
 
-import com.laker.admin.framework.ext.transaction.LakerDataSourceTransactionManager;
+import com.laker.admin.framework.ext.transaction.EasyDataSourceTransactionManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
@@ -18,7 +18,7 @@ public class EasyTransactionManagerConfig {
     @Bean
     DataSourceTransactionManager transactionManager(DataSource dataSource,
                                                     ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-        DataSourceTransactionManager transactionManager = new LakerDataSourceTransactionManager(dataSource, 500);
+        DataSourceTransactionManager transactionManager = new EasyDataSourceTransactionManager(dataSource, 500);
         transactionManagerCustomizers.ifAvailable((customizers) -> customizers.customize(transactionManager));
         return transactionManager;
     }

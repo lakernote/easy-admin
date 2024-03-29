@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @Slf4j
-public class DefaultUncaughtErrorControllor implements ErrorController {
+public class EasyDefaultUncaughtErrorControllor implements ErrorController {
 
     @RequestMapping("/error")
     public Response<String> error(HttpServletRequest request, HttpServletResponse response) {
