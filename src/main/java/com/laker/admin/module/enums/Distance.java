@@ -21,4 +21,9 @@ public enum Distance implements IEnum<String> {
     public String getValue() {
         return unit;
     }
+
+    @Override
+    public String toString() {
+        return unit;
+    }
 }

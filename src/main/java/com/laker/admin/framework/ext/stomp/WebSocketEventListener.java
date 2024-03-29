@@ -24,16 +24,14 @@ public class WebSocketEventListener {
     @Autowired
     StompMessageService stompMessageService;
 
-
     /**
      * 建立连接监听
      */
     @EventListener
     public void handleConnectListener(SessionConnectedEvent sessionConnectedEvent) {
         EasyPrincipal user = (EasyPrincipal) sessionConnectedEvent.getUser();
-        log.warn("建立连接 {} -> {}", user, sessionConnectedEvent);
+        log.info("建立连接 {} -> {}", user, sessionConnectedEvent);
         // 加入在线用户列表
-
         ThreadUtil.execute(() -> {
             // 缓几秒钟再广播消息防止，接收不到
             try {
@@ -56,7 +54,7 @@ public class WebSocketEventListener {
     @EventListener
     public void handleDisconnectListener(SessionDisconnectEvent sessionDisconnectEvent) {
         EasyPrincipal user = (EasyPrincipal) sessionDisconnectEvent.getUser();
-        log.warn("断开连接 -> {}", sessionDisconnectEvent);
+        log.info("断开连接 -> {}", sessionDisconnectEvent);
         // 剔除在线用户列表
         if (user == null) {
             return;
