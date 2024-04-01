@@ -20,6 +20,16 @@ public class JavaScriptEscape {
                 case '&':
                     escaped.append("&amp;");
                     break;
+                // 日志伪造防范,
+                // 处理回车、换行符
+                case '\n':
+                case '\r':
+                case '\t':
+                case '\\':
+                case '/':
+                case '`':
+                case ';':
+                    break;
                 default:
                     escaped.append(c);
             }

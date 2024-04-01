@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.laker.admin.framework.model.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.core.ApplicationPart;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 public class MultipartRequestChecker {
 
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif");
@@ -42,6 +44,9 @@ public class MultipartRequestChecker {
                     if (!ALLOWED_EXTENSIONS.contains(type)) {
                         return Response.error400("你在改文件名吗？哈哈哈");
                     }
+                } else {
+                    String partString = applicationPart.getString("utf-8");
+                    log.info("partString:{}", partString);
                 }
 
                 // 检查上传文件是否超出允许的大小限制

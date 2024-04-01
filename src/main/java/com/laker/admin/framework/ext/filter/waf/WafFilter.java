@@ -19,6 +19,12 @@ import java.util.regex.Pattern;
 
 /**
  * web防火墙
+ * <p>
+ * <a href="https://github.com/HackJava/HackJava">学习</a>
+ * https://github.com/JoyChou93/java-sec-code/blob/master/README_zh.md
+ * https://github.com/momosecurity/rhizobia_J
+ * https://javasec.org/java-vuls/XSS.html
+ * </p>
  */
 @Slf4j
 public class WafFilter implements Filter {
