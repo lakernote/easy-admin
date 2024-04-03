@@ -5,11 +5,29 @@ knife4j:
   production: false
 druid:
   monitor: false
-# 测试环境不需要
 management:
+  server:
+    # 指定端口，默认跟server.port一样，可以防止被其他人猜到
+    port: ${server.port}
+  endpoints:
+    web:
+      # 路径映射
+      base-path: /actuator
+      exposure:
+        # 只放开指定的endpoint info, health 或者 全部放开 "*"
+        include: info,health,*
   health:
+    # 禁用或者启用某个组件的健康监测
     redis:
-      enabled: false
+      enabled: true
+  endpoint:
+    health:
+      # 查看详细的应用健康信息
+      show-details: always
+  info:
+    git:
+      # simple核心提交信息 ,full展示所有的 Git 提交信息
+      mode: simple
 spring:
   datasource:
     username: root
@@ -29,3 +47,12 @@ ratelimit:
 cache:
   # redis/local
   type: local
+info:
+  app:
+    name: easy-admin
+    author: laker
+    # ${...} 可以引用 pom.xml 中变量（properties 节点下）
+    jdk-version: ${java.version}
+    # 将属性的值配置为环境变量，目标为pom.xml中设置的版本号,这样我们就能在执行mvn package时自动将变量替换为真实值
+    version: @project.version@
+  env: local

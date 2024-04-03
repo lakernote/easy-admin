@@ -114,5 +114,6 @@ management:
         password: 12345678
         user-name: laker
 info:
-  author: laker
-  version: 1.0.1
+  app:
+    name: easy-admin
+    author: laker

@@ -164,11 +164,11 @@
             <version>1.6.2</version>
         </dependency>
         <!-- java8不需要 -->
-<!--        <dependency>-->
-<!--            <groupId>org.openjdk.nashorn</groupId>-->
-<!--            <artifactId>nashorn-core</artifactId>-->
-<!--            <version>15.4</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjdk.nashorn</groupId>-->
+        <!--            <artifactId>nashorn-core</artifactId>-->
+        <!--            <version>15.4</version>-->
+        <!--        </dependency>-->
         <!-- 根据ip获取归属地 -->
         <dependency>
             <groupId>org.lionsoul</groupId>
@@ -251,6 +251,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- 会在target/classes/META-INF/build-info.properties，专门放一些build的信息,通过/actuator/info可以帮助我们获取这些信息 -->
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- 加入自定义打包配置 -->
             <plugin>
@@ -273,6 +281,26 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- 生成Git的相关信息等。会在target/classes/git.properties，放一些版本控制的信息，通过/actuator/info可以帮助我们获取这些信息 -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>
