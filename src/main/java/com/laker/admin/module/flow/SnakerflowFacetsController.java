@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -342,7 +341,6 @@ public class SnakerflowFacetsController {
         }
         filter.orderBy("create_Time").order(DESC);
         snakerEngineFacets.getEngine().query().getHistoryOrders(page, filter);
-
         return PageResponse.ok(JSONUtil.parse(page.getResult()), page.getTotalCount());
     }
 }

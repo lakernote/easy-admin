@@ -91,7 +91,13 @@
                         field: 'DeptName',
                         align: 'center',
                         width: 80,
-                        templet: '<div>{{d.user.dept.deptName}}</div>'
+                        templet: function (d) {
+                            if (d.user != null && d.user.dept != null) {
+                                return d.user.dept.deptName;
+                            } else {
+                                return "";
+                            }
+                        }
                     },
                     {
                         title: '城市',

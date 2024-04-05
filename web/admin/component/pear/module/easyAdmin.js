@@ -361,7 +361,18 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
              */
             form.on('submit(query)', function (data) {
                 table.reload('table', {
-                    where: data.field
+                    where: data.field,
+                    error: function (res) {
+                        let data = res.responseJSON;
+                        // 统一处理 401 和 403 情况
+                        if (res.status === 401) {
+                            easyAdmin.redirectToLogin(data);
+                        } else if (res.status === 403) {
+                            easyAdmin.handleNoPermission(data);
+                        } else {
+                            easyAdmin.handleError(data);
+                        }
+                    }
                 })
                 return false;
             });

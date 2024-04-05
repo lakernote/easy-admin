@@ -100,7 +100,7 @@ easy:
   waf:
     sql-enabled: true
     xss-enabled: true
-    excludes: /flow/*,/sys/nginx/*
+    excludes: /flow/*,/sys/nginx/*,/ureport/*
 # actuator
 management:
   endpoint:
