@@ -14,7 +14,7 @@ public class EasyAdminInfo implements InfoContributor {
     public void contribute(Info.Builder builder) {
         Map<String, String> info = new HashMap<>();
         String springBootVersion = SpringBootVersion.getVersion();
-        info.put("springBootVersion", springBootVersion);
+        info.put("boot", springBootVersion);
         info.put("email", "xxx@xxx.com");
         builder.withDetail("spring", info);
     }

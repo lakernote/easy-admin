@@ -24,7 +24,7 @@ public class TraceAnnotationInterceptor implements HandlerInterceptor {
             throws Exception {
 
         // 获取处理method
-        if (handler instanceof HandlerMethod == false) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         Method method = ((HandlerMethod) handler).getMethod();
@@ -33,9 +33,9 @@ public class TraceAnnotationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) {
         // 获取处理method
-        if (handler instanceof HandlerMethod == false) {
+        if (!(handler instanceof HandlerMethod)) {
             return;
         }
         TraceContext.stopSpan(1000);

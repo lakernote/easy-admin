@@ -158,7 +158,7 @@ public class PerformanceInterceptor implements Interceptor {
         long start = SystemClock.now();
         String mapperId = ms.getId();
         TraceContext.addSpan(mapperId, SpanType.Mapper);
-        Object result = null;
+        Object result;
         try {
             result = invocation.proceed();
         } catch (Exception e) {
@@ -178,7 +178,7 @@ public class PerformanceInterceptor implements Interceptor {
                 if (this.getMaxTime() >= 1 && timing > this.getMaxTime()) {
                     log.error(formatSql.toString());
                 } else {
-//                    log.warn("Execute {}ms,Mapper:{}", timing, mapperId);
+                    log.info("Execute {}ms,Mapper:{}", timing, mapperId);
                 }
             }
         }
@@ -201,7 +201,7 @@ public class PerformanceInterceptor implements Interceptor {
             this.maxTime = Long.parseLong(maxTime);
         }
         if (StringUtils.isNotBlank(format)) {
-            this.format = Boolean.valueOf(format);
+            this.format = Boolean.parseBoolean(format);
         }
     }
 

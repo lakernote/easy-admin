@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock.impl.redis;
 
-import com.laker.admin.framework.lock.api.LLock;
-import com.laker.admin.framework.lock.core.AbstractSimpleLock;
+import com.laker.admin.framework.lock.api.Locker;
+import com.laker.admin.framework.lock.core.AbstractSimpleILock;
 import io.lettuce.core.RedisCommandInterruptedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisSystemException;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author laker
  */
 @Slf4j
-public class RedisLock extends AbstractSimpleLock {
+public class RedisILock extends AbstractSimpleILock {
 
     private static final String LOCK_SCRIPT = "return redis.call('SET', KEYS[1], ARGV[1], 'PX', tonumber(ARGV[2]), 'NX') and true or false";
 
@@ -34,15 +34,15 @@ public class RedisLock extends AbstractSimpleLock {
     private final RedisScript<Boolean> lockScript = new DefaultRedisScript<>(LOCK_SCRIPT, Boolean.class);
     private final RedisScript<Boolean> lockReleaseScript = new DefaultRedisScript<>(LOCK_RELEASE_SCRIPT, Boolean.class);
     private final RedisScript<Boolean> lockRefreshScript = new DefaultRedisScript<>(LOCK_REFRESH_SCRIPT, Boolean.class);
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
-    public RedisLock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
+    public RedisILock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
-    protected String acquire(final String key, final String token, final Duration expiration) {
+    public String acquire(final String key, final String token, final Duration expiration) {
 
 //        final List<String> singletonKeyList = Collections.singletonList(key(key));
         // 使用这个也行
@@ -50,7 +50,7 @@ public class RedisLock extends AbstractSimpleLock {
         // 这个等价于 SET key token NX PX 5000
         Boolean locked = stringRedisTemplate.opsForValue().setIfAbsent(key(key), token, expiration);
         log.info("Tried to acquire lock for key {} with token {}. Locked: {}", key, token, locked);
-        return locked ? token : null;
+        return Boolean.TRUE.equals(locked) ? token : null;
     }
 
     private String key(String key) {
@@ -58,11 +58,11 @@ public class RedisLock extends AbstractSimpleLock {
     }
 
     @Override
-    protected boolean release0(LLock lock) {
+    public boolean release0(Locker lock) {
         String key = lock.getKey();
         String token = lock.getToken();
         final List<String> singletonKeyList = Collections.singletonList(key(key));
-        final boolean released = stringRedisTemplate.execute(lockReleaseScript, singletonKeyList, token);
+        final boolean released = Boolean.TRUE.equals(stringRedisTemplate.execute(lockReleaseScript, singletonKeyList, token));
         if (released) {
             log.info("Release script deleted the record for key {} with token {}", key, token);
         } else {
@@ -72,12 +72,12 @@ public class RedisLock extends AbstractSimpleLock {
     }
 
     @Override
-    protected boolean refresh(final String key, final String token, final Duration expiration) {
+    public boolean refresh(final String key, final String token, final Duration expiration) {
         final List<String> singletonKeyList = Collections.singletonList(key(key));
 
         boolean refreshed = false;
         try {
-            refreshed = stringRedisTemplate.execute(lockRefreshScript, singletonKeyList, token, String.valueOf(expiration.toMillis()));
+            refreshed = Boolean.TRUE.equals(stringRedisTemplate.execute(lockRefreshScript, singletonKeyList, token, String.valueOf(expiration.toMillis())));
             if (refreshed) {
                 log.info("Refresh script updated the expiration for key {} with token {} to {}", key, token, expiration);
             } else {

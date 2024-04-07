@@ -18,12 +18,8 @@ public class EasyCustomHandler implements IHandler {
     public void handle(Execution execution) {
         // 获取参数
         Map<String, Object> args = execution.getArgs();
-        args.forEach((s, o) -> System.out.println(s + ":" + o));
+        args.forEach((s, o) -> log.info("参数为:{}:{}", s, o));
         List<Task> tasks = execution.getTasks();
-        tasks.forEach(task -> {
-            System.out.println(task.getTaskName());
-        });
-
-
+        tasks.forEach(task -> log.info("任务名称为:{}", task.getTaskName()));
     }
 }

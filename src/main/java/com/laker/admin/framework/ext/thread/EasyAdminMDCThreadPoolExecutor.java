@@ -35,14 +35,12 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
 
     /**
      * submit Runnable callable 都会走这里，所以我们只需要改写这里即可。
-     *
-     * @param command
      */
     @Override
     public void execute(Runnable command) {
         if (command instanceof RunnableFuture) {
             // submit future
-            super.execute(new EasyAdminFuture((RunnableFuture) command, MDC.getCopyOfContextMap()));
+            super.execute(new EasyAdminFuture<>((RunnableFuture) command, MDC.getCopyOfContextMap()));
         } else {
             super.execute(wrapExecuteRunnable(command, MDC.getCopyOfContextMap()));
         }
@@ -52,10 +50,6 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
 
     /**
      * 封装任务，加入TraceId，无返回值
-     *
-     * @param runnable
-     * @param threadContext
-     * @return
      */
     private static Runnable wrapExecuteRunnable(final Runnable runnable, final Map<String, String> threadContext) {
         return () -> {
@@ -76,8 +70,8 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
     }
 
     private static class EasyAdminFuture<T> implements RunnableFuture<T> {
-        private RunnableFuture<T> future;
-        private Map<String, String> threadContext;
+        private final RunnableFuture<T> future;
+        private final Map<String, String> threadContext;
 
         public EasyAdminFuture(RunnableFuture<T> future, Map<String, String> threadContext) {
             this.future = future;

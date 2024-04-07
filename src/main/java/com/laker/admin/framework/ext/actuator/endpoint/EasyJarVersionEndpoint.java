@@ -61,6 +61,7 @@ public class EasyJarVersionEndpoint {
 
     @SneakyThrows
     @PostConstruct
+    // 优化这个方法，将依赖信息缓存起来
     private void initDependency() {
         Set<Dependency> dependencies = new LinkedHashSet<>();
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -70,6 +71,7 @@ public class EasyJarVersionEndpoint {
             byte[] data = FileCopyUtils.copyToByteArray(resource.getInputStream());
             String[] list = new String(data, StandardCharsets.UTF_8).split("\n");
             for (String string : list) {
+                string = string.replaceAll("\r", "");
                 if (string.startsWith("version=") || string.startsWith("groupId=") || string.startsWith("artifactId=")) {
                     if (string.startsWith("version=")) {
                         dependency.setVersion(string.replace("version=", ""));

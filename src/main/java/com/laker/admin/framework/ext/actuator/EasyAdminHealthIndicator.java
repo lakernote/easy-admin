@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class EasyAdminHealthIndicator extends AbstractHealthIndicator {
 
     @Override
-    public void doHealthCheck(Health.Builder builder) throws Exception {
+    public void doHealthCheck(Health.Builder builder) {
         boolean checkHealth = check();
         if (checkHealth) {
             builder.up();

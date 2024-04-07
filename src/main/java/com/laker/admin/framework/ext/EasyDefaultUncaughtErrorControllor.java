@@ -20,7 +20,7 @@ public class EasyDefaultUncaughtErrorControllor implements ErrorController {
         HttpStatus statusCode = getHttpStatusCode(request);
         String uri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
         log.error("error,code:{},uri:{}，response:{}", statusCode.value(), uri, response);
-        return Response.error(String.valueOf(statusCode.value()), "未找到接口", uri);
+        return Response.error(String.valueOf(statusCode.value()), statusCode.getReasonPhrase(), uri);
     }
 
     private HttpStatus getHttpStatusCode(HttpServletRequest request) {

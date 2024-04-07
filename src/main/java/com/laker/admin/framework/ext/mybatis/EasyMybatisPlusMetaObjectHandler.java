@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * @author longli
+ * @author laker
  */
 @Slf4j
 @Component
-public class MyMetaObjectHandler implements MetaObjectHandler {
+public class EasyMybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info("start insert fill ....");
-        this.strictInsertFill(metaObject, "createTime", () -> LocalDateTime.now(), LocalDateTime.class);
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime::now, LocalDateTime.class);
         this.strictInsertFill(metaObject, "createBy", Long.class, StpUtil.getLoginIdAsLong());
         UserInfoAndPowers userInfoAndPowers = (UserInfoAndPowers) StpUtil.getSession().get(EasyAdminConstants.CURRENT_USER);
         this.strictInsertFill(metaObject, "createDeptId", Long.class, userInfoAndPowers.getDeptId());
@@ -28,7 +28,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info("start update fill ....");
-        this.strictUpdateFill(metaObject, "updateTime", () -> LocalDateTime.now(), LocalDateTime.class);
+        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime::now, LocalDateTime.class);
         this.strictUpdateFill(metaObject, "operator", String.class, "张三");
     }
 }

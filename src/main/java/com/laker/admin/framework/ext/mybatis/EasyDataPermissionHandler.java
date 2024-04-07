@@ -26,8 +26,9 @@ import java.util.stream.Collectors;
  * 这种只能处理查询 不能处理 cud
  * 且不支持别名
  */
+@Deprecated
 @Slf4j
-public class LakerDataPermissionHandler implements DataPermissionHandler {
+public class EasyDataPermissionHandler implements DataPermissionHandler {
 
     public static final String WHERE = " where {}";
 
@@ -112,7 +113,7 @@ public class LakerDataPermissionHandler implements DataPermissionHandler {
             }
         } catch (Exception e) {
             log.error("LakerDataPermissionHandler.err", e);
-        } 
+        }
         return where;
     }
 }
