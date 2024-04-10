@@ -3,7 +3,6 @@ package com.laker.admin.module.sys.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -39,11 +38,11 @@ public class SysDeptController {
 
     @GetMapping
     @ApiOperation(value = "分页查询")
-    public Response pageAll(@RequestParam(required = false, defaultValue = "1") long current,
-                            @RequestParam(required = false, defaultValue = "10") long size) {
-        Page roadPage = new Page<>(current, size);
-        LambdaQueryWrapper<SysDept> queryWrapper = new QueryWrapper().lambda();
-        Page pageList = sysDeptService.page(roadPage, queryWrapper);
+    public Response<Page<SysDept>> pageAll(@RequestParam(required = false, defaultValue = "1") long current,
+                                           @RequestParam(required = false, defaultValue = "10") long size) {
+        Page<SysDept> roadPage = new Page<>(current, size);
+        LambdaQueryWrapper<SysDept> queryWrapper = new LambdaQueryWrapper<>();
+        Page<SysDept> pageList = sysDeptService.page(roadPage, queryWrapper);
         return Response.ok(pageList);
     }
 
@@ -75,15 +74,16 @@ public class SysDeptController {
         return Response.ok(sysDeptService.removeByIds(CollUtil.toList(ids)));
     }
 
-
+    @ApiOperation(value = "获取组织列表不分页")
     @GetMapping("/data")
-    public ResultTable data(SysDept param) {
+    public ResultTable data() {
         List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery()
                 .eq(SysDept::getStatus, true)
                 .orderByAsc(SysDept::getSort));
         return ResultTable.dataTable(data);
     }
 
+    @ApiOperation(value = "获取组织树")
     @GetMapping("/tree")
     public ResultTree tree() {
         List<SysDept> data = sysDeptService.list(Wrappers.<SysDept>lambdaQuery()

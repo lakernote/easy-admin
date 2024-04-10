@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -78,9 +79,9 @@ public class SysUserController {
 
     @GetMapping("/pageComplexAll")
     @ApiOperation(value = "复杂分页查询示例")
-    public  PageResponse<List<SysUser>>  pageComplexAll(PageVO page, UserDto userDto) {
-        Page<SysUser>  roadPage = page.toPage();
-        Page<SysUser>  pageList = sysUserService.page(roadPage, userDto.queryWrapper());
+    public PageResponse<List<SysUser>> pageComplexAll(PageVO page, UserDto userDto) {
+        Page<SysUser> roadPage = page.toPage();
+        Page<SysUser> pageList = sysUserService.page(roadPage, userDto.queryWrapper());
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
@@ -106,13 +107,13 @@ public class SysUserController {
     public Response saveOrUpdate(@RequestBody SysUser param) {
 
         if (param.getUserId() == null && param.getDeptId() == null) {
-            return Response.error("500", "请选择部门");
+            return Response.error500("请选择部门");
         }
 
         if (param.getUserId() == null) {
             // 只有超级管理员才能创建用户
             if (StpUtil.getLoginIdAsLong() != 1L) {
-                return Response.error("403", "只有超级管理员才能创建用户!");
+                return Response.error403("只有超级管理员才能创建用户!");
             }
             String password = param.getPassword();
             param.setPassword(SecureUtil.sha256(password));
@@ -137,7 +138,7 @@ public class SysUserController {
         return Response.ok(sysUserService.updateById(param));
     }
 
-    public boolean saveUserRole(Long userId, List<String> roleIds) {
+    private boolean saveUserRole(Long userId, List<String> roleIds) {
         sysUserRoleService.remove(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
         List<SysUserRole> sysUserRoles = new ArrayList<>();
         roleIds.forEach(roleId -> {
@@ -173,8 +174,9 @@ public class SysUserController {
     }
 
     @PutMapping("/resetPwd/{userId}")
-    @ApiOperation(value = "更新用户密码")
+    @ApiOperation(value = "重置用户密码")
     @SaCheckPermission("user.reset.pwd")
+    @SaCheckRole("admin")
     public Response resetPwd(@PathVariable Long userId) {
         SysUser user = new SysUser();
         user.setUserId(userId);

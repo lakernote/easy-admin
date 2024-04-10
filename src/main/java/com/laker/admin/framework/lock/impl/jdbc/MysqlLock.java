@@ -15,7 +15,7 @@ import java.time.Duration;
  * @author laker
  */
 @Slf4j
-public class MysqlILock extends AbstractSimpleILock {
+public class MysqlLock extends AbstractSimpleILock {
 
     /**
      * 原始sql 需要配合DuplicateKeyException使用，不优雅：INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);
@@ -26,7 +26,7 @@ public class MysqlILock extends AbstractSimpleILock {
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
     private final JdbcTemplate jdbcTemplate;
 
-    public MysqlILock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
+    public MysqlLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.jdbcTemplate = jdbcTemplate;
     }

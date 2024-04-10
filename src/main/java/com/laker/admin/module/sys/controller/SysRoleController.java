@@ -2,7 +2,6 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -45,13 +44,13 @@ public class SysRoleController {
 
     @GetMapping
     @ApiOperation(value = "分页查询")
-    public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long current,
-                                @RequestParam(required = false, defaultValue = "10") long size,
-                                Integer roleType) { // 1是菜单接口角色，2为数据角色
-        Page roadPage = new Page<>(current, size);
-        LambdaQueryWrapper<SysRole> queryWrapper = new QueryWrapper().lambda();
+    public PageResponse<List<SysRole>> pageAll(@RequestParam(required = false, defaultValue = "1") long current,
+                                               @RequestParam(required = false, defaultValue = "10") long size,
+                                               Integer roleType) { // 1是菜单接口角色，2为数据角色
+        Page<SysRole> roadPage = new Page<>(current, size);
+        LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(roleType != null, SysRole::getRoleType, roleType);
-        Page pageList = sysRoleService.page(roadPage, queryWrapper);
+        Page<SysRole> pageList = sysRoleService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 

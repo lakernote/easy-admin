@@ -2,7 +2,6 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -37,18 +36,18 @@ public class SysMenuController {
 
     @GetMapping
     @ApiOperation(value = "系统菜单表分页查询")
-    public Response pageAll(@RequestParam(required = false, defaultValue = "1") long current,
-                            @RequestParam(required = false, defaultValue = "10") long size) {
-        Page roadPage = new Page<>(current, size);
-        LambdaQueryWrapper<SysPower> queryWrapper = new QueryWrapper().lambda();
-        Page pageList = sysMenuService.page(roadPage, queryWrapper);
+    public Response<Page<SysPower>> pageAll(@RequestParam(required = false, defaultValue = "1") long current,
+                                            @RequestParam(required = false, defaultValue = "10") long size) {
+        Page<SysPower> roadPage = new Page<>(current, size);
+        LambdaQueryWrapper<SysPower> queryWrapper = new LambdaQueryWrapper<>();
+        Page<SysPower> pageList = sysMenuService.page(roadPage, queryWrapper);
         return Response.ok(pageList);
     }
 
 
     @GetMapping("/list")
     @ApiOperation(value = "系统菜单表分页查询")
-    public Response list() {
+    public Response<List<SysPower>> list() {
         List<SysPower> list = sysMenuService.list(Wrappers.<SysPower>lambdaQuery().orderByAsc(SysPower::getSort));
         return Response.ok(list);
     }
@@ -56,13 +55,13 @@ public class SysMenuController {
     @PostMapping
     @ApiOperation(value = "新增或者更新系统菜单表")
     @SaCheckPermission("menu.update")
-    public Response saveOrUpdate(@RequestBody SysPower param) {
+    public Response<Boolean> saveOrUpdate(@RequestBody SysPower param) {
         return Response.ok(sysMenuService.saveOrUpdate(param));
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id查询系统菜单表")
-    public Response get(@PathVariable Long id) {
+    public Response<SysPower> get(@PathVariable Long id) {
         return Response.ok(sysMenuService.getById(id));
     }
 
@@ -75,8 +74,8 @@ public class SysMenuController {
 
 
     @GetMapping("/selectTree")
-    @ApiOperation(value = "菜单树")
-    public Response selectTree() {
+    @ApiOperation(value = "菜单列表树")
+    public Response<List<MenuVo>> selectTree() {
         List<MenuVo> menuVos = sysMenuService.menu();
         return Response.ok(menuVos);
     }
@@ -84,7 +83,7 @@ public class SysMenuController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除系统菜单表")
     @SaCheckPermission("menu.delete")
-    public Response delete(@PathVariable Long id) {
+    public Response<Boolean> delete(@PathVariable Long id) {
         return Response.ok(sysMenuService.removeById(id));
     }
 }

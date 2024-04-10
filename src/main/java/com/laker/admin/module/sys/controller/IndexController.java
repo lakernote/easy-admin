@@ -46,9 +46,7 @@ public class IndexController {
     }
 
     /**
-     * 详情参考：https://gitee.com/whvse/EasyCaptcha
-     *
-     * @return
+     * 详情参考：<a href="https://gitee.com/whvse/EasyCaptcha">...</a>
      */
     @GetMapping("/captcha")
     @ResponseBody
@@ -74,7 +72,7 @@ public class IndexController {
 
     /**
      * 缩略图
-     * http://localhost:8080/thumbnail?url=http://localhost:8080/admin/admin/images/wx.jpg
+     * <a href="http://localhost:8080/thumbnail?url=http://localhost:8080/admin/admin/images/wx.jpg">...</a>
      */
     @GetMapping("/thumbnail")
     public void thumbnail(String url, HttpServletResponse response,

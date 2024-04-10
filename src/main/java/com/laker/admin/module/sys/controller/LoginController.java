@@ -63,17 +63,17 @@ public class LoginController {
         String code = iEasyCache.get(loginDto.getUid());
         iEasyCache.remove(loginDto.getUid());
         if (!StrUtil.equalsIgnoreCase(code, loginDto.getCaptchaCode())) {
-            return Response.error("500", "验证码不正确或已失效");
+            return Response.error500("验证码不正确或已失效");
         }
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getUserName, loginDto.getUsername())
                 .eq(SysUser::getPassword, SecureUtil.sha256(loginDto.getPassword())));
         if (sysUser == null) {
-            return Response.error("5001", "用户名或密码不正确");
+            return Response.error500("用户名或密码不正确");
         }
         if (sysUser.getEnable() == 0) {
-            return Response.error("5001", "用户:" + loginDto.getUsername() + "已被禁用");
+            return Response.error500("用户已被禁用");
         }
         StpUtil.login(sysUser.getUserId());
         // 获取用户的数据权限

@@ -40,14 +40,13 @@ public class NginxController {
 
     @GetMapping
     public Response get(@RequestParam(required = false) String path) {
-        NgxConfig conf = null;
+        NgxConfig conf;
         try {
             if (StrUtil.isBlank(path)) {
                 path = easyConfig.getNginx().getConfPath();
             }
             conf = NgxConfig.read(path);
         } catch (IOException e) {
-            e.printStackTrace();
             return Response.error("500", "路径错误：" + path);
         }
         String content = new NgxDumper(conf).dump();

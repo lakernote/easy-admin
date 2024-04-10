@@ -6,6 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.aop.metrics.Metrics;
@@ -34,9 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.snaker.engine.access.QueryFilter.DESC;
 
@@ -53,36 +52,37 @@ public class SnakerflowFacetsController {
     @Autowired
     private ISysUserService sysUserService;
 
-    // ---------流程相关 ---------
+    // ---------流程相关 --------- //
 
 
     /**
      * 获取流程定义
      */
     @GetMapping("/getXml")
-    public Response processEdit(String id) {
+    public Response<String> getProcessXml(String id) {
         Process process = snakerEngineFacets.getEngine().process().getProcessById(id);
-        if (process.getDBContent() != null) {
-            return Response.ok(new String(process.getDBContent(), StandardCharsets.UTF_8));
-        }
-        return Response.error("500", "xml异常");
+        return Optional.ofNullable(process.getDBContent())
+                .map(content -> Response.ok(new String(content, StandardCharsets.UTF_8)))
+                .orElse(Response.error500("xml异常"));
     }
 
 
     @GetMapping("/process/modelJson")
     @ApiOperation(value = "根据流程定义名称获取流程定义json", tags = "流程引擎-流程")
     @Metrics
-    public String getProcess(@RequestParam(required = false) String processId) {
+    public String getProcessJson(@RequestParam(required = false) String processId) {
         if (StrUtil.isBlank(processId)) {
-            return "";
+            return StrUtil.EMPTY;
         }
         Process process = snakerEngineFacets.getEngine().process().getProcessById(processId);
-        AssertHelper.notNull(process);
-        ProcessModel processModel = process.getModel();
-        if (processModel != null) {
-            return SnakerHelper.getModelJson(processModel);
+        if (Objects.isNull(process)) {
+            return StrUtil.EMPTY;
         }
-        return null;
+        ProcessModel processModel = process.getModel();
+        if (Objects.isNull(processModel)) {
+            return StrUtil.EMPTY;
+        }
+        return SnakerHelper.getModelJson(processModel);
     }
 
     /**
@@ -90,14 +90,13 @@ public class SnakerflowFacetsController {
      */
     @ApiOperation(value = "根据给定的参数列表args分页查询process", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/list", method = RequestMethod.GET)
-    public Response processList(Page<Process> page, String displayName) {
+    public Response<JSON> getProcessList(Page<Process> page, String displayName) {
         QueryFilter filter = new QueryFilter();
         if (StringHelper.isNotEmpty(displayName)) {
             filter.setDisplayName(displayName);
         }
         filter.orderBy("create_Time").order(DESC);
         snakerEngineFacets.getEngine().process().getProcesss(page, filter);
-
         return PageResponse.ok(JSONUtil.parse(page.getResult()), page.getTotalCount());
     }
 
@@ -105,13 +104,12 @@ public class SnakerflowFacetsController {
      * 根据流程定义ID，删除流程定义
      *
      * @param id
-     * @return
      */
     @ApiOperation(value = "根据流程定义ID，删除流程定义", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/delete/{id}", method = RequestMethod.GET)
     @Metrics
     @SaCheckPermission("flow.delete")
-    public Response processDelete(@PathVariable("id") String id) {
+    public Response<Void> processDelete(@PathVariable("id") String id) {
         snakerEngineFacets.getEngine().process().undeploy(id);
         return Response.ok();
     }
@@ -120,13 +118,13 @@ public class SnakerflowFacetsController {
      * 保存流程定义[web流程设计器]
      *
      * @param model
-     * @return
      */
     @ApiOperation(value = "保存流程定义[web流程设计器]", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/deployXml", method = RequestMethod.POST)
     @SaCheckPermission("flow.update")
     @RepeatSubmitLimit(businessKey = "savemodel", businessParam = "#model")
-    public boolean processDeploy(String model, String id, @RequestParam(required = false, defaultValue = "false") boolean xmlHearder) {
+    public boolean saveProcessXml(String model, String id,
+                                  @RequestParam(required = false, defaultValue = "false") boolean xmlHearder) {
         InputStream input = null;
         try {
             String xml = "";
@@ -141,14 +139,13 @@ public class SnakerflowFacetsController {
                 snakerEngineFacets.getEngine().process().deploy(input);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
             return false;
         } finally {
             if (input != null) {
                 try {
                     input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -158,14 +155,14 @@ public class SnakerflowFacetsController {
     @ApiOperation(value = "流程定义+流程状态", tags = "流程引擎-流程")
     @RequestMapping(value = "/process/json", method = RequestMethod.GET)
     @Metrics
-    public Object json(String processId, String orderId) {
+    public Object getProcessJson(String processId, String orderId) {
         if (StrUtil.isBlank(processId)) {
             processId = snakerEngineFacets.getEngine().query().getHistOrder(orderId).getProcessId();
         }
         Process process = snakerEngineFacets.getEngine().process().getProcessById(processId);
         AssertHelper.notNull(process);
         ProcessModel model = process.getModel();
-        Map<String, String> jsonMap = new HashMap<String, String>();
+        Map<String, String> jsonMap = new HashMap<>();
         if (model != null) {
             jsonMap.put("process", SnakerHelper.getModelJson(model));
         }
@@ -178,16 +175,15 @@ public class SnakerflowFacetsController {
         return jsonMap;
     }
 
-    /**
-     * --------- 任务相关 ---------
-     */
+    // --------- 任务相关 --------- //
+
 
     /**
      * 根据当前用户查询待办任务列表
      */
     @GetMapping("/task/todoList")
     @ApiOperation(value = "根据当前用户查询待办任务列表", tags = "流程引擎-任务")
-    public PageResponse userTaskTodoList() {
+    public PageResponse<List<WorkItem>> getUserTaskTodoList() {
         Page<WorkItem> page = new Page<>(30);
         snakerEngineFacets.getEngine().query().getWorkItems(page,
                 new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
@@ -199,7 +195,7 @@ public class SnakerflowFacetsController {
      */
     @GetMapping("/task/doneList")
     @ApiOperation(value = "根据当前用户查询已办任务列表", tags = "流程引擎-任务")
-    public PageResponse userTaskdoneList() {
+    public PageResponse<List<WorkItem>> getUserTaskDoneList() {
         Page<WorkItem> page = new Page<>(30);
         snakerEngineFacets.getEngine().query().getHistoryWorkItems(page,
                 new QueryFilter().setOperator(StpUtil.getLoginIdAsString()));
@@ -207,8 +203,8 @@ public class SnakerflowFacetsController {
     }
 
     @GetMapping("/task/actor/add")
-    @ApiOperation(value = "根据流程实例id和任务名称，增加任务参与者", tags = "流程引擎-任务")
-    public Response addTaskActor(String orderId, String taskName, String operator) {
+    @ApiOperation(value = "根据流程实例id和任务名称，动态增加任务参与者", tags = "流程引擎-任务")
+    public Response<Void> addTaskActor(String orderId, String taskName, String operator) {
         List<Task> tasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOrderId(orderId));
         for (Task task : tasks) {
             if (task.getTaskName().equalsIgnoreCase(taskName) && StringUtils.isNotEmpty(operator)) {
@@ -220,11 +216,11 @@ public class SnakerflowFacetsController {
 
     @GetMapping("/task/tip")
     @ApiOperation(value = "根据流程实例id和任务名称,查找当前任务的到达时间和待执行人", tags = "流程引擎-任务")
-    public Response taskTip(String orderId, String taskName) {
+    public Response<Map<String, String>> taskTip(String orderId, String taskName) {
         List<Task> tasks = snakerEngineFacets.getEngine().query().getActiveTasks(new QueryFilter().setOrderId(orderId));
         StringBuilder builder = new StringBuilder();
-        String createTime = "";
-        String finishTime = "";
+        String createTime = StrUtil.EMPTY;
+        String finishTime = StrUtil.EMPTY;
         boolean find = false;
         for (Task task : tasks) {
             if (task.getTaskName().equalsIgnoreCase(taskName)) {
@@ -256,7 +252,7 @@ public class SnakerflowFacetsController {
         if (builder.length() > 0) {
             builder.deleteCharAt(builder.length() - 1);
         }
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         data.put("actors", builder.toString());
         data.put("createTime", createTime);
         data.put("finishTime", finishTime);
@@ -270,7 +266,7 @@ public class SnakerflowFacetsController {
     @ApiOperation(value = "\t 【审批任务】驳回，根据任务主键ID，操作人ID，参数列表执行任务，并且根据nodeName跳转到任意节点\n" +
             "\t 1、nodeName为null时，则跳转至上一步处理\n" +
             "\t 2、nodeName不为null时，则任意跳转，即动态创建转移", tags = "流程引擎-任务")
-    public Response activeTaskReject(String taskId, String nodeName, String reason) {
+    public Response<Void> activeTaskReject(String taskId, String nodeName, String reason) {
         Dict rejectReason = Dict.create()
                 // 拒绝原因，建议单独搞个 审核表 审核的comment file单独存储
                 .set("rejectReason", reason);
@@ -279,14 +275,14 @@ public class SnakerflowFacetsController {
     }
 
     /**
-     * 活动任务的驳回-驳回到发起人
+     * 活动任务的驳回-驳回到发起人节点
      */
     @GetMapping("/task/rejectToCreate")
-    @ApiOperation(value = "任务的驳回-驳回到发起人", tags = "流程引擎-任务")
-    public Response activeTaskReject(String taskId) {
+    @ApiOperation(value = "任务的驳回-驳回到发起人节点", tags = "流程引擎-任务")
+    public Response<Void> doRejectToCreate(String taskId) {
         List<WorkItem> workItems = snakerEngineFacets.getEngine().query().getWorkItems(null, new QueryFilter().setTaskId(taskId));
         if (CollUtil.isEmpty(workItems)) {
-            Response.error("500", "不存在任务喽");
+            Response.error500("不存在的任务喽");
         }
         WorkItem workItem = workItems.get(0);
         Process process = snakerEngineFacets.getEngine().process().getProcessById(workItem.getProcessId());
@@ -299,7 +295,7 @@ public class SnakerflowFacetsController {
 
     @RequestMapping(value = "/task/approval", method = RequestMethod.GET)
     @ApiOperation(value = "【审批任务】同意", tags = "流程引擎-任务")
-    public Response doApproval(String taskId, String reason) {
+    public Response<Void> doApproval(String taskId, String reason) {
         snakerEngineFacets.execute(taskId, StpUtil.getLoginIdAsString(), null);
         return Response.ok();
     }
@@ -313,22 +309,21 @@ public class SnakerflowFacetsController {
      */
     @GetMapping("/task/undo")
     @ApiOperation(value = "根据任务主键id、操作人撤回任务", tags = "流程引擎-任务")
-    public Response historyTaskUndo(String taskId) {
+    public Response<Void> historyTaskUndo(String taskId) {
         snakerEngineFacets.getEngine().task().withdrawTask(taskId, StpUtil.getLoginIdAsString());
         return Response.ok();
     }
 
     @GetMapping("/task/transferMajor")
     @ApiOperation(value = "转办", tags = "流程引擎-任务")
-    public Response transferMajor(String taskId, String nextOperator) {
+    public Response<Void> transferMajor(String taskId, String nextOperator) {
         snakerEngineFacets.transferMajor(taskId, StpUtil.getLoginIdAsString(), nextOperator.split(","));
         return Response.ok();
     }
 
 
-    /**
-     *   ------------------ 流程
-     */
+    //  ------------------ 流程实例管理 ------------------ //
+
     /**
      * 流程实例管理
      */
