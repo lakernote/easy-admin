@@ -41,7 +41,6 @@ public class WebLogController {
     @Autowired
     private LoggerGroups loggerGroups;
 
-
     @GetMapping(value = "/file", produces = "text/plain; charset=UTF-8")
     @ResponseBody
     @SaCheckPermission("weblog.list")

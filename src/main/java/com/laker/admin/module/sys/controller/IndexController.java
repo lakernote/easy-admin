@@ -13,6 +13,7 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.utils.EasyImageUtils;
 import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,7 +67,6 @@ public class IndexController {
         // 前后端分离，这时还未有会话信息，用于确定uid和验证码的一一映射关系，防止多人串码
         // 把uuid和图片码一起给前端，验证的时候再一起回来
         iEasyCache.put(uid, verCode, 3 * 60);
-
         return Response.ok(Dict.create().set("uid", uid).set("image", captcha.toBase64()));
     }
 
@@ -76,34 +76,33 @@ public class IndexController {
      */
     @GetMapping("/thumbnail")
     public void thumbnail(String url, HttpServletResponse response,
-                          @RequestParam(required = false, defaultValue = "1") int type,
-                          @RequestParam(required = false, defaultValue = "100") int width,
-                          @RequestParam(required = false, defaultValue = "100") int height) throws IOException {
-        // 确保它是以"http://"或"https://"开头的
+                          @RequestParam(defaultValue = "1") int type,
+                          @RequestParam(defaultValue = "100") int width,
+                          @RequestParam(defaultValue = "100") int height) throws IOException {
+        validateUrl(url);
+        OutputStream out = new BufferedOutputStream(response.getOutputStream());
+        String suffix = FileUtil.getSuffix(url);
+        setResponseHeaders(response, type, suffix, url);
+        EasyImageUtils.compressBysize(url, out, width, height);
+    }
+
+    @SneakyThrows
+    private void validateUrl(String url) {
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
             throw new BusinessException("仅允许http/https文件");
         }
-
         if (!config.getSecurity().getAllowList().contains(new URL(url).getHost())) {
             throw new BusinessException("仅允许访问白名单文件");
         }
-        OutputStream out = new BufferedOutputStream(response.getOutputStream());
-        // png /jpg
-        String suffix = FileUtil.getSuffix(url);
-        switch (type) {
-            case 1: // 预览
-                response.setContentType("image/" + suffix + "; charset=utf-8");
-                break;
-            case 2: // 下载
-                response.addHeader("Content-Disposition", "attachment;filename="
-                        + new String(FileUtil.mainName(url).getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1) + "." + suffix);
-                response.setContentType("application/octet-stream");
-                break;
-            default:
-                response.setContentType("image/" + suffix + "; charset=utf-8");
+    }
 
+    private void setResponseHeaders(HttpServletResponse response, int type, String suffix, String url) {
+        String contentType = type == 2 ? "application/octet-stream" : "image/" + suffix + "; charset=utf-8";
+        response.setContentType(contentType);
+        if (type == 2) {
+            response.addHeader("Content-Disposition", "attachment;filename="
+                    + new String(FileUtil.mainName(url).getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1) + "." + suffix);
         }
-        EasyImageUtils.compressBysize(url, out, width, height);
     }
 
 }
