@@ -7,10 +7,10 @@
         <groupId>com.laker.easy</groupId>
         <version>1.0.0</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>easy-admin-server</artifactId>
-
 
     <dependencies>
         <!-- web -->
@@ -34,7 +34,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-
 
         <!-- 接口文档 -->
         <dependency>
@@ -80,48 +79,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-core</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-jackson</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-spring4</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-hystrix</artifactId>
-            <version>${feign.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-micrometer</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-okhttp</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.0.0-jre</version>
@@ -132,6 +89,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
     </dependencies>
 

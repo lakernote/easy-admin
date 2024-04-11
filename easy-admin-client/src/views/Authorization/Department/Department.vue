@@ -16,9 +16,9 @@ import {BaseButton} from '@/components/Button'
 
 const ids = ref<string[]>([])
 
-const { tableRegister, tableState, tableMethods } = useTable({
+const {tableRegister, tableState, tableMethods} = useTable({
   fetchDataApi: async () => {
-    const { currentPage, pageSize } = tableState
+    const {currentPage, pageSize} = tableState
     const res = await getDepartmentTableApi({
       // 设置请求的分页
       current: unref(currentPage),
@@ -33,12 +33,13 @@ const { tableRegister, tableState, tableMethods } = useTable({
     }
   },
   fetchDelApi: async () => {
+    // 调用删除部门接口
     const res = await deleteDepartmentApi(unref(ids))
     return !!res
   }
 })
-const { loading, dataList, total, currentPage, pageSize } = tableState
-const { getList, getElTableExpose, delList } = tableMethods
+const {loading, dataList, total, currentPage, pageSize} = tableState
+const {getList, getElTableExpose, delList} = tableMethods
 
 const searchParams = ref({})
 const setSearchParams = (params: any) => {
@@ -46,7 +47,7 @@ const setSearchParams = (params: any) => {
   getList()
 }
 
-const { t } = useI18n()
+const {t} = useI18n()
 
 const crudSchemas = reactive<CrudSchema[]>([
   {
@@ -120,11 +121,11 @@ const crudSchemas = reactive<CrudSchema[]>([
         default: (data: any) => {
           const status = data.row.status
           return (
-            <>
-              <ElTag type={status === 0 ? 'danger' : 'success'}>
-                {status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
-              </ElTag>
-            </>
+              <>
+                <ElTag type={status === 0 ? 'danger' : 'success'}>
+                  {status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
+                </ElTag>
+              </>
           )
         }
       }
@@ -148,11 +149,11 @@ const crudSchemas = reactive<CrudSchema[]>([
       slots: {
         default: (data: any) => {
           return (
-            <>
-              <ElTag type={data.status === 0 ? 'danger' : 'success'}>
-                {data.status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
-              </ElTag>
-            </>
+              <>
+                <ElTag type={data.status === 0 ? 'danger' : 'success'}>
+                  {data.status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
+                </ElTag>
+              </>
           )
         }
       }
@@ -209,17 +210,17 @@ const crudSchemas = reactive<CrudSchema[]>([
       slots: {
         default: (data: any) => {
           return (
-            <>
-              <BaseButton type="primary" onClick={() => action(data.row, 'edit')}>
-                {t('exampleDemo.edit')}
-              </BaseButton>
-              <BaseButton type="success" onClick={() => action(data.row, 'detail')}>
-                {t('exampleDemo.detail')}
-              </BaseButton>
-              <BaseButton type="danger" onClick={() => delData(data.row)}>
-                {t('exampleDemo.del')}
-              </BaseButton>
-            </>
+              <>
+                <BaseButton type="primary" onClick={() => action(data.row, 'edit')}>
+                  {t('exampleDemo.edit')}
+                </BaseButton>
+                <BaseButton type="success" onClick={() => action(data.row, 'detail')}>
+                  {t('exampleDemo.detail')}
+                </BaseButton>
+                <BaseButton type="danger" onClick={() => delData(data.row)}>
+                  {t('exampleDemo.del')}
+                </BaseButton>
+              </>
           )
         }
       }
@@ -228,7 +229,7 @@ const crudSchemas = reactive<CrudSchema[]>([
 ])
 
 // @ts-ignore
-const { allSchemas } = useCrudSchemas(crudSchemas)
+const {allSchemas} = useCrudSchemas(crudSchemas)
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
@@ -248,8 +249,8 @@ const delLoading = ref(false)
 const delData = async (row: DepartmentItem | null) => {
   const elTableExpose = await getElTableExpose()
   ids.value = row
-    ? [row.id]
-    : elTableExpose?.getSelectionRows().map((v: DepartmentItem) => v.id) || []
+      ? [row.id]
+      : elTableExpose?.getSelectionRows().map((v: DepartmentItem) => v.id) || []
   delLoading.value = true
   await delList(unref(ids).length).finally(() => {
     delLoading.value = false
@@ -273,10 +274,11 @@ const save = async () => {
   if (formData) {
     saveLoading.value = true
     const res = await saveDepartmentApi(formData)
-      .catch(() => {})
-      .finally(() => {
-        saveLoading.value = false
-      })
+        .catch(() => {
+        })
+        .finally(() => {
+          saveLoading.value = false
+        })
     if (res) {
       dialogVisible.value = false
       currentPage.value = 1
@@ -288,7 +290,7 @@ const save = async () => {
 
 <template>
   <ContentWrap>
-    <Search :schema="allSchemas.searchSchema" @search="setSearchParams" @reset="setSearchParams" />
+    <Search :schema="allSchemas.searchSchema" @search="setSearchParams" @reset="setSearchParams"/>
 
     <div class="mb-10px">
       <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
@@ -298,38 +300,38 @@ const save = async () => {
     </div>
 
     <Table
-      v-model:pageSize="pageSize"
-      v-model:currentPage="currentPage"
-      :columns="allSchemas.tableColumns"
-      :data="dataList"
-      :loading="loading"
-      :pagination="{
+        v-model:pageSize="pageSize"
+        v-model:currentPage="currentPage"
+        :columns="allSchemas.tableColumns"
+        :data="dataList"
+        :loading="loading"
+        :pagination="{
         total: total
       }"
-      @register="tableRegister"
+        @register="tableRegister"
     />
   </ContentWrap>
 
   <Dialog v-model="dialogVisible" :title="dialogTitle">
     <Write
-      v-if="actionType !== 'detail'"
-      ref="writeRef"
-      :form-schema="allSchemas.formSchema"
-      :current-row="currentRow"
+        v-if="actionType !== 'detail'"
+        ref="writeRef"
+        :form-schema="allSchemas.formSchema"
+        :current-row="currentRow"
     />
 
     <Detail
-      v-if="actionType === 'detail'"
-      :detail-schema="allSchemas.detailSchema"
-      :current-row="currentRow"
+        v-if="actionType === 'detail'"
+        :detail-schema="allSchemas.detailSchema"
+        :current-row="currentRow"
     />
 
     <template #footer>
       <BaseButton
-        v-if="actionType !== 'detail'"
-        type="primary"
-        :loading="saveLoading"
-        @click="save"
+          v-if="actionType !== 'detail'"
+          type="primary"
+          :loading="saveLoading"
+          @click="save"
       >
         {{ t('exampleDemo.save') }}
       </BaseButton>

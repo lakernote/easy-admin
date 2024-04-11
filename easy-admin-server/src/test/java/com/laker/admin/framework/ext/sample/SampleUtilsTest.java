@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class SampleUtilsTest {
     @Test
     public void test() {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 3; i++) {
             System.out.println(i + ":" + SampleUtils.sample(30));
         }
     }

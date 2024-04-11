@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author longli
@@ -49,5 +50,21 @@ public class Response<T> {
 
     public static <T> Response<T> error(Integer code, String msg) {
         return new Response<>(code, msg, null);
+    }
+
+    public static <T> Response<T> error401() {
+        return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), null);
+    }
+
+    public static <T> Response<T> error403() {
+        return new Response<>(HttpStatus.FORBIDDEN.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), null);
+    }
+
+    public static <T> Response<T> error403(String msg) {
+        return new Response<>(HttpStatus.FORBIDDEN.value(), msg, null);
+    }
+
+    public static <T> Response<T> error500() {
+        return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null);
     }
 }

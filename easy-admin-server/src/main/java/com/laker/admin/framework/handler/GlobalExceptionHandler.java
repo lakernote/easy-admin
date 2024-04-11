@@ -2,6 +2,7 @@
 package com.laker.admin.framework.handler;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.lang.Dict;
 import com.laker.admin.framework.aop.ratelimit.RateLimitException;
@@ -133,15 +134,23 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
     public Response<Void> handleNotLoginException(NotLoginException e) {
-        log.error(HttpServletRequestUtil.getAllRequestInfo());
-        log.error(e.getMessage(), e);
-        return Response.error(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        logSaTokenError(e);
+        return Response.error401();
     }
 
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(NotPermissionException.class)
+    public Response<Void> handleNotPermissionException(NotPermissionException e) {
+        logSaTokenError(e);
+        return Response.error403(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(SaTokenException.class)
-    public Response handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e);
-        return Response.error(403, e.getMessage());
+    public Response<Void> handleSaTokenException(SaTokenException e) {
+        logSaTokenError(e);
+        return Response.error403(e.getMessage());
     }
 
     /**
@@ -200,6 +209,11 @@ public class GlobalExceptionHandler {
     public Response<Void> handleException(Exception e) {
         log.info(HttpServletRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
-        return Response.error(500, "服务器异常");
+        return Response.error500();
+    }
+
+    private static void logSaTokenError(SaTokenException e) {
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(),
+                HttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
     }
 }

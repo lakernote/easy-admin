@@ -1,8 +1,8 @@
 package com.laker.admin.module.sys.dto;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;
-import org.apache.commons.lang.StringUtils;
 
 @Data
 public class UserDto {
@@ -13,9 +13,9 @@ public class UserDto {
 
     public <T> QueryWrapper<T> queryWrapper() {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(nickName), "nick_name", nickName);
+        queryWrapper.eq(StrUtil.isNotEmpty(nickName), "nick_name", nickName);
         queryWrapper.eq(sex != null, "sex", sex);
-        queryWrapper.and(StringUtils.isNotEmpty(keyword),
+        queryWrapper.and(StrUtil.isNotEmpty(keyword),
                 likeQueryWrapper -> likeQueryWrapper.like("user_name", keyword)
                         .or().like("nick_name", keyword));
         return queryWrapper;
