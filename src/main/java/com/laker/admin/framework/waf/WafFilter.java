@@ -81,7 +81,7 @@ public class WafFilter implements Filter {
     }
 
     private boolean getParamConfig(String value) {
-        if (value == null || "".equals(value.trim())) {
+        if (value == null || value.trim().isEmpty()) {
             //未配置默认 True
             return true;
         }

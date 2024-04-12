@@ -7,14 +7,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @EnableScheduling
 @Configuration
-public class ScheduleConfig {
+public class ThreadPoolConfig {
 
 
     @Bean
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(20);
-        threadPoolTaskScheduler.setThreadNamePrefix("lakerscheduler-");
+        threadPoolTaskScheduler.setThreadNamePrefix("easy-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
         return threadPoolTaskScheduler;

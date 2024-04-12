@@ -19,4 +19,10 @@
 > - docker
 > - docker-compose
 
-
+```shell
+sudo docker run -p 3306:3306 --name mysql8 \
+-e MYSQL_ROOT_PASSWORD=123456 \
+-e MYSQL_DATABASE=easy-admin \
+-e default-authentication-plugin=mysql_native_password \
+-d mysql:8.3
+```

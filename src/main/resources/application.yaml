@@ -43,6 +43,13 @@ spring:
   servlet:
     multipart:
       max-file-size: 20MB
+  flyway:
+    enabled: true
+    # 历史表
+    baselineOnMigrate: true
+    validateOnMigrate: true
+    # flyway的sql脚本路径
+    locations: classpath:db/migration
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
   # 配置日志 #仅控制台输出的日志
@@ -66,7 +73,7 @@ knife4j:
   # production: true
 javamelody:
   # javamelody监控的开关
-  enabled: true
+  enabled: false
   # Data source names to exclude from monitoring (optional, comma-separated)
   excluded-datasources: secretSource,topSecretSource
   # Enable monitoring of Spring services and controllers (optional, default: true)
@@ -103,7 +110,7 @@ sa-token:
   is-print: false
   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
   is-concurrent: true
-laker:
+easy:
   # web防火墙配置
   waf:
     sql-enabled: false

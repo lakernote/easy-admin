@@ -19,15 +19,16 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
     LakerChatHandler webSocketHandler;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler, "/websocket/**")
-            // 添加拦截器，可以获取连接的param和 header 用作认证鉴权
-            .addInterceptors(new LakerSessionHandshakeInterceptor())
-            // 设置运行跨域
-            .setAllowedOrigins("*");
+                // 添加拦截器，可以获取连接的param和 header 用作认证鉴权
+                .addInterceptors(new LakerSessionHandshakeInterceptor())
+                // 设置运行跨域
+                .setAllowedOrigins("*");
     }
-       
+
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();

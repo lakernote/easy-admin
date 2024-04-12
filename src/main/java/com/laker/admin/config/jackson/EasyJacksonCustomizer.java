@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
  * @author laker
  */
 @Component
-public class JacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer {
+public class EasyJacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer {
 
     private static final String STANDARD_PATTERN = "yyyy-MM-dd HH:mm:ss";
 

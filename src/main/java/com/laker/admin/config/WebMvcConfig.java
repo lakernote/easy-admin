@@ -37,7 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/error",
             "/swagger-resources/**"};
     @Autowired
-    LakerConfig lakerConfig;
+    EasyConfig easyConfig;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -71,7 +71,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 配置静态资源，自定义虚拟磁盘功能
         File web = new File("easy-admin-client");
-        String path = lakerConfig.getOssFile().getPath();
+        String path = easyConfig.getOssFile().getPath();
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
