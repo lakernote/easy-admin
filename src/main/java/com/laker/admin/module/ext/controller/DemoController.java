@@ -21,15 +21,15 @@ import java.util.List;
  * @author laker
  * @since 2021-08-16
  */
-@Tag(name  = "示例controller")// 在doc.html中的名称
+@Tag(name = "△△△1.示例controller△△△")// 在doc.html中的名称
 @ApiSupport(order = 0, author = "laker") // 在doc.html中的顺序
 @RestController
-@RequestMapping("/ext/demo")
+@RequestMapping("/demo/v1")
 @Slf4j
 public class DemoController {
 
     @GetMapping
-    @Operation(summary  = "参数数组 - querystring")
+    @Operation(summary = "参数数组 - querystring")
     public void pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                         @RequestParam(required = false, defaultValue = "10") long limit,
                         @RequestParam(required = false) List<DemoTypeEnum> types) {
@@ -37,13 +37,13 @@ public class DemoController {
     }
 
     @GetMapping("/1")
-    @Operation(summary  = "枚举 - querystring")
+    @Operation(summary = "枚举 - querystring")
     public void pageAll2(Distance distance) {
         log.info(distance.toString());
     }
 
     @GetMapping("/2")
-    @Operation(summary  = "实体 - querystring")
+    @Operation(summary = "实体 - querystring")
     public void pageAll3(City city) {
         log.info(city.toString());
     }

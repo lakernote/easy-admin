@@ -1,5 +1,7 @@
 package com.laker.admin.config;
 
+import cn.dev33.satoken.interceptor.SaInterceptor;
+import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
@@ -16,7 +18,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
 import java.util.List;
@@ -28,13 +33,6 @@ import java.util.List;
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
     private static final String[] exclude_path = {"/admin/**",
-            "/admin/login.html",
-            "/error",
-            "/swagger-resources/**",
-            "/api/v1/login",
-            "/captcha",
-            "/thumbnail"};
-    private static final String[] trace_exclude_path = {"/admin/**",
             "/admin/login.html",
             "/error",
             "/swagger-resources/**"};
@@ -57,17 +55,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册注解拦截器，并排除不需要注解鉴权的接口地址 (与登录拦截器无关)
-//        registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
-//                .excludePathPatterns(exclude_path);
+        // 注册注解拦截器，并排除不需要注解鉴权的接口地址
+        registry.addInterceptor(new SaInterceptor(handler -> {
+                    SaRouter.match("/**", r -> StpUtil.checkLogin());
+                    // 角色认证 -- 拦截以 admin 开头的路由，必须具备 admin 角色或者 super-admin 角色才可以通过认证
+                    SaRouter.match("/admin/**", r -> StpUtil.checkRoleOr("admin", "super-admin"));
+                }).isAnnotation(true)).addPathPatterns("/**")
+                .excludePathPatterns(exclude_path);
         // 配置自定义拦截器
         registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns(trace_exclude_path);
+                .excludePathPatterns(exclude_path);
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 配置静态资源，自定义虚拟磁盘功能
-        File web = new File("web");
+        File web = new File("easy-admin-client");
         String path = lakerConfig.getOssFile().getPath();
         File file = new File(path);
         if (!file.exists()) {
@@ -80,33 +83,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/" + path + "/**")
                 .addResourceLocations("file:" + file.getAbsolutePath() + "/");
     }
-
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        // 预先配置响应状态代码或视图以呈现响应主体。
-//        // 这在不需要自定义控制器逻辑的情况下很有用
-//        // @RequestMapping("/html1")
-//        //    public String html1(){
-//        //        return "index";
-//        //    }
-//        // ——例如呈现主页、执行简单的站点 URL 重定向、返回带有 HTML 内容的 404 状态、没有内容的 204 等等。
-////        registry.addViewController("/").setViewName("login");
-////        registry.addViewController("/login.html").setViewName("login");
-//    }
-
-//    @Override
-//    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-//        // 内容协商
-//        // 设置默认的设置默认的ContentType
-//        configurer.defaultContentType(MediaType.APPLICATION_JSON);
-//    }
-
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-        // 路由匹配规则
-//        configurer.setUseTrailingSlashMatch(false);
-    }
-
 
     @Override
     public void addFormatters(FormatterRegistry registry) {

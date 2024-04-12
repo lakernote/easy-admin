@@ -10,8 +10,8 @@ WORKDIR /laker
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 # 将指定目录下的jar包复制到docker容器的/目录下
 COPY target/*.jar app.jar
-# 复制前端web到容器内的 /laker/web
-COPY /web /laker/web
+# 复制前端web到容器内的 /laker/easy-admin-client
+COPY /easy-admin-client /laker/web
 # 暴露8080端口
 EXPOSE 8080
 # 指定docker容器启动时运行jar包

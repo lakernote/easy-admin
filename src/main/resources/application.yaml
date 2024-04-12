@@ -66,8 +66,27 @@ knife4j:
   # production: true
 javamelody:
   # javamelody监控的开关
-  enabled: false
-  # sa-token配置
+  enabled: true
+  # Data source names to exclude from monitoring (optional, comma-separated)
+  excluded-datasources: secretSource,topSecretSource
+  # Enable monitoring of Spring services and controllers (optional, default: true)
+  spring-monitoring-enabled: true
+  # Initialization parameters for JavaMelody (optional)
+  # See: https://github.com/javamelody/javamelody/wiki/UserGuide#6-optional-parameters
+  init-parameters:
+    # log http requests:
+    log: true
+    # to exclude images, css, fonts and js urls from the monitoring:
+    #url-exclude-pattern: (/webjars/.*|/css/.*|/images/.*|/fonts/.*|/js/.*)
+    # to aggregate digits in http requests:
+    #http-transform-pattern: \d+
+    # to add basic auth:
+    #authorized-users: admin:pwd
+    # to change the default storage directory:
+    #storage-directory: /tmp/javamelody
+    # to change the default "/monitoring" path:
+    #monitoring-path: /admin/performance
+# sa-token配置
 sa-token:
   # token名称 (同时也是cookie名称)
   token-name: LakerToken
@@ -93,6 +112,7 @@ laker:
   # 文件服务endpoint
   oss-file:
     domain: http://localhost:8080
+    path: storage
 # actuator
 management:
   endpoint:

@@ -53,7 +53,7 @@
             <!--                org.springframework.aop,-->
             <!--                org.springframework.security,-->
             <!--                org.springframework.transaction,-->
-            <!--                org.springframework.web,-->
+            <!--                org.springframework.easy-admin-client,-->
             <!--                sun.reflect,-->
             <!--                net.sf.cglib,-->
             <!--                org.springframework.cglib.proxy,-->

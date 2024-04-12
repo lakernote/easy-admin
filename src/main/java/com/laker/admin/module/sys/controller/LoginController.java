@@ -2,6 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -48,8 +49,8 @@ public class LoginController {
     @PostMapping("/api/v1/login")
     @ApiOperationSupport(order = 1)
     @Operation(summary = "登录")
+    @SaIgnore
     public Response login(@Validated @RequestBody LoginDto loginDto) {
-        // 验证码是否正确
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getUserName, loginDto.getUsername())
