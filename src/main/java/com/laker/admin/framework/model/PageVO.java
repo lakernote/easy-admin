@@ -38,22 +38,24 @@ public class PageVO implements Serializable {
     @Schema(description = "排序字段和排序类型，例如：create_time desc,user_no asc.")
     private String orderBy;
 
-
     public Page toPage() {
         Page page = new Page();
         page.setCurrent(current);
         page.setSize(size);
         if (StrUtil.isNotBlank(orderBy)) {
             List<OrderItem> orders = new ArrayList<>();
-            String[] orderItems = StrUtil.split(orderBy, ",");
+            List<String> orderItems = StrUtil.split(orderBy, ",");
             for (String orderItemStr : orderItems) {
-                String[] orderAndSort = StrUtil.split(orderItemStr, " ");
+                List<String> orderAndSort = StrUtil.split(orderItemStr, " ");
                 if (CollUtil.size(orderAndSort) != 2) {
                     continue;
                 }
-                String order = orderAndSort[0];
-                String sort = orderAndSort[1];
-                orders.add(new OrderItem(order, StrUtil.equalsIgnoreCase("ASC", sort)));
+                String order = orderAndSort.get(0);
+                String sort = orderAndSort.get(1);
+                OrderItem orderItem = new OrderItem();
+                orderItem.setColumn(order);
+                orderItem.setAsc(StrUtil.equalsIgnoreCase("ASC", sort));
+                orders.add(orderItem);
             }
             page.setOrders(orders);
         }

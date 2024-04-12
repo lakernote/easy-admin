@@ -1,15 +1,14 @@
 package com.laker.admin.framework.ext;
 
 import com.laker.admin.framework.model.Response;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @Slf4j
@@ -19,8 +18,8 @@ public class DefaultUncaughtErrorControllor implements ErrorController {
     public Response error(HttpServletRequest request, HttpServletResponse response) {
         HttpStatus statusCode = getHttpStatusCode(request);
         String uri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
-        log.error("error,code:{},uri:{}", statusCode.value(), uri);
-        return Response.error(statusCode.value() + "", "未找到接口", uri);
+        log.error("code:{},msg:{},uri:{}", statusCode.value(), statusCode.isError(), uri);
+        return Response.error(statusCode.value() + "", statusCode.getReasonPhrase(), uri);
     }
 
     private HttpStatus getHttpStatusCode(HttpServletRequest request) {

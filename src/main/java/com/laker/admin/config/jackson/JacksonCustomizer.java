@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * 自定义扩展jackson序列化和反序列化
+ *
  * @author laker
  */
 @Component
@@ -64,7 +65,7 @@ public class JacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer 
          * 1. java.util.Date yyyy-MM-dd HH:mm:ss
          * 2. 支持JDK8 LocalDateTime、LocalDate、 LocalTime
          * 3. Jdk8Module模块支持如Stream、Optional等类
-         * 4. 序列化时包含所有字段
+         * 4. 序列化时包含所有字段 ALWAYS，NON_NULL不序列化null字段
          * 5. 在序列化一个空对象时时不抛出异常
          * 6. 忽略反序列化时在json字符串中存在, 但在java对象中不存在的属性
          * 7. 序列化：日期/时间是否序列化为时间戳，这里禁止
@@ -72,7 +73,7 @@ public class JacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer 
          */
         builder.simpleDateFormat(STANDARD_PATTERN)
                 .modules(javaTimeModule, new Jdk8Module())
-                .serializationInclusion(JsonInclude.Include.ALWAYS)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .failOnEmptyBeans(false)
                 .failOnUnknownProperties(false)
                 .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

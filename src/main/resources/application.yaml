@@ -24,8 +24,8 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:p6spy:mysql://localhost:3307/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:mysql://localhost:3306/laker?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
@@ -48,6 +48,9 @@ mybatis-plus:
   # 配置日志 #仅控制台输出的日志
   #  configuration:
   #  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    # 是否开启print logo
+    banner: false
 knife4j:
   # 开启增强
   enable: true
@@ -71,7 +74,7 @@ sa-token:
   # token有效期，单位s 默认30天, -1代表永不过期
   timeout: 1800
   # token临时有效期 [指定时间内无操作就视为token过期] (单位: 秒), 默认-1 代表不限制
-  activity-timeout: 1800
+  active-timeout: 1800
   # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
   is-share: false
   # token风格

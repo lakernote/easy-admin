@@ -7,7 +7,6 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
-import com.laker.admin.utils.IP2CityUtil;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -51,9 +50,8 @@ public class MetricsAspect {
         ExtLog logBean = new ExtLog();
         logBean.setIp(HttpServletRequestUtil.getRemoteIP());
         if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
-            String cityInfo = IP2CityUtil.getCityInfo(logBean.getIp());
-            String[] split = cityInfo.split("\\|");
-            logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
+            // todo
+//            logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
         }
         logBean.setUri(HttpServletRequestUtil.getRequestURI());
         logBean.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
@@ -84,7 +82,7 @@ public class MetricsAspect {
         if (StrUtil.isNotBlank(response) && response.length() <= 500) {
             logBean.setResponse(response);
         }
-        if (JSONUtil.isJsonObj(response)) {
+        if (JSONUtil.isTypeJSONObject(response)) {
             Boolean success = JSONUtil.parseObj(response).getBool("success", true);
             logBean.setStatus(success);
         }

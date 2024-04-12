@@ -1,5 +1,5 @@
 # 该镜像需要依赖的基础镜像
-FROM openjdk:8-jre
+FROM openjdk:17-jre
 # 指定维护者的名字
 MAINTAINER laker "935009066@qq.com"
 # 创建目录

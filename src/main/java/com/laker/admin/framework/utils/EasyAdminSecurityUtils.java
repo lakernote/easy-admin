@@ -18,8 +18,7 @@ public class EasyAdminSecurityUtils {
         UserInfoAndPowers userInfoAndPowers = null;
         try {
             userInfoAndPowers = (UserInfoAndPowers) StpUtil.getSession().get(EasyAdminConstants.CURRENT_USER);
-        } catch (Exception e) {
-            log.warn(e.getMessage());
+        } catch (Exception ignored) {
         }
         return userInfoAndPowers;
     }

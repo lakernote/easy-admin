@@ -2,7 +2,7 @@ package com.laker.admin.framework.aop.trace;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,8 +33,6 @@ public class Trace {
 
     /**
      * 添加 span
-     *
-     * @param span
      */
     public void addSpan(String spanName, SpanType spanType) {
         treeView.begin(spanType + "-" + spanName);

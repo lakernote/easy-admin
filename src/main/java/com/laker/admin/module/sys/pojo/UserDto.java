@@ -2,7 +2,7 @@ package com.laker.admin.module.sys.pojo;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class UserDto {

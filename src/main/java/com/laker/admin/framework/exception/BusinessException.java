@@ -2,13 +2,14 @@
 package com.laker.admin.framework.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 自定义异常
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class BusinessException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
 
     private String msg;
     private int code = 500;

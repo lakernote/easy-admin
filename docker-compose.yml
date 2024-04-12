@@ -1,0 +1,71 @@
+# 构建镜像 docker-compose build
+# 启动容器命令 docker-compose up 在后台执行该服务可以加上 -d,docker-compose up -d
+# 停止删除命令 docker-compose down 删除容器同时删除卷docker-compose down -v
+version: "3.4"
+# 项目名称
+name: easy-admin
+
+services:
+  # 定义了mysql数据库
+  mysql:
+    # 容器名
+    container_name: mysql8
+    # 镜像
+    image: mysql:8.3
+    # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    restart: unless-stopped
+    command: [ "--max_connections=300","--default-authentication-plugin=mysql_native_password" ]
+    networks:
+      - app_net
+    # 映射端口
+    ports:
+      - "3306:3306"
+    # 设置环境变量,相当于docker run命令中的-e
+    environment:
+      TZ: Asia/Shanghai
+      # 初始化的数据库名称
+      MYSQL_DATABASE: easy-admin
+      # 设置root用户密码
+      MYSQL_ROOT_PASSWORD: 123456
+    # 数据卷挂载路径设置,将本机目录映射到容器目录
+    volumes:
+      - mysqlData:/var/lib/mysql
+      # 将宿主机的 /var/lib/mysql/ 目录挂载到容器内的 /var/lib/mysql/ 目录
+      # 这样做的目的通常是为了将 MySQL 数据库的持久化存储在宿主机的数据卷中，以防止容器删除后数据丢失。
+      #  - /var/lib/mysql/:/var/lib/mysql/
+      #  表示将宿主机中的 ./sql目录中的文件挂载到容器内的 /docker-entrypoint-initdb.d/目录中，
+      #  同时设置挂载为只读模式 (ro，即 read-only)。这个配置通常用于向 MySQL 数据库容器中初始化数据，比如在容器启动时执行 SQL 脚本以创建数据库表和插入初始数据。
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  # 定义了redis
+  redis:
+    container_name: redis6
+    image: redis:6-alpine
+    restart: unless-stopped
+    networks:
+      - app_net
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisData:/data
+      - redisData:/etc/redis/redis.conf
+volumes:
+  # 自定义的卷名,存储的路径不好找
+  redisData:
+  mysqlData:
+
+networks:
+  # 配置docker network
+  app_net:
+    # 桥接模式是 Docker 默认的网络驱动程序，用于在容器间创建桥接网络，使它们能够相互通信
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        # 子网络
+        - subnet: 178.18.0.0/16

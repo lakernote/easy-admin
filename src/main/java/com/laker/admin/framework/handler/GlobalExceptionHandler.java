@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,6 +185,14 @@ public class GlobalExceptionHandler {
     public Response<Void> handleRateLimitException(RateLimitException e) {
         log.error(e.getMessage(), e);
         return Response.error("429", "请求过于频繁，请稍后重试");
+    }
+
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response<Void> handleNoResourceFoundException(NoResourceFoundException e) {
+        log.error("uri:{}, method:{}, detail:{}", e.getResourcePath(), e.getHttpMethod(), e.getBody().getDetail());
+        return Response.error404();
     }
 
     @ExceptionHandler(Exception.class)

@@ -195,7 +195,7 @@ public class SysUserController {
 
     @GetMapping("/getRoles")
     public Response edit(Long userId) {
-        List<SysRole> allRole = sysRoleService.list(null);
+        List<SysRole> allRole = sysRoleService.list();
         if (userId != null) {
             List<SysUserRole> myRole = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
             allRole.forEach(sysRole -> {
