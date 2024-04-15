@@ -35,6 +35,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private static final String[] exclude_path = {"/admin/**",
             "/admin/login.html",
             "/error",
+            "/favicon.ico",
             "/swagger-resources/**"};
     @Autowired
     EasyConfig easyConfig;

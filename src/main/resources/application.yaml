@@ -50,6 +50,15 @@ spring:
     validateOnMigrate: true
     # flyway的sql脚本路径
     locations: classpath:db/migration
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
+            dismiss404: false
 mybatis-plus:
   type-aliases-package: org.snaker.engine.entity
   # 配置日志 #仅控制台输出的日志

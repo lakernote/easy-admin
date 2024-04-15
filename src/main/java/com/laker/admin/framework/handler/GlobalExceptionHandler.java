@@ -133,14 +133,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
     public Response handleNotLoginException(NotLoginException e) {
-        log.info(HttpServletRequestUtil.getAllRequestInfo());
-        log.error(e.getMessage());
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
         return Response.error("401", e.getMessage());
     }
 
     @ExceptionHandler(SaTokenException.class)
     public Response handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e);
+        log.error("uri：{}, httpMethod:{}, errMsg:{}", HttpServletRequestUtil.getRequestURI(), HttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
         return Response.error("403", e.getMessage());
     }
 

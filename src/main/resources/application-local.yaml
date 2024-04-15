@@ -11,7 +11,7 @@ management:
       export:
         enabled: false
         password: 12345678
-        user-name: laker
+        user-name: easy-admin
 spring:
   autoconfigure:
     exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
@@ -29,7 +29,16 @@ spring:
       port: 6379
       password:
       timeout: 30s
+#      lettuce:
+#        pool:
+#          enabled: true
+#          max-idle: 8
+#          min-idle: 1
+
 lock:
   type: mysql
 ratelimit:
   type: redis
+logging:
+  level:
+    com.laker.admin.module.remote: debug
