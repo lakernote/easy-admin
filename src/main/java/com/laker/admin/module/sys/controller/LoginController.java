@@ -6,6 +6,7 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.giffing.bucket4j.spring.boot.starter.context.RateLimiting;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
@@ -50,6 +51,7 @@ public class LoginController {
     @ApiOperationSupport(order = 1)
     @Operation(summary = "登录")
     @SaIgnore
+    @RateLimiting(name = "login", cacheKey = "#loginDto.getUsername()", ratePerMethod = true)
     public Response login(@Validated @RequestBody LoginDto loginDto) {
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()

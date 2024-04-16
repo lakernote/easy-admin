@@ -31,7 +31,7 @@ spring:
       maximum-pool-size: 20
   profiles:
     # maven启用的profile，默认是local
-    active: @profileActive@
+    active: @profileActive@,ratelimiter
   task:
     execution:
       pool:
@@ -60,7 +60,6 @@ spring:
             logger-level: full
             dismiss404: false
 mybatis-plus:
-  type-aliases-package: org.snaker.engine.entity
   # 配置日志 #仅控制台输出的日志
   #  configuration:
   #  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -75,16 +74,14 @@ knife4j:
     # 开启basic认证 输入用户名密码才能访问/doc.html
     enable: false
     # 认证用户名
-    password: laker
+    password: easy-admin
     # 认证密码
-    username: laker
+    username: easy-admin
   # 是否生产环境 屏蔽所有资源接口,一般这个用于生产环境 屏蔽资源，与上面二选一
   # production: true
 javamelody:
   # javamelody监控的开关
   enabled: false
-  # Data source names to exclude from monitoring (optional, comma-separated)
-  excluded-datasources: secretSource,topSecretSource
   # Enable monitoring of Spring services and controllers (optional, default: true)
   spring-monitoring-enabled: true
   # Initialization parameters for JavaMelody (optional)
