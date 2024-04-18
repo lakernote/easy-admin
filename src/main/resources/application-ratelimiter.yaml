@@ -1,17 +1,9 @@
 logging:
   level:
     com.giffing.bucket4j: debug
-spring:
-  cache:
-    jcache:
-      provider: com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
-    cache-names:
-      - buckets
-      - filterConfigCache
-    caffeine:
-      spec: maximumSize=1000000,expireAfterAccess=3600s
 bucket4j:
   enabled: true
+  cache-to-use: redis-lettuce
   filter-config-caching-enabled: true
   filter-config-cache-name: filterConfigCache
   methods:

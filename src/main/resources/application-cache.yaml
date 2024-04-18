@@ -1,0 +1,9 @@
+spring:
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1h
+      key-prefix: easy-admin
+      cache-null-values: false
+      use-key-prefix: true
+      enable-statistics: true

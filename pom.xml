@@ -167,14 +167,19 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <!-- // redisson-spring-boot-starter Redis客户端库，提供对基于Redis的数据结构的支持，可以用作分布式锁、缓存或队列。-->
-
+        <!-- https://github.com/redisson/redisson/tree/master/redisson-spring-boot-starter -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.28.0</version>
+        </dependency>
         <!-- bucket4j-spring-boot-starter 用于实现令牌桶算法的速率限制的Java库。它用于控制系统传入请求的速率。 令牌桶 -->
         <!-- https://github.com/bucket4j/bucket4j -->
-        <dependency>
-            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
-            <artifactId>bucket4j-spring-boot-starter</artifactId>
-            <version>0.12.6</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>-->
+<!--            <artifactId>bucket4j-spring-boot-starter</artifactId>-->
+<!--            <version>0.12.6</version>-->
+<!--        </dependency>-->
         <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -195,16 +200,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>jcache</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
 
     </dependencies>

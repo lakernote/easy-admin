@@ -30,8 +30,8 @@ spring:
       minimum-idle: 5
       maximum-pool-size: 20
   profiles:
-    # maven启用的profile，默认是local
-    active: @profileActive@,ratelimiter
+    # maven启用的profile，默认是local @profileActive@,ratelimiter,cache
+    active: @profileActive@,cache
   task:
     execution:
       pool:
@@ -50,6 +50,9 @@ spring:
     validateOnMigrate: true
     # flyway的sql脚本路径
     locations: classpath:db/migration
+  redis:
+    redisson:
+      file: classpath:redisson.yaml
   cloud:
     openfeign:
       client:

@@ -6,7 +6,6 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.giffing.bucket4j.spring.boot.starter.context.RateLimiting;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
@@ -24,6 +23,7 @@ import com.laker.admin.module.sys.service.ISysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +51,7 @@ public class LoginController {
     @ApiOperationSupport(order = 1)
     @Operation(summary = "登录")
     @SaIgnore
-    @RateLimiting(name = "login", cacheKey = "#loginDto.getUsername()", ratePerMethod = true)
+    @Cacheable(value = "loginCache", key = "#loginDto.username")
     public Response login(@Validated @RequestBody LoginDto loginDto) {
         // 单机版：在map中创建了会话，token id等映射关系 // 写入cookie
         SysUser sysUser = sysUserService.getOne(Wrappers.<SysUser>lambdaQuery()

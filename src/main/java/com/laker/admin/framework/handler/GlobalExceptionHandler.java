@@ -4,7 +4,6 @@ package com.laker.admin.framework.handler;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.lang.Dict;
-import com.giffing.bucket4j.spring.boot.starter.context.RateLimitException;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.utils.http.HttpServletRequestUtil;
@@ -179,12 +178,12 @@ public class GlobalExceptionHandler {
         return Response.error("404", "路径不存在，请检查路径是否正确");
     }
 
-    @ExceptionHandler(RateLimitException.class)
-    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    public Response<Void> handleRateLimitException(RateLimitException e) {
-        log.error(e.getMessage(), e);
-        return Response.error("429", "请求过于频繁，请稍后重试");
-    }
+//    @ExceptionHandler(RateLimitException.class)
+//    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+//    public Response<Void> handleRateLimitException(RateLimitException e) {
+//        log.error(e.getMessage(), e);
+//        return Response.error("429", "请求过于频繁，请稍后重试");
+//    }
 
 
     @ExceptionHandler(NoResourceFoundException.class)
