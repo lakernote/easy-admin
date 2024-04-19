@@ -50,9 +50,6 @@ spring:
     validateOnMigrate: true
     # flyway的sql脚本路径
     locations: classpath:db/migration
-  redis:
-    redisson:
-      file: classpath:redisson.yaml
   cloud:
     openfeign:
       client:

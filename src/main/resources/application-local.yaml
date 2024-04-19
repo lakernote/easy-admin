@@ -25,19 +25,13 @@ spring:
       maximum-pool-size: 20
   data:
     redis:
+      database: 0
       host: localhost
       port: 6379
       #      password:
       timeout: 5s
-      lettuce:
-        pool:
-          enabled: true
-          max-idle: 8
-          min-idle: 1
-      client-name: easy-admin
-      client-type: lettuce
-      database: 0
       connect-timeout: 5s
+      client-name: easy-admin
 logging:
   level:
     com.laker.admin.module.remote: debug
