@@ -5,16 +5,16 @@ import com.laker.admin.framework.EasyAdminConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
-import org.springframework.context.annotation.DependsOn;
 
 /**
  * @author longli
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor(force = true)
 @Schema(name = "文件part对象", description = "Part信息")
-@DependsOn
 public class Response<T> {
     @Schema(description = "响应码，非0 即为异常", example = "0")
     private final String code;
