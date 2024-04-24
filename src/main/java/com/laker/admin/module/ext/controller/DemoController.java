@@ -3,12 +3,19 @@ package com.laker.admin.module.ext.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
+import com.laker.admin.framework.model.PageResponse;
+import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
 import com.laker.admin.module.ext.vo.qo.City;
+import com.laker.admin.module.sys.entity.SysUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,12 +35,23 @@ import java.util.List;
 @Slf4j
 public class DemoController {
 
-    @GetMapping
-    @Operation(summary = "参数数组 - querystring")
-    public void pageAll(@RequestParam(required = false, defaultValue = "1") long page,
-                        @RequestParam(required = false, defaultValue = "10") long limit,
-                        @RequestParam(required = false) List<DemoTypeEnum> types) {
-        log.info(types.toString());
+    @GetMapping(path = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "0.Param+Header+Path 参数数组 - querystring")
+    @Parameters({
+            @Parameter(name = "id", description = "文件id", in = ParameterIn.PATH),
+            @Parameter(name = "token", description = "请求token", example = "xxxx", required = true, in = ParameterIn.HEADER),
+            @Parameter(name = "page", description = "第几页", in = ParameterIn.QUERY),
+            @Parameter(name = "limit", description = "每页多少记录", required = false, in = ParameterIn.QUERY),
+            @Parameter(name = "types", description = "类型", required = false, in = ParameterIn.QUERY)
+    })
+    public Response<SysUser> pageList(
+            @PathVariable("id") Long id,
+            @RequestHeader("token") String token,
+            @RequestParam(required = false, defaultValue = "1") long page,
+            @RequestParam(required = false, defaultValue = "10") long limit,
+            @RequestParam(required = false) List<DemoTypeEnum> types) {
+        log.info("id:{},token:{},page:{},limit:{},types:{}", id, token, page, limit, types);
+        return PageResponse.ok(new SysUser());
     }
 
     @GetMapping("/1")

@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.Ignore;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
 import com.laker.admin.framework.aop.trace.LakerIgnoreTrace;
@@ -34,6 +35,7 @@ import java.util.List;
  * @author laker
  * @since 2021-08-16
  */
+@Ignore
 @RestController
 @RequestMapping("/ext/log")
 @Metrics

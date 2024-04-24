@@ -66,19 +66,6 @@ mybatis-plus:
   global-config:
     # 是否开启print logo
     banner: false
-knife4j:
-  # 开启增强
-  enable: true
-  # 不是很重要的环境，但是又不想暴露文档可以用这个
-  basic:
-    # 开启basic认证 输入用户名密码才能访问/doc.html
-    enable: false
-    # 认证用户名
-    password: easy-admin
-    # 认证密码
-    username: easy-admin
-  # 是否生产环境 屏蔽所有资源接口,一般这个用于生产环境 屏蔽资源，与上面二选一
-  # production: true
 javamelody:
   # javamelody监控的开关
   enabled: false
@@ -135,3 +122,36 @@ management:
 info:
   author: laker
   version: 1.0.1
+# knife4j的增强配置，不需要增强可以不配置
+knife4j:
+  # 开启增强
+  enable: true
+  # 不是很重要的环境，但是又不想暴露文档可以用这个
+  basic:
+    # 开启basic认证 输入用户名密码才能访问/doc.html
+    enable: false
+    # 认证用户名
+    password: easy-admin
+    # 认证密码
+    username: easy-admin
+  # 是否生产环境 屏蔽所有资源接口,一般这个用于生产环境 屏蔽资源，与上面二选一
+  # production: true
+  setting:
+    language: zh_cn
+# springdoc-openapi项目配置
+springdoc:
+  # http://localhost:8080/swagger-ui/index.html
+  # http://localhost:8080/doc.html#/home
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  group-configs:
+    - group: 'ext'
+      display-name: '扩展模块'
+      paths-to-match: '/**'
+      packages-to-scan: com.laker.admin.module.ext

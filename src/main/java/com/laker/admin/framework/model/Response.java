@@ -14,7 +14,7 @@ import org.slf4j.MDC;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-@Schema(name = "文件part对象", description = "Part信息")
+@Schema(name = "响应", description = "响应")
 public class Response<T> {
     @Schema(description = "响应码，非0 即为异常", example = "0")
     private final String code;
