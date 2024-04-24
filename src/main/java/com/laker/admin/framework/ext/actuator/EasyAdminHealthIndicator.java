@@ -20,7 +20,7 @@ public class EasyAdminHealthIndicator extends AbstractHealthIndicator {
     }
 
     private boolean check() {
-        return true;
+        return false;
     }
 
 }

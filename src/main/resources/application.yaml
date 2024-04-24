@@ -107,12 +107,28 @@ management:
     health:
       # 生成环境的话注意安全问题
       show-details: always
+      # 启用或禁用k8s健康检查
+      probes:
+        enabled: true
+      group:
+        liveness:
+          include: livenessState,easyAdmin
+        readiness:
+          include: readinessState,easyAdmin,db,redis,diskSpace
   metrics:
     export:
       influx:
         enabled: false
         password: 12345678
         user-name: laker
+  # 启用或禁用k8s健康检查
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    redis:
+      enabled: true
 info:
   app:
     name: easy-admin
