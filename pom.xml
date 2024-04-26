@@ -175,11 +175,11 @@
         </dependency>
         <!-- bucket4j-spring-boot-starter 用于实现令牌桶算法的速率限制的Java库。它用于控制系统传入请求的速率。 令牌桶 -->
         <!-- https://github.com/bucket4j/bucket4j -->
-<!--        <dependency>-->
-<!--            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>-->
-<!--            <artifactId>bucket4j-spring-boot-starter</artifactId>-->
-<!--            <version>0.12.6</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>-->
+        <!--            <artifactId>bucket4j-spring-boot-starter</artifactId>-->
+        <!--            <version>0.12.6</version>-->
+        <!--        </dependency>-->
         <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -193,16 +193,16 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.kafka</groupId>-->
-<!--            <artifactId>spring-kafka-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.kafka</groupId>-->
+        <!--            <artifactId>spring-kafka-test</artifactId>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-pool2</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.commons</groupId>-->
+        <!--            <artifactId>commons-pool2</artifactId>-->
+        <!--        </dependency>-->
 
     </dependencies>
 
@@ -213,63 +213,49 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <!-- 加入自定义打包配置 -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <descriptors>
-                        <!-- 配置 assembly.xml 的路径,一般放在项目根目录 -->
-                        <descriptor>assembly/assembly.xml</descriptor>
-                    </descriptors>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <!--execution：phase加入package后，则在执行maven package时就可以调用maven-assembly-plugin插件定义的打包方式。-->
-                        <phase>package</phase>
-                        <!-- 打包次数 -->
                         <goals>
-                            <goal>single</goal>
+                            <!-- actuator/info 中 开启 构建信息，mvn 构建后才会生成META-INF/build-info.properties 文件 -->
+                            <goal>build-info</goal>
                         </goals>
+                        <configuration>
+                            <excludeInfoProperties>
+                                <!-- 排除 artifact 信息 -->
+                                <infoProperty>group</infoProperty>
+                            </excludeInfoProperties>
+                            <additionalProperties>
+                                <!-- 自定义属性 -->
+                                <custom.key1>easy</custom.key1>
+                                <custom.key2>note</custom.key2>
+                            </additionalProperties>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- actuator/info 中 开启 构建期间 Git 提交的信息，mvn 构建后才会生成git.properties 文件 -->
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <configuration>
+                    <excludeProperties>
+                        <!-- 排除 time 属性 -->
+                        <excludeProperty>time</excludeProperty>
+                    </excludeProperties>
+<!--                    <includeOnlyProperties>-->
+<!--                        &lt;!&ndash; 只包含 git.commit.id 属性 &ndash;&gt;-->
+<!--                        <property>git.commit.id</property>-->
+<!--                    </includeOnlyProperties>-->
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
-    <!--MAVEN打包选择运行环境-->
-    <!-- 1:local(默认) 本地 2:dev 开发环境 3:test 测试环境 4:uat 用户验收测试 5.pro:生产环境-->
-    <profiles>
-        <profile>
-            <id>local</id>
-            <properties>
-                <profileActive>local</profileActive>
-            </properties>
-            <activation>
-                <!-- 配置为默认值 -->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <profileActive>test</profileActive>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <profileActive>prod</profileActive>
-            </properties>
-        </profile>
-    </profiles>
-
     <repositories>
         <!-- https://developer.aliyun.com/mvn/guide -->
         <repository>
-            <id>aliyun-public</id>
+            <id>Aliyun-repository</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <snapshots>
                 <enabled>false</enabled>
@@ -279,7 +265,7 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>aliyun-public</id>
+            <id>Aliyun-pluginRepository</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>

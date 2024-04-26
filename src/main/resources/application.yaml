@@ -31,13 +31,13 @@ spring:
       maximum-pool-size: 20
   profiles:
     # maven启用的profile，默认是local @profileActive@,ratelimiter,cache
-    active: @profileActive@,cache
+    active: local
   task:
     execution:
       pool:
         max-size: 10
         queue-capacity: 1
-      thread-name-prefix: laker-
+      thread-name-prefix: easy-
   freemarker:
     suffix: .ftl
   servlet:
@@ -116,12 +116,53 @@ easy:
 # actuator
 management:
   endpoint:
+    info:
+      enabled: true
     health:
       # 生成环境的话注意安全问题
       show-details: always
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: '*'
+  health:
+    redis:
+      enabled: true
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  influx:
+    metrics:
+      export:
+        enabled: false
+        password: 12345678
+        user-name: easy-admin
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+    git:
+      enabled: true
+      mode: simple
 info:
-  author: laker
-  version: 1.0.1
+  # 环境变量
+  java-vendor: ${java.specification.vendor}
+  app:
+    author: laker
+    # 项目版本
+    version: @project.version@
+    name: easy-admin
 # knife4j的增强配置，不需要增强可以不配置
 knife4j:
   # 开启增强
