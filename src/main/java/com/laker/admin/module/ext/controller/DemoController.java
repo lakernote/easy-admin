@@ -8,6 +8,8 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
 import com.laker.admin.module.ext.vo.qo.City;
+import com.laker.admin.module.remote.IpifyClient;
+import com.laker.admin.module.remote.dto.IpifyVo;
 import com.laker.admin.module.sys.entity.SysUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +37,10 @@ import java.util.List;
 @RequestMapping("/demo/v1")
 @Slf4j
 public class DemoController {
+
+    @Autowired
+    IpifyClient ipifyClient;
+
 
     @GetMapping(path = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "0.Param+Header+Path 参数数组 - querystring")
@@ -83,5 +90,13 @@ public class DemoController {
     @Operation(summary = "get - PageRequest-")
     public void pageAll6(PageRequest user) {
         log.info(user.toString());
+    }
+
+    @GetMapping("/remote-call")
+    @Operation(summary = "6.远程调用-获取ip地址")
+    public Response<IpifyVo> remoteCall(
+            @Parameter(description = "traceId,用于链路追踪", example = "67614c197f54471795cc84a3a073dd25", required = true, in = ParameterIn.HEADER)
+            @RequestHeader String traceId) {
+        return Response.ok(ipifyClient.getIpAddress());
     }
 }

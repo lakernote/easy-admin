@@ -1,6 +1,7 @@
 package com.laker.admin.framework.ext.mvc;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -30,8 +31,8 @@ public class PageRequestArgumentResolver implements HandlerMethodArgumentResolve
 
         String[] directionParameter = webRequest.getParameterValues("sort");
         List<PageRequest.Order> allOrders = new ArrayList<>();
-        builder.page(Integer.valueOf(page))
-                .size(Integer.valueOf(pageSize))
+        builder.page(Integer.parseInt(StrUtil.isBlank(page) ? "1" : page))
+                .size(Integer.parseInt(StrUtil.isBlank(pageSize) ? "10" : pageSize))
                 .orders(allOrders);
         if (ArrayUtil.isNotEmpty(directionParameter)) {
             for (String part : directionParameter) {
