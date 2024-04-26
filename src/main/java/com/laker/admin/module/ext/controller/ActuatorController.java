@@ -48,6 +48,18 @@ public class ActuatorController {
         return "redirect:http://localhost:8080/actuator/health/ping";
     }
 
+    @GetMapping("/health/liveness")
+    @ApiOperation(value = "给k8s用的探针-存活接口")
+    public String healthLiveness() {
+        return "redirect:http://localhost:8080/actuator/health/liveness";
+    }
+
+    @GetMapping("/health/readiness")
+    @ApiOperation(value = "给k8s用的探针-就绪接口")
+    public String healthReadiness() {
+        return "redirect:http://localhost:8080/actuator/health/readiness";
+    }
+
     /**
      * 自定义类继承自 InfoContributor
      *
