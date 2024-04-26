@@ -2,7 +2,7 @@ package com.laker.admin.framework.ext.actuator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.availability.AvailabilityChangeEvent;
-import org.springframework.boot.availability.LivenessState;
+import org.springframework.boot.availability.ReadinessState;
 import org.springframework.boot.context.event.EventPublishingRunListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -17,26 +17,26 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class LivenessEventListener {
+public class ReadinessEventListener {
 
     /**
      * 默认 EventPublishingRunListener 会发布 AvailabilityChangeEvent 事件
      *
      * @see EventPublishingRunListener
      * <p>
-     * started() -> ACCEPTING_TRAFFIC
-     * - AvailabilityChangeEvent.publish(context, LivenessState.CORRECT);
+     * running() -> ACCEPTING_TRAFFIC
+     * - AvailabilityChangeEvent.publish(context, ReadinessState.ACCEPTING_TRAFFIC);
      */
     @EventListener
-    public void onEvent(AvailabilityChangeEvent<LivenessState> event) {
+    public void onEvent(AvailabilityChangeEvent<ReadinessState> event) {
         switch (event.getState()) {
-            case BROKEN:
+            case ACCEPTING_TRAFFIC:
                 // notify others
-                log.warn("liveness is broken");
+                log.warn("readiness is accepting traffic");
                 break;
-            case CORRECT:
+            case REFUSING_TRAFFIC:
                 // we're back
-                log.warn("liveness is correct");
+                log.warn("readiness is refusing traffic");
         }
     }
 }
