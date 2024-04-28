@@ -34,7 +34,7 @@
         <!-- 3.maven打包跳过测试 -->
         <skipTests>true</skipTests>
         <!-- 其他依赖组件版本 -->
-        <hutool.version>5.5.2</hutool.version>
+        <hutool.version>5.8.25</hutool.version>
     </properties>
 
     <dependencies>

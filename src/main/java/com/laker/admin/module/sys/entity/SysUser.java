@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.laker.admin.framework.ext.desensitization.Desensitization;
+import com.laker.admin.framework.ext.desensitization.DesensitizationTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,6 +32,7 @@ public class SysUser implements Serializable {
 
     private String userName;
 
+    @Desensitization(type = DesensitizationTypeEnum.PASSWORD)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
@@ -42,10 +45,11 @@ public class SysUser implements Serializable {
     private String deptName;
     private Integer sex;
 
+    @Desensitization(type = DesensitizationTypeEnum.MOBILE_PHONE)
     private String phone;
 
     private Integer enable;
-
+    @Desensitization(type = DesensitizationTypeEnum.EMAIL)
     private String email;
 
     private String avatar;

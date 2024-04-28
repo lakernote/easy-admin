@@ -88,9 +88,9 @@ public class CodeGenerator {
             public void initMap() {
                 Map<String, Object> map = new HashMap<>();
                 String table = tables[0];
-                String[] split = StrUtil.split(table, "_");
-                map.put("easyModule", split[0]);
-                map.put("easyMain", split[1]);
+                List<String> split = StrUtil.split(table, "_");
+                map.put("easyModule", split.get(0));
+                map.put("easyMain", split.get(1));
                 this.setMap(map);
             }
         };

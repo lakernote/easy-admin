@@ -45,14 +45,14 @@ public class PageVO implements Serializable {
         page.setSize(size);
         if (StrUtil.isNotBlank(orderBy)) {
             List<OrderItem> orders = new ArrayList<>();
-            String[] orderItems = StrUtil.split(orderBy, ",");
+            List<String> orderItems = StrUtil.split(orderBy, ",");
             for (String orderItemStr : orderItems) {
-                String[] orderAndSort = StrUtil.split(orderItemStr, " ");
+                List<String> orderAndSort = StrUtil.split(orderItemStr, " ");
                 if (CollUtil.size(orderAndSort) != 2) {
                     continue;
                 }
-                String order = orderAndSort[0];
-                String sort = orderAndSort[1];
+                String order = orderAndSort.get(0);
+                String sort = orderAndSort.get(1);
                 orders.add(new OrderItem(order, StrUtil.equalsIgnoreCase("ASC", sort)));
             }
             page.setOrders(orders);

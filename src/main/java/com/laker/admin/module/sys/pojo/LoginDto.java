@@ -1,6 +1,8 @@
 package com.laker.admin.module.sys.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.laker.admin.framework.ext.desensitization.Desensitization;
+import com.laker.admin.framework.ext.desensitization.DesensitizationTypeEnum;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,7 @@ public class LoginDto {
     /**
      * 因为密码比较重要，故仅用于反序列化
      */
+    @Desensitization(type = DesensitizationTypeEnum.PASSWORD)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @NotBlank(message = "验证码不能为空")
