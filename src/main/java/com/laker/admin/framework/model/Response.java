@@ -1,12 +1,11 @@
 package com.laker.admin.framework.model;
 
 import cn.hutool.core.util.StrUtil;
-import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.utils.EasyTraceUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.slf4j.MDC;
 import org.springframework.context.annotation.DependsOn;
 
 /**
@@ -34,7 +33,7 @@ public class Response<T> {
         this.msg = msg;
         this.data = data;
         this.success = StrUtil.equals("0", code);
-        this.traceId = MDC.get(EasyAdminConstants.TRACE_ID);
+        this.traceId = EasyTraceUtil.getTraceId();
     }
 
     public static <T> Response<T> ok(T data) {
@@ -48,6 +47,7 @@ public class Response<T> {
     public static <T> Response<T> error(T data) {
         return new Response<>("400", "", data);
     }
+
     public static <T> Response<T> error(String code, String msg, T data) {
         return new Response<>(code, msg, data);
     }

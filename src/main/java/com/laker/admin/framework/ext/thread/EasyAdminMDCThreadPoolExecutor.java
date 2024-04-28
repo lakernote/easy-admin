@@ -1,9 +1,8 @@
 package com.laker.admin.framework.ext.thread;
 
-import cn.hutool.core.util.IdUtil;
-import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceContext;
+import com.laker.admin.framework.utils.EasyTraceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
@@ -58,7 +57,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
             } else {
                 MDC.setContextMap(threadContext);
             }
-            setTraceIdIfAbsent();
+            EasyTraceUtil.setTraceIdOrGenerateNew();
             try {
                 TraceContext.addSpan("subThread.executeRunnable", SpanType.Thread);
                 runnable.run();
@@ -110,7 +109,7 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
             } else {
                 MDC.setContextMap(threadContext);
             }
-            setTraceIdIfAbsent();
+            EasyTraceUtil.setTraceIdOrGenerateNew();
             try {
                 TraceContext.addSpan("subThread.submitRunnableFuture", SpanType.Thread);
                 future.run();
@@ -121,16 +120,5 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
 
         }
 
-    }
-
-
-    /**
-     * 如果traceId不存在，则设置一个随机的traceId
-     * 这种场景主要用于后台定时任务类，没有前端生成traceID的情况。
-     */
-    private static void setTraceIdIfAbsent() {
-        if (MDC.get(EasyAdminConstants.TRACE_ID) == null) {
-            MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
-        }
     }
 }

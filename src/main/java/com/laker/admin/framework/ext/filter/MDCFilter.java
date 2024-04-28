@@ -4,9 +4,8 @@ import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaFoxUtil;
 import cn.dev33.satoken.util.SaTokenConsts;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.utils.EasyTraceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
@@ -64,11 +63,7 @@ public class MDCFilter extends OncePerRequestFilter {
             MDC.put(EasyAdminConstants.USER_ID, (String) StpUtil.getLoginIdByToken(tokenValue));
             // 如果请求头没有携带traceId，则由后端生成一个
             String traceId = httpServletRequest.getHeader(EasyAdminConstants.TRACE_ID);
-            if (StrUtil.isBlank(traceId)) {
-                traceId = IdUtil.simpleUUID();
-            }
-            // 设置MDC traceId
-            MDC.put(EasyAdminConstants.TRACE_ID, traceId);
+            EasyTraceUtil.setTraceIdOrGenerateNew(traceId);
         } catch (Exception e) {
             //
             log.error("", e);

@@ -3,11 +3,10 @@ package com.laker.admin.module.task.core.processor;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.LFUCache;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.utils.EasySpringUtils;
+import com.laker.admin.framework.utils.EasyTraceUtil;
 import com.laker.admin.module.enums.TaskStateEnum;
 import com.laker.admin.module.task.core.IJob;
 import com.laker.admin.module.task.core.TaskJob;
@@ -64,11 +63,7 @@ public class EasyTaskProcessor {
             ScheduledFuture<?> future = threadPoolTaskScheduler
                     .schedule(() -> {
                                 try {
-                                    String traceId = MDC.get(EasyAdminConstants.TRACE_ID);
-                                    if (StrUtil.isBlank(traceId)) {
-                                        traceId = IdUtil.simpleUUID();
-                                    }
-                                    MDC.put(EasyAdminConstants.TRACE_ID, traceId);
+                                    EasyTraceUtil.getOrGenerateTraceId();
 
                                     callBacks.forEach(jobListener -> {
                                         jobListener.start(task);
