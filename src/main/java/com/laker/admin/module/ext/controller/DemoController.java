@@ -11,6 +11,8 @@ import com.laker.admin.module.ext.vo.qo.City;
 import com.laker.admin.module.remote.IpifyClient;
 import com.laker.admin.module.remote.dto.IpifyVo;
 import com.laker.admin.module.sys.entity.SysUser;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,11 +95,31 @@ public class DemoController {
         log.info(user.toString());
     }
 
+    @Autowired
+    ObservationRegistry registry;
+
     @GetMapping("/remote-call")
     @Operation(summary = "6.远程调用-获取ip地址")
     public Response<IpifyVo> remoteCall(
             @Parameter(description = "traceId,用于链路追踪", example = "67614c197f54471795cc84a3a073dd25", required = true, in = ParameterIn.HEADER)
             @RequestHeader String traceId) {
+        List<String> lowCardinalityValues = Arrays.asList("userType1", "userType2", "userType3"); // Simulates low number of values
+
+        Observation.createNotStarted("my.observation", registry)
+                // Low cardinality means that the number of potential values won't be big. Low cardinality entries will end up in e.g. Metrics
+                .lowCardinalityKeyValue("userType", "userType1")
+                // High cardinality means that the number of potential values can be large. High cardinality entries will end up in e.g. Spans
+                .highCardinalityKeyValue("userId", "highCardinalityUserId")
+                // <command-line-runner> is a "contextual" name that gives more details within the provided context. It will be used to name e.g. Spans
+                .contextualName("command-line-runner")
+                // The following lambda will be executed with an observation scope (e.g. all the MDC entries will be populated with tracing information). Also the observation will be started, stopped and if an error occurred it will be recorded on the observation
+                .observe(() -> {
+                    log.info("Will send a request to the server"); // Since we're in an observation scope - this log line will contain tracing MDC entries ...
+                    IpifyVo ipAddress = ipifyClient.getIpAddress();
+                    log.info("Got response [{}]", ipAddress); // ... so will this line
+                });
+
+
         return Response.ok(ipifyClient.getIpAddress());
     }
 }

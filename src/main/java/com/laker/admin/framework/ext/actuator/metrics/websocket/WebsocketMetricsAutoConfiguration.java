@@ -27,7 +27,7 @@ public class WebsocketMetricsAutoConfiguration {
      *
      * @return
      */
-    // @Bean
+//    @Bean
     public MeterRegistry meterRegistry() {
         return new LoggingMeterRegistry(new LoggingRegistryConfig() {
             @Override

@@ -193,6 +193,11 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
+        <!-- feign-micrometer trace and metrics-->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-micrometer</artifactId>
+        </dependency>
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.kafka</groupId>-->
         <!--            <artifactId>spring-kafka-test</artifactId>-->
@@ -243,10 +248,10 @@
                         <!-- 排除 time 属性 -->
                         <excludeProperty>time</excludeProperty>
                     </excludeProperties>
-<!--                    <includeOnlyProperties>-->
-<!--                        &lt;!&ndash; 只包含 git.commit.id 属性 &ndash;&gt;-->
-<!--                        <property>git.commit.id</property>-->
-<!--                    </includeOnlyProperties>-->
+                    <!--                    <includeOnlyProperties>-->
+                    <!--                        &lt;!&ndash; 只包含 git.commit.id 属性 &ndash;&gt;-->
+                    <!--                        <property>git.commit.id</property>-->
+                    <!--                    </includeOnlyProperties>-->
                 </configuration>
             </plugin>
         </plugins>
