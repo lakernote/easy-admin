@@ -4,12 +4,11 @@ import io.micrometer.common.KeyValue;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.stream.StreamSupport;
 
 @Slf4j
-@Component
+//@Component
 public class EasyHandler implements ObservationHandler<Observation.Context> {
 
 

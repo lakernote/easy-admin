@@ -104,8 +104,12 @@ public class DemoController {
             @Parameter(description = "traceId,用于链路追踪", example = "67614c197f54471795cc84a3a073dd25", required = true, in = ParameterIn.HEADER)
             @RequestHeader String traceId) {
         List<String> lowCardinalityValues = Arrays.asList("userType1", "userType2", "userType3"); // Simulates low number of values
-
-        Observation.createNotStarted("my.observation", registry)
+        // 用 Micrometer 改进 metrics，并通过 Micrometer tracing （以前称为 Spring Cloud Sleuth）提供新的分布式 tracing 支持。最值得注意的变化是，
+        // 它将包含对 log 关联的内置支持，W3C上下文传递将是默认传播类型，我们将支持自动传播元数据，以供 tracing 基础设施(称为“远程包裹”)使用，帮助标记观察结果。
+        // 最重要的变化是我们引入了一个新的API：Observation API。
+        // 它创建理念是，希望用户使用单一 API 就能检测代码，并从中获得多种信息（例如 metrics, tracing, logging）。
+        // classpath 添加了 Micrometer Tracing
+        return Observation.createNotStarted("my.observation", registry)
                 // Low cardinality means that the number of potential values won't be big. Low cardinality entries will end up in e.g. Metrics
                 .lowCardinalityKeyValue("userType", "userType1")
                 // High cardinality means that the number of potential values can be large. High cardinality entries will end up in e.g. Spans
@@ -117,9 +121,9 @@ public class DemoController {
                     log.info("Will send a request to the server"); // Since we're in an observation scope - this log line will contain tracing MDC entries ...
                     IpifyVo ipAddress = ipifyClient.getIpAddress();
                     log.info("Got response [{}]", ipAddress); // ... so will this line
+                    return Response.ok(ipifyClient.getIpAddress());
                 });
 
 
-        return Response.ok(ipifyClient.getIpAddress());
     }
 }

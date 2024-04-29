@@ -71,10 +71,11 @@
     <!-- 不支持通配符 com.laker.admin.module.**.mapper-->
     <logger name="com.laker.admin.module" level="INFO"/>
     <logger name="com.laker.admin.framework" level="INFO"/>
+    <logger name="io.micrometer.core.instrument.logging" level="WARN"/>
     <!-- 定义p6spy sql监控 -->
     <logger name="p6spy" level="INFO"/>
-    <!-- 默认日志输出级别 -->
-    <root level="WARN">
+    <!-- 默认日志输出级别  WARN INFO-->
+    <root level="INFO">
         <appender-ref ref="DEFAULT"/>
         <appender-ref ref="console"/>
     </root>
