@@ -112,7 +112,7 @@
         let menuId;
 
         form.on('submit(power-save)', function (data) {
-            data.field.icon = "layui-icon " + data.field.icon;
+            // data.field.icon = "layui-icon " + data.field.icon;
             data.field.menuId = menuId;
             easyAdmin.http({
                 url: '/sys/menu',
