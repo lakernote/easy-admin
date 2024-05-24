@@ -345,7 +345,7 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>aliyun-public</id>
+            <id>aliyun-public-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>

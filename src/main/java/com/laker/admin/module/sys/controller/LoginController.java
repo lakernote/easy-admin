@@ -3,6 +3,7 @@ package com.laker.admin.module.sys.controller;
 import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -58,7 +59,7 @@ public class LoginController {
     @PostMapping("/v1/login")
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "登录-用户名密码")
-    public Response login(@Validated @RequestBody LoginDto loginDto) {
+    public Response<SaTokenInfo> login(@Validated @RequestBody LoginDto loginDto) {
         // 验证码是否正确
         String code = iEasyCache.get(loginDto.getUid());
         iEasyCache.remove(loginDto.getUid());
@@ -91,7 +92,7 @@ public class LoginController {
     @GetMapping("/v1/tokenInfo")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前会话的token信息")
-    public Response tokenInfo() {
+    public Response<SaTokenInfo> tokenInfo() {
         return Response.ok(StpUtil.getTokenInfo());
     }
 
@@ -99,7 +100,7 @@ public class LoginController {
     @GetMapping("/v1/userInfo")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取当前用户信息")
-    public Response userInfo() {
+    public Response<SysUser> userInfo() {
         SysUser user = sysUserService.getById(StpUtil.getLoginIdAsLong());
         SysDept dept = sysDeptService.getById(user.getDeptId());
         if (dept != null) {
@@ -111,8 +112,8 @@ public class LoginController {
     @GetMapping("/v1/onlineUsers")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "获取在线用户信息")
-    public PageResponse onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
-                                    @RequestParam(required = false, defaultValue = "10") int limit) {
+    public PageResponse<List<OnlineUser>> onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
+                                                      @RequestParam(required = false, defaultValue = "10") int limit) {
         EasySaTokenListener.ONLINE_USERS.sort((o1, o2) -> DateUtil.compare(o2.getLoginTime(), o1.getLoginTime()));
         PageDtoUtil pageDto = PageDtoUtil.getPageDto(EasySaTokenListener.ONLINE_USERS, page, limit);
         List<OnlineUser> pageList = (List<OnlineUser>) pageDto.getPageList();
@@ -131,7 +132,7 @@ public class LoginController {
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "踢人下线")
     @SaCheckPermission("online.user.kick")
-    public Response kickOffline(String token) {
+    public Response<Void> kickOffline(String token) {
         log.info("踢人下线，token:{}", token);
         if (StpUtil.getTokenValue().equals(token)) {
             return Response.error("500", "不能踢自己啊老弟");
@@ -144,14 +145,13 @@ public class LoginController {
     @ApiOperationSupport(order = 3)
     @ApiOperation(value = "登出")
     @SaCheckLogin
-    public Response loginOut() {
+    public Response<Void> loginOut() {
         //获取token
         //   1. 尝试从request里读取 tokenName 默认值 satoken
         //   2. 尝试从请求体里面读取
         //   3. 尝试从header里读取
         //   4. 尝试从cookie里读取
         // 删除cookie
-        log.info(StpUtil.getLoginIdAsString());
         StpUtil.logout();
         return Response.ok();
     }

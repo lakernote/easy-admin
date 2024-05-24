@@ -39,7 +39,7 @@ public class NginxController {
     EasyConfig easyConfig;
 
     @GetMapping
-    public Response get(@RequestParam(required = false) String path) {
+    public Response<String> get(@RequestParam(required = false) String path) {
         NgxConfig conf;
         try {
             if (StrUtil.isBlank(path)) {
@@ -55,7 +55,7 @@ public class NginxController {
 
     @PostMapping
     @SaCheckPermission("nginx.update")
-    public Response update(@RequestBody NginxQo nginxQo) {
+    public Response<Void> update(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
@@ -66,7 +66,7 @@ public class NginxController {
 
     @PostMapping("/check")
     @SaCheckPermission("nginx.check")
-    public Response check(@RequestBody NginxQo nginxQo) {
+    public Response<String> check(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
@@ -76,7 +76,7 @@ public class NginxController {
 
     @PostMapping("/reload")
     @SaCheckPermission("nginx.reload")
-    public Response reload(@RequestBody NginxQo nginxQo) {
+    public Response<String> reload(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
@@ -86,7 +86,7 @@ public class NginxController {
 
     @PostMapping("/start")
     @SaCheckPermission("nginx.start")
-    public Response start(@RequestBody NginxQo nginxQo) {
+    public Response<String> start(@RequestBody NginxQo nginxQo) {
         if (StrUtil.isBlank(nginxQo.getPath())) {
             nginxQo.setPath(easyConfig.getNginx().getConfPath());
         }
@@ -96,7 +96,7 @@ public class NginxController {
 
     @PostMapping("/stop")
     @SaCheckPermission("nginx.stop")
-    public Response stop() {
+    public Response<String> stop() {
         String res = RuntimeUtil.execForStr("nginx -s quit");
         return Response.ok(res);
     }

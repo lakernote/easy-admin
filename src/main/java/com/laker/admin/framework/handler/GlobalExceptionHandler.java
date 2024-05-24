@@ -134,24 +134,21 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotLoginException.class)
     public Response<Void> handleNotLoginException(NotLoginException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
-                EasyHttpRequestUtil.getRequest().getMethod(), e.getMessage());
+        logErrorMsg(e.getMessage());
         return Response.error401(e.getMessage());
     }
 
     @ExceptionHandler(NoPermissionException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Response<Void> handleMaxSizeException(NoPermissionException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
-                EasyHttpRequestUtil.getRequest().getMethod(), e.getMessage());
+        logErrorMsg(e.getMessage());
         return Response.error403(e.getMessage());
     }
 
     @ExceptionHandler(SaTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Response<Void> handleMaxSizeException(SaTokenException e) {
-        log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
-                EasyHttpRequestUtil.getRequest().getMethod(), e.getMessage());
+        logErrorMsg(e.getMessage());
         return Response.error403(e.getMessage());
     }
 
@@ -205,5 +202,10 @@ public class GlobalExceptionHandler {
         log.info(EasyHttpRequestUtil.getAllRequestInfo());
         log.error(e.getMessage(), e);
         return Response.error400("服务器内部异常");
+    }
+
+    private static void logErrorMsg(String e) {
+        log.error("uri:{}, httpMethod:{}, errMsg:{}", EasyHttpRequestUtil.getRequestURI(),
+                EasyHttpRequestUtil.getRequest().getMethod(), e);
     }
 }
