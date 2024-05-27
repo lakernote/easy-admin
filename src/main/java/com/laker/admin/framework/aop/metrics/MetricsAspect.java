@@ -6,10 +6,10 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.laker.admin.framework.utils.EasyHttpRequestUtil;
+import com.laker.admin.framework.utils.IP2CityUtil;
 import com.laker.admin.module.ext.entity.ExtLog;
 import com.laker.admin.module.ext.service.IExtLogService;
-import com.laker.admin.framework.utils.IP2CityUtil;
-import com.laker.admin.framework.utils.EasyHttpRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -101,7 +101,7 @@ public class MetricsAspect {
         if (StrUtil.isNotBlank(response) && response.length() <= 500) {
             logBean.setResponse(response);
         }
-        if (JSONUtil.isJsonObj(response)) {
+        if (JSONUtil.isTypeJSONObject(response)) {
             Boolean success = JSONUtil.parseObj(response).getBool("success", true);
             logBean.setStatus(success);
         }

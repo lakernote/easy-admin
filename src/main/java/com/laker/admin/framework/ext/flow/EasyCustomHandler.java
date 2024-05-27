@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * 自定义模型操作处理类，用于完成流程的全自动编排
- * https://yunmel.gitbooks.io/snakerflow/content/4xiang-xi-shuo-ming/418-zi-ding-yi-jie-dian.html
+ * <a href="https://yunmel.gitbooks.io/snakerflow/content/4xiang-xi-shuo-ming/418-zi-ding-yi-jie-dian.html">...</a>
  */
 @Slf4j
 public class EasyCustomHandler implements IHandler {
