@@ -117,6 +117,9 @@ easy:
   oss-file:
     domain: http://localhost:8080
     path: storage
+  spring:
+    kafka:
+      enabled: false
 # actuator
 management:
   tracing:

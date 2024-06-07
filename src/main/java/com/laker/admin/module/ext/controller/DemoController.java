@@ -3,6 +3,7 @@ package com.laker.admin.module.ext.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
+import com.laker.admin.framework.kafka.EasyKafkaConfig;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.enums.DemoTypeEnum;
@@ -21,10 +22,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>
@@ -125,5 +129,32 @@ public class DemoController {
                 });
 
 
+    }
+
+    @Autowired(required = false)
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired(required = false)
+    private EasyKafkaConfig easyKafkaConfig;
+
+    @GetMapping("/sendMessage")
+    @Operation(summary = "7.使用kafka发送消息")
+    public void sendMessage(String message) {
+        // 阻塞发送线程并获取有关已发送消息的结果，我们可以调用CompletableFuture对象的get API  。线程将等待结果，但这会减慢生产者的速度。
+        //Kafka 是一个快速流处理平台。因此，最好以异步方式处理结果，以便后续消息不会等待上一条消息的结果。通过回调来实现
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(easyKafkaConfig.getTopic(), 0, "key-key", message);
+        // SendResult<String, String> result = future.get();
+        // LOG.info("Partition: {}", result.getRecordMetadata().partition());
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                log.info("Sent message=[" + message +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                future.complete(result);
+            } else {
+                log.info("Unable to send message=[" +
+                        message + "] due to : " + ex.getMessage());
+                future.completeExceptionally(ex);
+            }
+        });
     }
 }
