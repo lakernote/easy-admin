@@ -2,12 +2,12 @@ package com.laker.admin.framework.ext.interceptor;
 
 import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
@@ -24,7 +24,7 @@ public class TraceAnnotationInterceptor implements HandlerInterceptor {
             throws Exception {
 
         // 获取处理method
-        if (handler instanceof HandlerMethod == false) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         Method method = ((HandlerMethod) handler).getMethod();
@@ -35,7 +35,7 @@ public class TraceAnnotationInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
         // 获取处理method
-        if (handler instanceof HandlerMethod == false) {
+        if (!(handler instanceof HandlerMethod)) {
             return;
         }
         TraceContext.stopSpan(1000);

@@ -51,9 +51,16 @@
                         <ul id="selectParent" name="deptId" class="dtree" data-id="0"></ul>
                     </div>
                 </div>
+
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色</label>
-                    <div id="view11" class="layui-input-block">
+                    <label class="layui-form-label">菜单角色</label>
+                    <div id="menu-role" class="layui-input-block">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据角色</label>
+                    <div id="data-role" class="layui-input-block">
                     </div>
                 </div>
             </div>
@@ -75,11 +82,19 @@
 <script src="../../../component/layui/layui.js"></script>
 <script src="../../../component/pear/pear.js"></script>
 
-<script id="demo" type="text/html">
+<script id="roleTpl" type="text/html">
     {{# layui.each(d.data, function(index, item){ }}
     <input value="{{ item.roleId }}" title="{{ item.roleName }}"
            {{item.checked ? 'checked' : '' }}
     type="checkbox" name="roleIds" lay-skin="primary">
+    {{# }); }}
+</script>
+
+<script id="dataroleTpl" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <input value="{{ item.roleId }}" title="{{ item.roleName }}"
+           {{item.checked ? 'checked' : '' }}
+    type="radio" name="dataRoleId" lay-skin="primary">
     {{# }); }}
 </script>
 
@@ -153,13 +168,24 @@
 
         var laytpl = layui.laytpl;
 
-        easyAdmin.httpGet("/sys/user/getRoles?userId=" + id, function (result) {
-            var getTpl = demo.innerHTML;
-            var view = document.getElementById('view11');
+
+        // 处理 菜单接口角色
+        easyAdmin.httpGet("/sys/user/getRoles?roleType=1&userId=" + id, function (result) {
+            var getTpl = roleTpl.innerHTML;
+            var view = document.getElementById('menu-role');
             laytpl(getTpl).render(result, function (html) {
                 view.innerHTML = html;
             });
+            form.render();
+        });
 
+        // 处理 数据角色
+        easyAdmin.httpGet("/sys/user/getRoles?roleType=2&userId=" + id, function (result) {
+            var getTpl = dataroleTpl.innerHTML;
+            var view = document.getElementById('data-role');
+            laytpl(getTpl).render(result, function (html) {
+                view.innerHTML = html;
+            });
             form.render();
         });
 

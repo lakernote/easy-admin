@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.EasyConfig;
+import com.laker.admin.config.EasyAdminConfig;
 import com.laker.admin.framework.exception.BusinessException;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.model.PageResponse;
@@ -34,7 +34,7 @@ public class SysFileController {
     @Autowired
     ISysFileService sysFileService;
     @Autowired
-    EasyConfig easyConfig;
+    EasyAdminConfig easyAdminConfig;
 
     @GetMapping
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
@@ -49,8 +49,8 @@ public class SysFileController {
     public Response upload(@RequestParam("file") MultipartFile file, @RequestParam(value = "name", required = false) String name) {
         // 这里实际项目中文件基本都存储在oss上，这里仅做演示
         String fileName = file.getOriginalFilename();
-        File dest = new File(new File(easyConfig.getOssFile().getPath()).getAbsolutePath() + "/" + fileName);
-        String filePath = easyConfig.getOssFile().getDomain() + "/" + easyConfig.getOssFile().getPath() + "/" + fileName;
+        File dest = new File(new File(easyAdminConfig.getOssFile().getPath()).getAbsolutePath() + "/" + fileName);
+        String filePath = easyAdminConfig.getOssFile().getDomain() + "/" + easyAdminConfig.getOssFile().getPath() + "/" + fileName;
         try {
             file.transferTo(dest);
             SysFile sysFile = new SysFile();

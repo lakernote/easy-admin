@@ -2,7 +2,7 @@ package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.util.StrUtil;
-import com.laker.admin.config.EasyConfig;
+import com.laker.admin.config.EasyAdminConfig;
 import com.laker.admin.framework.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -31,7 +31,7 @@ import java.io.File;
 @RequestMapping("/sys/weblog")
 public class WebLogController {
     @Autowired
-    EasyConfig easyConfig;
+    EasyAdminConfig easyAdminConfig;
     @Autowired
     private LoggingSystem loggingSystem;
     @Autowired
@@ -46,7 +46,7 @@ public class WebLogController {
             throw new BusinessException("演示环境，禁止修改模式文件路径");
         }
 
-        String lookFilePath = easyConfig.getLogFilePath();
+        String lookFilePath = easyAdminConfig.getLogFilePath();
         if (StrUtil.isNotBlank(filePath)) {
             lookFilePath = filePath;
         }

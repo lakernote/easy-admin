@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.EasyConfig;
+import com.laker.admin.config.EasyAdminConfig;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.PageVO;
@@ -52,7 +52,7 @@ public class SysUserController {
     @Autowired
     ISysUserRoleService sysUserRoleService;
     @Autowired
-    EasyConfig easyConfig;
+    EasyAdminConfig easyAdminConfig;
 
     @GetMapping
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
@@ -166,7 +166,7 @@ public class SysUserController {
     public Response resetPwd(@PathVariable Long userId) {
         SysUser user = new SysUser();
         user.setUserId(userId);
-        user.setPassword(SecureUtil.sha256(easyConfig.getDefaultPwd()));
+        user.setPassword(SecureUtil.sha256(easyAdminConfig.getDefaultPwd()));
         sysUserService.updateById(user);
         return Response.ok();
     }

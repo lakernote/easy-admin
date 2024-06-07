@@ -3,13 +3,13 @@ package com.laker.admin.utils.http;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -19,16 +19,13 @@ import java.util.*;
  * request 工具类
  */
 @Slf4j
-public class HttpServletRequestUtil {
+public class EasyHttpServletRequestUtil {
 
     /**
      * 获取request对象
-     *
-     * @return
      */
     public static HttpServletRequest getRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        return request;
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
     }
 

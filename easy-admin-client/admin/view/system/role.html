@@ -10,12 +10,20 @@
     <div class="layui-card-body">
         <div class="layui-tab layui-tab-card" lay-filter="test">
             <ul class="layui-tab-title">
-                <li class="layui-this">权限角色</li>
+                <li class="layui-this">菜单接口</li>
+                <li>数据权限</li>
             </ul>
             <div class="layui-tab-content">
+                <!--菜单接口-->
                 <div class="layui-tab-item layui-show">
                     <table id="role-table" lay-filter="role-table"></table>
                 </div>
+
+                <!--数据权限-->
+                <div class="layui-tab-item">
+                    <table id="data-role-table" lay-filter="role-table"></table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -66,20 +74,35 @@
         let element = layui.element;
         let MODULE_PATH = "role/";
 
+
         let cols = [
             [
                 {type: 'checkbox'},
                 {title: '角色名', field: 'roleName', align: 'center'},
-                {title: 'Key值', field: 'roleCode', align: 'center'},
+                {title: '角色编码', field: 'roleCode', align: 'center'},
                 {title: '角色类型', field: 'roleType', align: 'center', templet: '#role-type'},
                 {title: '描述', field: 'details', align: 'center'},
                 {title: '操作', toolbar: '#role-bar', align: 'center', width: 195}
             ]
         ]
 
+        // 菜单接口
         easyAdmin.tableRender({
             elem: '#role-table',
-            url: '/sys/role',
+            url: '/sys/role?roleType=1',
+            page: true,
+            cols: cols,
+            skin: 'line',
+            toolbar: '#role-toolbar',
+            defaultToolbar: [{
+                layEvent: 'refresh',
+                icon: 'layui-icon-refresh',
+            }, 'filter', 'print', 'exports']
+        });
+        // 数据权限
+        easyAdmin.tableRender({
+            elem: '#data-role-table',
+            url: '/sys/role?roleType=2',
             page: true,
             cols: cols,
             skin: 'line',
@@ -114,14 +137,18 @@
             table.reload('role-table', {where: data.field})
             return false;
         });
+
         //监听Tab切换，以改变地址hash值
+        var currentTab = 1; // 默认1是菜单接口，2是数据权限
         element.on('tab(test)', function (data) {
             if (data.index == 0) {
                 table.reload('role-table')
+                currentTab = 1;
             }
 
             if (data.index == 1) {
                 table.reload('data-role-table')
+                currentTab = 2;
             }
         });
         form.on('switch(role-enable)', function (obj) {
@@ -155,7 +182,7 @@
                 title: '新增',
                 shade: 0.1,
                 area: ['500px', '500px'],
-                content: MODULE_PATH + 'add.html'
+                content: MODULE_PATH + 'add.html?currentTab=' + currentTab
             });
         }
 
@@ -219,6 +246,7 @@
                         if (result.success) {
                             popup.success(result.msg, function () {
                                 table.reload('role-table');
+                                table.reload('data-role-table');
                             });
                         } else {
                             popup.failure(result.msg);
@@ -230,6 +258,7 @@
 
         window.refresh = function () {
             table.reload('role-table');
+            table.reload('data-role-table');
         }
     })
 </script>

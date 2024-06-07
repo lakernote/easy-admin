@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>Login Page</title>
+    <title>登录页</title>
     <!-- 样 式 文 件 -->
     <link rel="stylesheet" href="component/pear/css/pear.css"/>
-    <link rel="stylesheet" href="admin/css/other/login.css"/>
+    <!-- 新的样式文件 -->
+    <link rel="stylesheet" href="admin/css/login/new_style.css"/>
 </head>
 <!-- 代 码 结 构 -->
-<body background="admin/images/background.svg" style="background-size: cover;">
 <form class="layui-form" action="javascript:void(0);">
     <div class="layui-form-item">
         <img class="logo" src="admin/images/logo.png"/>
         <div class="title">Easy Admin</div>
         <div class="desc">
-            easy easy easy 打造最易入门的admin脚手架
+            Easy Admin 打造最易入门的admin脚手架
         </div>
     </div>
     <div class="layui-form-item">
         <input placeholder="账 户 : 输入账号" name="username" lay-verify="required" hover class="layui-input"
+               autocomplete="on"
                value="laker"/>
     </div>
     <div class="layui-form-item">
         <input placeholder="密 码 : 输入密码 " name="password" lay-verify="required" hover class="layui-input"
                value="lakernote"
+               autocomplete="on"
                type="password"/>
     </div>
     <div class="layui-form-item">
@@ -44,24 +46,33 @@
         var button = layui.button;
         var popup = layui.popup;
         let $ = layui.jquery;
-        const yaml = layui.yaml;
+        var yaml = layui.yaml;
         // 配置服务端地址,先获取adminServerUrl，否则第一次easyAdmin为空
         let adminServerUrl = yaml.load("config/pear.config.yml").admin.server;
         layui.data('easyAdmin', {
             key: 'serverUrl'
             , value: adminServerUrl
         });
-        console.log('服务端地址:' + adminServerUrl);
+        console.log('服务端地址为:' + adminServerUrl);
+
         layui.data('login', {
             key: 'url'
             , value: location.href
         });
+
         let easyAdmin = layui.easyAdmin;
+        let uid;
         // 登 录 提 交
+        let isLoggingIn = false; // 添加标志位 防止多次登录问题
         form.on('submit(login)', function (data) {
+            if (isLoggingIn) {
+                return false;
+            }
+            isLoggingIn = true;
             /// 登录
+            data.field.uid = uid;
             easyAdmin.http({
-                url: '/api/v1/login',
+                url: '/sys/auth/v1/login',
                 sendToken: false,
                 data: JSON.stringify(data.field),
                 dataType: 'json',
@@ -84,13 +95,16 @@
                             done: function () {
                                 popup.success("登录成功", function () {
                                     location.href = "index.html"
+                                    isLoggingIn = false; // 重置标志位
                                 });
                             }
                         })
+
                     } else {
                         layer.msg(result.msg,
                             {icon: 2, time: 2000, area: ['230px', '80px']}
                         );
+                        isLoggingIn = false; // 重置标志位
                     }
                 }
             })

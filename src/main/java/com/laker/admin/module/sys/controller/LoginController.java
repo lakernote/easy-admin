@@ -1,9 +1,11 @@
 package com.laker.admin.module.sys.controller;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -12,7 +14,11 @@ import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.aop.metrics.Metrics;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
+import com.laker.admin.framework.ext.satoken.EasySaTokenListener;
+import com.laker.admin.framework.ext.satoken.OnlineUser;
+import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
+import com.laker.admin.framework.utils.PageDtoUtil;
 import com.laker.admin.module.sys.entity.SysDept;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.pojo.LoginDto;
@@ -24,10 +30,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +38,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @Metrics
+@RequestMapping("/sys/auth")
 public class LoginController {
 
     @Autowired
@@ -46,7 +50,7 @@ public class LoginController {
     @Autowired
     ISysDeptService sysDeptService;
 
-    @PostMapping("/api/v1/login")
+    @PostMapping("/v1/login")
     @ApiOperationSupport(order = 1)
     @Operation(summary = "登录")
     @SaIgnore
@@ -74,7 +78,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/api/v1/tokenInfo")
+    @GetMapping("/v1/tokenInfo")
     @ApiOperationSupport(order = 2)
     @Operation(summary = "获取当前会话的token信息")
     public Response tokenInfo() {
@@ -82,7 +86,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/api/v1/userInfo")
+    @GetMapping("/v1/userInfo")
     @ApiOperationSupport(order = 2)
     @Operation(summary = "获取当前用户信息")
     public Response userInfo() {
@@ -95,7 +99,26 @@ public class LoginController {
     }
 
 
-    @GetMapping("/api/v1/kickOffline")
+    @GetMapping("/v1/onlineUsers")
+    @ApiOperationSupport(order = 2)
+    @Operation(summary = "获取在线用户信息")
+    public PageResponse<List<OnlineUser>> onlineUsers(@RequestParam(required = false, defaultValue = "1") int page,
+                                                      @RequestParam(required = false, defaultValue = "10") int limit) {
+        EasySaTokenListener.ONLINE_USERS.sort((o1, o2) -> DateUtil.compare(o2.getLoginTime(), o1.getLoginTime()));
+        PageDtoUtil pageDto = PageDtoUtil.getPageDto(EasySaTokenListener.ONLINE_USERS, page, limit);
+        List<OnlineUser> pageList = (List<OnlineUser>) pageDto.getPageList();
+        pageList.forEach(onlineUser -> {
+            String keyLastActivityTime = StpUtil.getStpLogic().splicingKeyLastActiveTime(onlineUser.getTokenValue());
+            String lastActivityTimeString = SaManager.getSaTokenDao().get(keyLastActivityTime);
+            if (lastActivityTimeString != null) {
+                long lastActivityTime = Long.parseLong(lastActivityTimeString);
+                onlineUser.setLastActivityTime(DateUtil.date(lastActivityTime));
+            }
+        });
+        return PageResponse.ok(pageList, (long) pageDto.getTotal());
+    }
+
+    @GetMapping("/v1/kickOffline")
     @ApiOperationSupport(order = 2)
     @Operation(summary = "踢人下线")
     @SaCheckPermission("online.user.kick")
@@ -108,7 +131,7 @@ public class LoginController {
         return Response.ok();
     }
 
-    @GetMapping("/api/v1/loginOut")
+    @GetMapping("/v1/logout")
     @ApiOperationSupport(order = 3)
     @Operation(summary = "登出")
     @SaCheckLogin

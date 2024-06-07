@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Data
 @ConfigurationProperties(prefix = "easy")
-public class EasyConfig {
+public class EasyAdminConfig {
     /**
      * log配置
      */

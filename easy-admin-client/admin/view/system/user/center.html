@@ -113,7 +113,7 @@
         let easyAdmin = layui.easyAdmin;
         // 获取用户信息，用户名、昵称、头像等
         easyAdmin.http({
-            url: "/api/v1/userInfo",
+            url: "/sys/auth/v1/userInfo",
             dataType: 'json',
             success: function (result) {
                 $("#avatar").attr("src", result.data.avatar || "../../../admin/images/avatar.jpg");

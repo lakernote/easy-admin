@@ -102,14 +102,14 @@
 
         let module = "log";
         easyAdmin.tableRender({
-            url: "/api/v1/onlineUsers",
+            url: "/sys/auth/v1/onlineUsers",
             cols: cols,
             toolbar: null,
             defaultToolbar: null
         });
         table.on('tool(table-filter)', function (obj) {
             if (obj.event === 'kick') {
-                easyAdmin.httpGet("/api/v1/kickOffline?token=" + obj.data.tokenValue, function (result) {
+                easyAdmin.httpGet("/sys/auth/v1/kickOffline?token=" + obj.data.tokenValue, function (result) {
                     if (result.success) {
                         layer.msg("踢人成功", {
                             icon: 1,

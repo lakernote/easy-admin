@@ -16,7 +16,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
         this.GetTokenQueryString = function () {
             var user = layui.data('user');
             // 用于判断未登录跳转到登录页
-            if (JSON.stringify(user) == "{}") {
+            if (JSON.stringify(user) === "{}") {
                 console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
                 location.href = "login.html";
             }
@@ -60,7 +60,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         o.beforeSend && o.beforeSend();
                         var user = layui.data('user');
                         // 用于判断未登录跳转到登录页
-                        if (JSON.stringify(user) == "{}") {
+                        if (JSON.stringify(user) === "{}") {
                             console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
                             location.href = "login.html";
                         }
@@ -68,15 +68,30 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                     }
                 },
                 success: function (res) {
-                    o.success && o.success(res);
+                    if (o.success) {
+                        o.success(res);
+                    } else {
+                        easyAdmin.handleError(res.responseJSON);
+                    }
                 },
                 complete: function () {
                     o.complete && o.complete();
                 },
                 error: function (res) {
                     let data = res.responseJSON;
-                    o.error && o.error(res);
-                    easyAdmin.redirectToLogin(data);
+                    // 统一处理 401 和 403 情况
+                    if (res.status === 401) {
+                        easyAdmin.redirectToLogin(data);
+                    } else if (res.status === 403) {
+                        easyAdmin.handleNoPermission(data);
+                    } else {
+                        // 如果没有特殊处理的情况，则执行 o.error 或默认的 handleError 函数
+                        if (o.error) {
+                            o.error(res);
+                        } else {
+                            easyAdmin.handleError(data);
+                        }
+                    }
                 }
             });
         };
@@ -99,7 +114,6 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
 
         this.redirectToLogin = function (data) {
             if (!data.success && data.code === '401') {
-                console.log("会话已经过期了")
                 layer.open({
                     time: 1500,// 自动关闭所需毫秒
                     content: '会话已过期，即将跳转到登录页',
@@ -109,6 +123,26 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                             top.location.href = login.url;
                         }
                     }
+                });
+            }
+        }
+
+        this.handleNoPermission = function (data) {
+            if (!data.success && data.code === '403') {
+                layer.msg(data.msg, {
+                    icon: 2,
+                    area: ['260px', '65px'],
+                    time: 1500 // 自动关闭所需毫秒
+                });
+            }
+        }
+
+        this.handleError = function (data) {
+            if (!data.success) {
+                layer.msg(data.msg, {
+                    icon: 2,
+                    area: ['260px', '65px'],
+                    time: 1500 // 自动关闭所需毫秒
                 });
             }
         }
@@ -129,8 +163,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                     title: '刷新',
                     layEvent: 'refresh',
                     icon: 'layui-icon-refresh',
-                },
-                    'filter', 'print', 'exports']
+                }, 'filter', 'print', 'exports']
                 ,
                 sendToken: true
             };
@@ -141,8 +174,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
             if (o.sendToken) {
                 user = layui.data('user');
                 // 用于判断未登录跳转到登录页
-                if (JSON.stringify(user) == "{}") {
-                    console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
+                if (JSON.stringify(user) === "{}") {
                     location.href = "login.html";
                 }
             }
@@ -206,7 +238,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         if (result.success) {
                             layer.msg(result.msg, {
                                 icon: 1,
-                                time: 1000,
+                                time: 1500,
                                 area: ['100px', '65px'],
                                 content: "删除成功"
                             }, function () {
@@ -215,7 +247,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                         } else {
                             layer.msg(result.msg, {
                                 icon: 2,
-                                time: 1000,
+                                time: 1500,
                                 area: ['260px', '65px']
                             });
                         }
@@ -289,7 +321,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                 return false;
             }
 
-            layer.confirm('确定要删除这些用户', {
+            layer.confirm('确定要删除这些记录吗', {
                 icon: 3,
                 title: '提示'
             }, function (index) {
@@ -329,7 +361,18 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
              */
             form.on('submit(query)', function (data) {
                 table.reload('table', {
-                    where: data.field
+                    where: data.field,
+                    error: function (res) {
+                        let data = res.responseJSON;
+                        // 统一处理 401 和 403 情况
+                        if (res.status === 401) {
+                            easyAdmin.redirectToLogin(data);
+                        } else if (res.status === 403) {
+                            easyAdmin.handleNoPermission(data);
+                        } else {
+                            easyAdmin.handleError(data);
+                        }
+                    }
                 })
                 return false;
             });
@@ -372,7 +415,7 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
         this.FormSave = function (url) {
             form.on('submit(save)', function (data) {
                 // 转换
-                data.field.enable = data.field.enable == '1' ? true : false;
+                data.field.enable = data.field.enable === '1';
                 easyAdmin.http({
                     url: url,
                     data: JSON.stringify(data.field),

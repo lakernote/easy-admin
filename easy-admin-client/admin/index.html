@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -40,7 +40,8 @@
                     <dd><a user-menu-url="view/system/user/center.html" user-menu-id="5555"
                            user-menu-title="基本资料">基本资料</a>
                     </dd>
-                    <dd><a user-menu-url="view/system/user/password.html" user-menu-id="6666" user-menu-title="修改密码">修改密码</a>
+                    <dd><a user-menu-url="view/system/user/password.html" user-menu-id="6666"
+                           user-menu-title="修改密码">修改密码</a>
                     </dd>
                     <dd><a href="javascript:void(0);" class="logout">注销登录</a></dd>
                 </dl>
@@ -82,8 +83,6 @@
 <!-- 依 赖 脚 本 -->
 <script src="component/layui/layui.js"></script>
 <script src="component/pear/pear.js"></script>
-<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
-<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- 框 架 初 始 化 -->
 <script>
     layui.use(['admin', 'jquery', 'notice', 'popup', 'easyAdmin', 'util'], function () {
@@ -95,27 +94,26 @@
         let util = layui.util;//引入util
 
         // 在登录的时候塞入的值
-        var user = layui.data('user');
+        const user = layui.data('user');
         // 用于判断未登录跳转到登录页
-        if (JSON.stringify(user) == "{}") {
-            console.log("当前浏览器存储中没有用户信息，讲跳转到login.html")
+        if (JSON.stringify(user) === "{}") {
             location.href = "login.html";
         }
 
         // 获取用户信息，用户名、昵称、头像等
         easyAdmin.http({
-            url: "/api/v1/userInfo",
+            url: "/sys/auth/v1/userInfo",
             dataType: 'json',
             success: function (data) {
                 admin.setAvatar(data.data.avatar, data.data.nickName);
-            },
-            error: function () {
-                // 用于验证前端信息 对应到不对的会话情况
-                // 清空本地存储
-                console.log("当前浏览器存储中没有用户信息,清空本地存储,讲跳转到login.html")
-                layui.data('user', null);
-                location.href = "login.html";
             }
+            // error: function () {
+            //     // 用于验证前端信息 对应到不对的会话情况
+            //     // 清空本地存储
+            //     console.log("当前浏览器存储中没有用户信息,清空本地存储,讲跳转到login.html")
+            //     layui.data('user', null);
+            //     location.href = "login.html";
+            // }
         });
 
         // 读取配置文件yml、json2种方式
@@ -132,10 +130,7 @@
 
         // 登出逻辑
         admin.logout(function () {
-
-            easyAdmin.httpGet("/api/v1/loginOut");
-
-
+            easyAdmin.httpGet("/sys/auth/v1/logout");
             popup.success("注销成功", function () {
                 // 清空本地存储
                 layui.data('user', null);
@@ -164,17 +159,14 @@
                     // 公告层
                     layer.open({
                         type: 1,
-                        title: false //不显示标题栏
-                        ,
+                        title: false, //不显示标题栏
                         closeBtn: false,
                         area: '300px;',
                         shade: 0.8,
-                        id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                        ,
+                        id: 'LAY_layuipro', //设定一个id，防止重复弹出
                         btn: ['火速支援', '残忍拒绝'],
                         btnAlign: 'c',
-                        moveType: 1 //拖拽模式，0或者1
-                        ,
+                        moveType: 1, //拖拽模式，0或者1
                         content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 200;">' +
                             '工作时间久了' +
                             '<br> 总想搞点骚东西，这是即' +
@@ -185,7 +177,7 @@
                             '</div>'
                         ,
                         success: function (layero) {
-                            var btn = layero.find('.layui-layer-btn');
+                            const btn = layero.find('.layui-layer-btn');
                             btn.find('.layui-layer-btn0').attr({
                                 href: 'https://gitee.com/lakernote/easy-admin'
                                 , target: '_blank'
@@ -210,19 +202,6 @@
             iconClass: 'toast-info', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名
             onclick: null, // 点击关闭回调
         };
-
-        // var url = easyAdmin.GetAdminServerUrl() + '/chatroom?' + easyAdmin.GetTokenQueryString();
-        // var sock = new SockJS(url);  //创建SockJS连接。
-        // var stomp = Stomp.over(sock);//创建STOMP客户端实例。实际上封装了SockJS,这样就能在WebSocket连接上发送STOMP消息。
-        // stomp.connect({}, function (frame) {
-        //     stomp.subscribe('/topic/status', function (message) {
-        //         notice.info(JSON.parse(message.body).content);
-        //     });
-        // }, function (frame) {
-        //     notice.error(frame);
-        // });
-
-
     })
 </script>
 </body>
