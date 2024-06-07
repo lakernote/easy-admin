@@ -40,16 +40,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     EasyConfig easyConfig;
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        // 配置跨域访问
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .allowCredentials(false)
-                .maxAge(3600);
-    }
-
     /**
      * 注册sa-token的拦截器，打开注解式鉴权功能 (如果您不需要此功能，可以删除此类)
      */
