@@ -2,7 +2,7 @@
 package com.laker.admin.framework.waf;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.laker.admin.framework.waf.attack.HTMLFilter;
 import com.laker.admin.framework.waf.attack.SqlFilter;
 import jakarta.servlet.ReadListener;
@@ -38,11 +38,6 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
     }
 
 
-    public WafRequestWrapper(HttpServletRequest request) {
-        this(request, true, true);
-    }
-
-
     /**
      * @param parameter 过滤参数
      * @since 数组参数过滤
@@ -51,7 +46,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
     public String[] getParameterValues(String parameter) {
         String[] values = super.getParameterValues(parameter);
         if (values == null) {
-            return null;
+            return new String[0];
         }
 
         int count = values.length;
@@ -66,7 +61,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public Map<String, String[]> getParameterMap() {
         Map<String, String[]> primary = super.getParameterMap();
-        Map<String, String[]> result = new HashMap<String, String[]>(primary.size());
+        Map<String, String[]> result = new HashMap<>(primary.size());
         for (Map.Entry<String, String[]> entry : primary.entrySet()) {
             result.put(entry.getKey(), filterEntryString(entry.getValue()));
         }
@@ -93,7 +88,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
         // 为空，直接返回
         String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
-        if (StrUtil.isBlank(json)) {
+        if (CharSequenceUtil.isBlank(json)) {
             return super.getInputStream();
         }
 
@@ -114,10 +109,11 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
             @Override
             public void setReadListener(ReadListener readListener) {
+                //  document why this method is empty
             }
 
             @Override
-            public int read() throws IOException {
+            public int read() {
                 return bis.read();
             }
         };
@@ -128,8 +124,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
      */
     private boolean isJsonRequest() {
         String header = super.getHeader(HttpHeaders.CONTENT_TYPE);
-        return MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(header)
-                || MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(header);
+        return MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(header);
     }
 
     /**

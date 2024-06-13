@@ -18,8 +18,6 @@ public interface Lock {
     /**
      * 释放锁
      *
-     * @param key   锁定的key
-     * @param token 用于检查是否是这个锁，防止误删
      * @return 是否成功
      */
     boolean release(LLock lock);
