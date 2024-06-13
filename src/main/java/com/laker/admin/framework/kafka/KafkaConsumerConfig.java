@@ -3,7 +3,6 @@ package com.laker.admin.framework.kafka;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,36 +10,40 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-//@EnableKafka // 启用对 spring 管理的 bean 上的@KafkaListener注释的检测
 @Configuration
 @Slf4j
 @ConditionalOnBean(EasyKafkaConfig.class)
 public class KafkaConsumerConfig {
-    @Autowired
-    private EasyKafkaConfig easyKafkaConfig;
+    private final EasyKafkaConfig easyKafkaConfig;
+
+    public KafkaConsumerConfig(EasyKafkaConfig easyKafkaConfig) {
+        this.easyKafkaConfig = easyKafkaConfig;
+    }
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, easyKafkaConfig.getBootstrapServers());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "laker_groupId");
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); //  earliest:最早未被消费的offset
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);         // 自动提交
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, easyKafkaConfig.getBootstrapServers()); // kafka地址
+        props.put(ConsumerConfig.CLIENT_ID_CONFIG, "laker_clientId"); // 客户端id
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "laker_groupId"); // 消费者组
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // key序列化
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // value序列化
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // latest（从最新的消息开始消费）,earliest（从最老的消息开始消费）,none（如果无offset就抛出异常）
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false); // 是否自动提交
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, 100); // 自动提交的时间间隔
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 50);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100); // 每次拉取的最大记录数
+        props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1); // 每次拉取的最小字节数
+        props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 500); // 每次拉取的最大等待时间
         // 心跳数,如果消息队列中没有消息，等待毫秒后，调用poll()方法。
         // 如果队列中有消息，立即消费消息，每次消费的消息的多少可以通过max.poll.records配置。
         // 最大轮询间隔，避免消费者被认定为不活跃
-        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 30000);
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 30000); // 最大轮询间隔
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 30000); // 连接超时时间
-        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000);
+        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000); // 请求超时时间
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
@@ -59,7 +62,7 @@ public class KafkaConsumerConfig {
         // 设置为 true 表示消息监听器将以批量的方式处理接收到的消息，从而提高消费效率。
         // 设置为批量消费，每个批次数量在Kafka配置参数中设置ConsumerConfig.MAX_POLL_RECORDS_CONFIG
 //        factory.setBatchListener(true);
-        factory.getContainerProperties().setPollTimeout(1500);
+        factory.getContainerProperties().setPollTimeout(5000);
 
         // 设置手动提交offset
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
