@@ -2,3 +2,4 @@ easy:
   spring:
     kafka:
       enabled: false
+      bootstrap-servers: 10.22.77.9:9092
