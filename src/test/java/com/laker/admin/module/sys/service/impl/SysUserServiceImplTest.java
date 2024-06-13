@@ -83,6 +83,6 @@ public class SysUserServiceImplTest {
                         SysUserServiceImpl, baseMapper);
 
         List<UserDataPower> userDataPowers = SysUserServiceImpl.getUserDataPowers(4L);
-        Assert.assertEquals(1l, userDataPowers.size());
+        Assert.assertEquals(1L, userDataPowers.size());
     }
 }

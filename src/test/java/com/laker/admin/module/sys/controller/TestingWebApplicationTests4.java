@@ -28,8 +28,8 @@ public class TestingWebApplicationTests4 {
     @Test
     public void contextLoads() {
         Assert.assertNotNull(sysUserController);
-        Assert.assertTrue(this.restTemplate.getForObject("http://localhost:8080" + "/",
-                String.class) != null);
+        Assert.assertNotNull(this.restTemplate.getForObject("http://localhost:8080" + "/",
+                String.class));
     }
 
 }

@@ -16,10 +16,10 @@ import java.io.InputStream;
 @ConditionalOnProperty(name = "laker.storage.aliyun.enable", havingValue = "true")
 public class AliyunStorage implements Storage {
 
-    private String endpoint;
-    private String accessKeyId;
-    private String accessKeySecret;
-    private String bucketName;
+    private final String endpoint;
+    private final String accessKeyId;
+    private final String accessKeySecret;
+    private final String bucketName;
 
     public AliyunStorage(EasyConfig easyConfig) {
         EasyConfig.Aliyun aliyun = easyConfig.getStorage().getAliyun();

@@ -22,11 +22,11 @@ public class ThreadLocalDemoThreadSafe {
     /**
      * 模拟tomcat线程池
      */
-    private static ExecutorService tomcatExecutors = Executors.newFixedThreadPool(10);
+    private static final ExecutorService tomcatExecutors = Executors.newFixedThreadPool(10);
     /**
      * 线程上下文环境,模拟在Control这一层,设置环境变量,然后在这里提交一个异步任务,模拟在子线程中,是否可以访问到刚设置的环境变量值
      */
-    private static ThreadLocal<Integer> requestIdThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Integer> requestIdThreadLocal = new ThreadLocal<>();
 
     /**
      * 模式10个请求,每个请求执行ControlThread的逻辑,其具体实现就是,先输出父线程的名称,

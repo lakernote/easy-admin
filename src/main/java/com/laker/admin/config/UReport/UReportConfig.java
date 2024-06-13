@@ -26,6 +26,6 @@ public class UReportConfig {
 
     @Bean
     public ServletRegistrationBean<UReportServlet> registerUReportServlet() {
-        return new ServletRegistrationBean(new UReportServlet(), new String[]{"/ureport/*"});
+        return new ServletRegistrationBean(new UReportServlet(), "/ureport/*");
     }
 }

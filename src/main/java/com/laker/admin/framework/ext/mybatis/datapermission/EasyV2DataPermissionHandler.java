@@ -141,11 +141,8 @@ public class EasyV2DataPermissionHandler {
 
 
     public boolean support(String tableName) {
-        boolean result = false;
+        boolean result = StrUtil.equalsIgnoreCase(tableName, "ext_leave");
         // TODO 这里仅仅用ext_leave表来示例
-        if (StrUtil.equalsIgnoreCase(tableName, "ext_leave")) {
-            result = true;
-        }
         log.warn("数据鉴权之-更新/删除操作鉴权，表名为:{},是否鉴权：{}", tableName, result);
         return result;
     }

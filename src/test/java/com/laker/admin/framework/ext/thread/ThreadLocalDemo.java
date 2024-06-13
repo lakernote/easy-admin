@@ -34,17 +34,17 @@ public class ThreadLocalDemo {
     /**
      * 模拟tomcat线程池
      */
-    private static ExecutorService tomcatExecutors = Executors.newFixedThreadPool(10);
+    private static final ExecutorService tomcatExecutors = Executors.newFixedThreadPool(10);
 
     /**
      * 业务线程池,默认Control中异步任务执行线程池
      */
-    private static ExecutorService businessExecutors = Executors.newFixedThreadPool(5);
+    private static final ExecutorService businessExecutors = Executors.newFixedThreadPool(5);
 
     /**
      * 线程上下文环境,模拟在Control这一层,设置环境变量,然后在这里提交一个异步任务,模拟在子线程中,是否可以访问到刚设置的环境变量值
      */
-    private static ThreadLocal<Integer> requestIdThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Integer> requestIdThreadLocal = new ThreadLocal<>();
 
     /**
      * 模式10个请求,每个请求执行ControlThread的逻辑,其具体实现就是,先输出父线程的名称,
@@ -67,7 +67,7 @@ public class ThreadLocalDemo {
      * 模拟Control任务
      */
     static class ControlThread implements Runnable {
-        private int i;
+        private final int i;
 
         public ControlThread(int i) {
             this.i = i;
@@ -87,7 +87,7 @@ public class ThreadLocalDemo {
      * 业务任务,主要是模拟在Control控制层,提交任务到线程池执行
      */
     static class BusinessTask implements Runnable {
-        private String parentThreadName;
+        private final String parentThreadName;
 
         public BusinessTask(String parentThreadName) {
             this.parentThreadName = parentThreadName;

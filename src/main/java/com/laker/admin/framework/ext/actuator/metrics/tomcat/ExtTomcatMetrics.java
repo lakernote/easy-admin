@@ -250,7 +250,7 @@ public class ExtTomcatMetrics implements MeterBinder, AutoCloseable {
         };
         notificationListeners.add(notificationListener);
 
-        NotificationFilter notificationFilter = (NotificationFilter) notification -> {
+        NotificationFilter notificationFilter = notification -> {
             if (!MBeanServerNotification.REGISTRATION_NOTIFICATION.equals(notification.getType())) {
                 return false;
             }

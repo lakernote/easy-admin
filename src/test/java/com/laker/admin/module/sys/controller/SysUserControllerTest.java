@@ -64,7 +64,7 @@ public class SysUserControllerTest {
     @Test
     public void saveOrUpdate() {
         PowerMockito.mockStatic(StpUtil.class);
-        when(StpUtil.getLoginIdAsLong()).thenReturn(1l);
+        when(StpUtil.getLoginIdAsLong()).thenReturn(1L);
         /** 录制 mock操作 */
         when(sysUserService.save(any()))
                 .thenReturn(Boolean.TRUE);

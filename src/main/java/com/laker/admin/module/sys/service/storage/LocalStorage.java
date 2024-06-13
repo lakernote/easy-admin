@@ -15,8 +15,8 @@ import java.io.InputStream;
 @ConditionalOnProperty(name = "laker.storage.local.enable", havingValue = "true", matchIfMissing = true)
 public class LocalStorage implements Storage {
 
-    private String storagePath;
-    private String address;
+    private final String storagePath;
+    private final String address;
 
     public LocalStorage(EasyConfig easyConfig) {
         EasyConfig.Local local = easyConfig.getStorage().getLocal();

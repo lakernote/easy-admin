@@ -36,7 +36,7 @@ import java.util.Map;
  * @since 0.1
  */
 public class SnakerHelper {
-    private static Map<Class<? extends NodeModel>, String> mapper = new HashMap<Class<? extends NodeModel>, String>();
+    private static final Map<Class<? extends NodeModel>, String> mapper = new HashMap<Class<? extends NodeModel>, String>();
 
     static {
         mapper.put(TaskModel.class, "task");
@@ -141,7 +141,7 @@ public class SnakerHelper {
             if (StringUtils.isNotEmpty(tm.getOffset())) {
                 String[] values = tm.getOffset().split(",");
                 buffer.append("x:").append(values[0]).append(",");
-                buffer.append("y:").append(values[1]).append("");
+                buffer.append("y:").append(values[1]);
             }
             buffer.append("}, props:{name:{value:'" + tm.getName() + "'},expr:{value:'" + tm.getExpr() + "'}}}");
             buffer.append(",");
@@ -152,13 +152,12 @@ public class SnakerHelper {
     }
 
     private static String getBase(NodeModel node) {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(":{type:'");
-        buffer.append(mapper.get(node.getClass()));
-        buffer.append("',text:{text:'");
-        buffer.append(node.getDisplayName());
-        buffer.append("'},");
-        return buffer.toString();
+        String buffer = ":{type:'" +
+                mapper.get(node.getClass()) +
+                "',text:{text:'" +
+                node.getDisplayName() +
+                "'},";
+        return buffer;
     }
 
     private static String getProperty(NodeModel node) {
@@ -172,7 +171,7 @@ public class SnakerHelper {
                 String name = propertyDescriptor.getName();
                 String value = "";
                 if (propertyDescriptor.getPropertyType() == String.class) {
-                    value = (String) BeanUtils.getProperty(node, name);
+                    value = BeanUtils.getProperty(node, name);
                 } else {
                     continue;
                 }

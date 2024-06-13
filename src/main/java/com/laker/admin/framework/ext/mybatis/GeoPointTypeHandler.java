@@ -20,11 +20,11 @@ public class GeoPointTypeHandler extends BaseTypeHandler<GeoPoint> {
     /**
      * 空间参照标识系 MySQL数据库默认为0
      */
-    private static int SRID = 0;
+    private static final int SRID = 0;
     /**
      * 字节顺序指示符为1或0表示小端或大端存储。小字节序和大字节序分别也称为网络数据表示（NDR）和外部数据表示（XDR）
      */
-    private static byte ENDIAN = (byte) 1;
+    private static final byte ENDIAN = (byte) 1;
 
 
     @Override
