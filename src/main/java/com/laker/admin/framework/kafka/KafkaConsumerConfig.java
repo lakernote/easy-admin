@@ -6,11 +6,19 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.ConsumerRecordRecoverer;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.FixedBackOff;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,21 +79,40 @@ public class KafkaConsumerConfig {
         // 设置了并发消费者数量为 3。这表示每个监听容器会创建 3 个消费者实例来并发地处理消息，
         // 以提高消息处理的吞吐量。这里要看你的分区数是多少，如果是3那么刚好，如果是2，就有多余，浪费。
 //        factory.setConcurrency(3);
+
+//        factory.setCommonErrorHandler(errorHandler());
         return factory;
     }
 
-//    @Bean
-//    @Primary
-//    public ErrorHandler kafkaErrorHandler(KafkaTemplate<?, ?> template) {
-//
-//        log.warn("kafkaErrorHandler begin to Handle");
-//
-//        // <1> 创建 DeadLetterPublishingRecoverer 对象
-//        ConsumerRecordRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
-//        // <2> 创建 FixedBackOff 对象   设置重试间隔 10秒 次数为 3次
-//        BackOff backOff = new FixedBackOff(10 * 1000L, 3L);
-//        // <3> 创建 SeekToCurrentErrorHandler 对象
-//        return new SeekToCurrentErrorHandler(recoverer, backOff);
-//    }
 
+    /**
+     * 阻塞重试
+     * 如果初始尝试因临时错误而失败，则阻塞重试可让消费者再次尝试使用消息。消费者会等待一段时间（称为重试退避期），然后再尝试再次使用消息。
+     * 此外，消费者可以使用固定延迟或指数退避策略自定义重试退避期。它还可以设置在放弃并将消息标记为失败之前的最大重试次数。
+     * <p>
+     * 阻止重试可能会导致消息处理管道延迟。这会影响系统的整体性能
+     * 非阻塞重试 @RetryableTopic
+     * 非阻塞重试允许消费者异步重试消息的消费，而不会阻塞消息监听器方法的执行。
+     *
+     * @param template
+     * @return
+     */
+    @Lazy
+    @Bean
+    public DefaultErrorHandler errorHandler(KafkaTemplate<?, ?> template) {
+        log.warn("errorHandler begin to Handle");
+        // 设置重试间隔 1秒 次数为 3次
+        BackOff fixedBackOff = new FixedBackOff(1000L, 3L);
+        // consumerRecord：表示导致错误的 Kafka 记录
+        // exception：表示抛出的异常
+//        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) -> {
+//            // logic to execute when all the retry attemps are exhausted
+//        }, fixedBackOff);
+        ConsumerRecordRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, fixedBackOff);
+        // 设置可重试异常与不可重试异常
+        errorHandler.addRetryableExceptions(SocketTimeoutException.class);
+        errorHandler.addNotRetryableExceptions(NullPointerException.class);
+        return errorHandler;
+    }
 }

@@ -57,6 +57,9 @@ public class EasyKafkaConsumer {
      * 使用 Spring RetryableTopic 和 DltHandler 注解来实现 Kafka 消息重试和死信队列功能
      * dlt topic : lakernote-dlt
      * retry topic : lakernote-retry
+     * 当消息无法传递到其预期主题时，它将被自动发送到重试主题进行重试。
+     * <p>
+     * 如果在最大尝试次数后仍无法传递消息，则会将其发送到 DLT 进行进一步处理。
      */
     @RetryableTopic(
             backoff = @Backoff(value = 6000), // 配置重试间隔为 6000 毫秒（6秒）
