@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class LakerMeterRegistry {
     private final Object meterMapLock = new Object();
-    private Duration step;
+    private final Duration step;
     private ScheduledExecutorService scheduledExecutorService;
 
     private final ConcurrentMap<String, StepCounterTuple> meterMap = new ConcurrentHashMap<>();

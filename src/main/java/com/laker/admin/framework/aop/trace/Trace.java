@@ -109,7 +109,7 @@ public class Trace {
         spans.stream().filter(span -> span.getLevel() != 0).max(Comparator.comparing(Span::getCost)).ifPresent(span -> span.setMax(true));
         int i = 1;
         for (Span span : spans) {
-            span.setName(span.getParent() == null ? "root" : span.getParent().getName() + "." + (i++) + "");
+            span.setName(span.getParent() == null ? "root" : span.getParent().getName() + "." + (i++));
             log.warn("{} {}{}{}ms{}:[{}]-{}", span.getName(), append + BAR, span.isMax() ? "【" : "[", span.getCost(), span.isMax() ? "】" : "]", span.getSpanType(), span.getId());
             logSpan(span.getChilds(), append + BAR);
         }

@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.LongAdder;
  * @author laker
  */
 public class StepCounterTuple {
-    private String id;
+    private final String id;
     private final LongAdder count1 = new LongAdder();
     /**
      * 可以 自己扩展 count n ，double n

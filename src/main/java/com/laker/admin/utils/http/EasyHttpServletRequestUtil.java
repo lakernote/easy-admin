@@ -13,6 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -109,7 +110,7 @@ public class EasyHttpServletRequestUtil {
         InputStream inputStream = null;
         try {
             inputStream = request.getInputStream();
-            return StreamUtils.copyToString(inputStream, Charset.forName("utf-8"));
+            return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("HttpServletRequest.getBody", e);
@@ -126,14 +127,13 @@ public class EasyHttpServletRequestUtil {
     }
 
     public static String getAllRequestInfo() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("请求详情为：").append(StrUtil.CRLF);
-        sb.append("RemoteAddress: ").append(getRemoteIP()).append(StrUtil.CRLF);
-        sb.append("Method: ").append(getRequest().getMethod()).append(StrUtil.CRLF);
-        sb.append("URI: ").append(getRequestURI()).append(StrUtil.CRLF);
-        sb.append("Headers: ").append(StrUtil.join(StrUtil.CRLF + "         ", mapToList(getHeaders()))).append(StrUtil.CRLF);
-        sb.append("Body: ").append(getBody()).append(StrUtil.CRLF);
-        return sb.toString();
+        String sb = "请求详情为：" + StrUtil.CRLF +
+                "RemoteAddress: " + getRemoteIP() + StrUtil.CRLF +
+                "Method: " + getRequest().getMethod() + StrUtil.CRLF +
+                "URI: " + getRequestURI() + StrUtil.CRLF +
+                "Headers: " + StrUtil.join(StrUtil.CRLF + "         ", mapToList(getHeaders())) + StrUtil.CRLF +
+                "Body: " + getBody() + StrUtil.CRLF;
+        return sb;
     }
 
     private static List mapToList(Map parameters) {

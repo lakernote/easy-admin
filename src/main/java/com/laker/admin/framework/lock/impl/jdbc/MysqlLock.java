@@ -24,7 +24,7 @@ public class MysqlLock extends AbstractSimpleLock {
     public static final String RELEASE_FORMATTED_QUERY = "DELETE FROM distribute_lock WHERE lock_key = ? AND token = ?;";
     public static final String DELETE_EXPIRED_FORMATTED_QUERY = "DELETE FROM distribute_lock WHERE expire < ?;";
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public MysqlLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);

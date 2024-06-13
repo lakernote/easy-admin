@@ -10,7 +10,7 @@ import java.io.*;
 
 public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-    private byte[] cachedBody;
+    private final byte[] cachedBody;
 
     public CachedBodyHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
@@ -31,7 +31,7 @@ public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapp
 
     public class CachedBodyServletInputStream extends ServletInputStream {
 
-        private InputStream cachedBodyInputStream;
+        private final InputStream cachedBodyInputStream;
 
         public CachedBodyServletInputStream(byte[] cachedBody) {
             this.cachedBodyInputStream = new ByteArrayInputStream(cachedBody);

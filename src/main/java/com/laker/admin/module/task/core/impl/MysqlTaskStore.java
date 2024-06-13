@@ -22,14 +22,10 @@ public class MysqlTaskStore implements ITaskStore {
         task.setEnable(true);
 
         BeanUtils.copyProperties(taskDto, task);
-        try {
-            long count = taskService.count(Wrappers.<SysTask>lambdaQuery().eq(SysTask::getTaskCode, taskDto.getTaskCode()));
-            if (count == 0) {
-                task.setTaskState(TaskStateEnum.START);
-                taskService.save(task);
-            }
-        } finally {
-
+        long count = taskService.count(Wrappers.<SysTask>lambdaQuery().eq(SysTask::getTaskCode, taskDto.getTaskCode()));
+        if (count == 0) {
+            task.setTaskState(TaskStateEnum.START);
+            taskService.save(task);
         }
     }
 

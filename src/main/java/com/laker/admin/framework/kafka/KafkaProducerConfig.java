@@ -46,7 +46,7 @@ public class KafkaProducerConfig {
             @Override
             public void onSuccess(ProducerRecord<String, String> producerRecord, RecordMetadata recordMetadata) {
                 log.info("ACK from ProducerListener message: {} offset:  {}",
-                        producerRecord.value().toString(),
+                        producerRecord.value(),
                         recordMetadata.offset());
             }
 

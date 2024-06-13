@@ -55,12 +55,12 @@ public class LimitSubmitAspect {
         if (result != null) {
             throw new BusinessException("请勿重复访问！");
         }
-        cache.put(key, StpUtil.getLoginId(), limitTime * 1000);
+        cache.put(key, StpUtil.getLoginId(), limitTime * 1000L);
         try {
             Object proceed = joinPoint.proceed();
             return proceed;
         } catch (Throwable e) {
-            log.error("Exception in {}.{}() with cause = \'{}\' and exception = \'{}\'", joinPoint.getSignature().getDeclaringTypeName(),
+            log.error("Exception in {}.{}() with cause = '{}' and exception = '{}'", joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL", e.getMessage(), e);
             throw e;
         } finally {

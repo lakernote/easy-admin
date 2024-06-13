@@ -30,7 +30,7 @@ import java.sql.SQLException;
 @SuppressWarnings({"rawtypes"})
 @Slf4j
 public class LakerDataPermissionV2Interceptor extends JsqlParserSupport implements InnerInterceptor {
-    private LakerV2DataPermissionHandler dataPermissionHandler = new LakerV2DataPermissionHandler();
+    private final LakerV2DataPermissionHandler dataPermissionHandler = new LakerV2DataPermissionHandler();
 
     @Override
     public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {

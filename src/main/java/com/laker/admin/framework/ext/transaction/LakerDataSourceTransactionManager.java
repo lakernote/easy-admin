@@ -23,7 +23,7 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
 
 
     transient ThreadLocal<LinkedList<Transaction>> dateThreadLocal = new ThreadLocal<>();
-    private transient long costTime;
+    private final transient long costTime;
 
     public LakerDataSourceTransactionManager(DataSource dataSource, long costTime) {
         super(dataSource);

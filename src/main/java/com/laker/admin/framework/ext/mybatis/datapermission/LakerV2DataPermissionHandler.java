@@ -47,13 +47,11 @@ public class LakerV2DataPermissionHandler {
         // 有别名用别名，无别名用表名，防止字段冲突报错
         String mainTableName = "";
         // 如果是 table 类型
-        if (fromItem instanceof Table) {
-            Table fromTable = (Table) fromItem;
+        if (fromItem instanceof Table fromTable) {
             // 有别名用别名，无别名用表名，防止字段冲突报错
             Alias fromItemAlias = fromItem.getAlias();
             mainTableName = fromItemAlias == null ? fromTable.getName() : fromItemAlias.getName();
-        } else if (fromItem instanceof SubSelect) {
-            SubSelect fromTable = (SubSelect) fromItem;
+        } else if (fromItem instanceof SubSelect fromTable) {
             // 有别名用别名，无别名用表名，防止字段冲突报错
             Alias fromItemAlias = fromItem.getAlias();
             mainTableName = fromItemAlias == null ? fromTable.getAlias().getName() : fromItemAlias.getName();

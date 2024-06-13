@@ -100,7 +100,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
         // xss过滤
         json = filterParamString(json).trim();
         log.info("web防火墙处理后的结果如下：{}", json);
-        final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
+        final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {

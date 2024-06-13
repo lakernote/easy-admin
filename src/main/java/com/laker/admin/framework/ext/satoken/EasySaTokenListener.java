@@ -160,10 +160,7 @@ public class EasySaTokenListener implements SaTokenListener {
                         long start = System.currentTimeMillis();
                         ONLINE_USERS.removeIf(onlineUser -> {
                             long timeout = StpUtil.getStpLogic().getTokenActiveTimeoutByToken(onlineUser.getTokenValue());
-                            if (timeout == SaTokenDao.NOT_VALUE_EXPIRE) {
-                                return true;
-                            }
-                            return false;
+                            return timeout == SaTokenDao.NOT_VALUE_EXPIRE;
                         });
                         log.debug("定时清理过期会话结束，在线人数：{},耗时：{}ms", ONLINE_USERS.size(), System.currentTimeMillis() - start);
 

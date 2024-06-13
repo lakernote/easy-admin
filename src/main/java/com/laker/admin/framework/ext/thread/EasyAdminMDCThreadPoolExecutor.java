@@ -76,8 +76,8 @@ public class EasyAdminMDCThreadPoolExecutor extends EasyAdminThreadPoolExecutor 
     }
 
     private static class EasyAdminFuture<T> implements RunnableFuture<T> {
-        private RunnableFuture<T> future;
-        private Map<String, String> threadContext;
+        private final RunnableFuture<T> future;
+        private final Map<String, String> threadContext;
 
         public EasyAdminFuture(RunnableFuture<T> future, Map<String, String> threadContext) {
             this.future = future;

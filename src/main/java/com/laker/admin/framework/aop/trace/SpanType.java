@@ -13,5 +13,5 @@ public enum SpanType {
     Kafka,
     Transaction,
     Thread,
-    Others;
+    Others
 }
