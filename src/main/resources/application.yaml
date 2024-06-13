@@ -30,8 +30,7 @@ spring:
       minimum-idle: 5
       maximum-pool-size: 20
   profiles:
-    # maven启用的profile，默认是local @profileActive@,ratelimiter,cache
-    active: local
+    active: local,kafka
   task:
     execution:
       pool:
@@ -117,9 +116,6 @@ easy:
   oss-file:
     domain: http://localhost:8080
     path: storage
-  spring:
-    kafka:
-      enabled: false
 # actuator
 management:
   tracing:

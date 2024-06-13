@@ -1,0 +1,4 @@
+easy:
+  spring:
+    kafka:
+      enabled: false
