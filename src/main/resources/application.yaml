@@ -62,6 +62,8 @@ spring:
             dismiss404: false
             # Feign使用默认的超时配置，在该类源码中可见，默认单次请求最大时长1秒，重试5次
             retryer: feign.Retryer.Default
+    discovery:
+      enabled: false
 mybatis-plus:
   # 配置日志 #仅控制台输出的日志
   #  configuration:
