@@ -72,6 +72,7 @@
     <logger name="com.laker.admin.module" level="INFO"/>
     <logger name="com.laker.admin.framework" level="INFO"/>
     <logger name="io.micrometer.core.instrument.logging" level="WARN"/>
+    <logger name="org.apache.kafka.clients" level="WARN"/>
     <!-- 定义p6spy sql监控 -->
     <logger name="p6spy" level="INFO"/>
     <!-- 默认日志输出级别  WARN INFO-->

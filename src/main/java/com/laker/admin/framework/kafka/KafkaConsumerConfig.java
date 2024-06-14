@@ -2,23 +2,20 @@ package com.laker.admin.framework.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.ConsumerRecordRecoverer;
 import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.listener.RetryListener;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
-import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,7 +77,27 @@ public class KafkaConsumerConfig {
         // 以提高消息处理的吞吐量。这里要看你的分区数是多少，如果是3那么刚好，如果是2，就有多余，浪费。
 //        factory.setConcurrency(3);
 
-//        factory.setCommonErrorHandler(errorHandler());
+        // 设置处理记录和批处理监听器的错误处理程序，以便在处理记录时发生错误时执行逻辑。
+        // 默认 DefaultErrorHandler 没delay重试9次。
+        BackOff fixedBackOff = new FixedBackOff(1000L, 2L);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) -> {
+            log.error("laker_errorHandler:{}", consumerRecord);
+        }, fixedBackOff);
+
+        // 自定义逻辑：在重试2次后，手动确认offset，并在第一次失败时记录日志
+        errorHandler.setRetryListeners(new RetryListener() {
+            @Override
+            public void failedDelivery(ConsumerRecord<?, ?> record, Exception ex, int attempt) {
+                if (attempt == 1) {
+                    log.error("Retry attempt 1 for record: {}", record, ex);
+                } else if (attempt == 2) {
+                    log.error("Retry attempt 2 for record: {}. Manually acknowledging offset.", record, ex);
+                    // 手动确认offset
+                    // 通过调用 ConsumerRecord 的 acknowledge() 方法来手动确认 offset。
+                }
+            }
+        });
+        factory.setCommonErrorHandler(errorHandler);
         return factory;
     }
 
@@ -97,22 +114,22 @@ public class KafkaConsumerConfig {
      * @param template
      * @return
      */
-    @Lazy
-    @Bean
-    public DefaultErrorHandler errorHandler(KafkaTemplate<?, ?> template) {
-        log.warn("errorHandler begin to Handle");
-        // 设置重试间隔 1秒 次数为 3次
-        BackOff fixedBackOff = new FixedBackOff(1000L, 3L);
-        // consumerRecord：表示导致错误的 Kafka 记录
-        // exception：表示抛出的异常
-//        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) -> {
-//            // logic to execute when all the retry attemps are exhausted
-//        }, fixedBackOff);
-        ConsumerRecordRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, fixedBackOff);
-        // 设置可重试异常与不可重试异常
-        errorHandler.addRetryableExceptions(SocketTimeoutException.class);
-        errorHandler.addNotRetryableExceptions(NullPointerException.class);
-        return errorHandler;
-    }
+//    @Lazy
+//    @Bean
+//    public DefaultErrorHandler errorHandler(KafkaTemplate<?, ?> template) {
+//        log.warn("errorHandler begin to Handle");
+//        // 设置重试间隔 1秒 次数为 3次
+//        BackOff fixedBackOff = new FixedBackOff(1000L, 3L);
+//        // consumerRecord：表示导致错误的 Kafka 记录
+//        // exception：表示抛出的异常
+////        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) -> {
+////            // logic to execute when all the retry attemps are exhausted
+////        }, fixedBackOff);
+//        ConsumerRecordRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
+//        DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, fixedBackOff);
+//        // 设置可重试异常与不可重试异常
+//        errorHandler.addRetryableExceptions(SocketTimeoutException.class);
+//        errorHandler.addNotRetryableExceptions(NullPointerException.class);
+//        return errorHandler;
+//    }
 }
