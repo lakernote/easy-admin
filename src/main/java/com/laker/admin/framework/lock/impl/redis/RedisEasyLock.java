@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock.impl.redis;
 
 import com.laker.admin.framework.lock.api.LLock;
-import com.laker.admin.framework.lock.core.AbstractSimpleLock;
+import com.laker.admin.framework.lock.core.AbstractSimpleEasyLock;
 import io.lettuce.core.RedisCommandInterruptedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisSystemException;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author laker
  */
 @Slf4j
-public class RedisLock extends AbstractSimpleLock {
+public class RedisEasyLock extends AbstractSimpleEasyLock {
 
     private static final String LOCK_SCRIPT = "return redis.call('SET', KEYS[1], ARGV[1], 'PX', tonumber(ARGV[2]), 'NX') and true or false";
 
@@ -36,7 +36,7 @@ public class RedisLock extends AbstractSimpleLock {
     private final RedisScript<Boolean> lockRefreshScript = new DefaultRedisScript<>(LOCK_REFRESH_SCRIPT, Boolean.class);
     private final StringRedisTemplate stringRedisTemplate;
 
-    public RedisLock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
+    public RedisEasyLock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.stringRedisTemplate = stringRedisTemplate;
     }
@@ -50,7 +50,7 @@ public class RedisLock extends AbstractSimpleLock {
         // 这个等价于 SET key token NX PX 5000
         Boolean locked = stringRedisTemplate.opsForValue().setIfAbsent(key(key), token, expiration);
         log.info("Tried to acquire lock for key {} with token {}. Locked: {}", key, token, locked);
-        return locked ? token : null;
+        return Boolean.TRUE.equals(locked) ? token : null;
     }
 
     private String key(String key) {
@@ -77,14 +77,14 @@ public class RedisLock extends AbstractSimpleLock {
 
         boolean refreshed = false;
         try {
-            refreshed = stringRedisTemplate.execute(lockRefreshScript, singletonKeyList, token, String.valueOf(expiration.toMillis()));
+            refreshed = Boolean.TRUE.equals(stringRedisTemplate.execute(lockRefreshScript, singletonKeyList, token, String.valueOf(expiration.toMillis())));
             if (refreshed) {
                 log.info("Refresh script updated the expiration for key {} with token {} to {}", key, token, expiration);
             } else {
                 log.info("Refresh script failed to update expiration for key {} with token {} with expiration: {}", key, token, expiration);
             }
         } catch (RedisSystemException e) {
-            if (e.getCause() != null && (e.getCause() instanceof RedisCommandInterruptedException)) {
+            if (e.getCause() instanceof RedisCommandInterruptedException) {
                 log.error("Refresh script thread interrupted to update expiration for key {} with token {} with expiration: {}", key, token, expiration);
             } else {
                 throw e;

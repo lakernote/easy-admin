@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock.impl.jdbc;
 
 import com.laker.admin.framework.lock.api.LLock;
-import com.laker.admin.framework.lock.core.AbstractSimpleLock;
+import com.laker.admin.framework.lock.core.AbstractSimpleEasyLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;
@@ -15,7 +15,7 @@ import java.time.Duration;
  * @author laker
  */
 @Slf4j
-public class MysqlLock extends AbstractSimpleLock {
+public class MysqlEasyLock extends AbstractSimpleEasyLock {
 
     /**
      * 原始sql 需要配合DuplicateKeyException使用，不优雅：INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);
@@ -26,14 +26,14 @@ public class MysqlLock extends AbstractSimpleLock {
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
     private final JdbcTemplate jdbcTemplate;
 
-    public MysqlLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
+    public MysqlEasyLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    protected String acquire(final String key, final String token, final Duration expiration) {
+    public String acquire(final String key, final String token, final Duration expiration) {
         final long now = System.currentTimeMillis();
         // 这里是为了删除由于一些异常导致的锁,因为db 没有ttl
         final int expired = jdbcTemplate.update(DELETE_EXPIRED_FORMATTED_QUERY, now);
@@ -45,7 +45,7 @@ public class MysqlLock extends AbstractSimpleLock {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    protected boolean release0(LLock lock) {
+    public boolean release0(LLock lock) {
         String key = lock.getKey();
         String token = lock.getToken();
         final int deleted = jdbcTemplate.update(RELEASE_FORMATTED_QUERY, key, token);
@@ -64,7 +64,7 @@ public class MysqlLock extends AbstractSimpleLock {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    protected boolean refresh(final String key, final String token, final Duration expiration) {
+    public boolean refresh(final String key, final String token, final Duration expiration) {
         final long now = System.currentTimeMillis();
         final long expireAt = expiration.toMillis() + now;
 

@@ -1,9 +1,9 @@
 package com.laker.admin.framework.lock.core;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
+import com.laker.admin.framework.lock.api.EasyLock;
 import com.laker.admin.framework.lock.api.LLock;
-import com.laker.admin.framework.lock.api.Lock;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.time.Duration;
@@ -12,10 +12,10 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * @author laker
  */
-public abstract class AbstractSimpleLock implements Lock {
+public abstract class AbstractSimpleEasyLock implements EasyLock {
     private final TaskScheduler taskScheduler;
 
-    protected AbstractSimpleLock(TaskScheduler taskScheduler) {
+    protected AbstractSimpleEasyLock(TaskScheduler taskScheduler) {
         this.taskScheduler = taskScheduler;
     }
 
@@ -23,7 +23,7 @@ public abstract class AbstractSimpleLock implements Lock {
     public LLock acquire(final String key, final Duration expiration) {
         final String token = IdUtil.fastSimpleUUID();
         String acquire = acquire(key, token, expiration);
-        if (StrUtil.isBlank(acquire)) {
+        if (CharSequenceUtil.isBlank(acquire)) {
             return null;
         }
         // 后台线程定时续租 一个锁一个后台线程续约
@@ -39,7 +39,7 @@ public abstract class AbstractSimpleLock implements Lock {
 
     private ScheduledFuture<?> scheduleLockRefresh(final String key, final String token, final Duration expiration) {
         return taskScheduler.scheduleAtFixedRate(() ->
-                refresh(key, token, expiration), expiration.toMillis() / 3);
+                refresh(key, token, expiration), Duration.ofMillis(expiration.toMillis() / 3));
 
     }
 

@@ -5,7 +5,7 @@ import java.time.Duration;
 /**
  * @author laker
  */
-public interface Lock {
+public interface EasyLock {
     /**
      * 尝试获取锁，
      *

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.config.EasyCacheConfig;
-import com.laker.admin.framework.lock.api.Lock;
+import com.laker.admin.framework.lock.api.EasyLock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysDict;
@@ -32,7 +32,7 @@ public class SysDictController {
     ISysDictService sysDictService;
 
     @Autowired
-    Lock lock;
+    EasyLock easyLock;
 
     @GetMapping
     @Operation(summary = "分页查询")
