@@ -10,6 +10,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EasyAdminApplication {
     public static void main(String[] args) {
         SpringApplication.run(EasyAdminApplication.class, args);
-        System.out.println("start success!");
     }
 }

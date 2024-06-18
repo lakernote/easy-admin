@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.EasyAdminConstants;
-import com.laker.admin.framework.aop.metrics.Metrics;
+import com.laker.admin.framework.aop.metrics.EasyMetrics;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
 import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.ext.satoken.EasySaTokenListener;
@@ -37,7 +37,7 @@ import java.util.List;
 @ApiSupport(order = 2)
 @RestController
 @Slf4j
-@Metrics
+@EasyMetrics
 @RequestMapping("/sys/auth")
 public class LoginController {
 

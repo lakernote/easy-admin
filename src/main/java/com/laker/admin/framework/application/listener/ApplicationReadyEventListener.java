@@ -1,26 +1,26 @@
 package com.laker.admin.framework.application.listener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 
+@Slf4j
 @Component
 public class ApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationReadyEventListener.class);
 
+    private final Environment environment;
 
-    @Autowired
-    private Environment environment;
+    public ApplicationReadyEventListener(Environment environment) {
+        this.environment = environment;
+    }
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         String port = environment.getProperty("server.port");
-        LOGGER.info("Tomcat started on port : " + port);
+        log.info("Tomcat started on port : " + port);
     }
 }

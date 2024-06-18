@@ -22,10 +22,10 @@ import java.util.Map;
 @Configuration
 @Slf4j
 @ConditionalOnBean(EasyKafkaConfig.class)
-public class KafkaConsumerConfig {
+public class EasyKafkaConsumerConfig {
     private final EasyKafkaConfig easyKafkaConfig;
 
-    public KafkaConsumerConfig(EasyKafkaConfig easyKafkaConfig) {
+    public EasyKafkaConsumerConfig(EasyKafkaConfig easyKafkaConfig) {
         this.easyKafkaConfig = easyKafkaConfig;
     }
 

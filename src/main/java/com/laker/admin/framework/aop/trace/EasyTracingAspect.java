@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @Aspect
-public class TracingAspect {
+public class EasyTracingAspect {
     @Value("${tracing.time:1000}")
     private long time;
 
@@ -38,7 +38,7 @@ public class TracingAspect {
     /**
      * 拦截【方法】上有@LakerTrace注解
      */
-    @Pointcut("@annotation(com.laker.admin.framework.aop.trace.LakerTrace)")
+    @Pointcut("@annotation(com.laker.admin.framework.aop.trace.EasyTrace)")
     public void annotationAspect() {
         // do nothing
     }
@@ -46,7 +46,7 @@ public class TracingAspect {
     /**
      * 拦截【类】上有@LakerTrace注解
      */
-    @Pointcut("@within(com.laker.admin.framework.aop.trace.LakerTrace)")
+    @Pointcut("@within(com.laker.admin.framework.aop.trace.EasyTrace)")
     public void withinAspect() {
         // do nothing
     }
@@ -57,7 +57,7 @@ public class TracingAspect {
      * - @LakerTrace注解在类上，或者包扫描到了整个类，但是其中的某个方法不想拦截
      * - 在方法上注解@LakerIgnoreTrace即可
      */
-    @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.LakerIgnoreTrace)")
+    @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.EasyIgnoreTrace)")
     public void annotationIgnoreAspect() {
         // do nothing
     }

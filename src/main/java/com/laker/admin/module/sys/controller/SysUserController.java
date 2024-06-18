@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.config.EasyAdminConfig;
-import com.laker.admin.framework.aop.metrics.Metrics;
+import com.laker.admin.framework.aop.metrics.EasyMetrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.PageVO;
 import com.laker.admin.framework.model.Response;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/sys/user")
-@Metrics
+@EasyMetrics
 public class SysUserController {
     @Autowired
     ISysUserService sysUserService;

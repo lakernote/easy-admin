@@ -32,7 +32,7 @@ public class FeignConfig {
             if (Optional.ofNullable(MDC.get(EasyAdminConstants.TRACE_ID)).isEmpty()) {
                 MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
             }
-            log.warn("traceIdRequestInterceptor:{}", MDC.get(EasyAdminConstants.TRACE_ID));
+            log.info("traceIdRequestInterceptor:{}", MDC.get(EasyAdminConstants.TRACE_ID));
             requestTemplate.header(EasyAdminConstants.TRACE_ID, MDC.get(EasyAdminConstants.TRACE_ID));
         };
     }
@@ -41,7 +41,7 @@ public class FeignConfig {
     @Bean
     RequestInterceptor viaRequestInterceptor() {
         return requestTemplate -> {
-            log.warn("viaRequestInterceptor:{}", MDC.get(EasyAdminConstants.TRACE_ID));
+            log.info("viaRequestInterceptor:{}", MDC.get(EasyAdminConstants.TRACE_ID));
             requestTemplate.header("via", "easy-feign");
         };
     }

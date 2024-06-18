@@ -3,7 +3,7 @@ package com.laker.admin.framework.aop.repeatedsubmit;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.LFUCache;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.laker.admin.framework.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,14 +22,14 @@ import java.lang.reflect.Method;
 
 /**
  * 保证服务的幂等性和防止重复请求
- * https://blog.csdn.net/abu935009066/article/details/117471885
+ * <a href="https://blog.csdn.net/abu935009066/article/details/117471885">...</a>
  *
  * @author laker
  */
 @Component
 @Aspect
 @Slf4j
-public class LimitSubmitAspect {
+public class EasyLimitSubmitAspect {
     private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 60 * 1000);
 
     /**
@@ -38,27 +38,26 @@ public class LimitSubmitAspect {
      * 方式2： method.getAnnotation(RepeatSubmitLimit.class)
      *
      * @param joinPoint
-     * @param repeatSubmitLimitParam
+     * @param easyRepeatSubmitLimitParam
      * @return
      * @throws Throwable
      */
-    @Around("@annotation(repeatSubmitLimitParam)")
-    public Object handleSubmit(ProceedingJoinPoint joinPoint, RepeatSubmitLimit repeatSubmitLimitParam) throws Throwable {
+    @Around("@annotation(easyRepeatSubmitLimitParam)")
+    public Object handleSubmit(ProceedingJoinPoint joinPoint, EasyRepeatSubmitLimit easyRepeatSubmitLimitParam) throws Throwable {
 
 
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         //获取注解信息
-        RepeatSubmitLimit repeatSubmitLimit = method.getAnnotation(RepeatSubmitLimit.class);
-        int limitTime = repeatSubmitLimit.time();
-        String key = getLockKey(joinPoint, repeatSubmitLimit);
+        EasyRepeatSubmitLimit easyRepeatSubmitLimit = method.getAnnotation(EasyRepeatSubmitLimit.class);
+        int limitTime = easyRepeatSubmitLimit.time();
+        String key = getLockKey(joinPoint, easyRepeatSubmitLimit);
         Object result = cache.get(key, false);
         if (result != null) {
             throw new BusinessException("请勿重复访问！");
         }
         cache.put(key, StpUtil.getLoginId(), limitTime * 1000L);
         try {
-            Object proceed = joinPoint.proceed();
-            return proceed;
+            return joinPoint.proceed();
         } catch (Throwable e) {
             log.error("Exception in {}.{}() with cause = '{}' and exception = '{}'", joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL", e.getMessage(), e);
@@ -72,15 +71,15 @@ public class LimitSubmitAspect {
 
     private static final ExpressionParser PARSER = new SpelExpressionParser();
 
-    private String getLockKey(ProceedingJoinPoint joinPoint, RepeatSubmitLimit repeatSubmitLimit) {
-        String businessKey = repeatSubmitLimit.businessKey();
-        boolean userLimit = repeatSubmitLimit.userLimit();
-        String businessParam = repeatSubmitLimit.businessParam();
+    private String getLockKey(ProceedingJoinPoint joinPoint, EasyRepeatSubmitLimit easyRepeatSubmitLimit) {
+        String businessKey = easyRepeatSubmitLimit.businessKey();
+        boolean userLimit = easyRepeatSubmitLimit.userLimit();
+        String businessParam = easyRepeatSubmitLimit.businessParam();
         if (userLimit) {
             businessKey = businessKey + ":" + StpUtil.getLoginId();
         }
 
-        if (StrUtil.isNotBlank(businessParam)) {
+        if (CharSequenceUtil.isNotBlank(businessParam)) {
             Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
             EvaluationContext context = new MethodBasedEvaluationContext(null, method, joinPoint.getArgs(), NAME_DISCOVERER);
             String key = PARSER.parseExpression(businessParam).getValue(context, String.class);

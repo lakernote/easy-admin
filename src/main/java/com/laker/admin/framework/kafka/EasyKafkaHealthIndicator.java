@@ -18,12 +18,12 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class KafkaHealthIndicator extends AbstractHealthIndicator {
+public class EasyKafkaHealthIndicator extends AbstractHealthIndicator {
 
     private final KafkaAdmin kafkaAdmin;
     private final EasyKafkaConfig easyKafkaConfig;
 
-    public KafkaHealthIndicator(KafkaAdmin kafkaAdmin, @Autowired(required = false) EasyKafkaConfig easyKafkaConfig) {
+    public EasyKafkaHealthIndicator(KafkaAdmin kafkaAdmin, @Autowired(required = false) EasyKafkaConfig easyKafkaConfig) {
         this.kafkaAdmin = kafkaAdmin;
         this.easyKafkaConfig = easyKafkaConfig;
     }

@@ -19,11 +19,11 @@ import java.util.Map;
 @Configuration
 @ConditionalOnBean(EasyKafkaConfig.class)
 @Slf4j
-public class KafkaProducerConfig {
+public class EasyProducerConfig {
 
     private final EasyKafkaConfig easyKafkaConfig;
 
-    public KafkaProducerConfig(EasyKafkaConfig easyKafkaConfig) {
+    public EasyProducerConfig(EasyKafkaConfig easyKafkaConfig) {
         this.easyKafkaConfig = easyKafkaConfig;
     }
 

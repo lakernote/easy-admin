@@ -21,8 +21,8 @@ public class ExternalIpHandler implements CommandLineRunner {
     @Override
     public void run(String... args) {
         IpifyVo address = ipifyClient.getIpAddress();
-        log.warn("External IP Address: {}", address);
+        log.info("External IP Address: {}", address);
         String todo = easyTodoClient.getById(URI.create("https://jsonplaceholder.typicode.com/"), 1);
-        log.warn("Todo: {}", todo);
+        log.info("Todo: {}", todo);
     }
 }

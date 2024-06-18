@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Configuration
 @ConditionalOnBean(EasyKafkaConfig.class)
-public class KafkaTopicConfig {
+public class EasyKafkaTopicConfig {
 
     @Autowired
     private EasyKafkaConfig easyKafkaConfig;

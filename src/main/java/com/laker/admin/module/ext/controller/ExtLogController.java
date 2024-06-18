@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.Ignore;
-import com.laker.admin.framework.aop.metrics.Metrics;
-import com.laker.admin.framework.aop.repeatedsubmit.RepeatSubmitLimit;
-import com.laker.admin.framework.aop.trace.LakerIgnoreTrace;
-import com.laker.admin.framework.aop.trace.LakerTrace;
+import com.laker.admin.framework.aop.metrics.EasyMetrics;
+import com.laker.admin.framework.aop.repeatedsubmit.EasyRepeatSubmitLimit;
+import com.laker.admin.framework.aop.trace.EasyIgnoreTrace;
+import com.laker.admin.framework.aop.trace.EasyTrace;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.ext.entity.ExtLog;
@@ -38,8 +38,8 @@ import java.util.List;
 @Ignore
 @RestController
 @RequestMapping("/ext/log")
-@Metrics
-@LakerTrace
+@EasyMetrics
+@EasyTrace
 public class ExtLogController {
     @Autowired
     IExtLogService extLogService;
@@ -52,8 +52,8 @@ public class ExtLogController {
 
     @GetMapping
     @SaCheckPermission("log.list")
-    @LakerIgnoreTrace
-    @RepeatSubmitLimit(businessKey = "log.list", businessParam = "#keyWord")
+    @EasyIgnoreTrace
+    @EasyRepeatSubmitLimit(businessKey = "log.list", businessParam = "#keyWord")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 String keyWord) {

@@ -1,7 +1,7 @@
 package com.laker.admin.framework.aop.metrics;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +14,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -30,13 +29,16 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class MetricsAspect {
-    @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
-    IExtLogService extLogService;
+public class EasyMetricsAspect {
+    private final ObjectMapper objectMapper;
+    private final IExtLogService extLogService;
 
-    @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.Metrics) || @within(com.laker.admin.framework.aop.metrics.Metrics)")
+    public EasyMetricsAspect(ObjectMapper objectMapper, IExtLogService extLogService) {
+        this.objectMapper = objectMapper;
+        this.extLogService = extLogService;
+    }
+
+    @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.EasyMetrics) || @within(com.laker.admin.framework.aop.metrics.EasyMetrics)")
     public void withAnnotationMetrics() {
         // do nothing
     }
@@ -49,10 +51,6 @@ public class MetricsAspect {
         Instant start = Instant.now();
         ExtLog logBean = new ExtLog();
         logBean.setIp(EasyHttpServletRequestUtil.getRemoteIP());
-        if (!StrUtil.equals(logBean.getIp(), "127.0.0.1")) {
-            // todo
-//            logBean.setCity(StrUtil.format("{}.{}.{}.{}", split[0], split[2], split[3], split[4]));
-        }
         logBean.setUri(EasyHttpServletRequestUtil.getRequestURI());
         logBean.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
         UserAgent userAgent = EasyHttpServletRequestUtil.getRequestUserAgent();
@@ -79,7 +77,7 @@ public class MetricsAspect {
         log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), EasyHttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(pjp.getArgs()), response);
         logBean.setCost((int) Duration.between(start, Instant.now()).toMillis());
         logBean.setCreateTime(LocalDateTime.now());
-        if (StrUtil.isNotBlank(response) && response.length() <= 500) {
+        if (CharSequenceUtil.isNotBlank(response) && response.length() <= 500) {
             logBean.setResponse(response);
         }
         if (JSONUtil.isTypeJSONObject(response)) {

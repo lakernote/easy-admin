@@ -17,8 +17,6 @@ public class EasyMetricsAutoConfiguration {
 
     /**
      * 日志示例,生产环境放开
-     *
-     * @return
      */
     @Bean
     public MeterRegistry meterRegistry() {

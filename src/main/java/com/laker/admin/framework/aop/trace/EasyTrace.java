@@ -1,5 +1,4 @@
-
-package com.laker.admin.framework.aop.metrics;
+package com.laker.admin.framework.aop.trace;
 
 import java.lang.annotation.*;
 
@@ -9,6 +8,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Metrics {
-
+public @interface EasyTrace {
+    SpanType spanType() default SpanType.Others;
 }

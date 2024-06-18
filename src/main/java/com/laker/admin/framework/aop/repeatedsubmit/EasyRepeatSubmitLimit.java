@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface RepeatSubmitLimit {
+public @interface EasyRepeatSubmitLimit {
     /**
      * 业务key，例如下单业务 order
      */

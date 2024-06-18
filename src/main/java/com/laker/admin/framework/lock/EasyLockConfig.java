@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
@@ -17,14 +16,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  * @date: 2022/11/1
  **/
 @Configuration
-public class LockConfig {
+public class EasyLockConfig {
 
     @Bean
     @ConditionalOnMissingBean
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(20);
-        threadPoolTaskScheduler.setThreadNamePrefix("lakerscheduler-");
+        threadPoolTaskScheduler.setThreadNamePrefix("easy-lock-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
         return threadPoolTaskScheduler;
@@ -34,14 +33,14 @@ public class LockConfig {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "mysql", matchIfMissing = true)
-    public Lock mysqlLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
-        return new MysqlLock(jdbcTemplate, taskScheduler);
+    public Lock mysqlLock(JdbcTemplate jdbcTemplate) {
+        return new MysqlLock(jdbcTemplate, taskScheduler());
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "redis")
-    public Lock redisLock(StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
-        return new RedisLock(stringRedisTemplate, taskScheduler);
+    public Lock redisLock(StringRedisTemplate stringRedisTemplate) {
+        return new RedisLock(stringRedisTemplate, taskScheduler());
     }
 }
