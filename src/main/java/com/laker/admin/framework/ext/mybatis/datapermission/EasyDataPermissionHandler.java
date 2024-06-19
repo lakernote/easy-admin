@@ -24,12 +24,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * 这种只能处理查询 不能处理 cud
- * 且不支持别名
- */
 @Slf4j
-public class LakerV2DataPermissionHandler {
+public class EasyDataPermissionHandler {
 
     public static final String WHERE = " where {}";
 

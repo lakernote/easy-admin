@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableFeignClients(basePackages = "com.laker.admin.module.remote") // 启用feign 指定扫描的包
 @Slf4j
-public class FeignConfig {
+public class EasyFeignConfig {
     /**
      * 拦截器可以有多个
      */

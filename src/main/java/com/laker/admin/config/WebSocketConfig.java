@@ -2,7 +2,6 @@ package com.laker.admin.config;
 
 import com.laker.admin.framework.ext.websocket.LakerChatHandler;
 import com.laker.admin.framework.ext.websocket.LakerSessionHandshakeInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -17,8 +16,11 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocket // 启动Websocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Autowired
-    LakerChatHandler webSocketHandler;
+    private final LakerChatHandler webSocketHandler;
+
+    public WebSocketConfig(LakerChatHandler webSocketHandler) {
+        this.webSocketHandler = webSocketHandler;
+    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {

@@ -1,6 +1,7 @@
 package com.laker.admin.module.remote.configration;
 
 import cn.hutool.core.util.IdUtil;
+import com.laker.admin.config.EasyFeignConfig;
 import feign.Request;
 import feign.RequestInterceptor;
 import feign.RetryableException;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * feign配置
  * 注意使用全局的还是这里定义的，以及一些定义规则
  *
- * @see com.laker.admin.config.FeignConfig
+ * @see EasyFeignConfig
  * 这里的配置会覆盖全局的配置
  * @see org.springframework.cloud.openfeign.FeignClientFactoryBean
  * 设置的原理 请查看 getTarget() 方法

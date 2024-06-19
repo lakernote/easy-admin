@@ -23,14 +23,13 @@ import org.apache.ibatis.session.RowBounds;
 import java.sql.SQLException;
 
 /**
- * 数据权限处理器 TODO
+ * 数据权限处理器
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"rawtypes"})
 @Slf4j
-public class LakerDataPermissionV2Interceptor extends JsqlParserSupport implements InnerInterceptor {
-    private final LakerV2DataPermissionHandler dataPermissionHandler = new LakerV2DataPermissionHandler();
+public class EasyDataPermissionInterceptor extends JsqlParserSupport implements InnerInterceptor {
+    private final EasyDataPermissionHandler dataPermissionHandler = new EasyDataPermissionHandler();
 
     @Override
     public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {

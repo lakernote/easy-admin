@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @author laker
  */
 @Configuration
-public class Knife4jConfig {
+public class EasyKnife4jConfig {
     /**
      * 根据@Tag 上的排序，写入x-order
      *
