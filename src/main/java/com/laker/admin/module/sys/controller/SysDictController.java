@@ -5,10 +5,10 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.config.EasyCacheConfig;
 import com.laker.admin.framework.lock.api.EasyLock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
+import com.laker.admin.framework.redis.EasyRedisCacheConfig;
 import com.laker.admin.module.sys.entity.SysDict;
 import com.laker.admin.module.sys.service.ISysDictService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,14 +53,14 @@ public class SysDictController {
 
     @GetMapping("/{id}")
     @Operation(summary = "根据id查询")
-    @Cacheable(value = EasyCacheConfig.CACHE_NAME_1H, key = "#id")
+    @Cacheable(value = EasyRedisCacheConfig.CACHE_NAME_1H, key = "#id")
     public Response get(@PathVariable Long id) {
         return Response.ok(sysDictService.getById(id));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "根据id删除")
-    @CacheEvict(value = EasyCacheConfig.CACHE_NAME_1H, key = "#id")
+    @CacheEvict(value = EasyRedisCacheConfig.CACHE_NAME_1H, key = "#id")
     public Response delete(@PathVariable Long id) {
         return Response.ok(sysDictService.removeById(id));
     }

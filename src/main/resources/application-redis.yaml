@@ -1,0 +1,8 @@
+easy:
+  spring:
+    redis:
+      enabled: false
+      database: 0
+      address: "redis://localhost:6379"
+#      password:
+      client-name: "easy-admin"

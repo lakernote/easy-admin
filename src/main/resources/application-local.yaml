@@ -12,15 +12,6 @@ spring:
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
-  data:
-    redis:
-      database: 0
-      host: localhost
-      port: 6379
-      #      password:
-      timeout: 5s
-      connect-timeout: 5s
-      client-name: easy-admin
 logging:
   level:
     com.laker.admin.module.remote: debug

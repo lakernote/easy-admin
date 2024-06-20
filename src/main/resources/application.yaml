@@ -30,7 +30,7 @@ spring:
       minimum-idle: 5
       maximum-pool-size: 20
   profiles:
-    active: local,kafka
+    active: local,kafka,redis
   task:
     execution:
       pool:
