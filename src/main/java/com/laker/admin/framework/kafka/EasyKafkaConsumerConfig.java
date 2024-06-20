@@ -2,7 +2,6 @@ package com.laker.admin.framework.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
-import org.springframework.kafka.listener.RetryListener;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
@@ -75,26 +73,23 @@ public class EasyKafkaConsumerConfig {
         // 设置并发消费者数量 小于或等于Topic的分区数
         // 设置了并发消费者数量为 3。这表示每个监听容器会创建 3 个消费者实例来并发地处理消息，
         // 以提高消息处理的吞吐量。这里要看你的分区数是多少，如果是3那么刚好，如果是2，就有多余，浪费。
+        // 最好就默认1，不要设置
 //        factory.setConcurrency(3);
 
         // 设置处理记录和批处理监听器的错误处理程序，以便在处理记录时发生错误时执行逻辑。
         // 默认 DefaultErrorHandler 没delay重试9次。
-        BackOff fixedBackOff = new FixedBackOff(1000L, 2L);
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) -> {
-            log.error("laker_errorHandler:{}", consumerRecord);
-        }, fixedBackOff);
+        BackOff fixedBackOff = new FixedBackOff(10_000L, 2L);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) ->
+                log.error("easy_errorHandler:{}", consumerRecord), fixedBackOff);
 
         // 自定义逻辑：在重试2次后，手动确认offset，并在第一次失败时记录日志
-        errorHandler.setRetryListeners(new RetryListener() {
-            @Override
-            public void failedDelivery(ConsumerRecord<?, ?> record, Exception ex, int attempt) {
-                if (attempt == 1) {
-                    log.error("Retry attempt 1 for record: {}", record, ex);
-                } else if (attempt == 2) {
-                    log.error("Retry attempt 2 for record: {}. Manually acknowledging offset.", record, ex);
-                    // 手动确认offset
-                    // 通过调用 ConsumerRecord 的 acknowledge() 方法来手动确认 offset。
-                }
+        errorHandler.setRetryListeners((record, ex, attempt) -> {
+            if (attempt == 1) {
+                log.error("Retry attempt 1 for record: {}", record, ex);
+            } else if (attempt == 2) {
+                log.error("Retry attempt 2 for record: {}. Manually acknowledging offset.", record, ex);
+                // 手动确认offset
+                // 通过调用 ConsumerRecord 的 acknowledge() 方法来手动确认 offset。
             }
         });
         factory.setCommonErrorHandler(errorHandler);

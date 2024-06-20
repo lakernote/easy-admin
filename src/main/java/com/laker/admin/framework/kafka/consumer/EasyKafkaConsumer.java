@@ -16,8 +16,16 @@ public class EasyKafkaConsumer {
 
     @KafkaListener(topics = EasyKafkaConfig.TOPIC_NAME, concurrency = "1", groupId = "laker")
     public void listen(ConsumerRecord<String, String> consumerRecord, Acknowledgment ack) {
-        log.info("receive message topic:{}, partition:{}, offset:{},key:{}, message:{}", consumerRecord.topic(),
-                consumerRecord.partition(), consumerRecord.offset(), consumerRecord.key(), consumerRecord.value());
+        final String format = """
+                receive message topic:{}, partition:{}, offset:{}
+                key:{}, message:{},
+                timestamp:{}, timestampType:{}, headers:{}
+                """.trim();
+        log.info(format,
+                consumerRecord.topic(),
+                consumerRecord.partition(), consumerRecord.offset(), consumerRecord.key(), consumerRecord.value(),
+                consumerRecord.timestamp(), consumerRecord.timestampType(),
+                consumerRecord.headers());
         if ("error".equals(consumerRecord.value())) {
             log.error("test exception");
             throw new RuntimeException("test exception");
@@ -27,6 +35,5 @@ public class EasyKafkaConsumer {
         //enable.auto.commit参数设置成false。
         ack.acknowledge();
     }
-
 
 }
