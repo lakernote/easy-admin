@@ -14,4 +14,4 @@ spring:
       maximum-pool-size: 20
 logging:
   level:
-    com.laker.admin.module.remote: debug
+    com.laker.admin.module.remote: error
