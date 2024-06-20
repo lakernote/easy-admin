@@ -21,6 +21,8 @@ server:
   servlet:
     context-path: /
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
   datasource:
     username: root
     password: 123456
@@ -205,3 +207,6 @@ springdoc:
       display-name: '扩展模块'
       paths-to-match: '/**'
       packages-to-scan: com.laker.admin.module.ext
+logging:
+  level:
+    com.laker.admin.module.remote: error
