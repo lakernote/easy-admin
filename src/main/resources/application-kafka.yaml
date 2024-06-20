@@ -1,5 +1,5 @@
 easy:
   spring:
     kafka:
-      enabled: true
-      bootstrap-servers: 10.224.77.186:9092
+      enabled: false
+      bootstrap-servers: 10.22.77.86:9092
