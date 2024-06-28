@@ -43,3 +43,27 @@ docker run -d \
   -e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER \
   bitnami/kafka:3.7
 ```
+
+##### Redis
+```shell
+docker run -d \
+  --name redis6 \
+  -p 6379:6379 \
+  redis:6-alpine
+
+// 将 yourpassword 替换为您想要设置的密码。  
+docker run -d \
+  --name redis6 \
+  -p 6379:6379 \
+  redis:6-alpine \
+  redis-server --requirepass yourpassword
+  
+// 将 yourpassword 替换为您想要设置的密码。首先创建一个 redis.conf 文件，并包含以下内容：
+requirepass yourpassword
+// 然后，运行以下命令：
+docker run -d \
+  --name redis6 \
+  -p 6379:6379 \
+  -v /path/to/redis.conf:/usr/local/etc/redis/redis.conf \
+  redis:6-alpine redis-server /usr/local/etc/redis/redis.conf
+```
