@@ -1,18 +1,19 @@
 package com.laker.admin.utils.http;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -22,12 +23,19 @@ import java.util.*;
 @Slf4j
 public class EasyHttpServletRequestUtil {
 
+    private EasyHttpServletRequestUtil() {
+        // Prevent instantiation
+    }
+
     /**
      * 获取request对象
      */
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
+        final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            throw new IllegalStateException("requestAttributes is null");
+        }
+        return ((ServletRequestAttributes) requestAttributes).getRequest();
     }
 
     /**
@@ -47,36 +55,31 @@ public class EasyHttpServletRequestUtil {
 
     /**
      * 获取getRequestURI
-     *
-     * @return
      */
     public static UserAgent getRequestUserAgent() {
         HttpServletRequest request = getRequest();
-        UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
-        return userAgent;
+        return UserAgentUtil.parse(request.getHeader("User-Agent"));
 
     }
 
     public static String getRemoteIP() {
         HttpServletRequest request = getRequest();
-        if (request == null) {
-            return "unknown";
-        }
+        final String unknown = "unknown";
         String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || unknown.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || unknown.equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Forwarded-For");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || unknown.equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || unknown.equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
 
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || unknown.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
         // 多次反向代理后会有多个IP值，第一个为真实IP。
@@ -90,12 +93,12 @@ public class EasyHttpServletRequestUtil {
     /**
      * 取得请求头信息 name:value
      */
-    public static Map getHeaders() {
+    public static Map<String, String> getHeaders() {
         HttpServletRequest request = getRequest();
         Map<String, String> map = new HashMap<>(32);
-        Enumeration headerNames = request.getHeaderNames();
+        Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
+            String key = headerNames.nextElement();
             String value = request.getHeader(key);
             map.put(key, value);
         }
@@ -112,7 +115,6 @@ public class EasyHttpServletRequestUtil {
             inputStream = request.getInputStream();
             return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
             log.error("HttpServletRequest.getBody", e);
         } finally {
             if (inputStream != null) {
@@ -123,24 +125,21 @@ public class EasyHttpServletRequestUtil {
                 }
             }
         }
-        return StrUtil.EMPTY;
+        return CharSequenceUtil.EMPTY;
     }
 
     public static String getAllRequestInfo() {
-        String sb = "请求详情为：" + StrUtil.CRLF +
-                "RemoteAddress: " + getRemoteIP() + StrUtil.CRLF +
-                "Method: " + getRequest().getMethod() + StrUtil.CRLF +
-                "URI: " + getRequestURI() + StrUtil.CRLF +
-                "Headers: " + StrUtil.join(StrUtil.CRLF + "         ", mapToList(getHeaders())) + StrUtil.CRLF +
-                "Body: " + getBody() + StrUtil.CRLF;
-        return sb;
+        return "请求详情为：" + StrPool.CRLF +
+                "RemoteAddress: " + getRemoteIP() + StrPool.CRLF +
+                "Method: " + getRequest().getMethod() + StrPool.CRLF +
+                "URI: " + getRequestURI() + StrPool.CRLF +
+                "Headers: " + CharSequenceUtil.join(StrPool.CRLF + "         ", mapToList(getHeaders())) + StrPool.CRLF +
+                "Body: " + getBody() + StrPool.CRLF;
     }
 
-    private static List mapToList(Map parameters) {
-        List parametersList = new ArrayList();
-        parameters.forEach((name, value) -> {
-            parametersList.add(name + "=" + value);
-        });
+    private static List<String> mapToList(Map<String, String> parameters) {
+        List<String> parametersList = new ArrayList<>();
+        parameters.forEach((name, value) -> parametersList.add(name + "=" + value));
         return parametersList;
     }
 }

@@ -5,7 +5,11 @@ import com.laker.admin.module.sys.pojo.MenuVo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeUtil {
+public class EasyTreeUtil {
+
+    private EasyTreeUtil() {
+        // Prevent instantiation
+    }
 
     public static List<MenuVo> toTree(List<MenuVo> treeList, Long pid) {
         List<MenuVo> retList = new ArrayList<MenuVo>();
@@ -16,6 +20,7 @@ public class TreeUtil {
         }
         return retList;
     }
+
     private static MenuVo findChildren(MenuVo parent, List<MenuVo> treeList) {
         for (MenuVo child : treeList) {
             if (parent.getId().equals(child.getPid())) {

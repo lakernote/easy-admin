@@ -11,14 +11,11 @@ import com.laker.admin.module.sys.pojo.MenuVo;
 import com.laker.admin.module.sys.service.ISysMenuService;
 import com.laker.admin.module.sys.service.ISysRolePowerService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
-import com.laker.admin.utils.TreeUtil;
-import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.laker.admin.utils.EasyTreeUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -31,23 +28,31 @@ import java.util.stream.Collectors;
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysPower> implements ISysMenuService {
 
-    @Autowired
-    ISysUserRoleService sysUserRoleService;
-    @Autowired
-    ISysRolePowerService sysRolePowerService;
-    @Resource
-    private SysMenuMapper sysMenuMapper;
+    private final ISysUserRoleService sysUserRoleService;
+    private final ISysRolePowerService sysRolePowerService;
+    private final SysMenuMapper sysMenuMapper;
+
+    public SysMenuServiceImpl(ISysUserRoleService sysUserRoleService, ISysRolePowerService sysRolePowerService, SysMenuMapper sysMenuMapper) {
+        this.sysUserRoleService = sysUserRoleService;
+        this.sysRolePowerService = sysRolePowerService;
+        this.sysMenuMapper = sysMenuMapper;
+    }
 
     @Override
     public List<MenuVo> menu() {
-        Long loginId = StpUtil.getLoginIdAsLong();
-        List<SysPower> sysPowers = null;
+        long loginId = StpUtil.getLoginIdAsLong();
+        List<SysPower> sysPowers;
         // 超级管理员开玩笑
-        if (loginId.longValue() == 1L) {
+        if (loginId == 1L) {
             sysPowers = sysMenuMapper.findAllByStatusOrderBySort(true);
         } else {
             sysPowers = getSysMenusPowerByLoginUser(loginId);
         }
+        final List<MenuVo> menuInfo = getMenuVos(sysPowers);
+        return EasyTreeUtil.toTree(menuInfo, 0L);
+    }
+
+    private static List<MenuVo> getMenuVos(List<SysPower> sysPowers) {
         List<MenuVo> menuInfo = new ArrayList<>();
         for (SysPower e : sysPowers) {
             MenuVo menuVO = new MenuVo();
@@ -61,14 +66,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysPower> imp
             menuVO.setPowerCode(e.getPowerCode());
             menuInfo.add(menuVO);
         }
-        return TreeUtil.toTree(menuInfo, 0L);
+        return menuInfo;
     }
 
     private List<SysPower> getSysMenusPowerByLoginUser(Long loginId) {
         List<SysUserRole> userRoles = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, loginId));
-        List<Long> roleIds = userRoles.stream().map(sysUserRole -> sysUserRole.getRoleId()).collect(Collectors.toList());
+        List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).toList();
         List<SysRolePower> rolePowerLists = sysRolePowerService.list(Wrappers.<SysRolePower>lambdaQuery().in(SysRolePower::getRoleId, roleIds));
-        List<Long> powerIds = rolePowerLists.stream().map(sysRolePower -> sysRolePower.getPowerId()).collect(Collectors.toList());
+        List<Long> powerIds = rolePowerLists.stream().map(SysRolePower::getPowerId).toList();
         return this.list(Wrappers.<SysPower>lambdaQuery().in(SysPower::getMenuId, powerIds).eq(SysPower::getEnable, true).orderByAsc(SysPower::getSort));
     }
 
