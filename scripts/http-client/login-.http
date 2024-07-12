@@ -1,0 +1,29 @@
+### login
+POST {{endpoint}}/sys/auth/v1/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "username": "{{username}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.test("登录请求成功执行", function () {
+        console.log("Response body: ", response.body)
+        client.assert(response.status === 200, "响应状态不是200");
+        client.assert(response.body.data !== undefined, "Token is missing");
+        client.global.set("tokenName", response.body.data.tokenName);
+        client.global.set("tokenValue", response.body.data.tokenValue);
+    });
+%}
+
+### get user info
+GET {{endpoint}}/sys/user/v1/info
+Authorization: Bearer {{tokenValue}}
+
+> {%
+    client.test("Response contains expected data", function () {
+        client.assert(response.body.data.loginId === "16", "Expected login ID is incorrect");
+    });
+%}
