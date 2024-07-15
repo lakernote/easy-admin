@@ -1,16 +1,28 @@
 ### login
-POST {{endpoint}}/sys/auth/v1/login
+// pre-request scripts
+< {%
+    request.variables.set("petName", "Bella")
+%}
+
+// Method Request-URI HTTP-Version
+// 示例 GET https://example.org HTTP/2
+POST {{endpoint}}/sys/auth/v1/login HTTP/1.1
+// Header-field: Header-value
 Content-Type: application/json
 Accept: application/json
 
+// Request body
 {
     "username": "{{username}}",
     "password": "{{password}}"
 }
 
 > {%
+    // Response Handler Script
+    client.log("Response body: ", response.body);
+    client.log(jsonPath(response.body, "$.data.tokenName"));
     client.test("登录请求成功执行", function () {
-        console.log("Response body: ", response.body)
+        console.log(response.status);
         client.assert(response.status === 200, "响应状态不是200");
         client.assert(response.body.data !== undefined, "Token is missing");
         client.global.set("tokenName", response.body.data.tokenName);
