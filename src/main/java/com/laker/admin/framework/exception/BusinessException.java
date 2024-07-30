@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class BusinessException extends RuntimeException {
 
-    private String msg;
+    private final String msg;
     private int code = 500;
 
     public BusinessException(String msg) {

@@ -13,6 +13,7 @@ public class TraceContext {
 
     private TraceContext() {
         // do nothing
+        throw new UnsupportedOperationException();
     }
 
     public static void addSpan(ProceedingJoinPoint pjp) {

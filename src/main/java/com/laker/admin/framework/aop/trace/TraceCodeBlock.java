@@ -10,6 +10,7 @@ public class TraceCodeBlock {
 
     private TraceCodeBlock() {
         // do nothing
+        throw new UnsupportedOperationException();
     }
 
     /**

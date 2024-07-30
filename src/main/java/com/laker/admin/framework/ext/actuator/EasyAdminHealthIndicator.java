@@ -1,5 +1,6 @@
 package com.laker.admin.framework.ext.actuator;
 
+import cn.hutool.core.util.RandomUtil;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,12 @@ public class EasyAdminHealthIndicator extends AbstractHealthIndicator {
         } else {
             builder.down();
         }
-        builder.withDetail("code", "200")
-                .withDetail("msg", "i am ok");
+        builder.withDetail("code", "2xx/4xx/5xx")
+                .withDetail("msg", "i am laker, i am ok!");
     }
 
     private boolean check() {
-        return true;
+        return RandomUtil.randomBoolean();
     }
 
 }

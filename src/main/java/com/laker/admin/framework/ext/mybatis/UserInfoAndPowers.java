@@ -27,7 +27,7 @@ public class UserInfoAndPowers {
     private List<UserDataPower> userDataPowers;
 
     public Boolean isSuperAdmin() {
-        return userId.longValue() == 1L;
+        return userId == 1L;
     }
 
 }

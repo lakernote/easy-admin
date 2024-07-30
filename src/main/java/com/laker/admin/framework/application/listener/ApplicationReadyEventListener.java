@@ -21,6 +21,6 @@ public class ApplicationReadyEventListener implements ApplicationListener<Applic
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         String port = environment.getProperty("server.port");
-        log.info("Tomcat started on port : " + port);
+        log.info("Tomcat started on port : {}", port);
     }
 }

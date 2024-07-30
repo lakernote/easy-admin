@@ -52,10 +52,10 @@ public class Trace {
             // 设置level 为上个level +1
 //            span.setLevel(latest.getLevel() + 1);
             span.setLevel(latest.getLevel() + 1);
-            span.setLevelDeep(latest.getChilds().size() + 1);
+            span.setLevelDeep(latest.getChildren().size() + 1);
             // 添加进其 子span列表
             span.setParent(latest);
-            latest.getChilds().add(span);
+            latest.getChildren().add(span);
         }
         // 入栈
         activeSpanStack.addLast(span);
@@ -111,7 +111,7 @@ public class Trace {
         for (Span span : spans) {
             span.setName(span.getParent() == null ? "root" : span.getParent().getName() + "." + (i++));
             log.warn("{} {}{}{}ms{}:[{}]-{}", span.getName(), append + BAR, span.isMax() ? "【" : "[", span.getCost(), span.isMax() ? "】" : "]", span.getSpanType(), span.getId());
-            logSpan(span.getChilds(), append + BAR);
+            logSpan(span.getChildren(), append + BAR);
         }
     }
 }
