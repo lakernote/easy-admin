@@ -14,6 +14,10 @@ import java.io.IOException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * 单元测试
+ * 单元测试主要测试单个方法或类的功能，通常不涉及Spring的上下文。通过Mock对象来隔离依赖。
+ */
 class OpenBrowserHandlerTest {
 
     @InjectMocks

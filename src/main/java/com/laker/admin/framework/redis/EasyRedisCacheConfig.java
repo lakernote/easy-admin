@@ -36,7 +36,7 @@ public class EasyRedisCacheConfig {
     }
 
     @Bean
-    public RedissonCacheMeterBinderProvider redissonCacheMeterBinderProvider(){
+    public RedissonCacheMeterBinderProvider redissonCacheMeterBinderProvider() {
         return new RedissonCacheMeterBinderProvider();
     }
 
@@ -49,6 +49,8 @@ public class EasyRedisCacheConfig {
         redissonSpringCacheManager.setTransactionAware(false);
         // 设置缓存的配置信息
         redissonSpringCacheManager.setConfig(cacheConfigMap);
+        // 设置缓存的名称 定义“固定”缓存名称。对于未定义的名称，不会动态创建新的缓存实例。会返回null
+        redissonSpringCacheManager.setCacheNames(cacheConfigMap.keySet());
         // 设置缓存的编码方式
         redissonSpringCacheManager.setCodec(new JsonJacksonCodec());
         return redissonSpringCacheManager;

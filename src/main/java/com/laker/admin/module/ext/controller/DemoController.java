@@ -173,7 +173,5 @@ public class DemoController {
         myCache.put("key", "value");
         final String key1 = myCache.get("key", String.class);
         log.info("key1:{}", key1);
-
-
     }
 }
