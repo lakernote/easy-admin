@@ -21,6 +21,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -156,5 +158,22 @@ public class DemoController {
                 future.completeExceptionally(ex);
             }
         });
+    }
+
+    @Autowired(required = false)
+    CacheManager cacheManager;
+
+    @GetMapping("/redis-get")
+    @Operation(summary = "get from redis")
+    public void getFromRedis() {
+        final Cache myCache = cacheManager.getCache("myCache");
+        assert myCache != null;
+        final String key = myCache.get("key", String.class);
+        log.info("key:{}", key);
+        myCache.put("key", "value");
+        final String key1 = myCache.get("key", String.class);
+        log.info("key1:{}", key1);
+
+
     }
 }
