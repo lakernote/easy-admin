@@ -32,7 +32,7 @@
         <!-- 配置 打包进压缩包 -->
         <!-- 指定输出target/classes中的配置文件到config目录中 -->
         <fileSet>
-            <directory>${basedir}/src/main/resources</directory>
+            <directory>${basedir}/target/classes</directory>
             <outputDirectory>config</outputDirectory>
             <fileMode>0644</fileMode>
             <includes>

@@ -205,7 +205,7 @@ ext_log    // 影响前端代码生成路径D:\JT\easy-admin/web/admin/view/ext/
 
 **1.执行**`easy-admin.sql`
 
-**2.修改**`application.yaml`
+**2.修改**`application-{profile}.yaml`
 
 ```yaml
 server:
