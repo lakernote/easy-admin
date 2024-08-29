@@ -1,5 +1,6 @@
 package com.laker.admin.module.ext.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
@@ -7,6 +8,8 @@ import com.laker.admin.framework.kafka.EasyKafkaConfig;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
+import com.laker.admin.module.ext.entity.ExtLog;
+import com.laker.admin.module.ext.service.IExtLogService;
 import com.laker.admin.module.ext.vo.qo.City;
 import com.laker.admin.module.remote.IpifyClient;
 import com.laker.admin.module.remote.dto.IpifyVo;
@@ -52,16 +55,18 @@ public class DemoController {
     final EasyKafkaConfig easyKafkaConfig;
     final CacheManager cacheManager;
     final ObservationRegistry registry;
+    final IExtLogService extLogService;
 
     public DemoController(IpifyClient ipifyClient, ObservationRegistry registry,
                           @Autowired(required = false) KafkaTemplate<String, String> kafkaTemplate,
                           @Autowired(required = false) EasyKafkaConfig easyKafkaConfig,
-                          @Autowired(required = false) CacheManager cacheManager) {
+                          @Autowired(required = false) CacheManager cacheManager, IExtLogService extLogService) {
         this.ipifyClient = ipifyClient;
         this.registry = registry;
         this.kafkaTemplate = kafkaTemplate;
         this.easyKafkaConfig = easyKafkaConfig;
         this.cacheManager = cacheManager;
+        this.extLogService = extLogService;
     }
 
 
@@ -112,10 +117,20 @@ public class DemoController {
         log.info(user.toString());
     }
 
-    @GetMapping("/5")
+    /**
+     * /api/products?page=1&size=2&sort=rank|asc,zipCode|desc&filter=city|eq|beijing
+     * /api/products?page=1&size=2&sort=rank|asc,zipCode|desc&filter=city|eq|beijing,zipCode|eq|100000
+     * ?page=1&size=2&sort=cost|asc&filter=status|eq|1
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/PageRequest")
     @Operation(summary = "5.参数 PageRequest")
-    public void paramPageRequest(PageRequest user) {
-        log.info(user.toString());
+    public Response paramPageRequest(PageRequest request) {
+        log.info(request.getQueryWrapper().getTargetSql());
+        final Page<ExtLog> pages = extLogService.page(request.toPage(), request.getQueryWrapper());
+        return Response.ok(pages);
     }
 
     @GetMapping("/remote-call")
