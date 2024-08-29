@@ -27,6 +27,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -80,7 +81,10 @@ public class DemoController {
             @RequestParam(required = false, defaultValue = "10") long limit,
             @RequestParam(required = false) List<DemoTypeEnum> types) {
         log.info("id:{},token:{},page:{},limit:{},types:{}", id, token, page, limit, types);
-        return Response.ok(new SysUser());
+        SysUser sysUser = new SysUser();
+        sysUser.setUserId(2334234234324324343L);
+        sysUser.setCreateTime(LocalDateTime.now());
+        return Response.ok(sysUser);
     }
 
     @GetMapping("/enum")

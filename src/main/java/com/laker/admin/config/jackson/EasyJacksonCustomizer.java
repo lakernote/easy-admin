@@ -3,6 +3,7 @@ package com.laker.admin.config.jackson;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -61,6 +62,11 @@ public class EasyJacksonCustomizer implements Jackson2ObjectMapperBuilderCustomi
         javaTimeModule.addDeserializer(LocalTime.class,
                 new LocalTimeDeserializer(timeFormatter));
 
+        // 创建自定义模块并添加 Long 的序列化器
+        SimpleModule customModule = new SimpleModule();
+        // 防止Long类型返回前端精度丢失
+        customModule.addSerializer(Long.class, new LongToStringSerializer());
+
         /*
          * 1. java.util.Date yyyy-MM-dd HH:mm:ss
          * 2. 支持JDK8 LocalDateTime、LocalDate、 LocalTime
@@ -72,7 +78,7 @@ public class EasyJacksonCustomizer implements Jackson2ObjectMapperBuilderCustomi
          * 8. 允许忽略未知枚举值和通过@JsonEnumDefaultValue注释指定的预定义值的功能。如果禁用，未知的枚举值将引发异常。如果启用，但未指定预定义的默认 Enum 值，也会引发异常。
          */
         builder.simpleDateFormat(STANDARD_PATTERN)
-                .modules(javaTimeModule, new Jdk8Module())
+                .modules(javaTimeModule, customModule, new Jdk8Module())
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .failOnEmptyBeans(false)
                 .failOnUnknownProperties(false)
