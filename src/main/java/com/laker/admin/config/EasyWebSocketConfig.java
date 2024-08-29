@@ -14,11 +14,11 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
  */
 @Configuration
 @EnableWebSocket // 启动Websocket
-public class WebSocketConfig implements WebSocketConfigurer {
+public class EasyWebSocketConfig implements WebSocketConfigurer {
 
     private final LakerChatHandler webSocketHandler;
 
-    public WebSocketConfig(LakerChatHandler webSocketHandler) {
+    public EasyWebSocketConfig(LakerChatHandler webSocketHandler) {
         this.webSocketHandler = webSocketHandler;
     }
 

@@ -173,13 +173,7 @@
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.28.0</version>
         </dependency>
-        <!-- bucket4j-spring-boot-starter 用于实现令牌桶算法的速率限制的Java库。它用于控制系统传入请求的速率。 令牌桶 -->
-        <!-- https://github.com/bucket4j/bucket4j -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>-->
-        <!--            <artifactId>bucket4j-spring-boot-starter</artifactId>-->
-        <!--            <version>0.12.6</version>-->
-        <!--        </dependency>-->
+
         <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -210,16 +204,12 @@
             <version>1.5.1</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.kafka</groupId>-->
-        <!--            <artifactId>spring-kafka-test</artifactId>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.commons</groupId>-->
-        <!--            <artifactId>commons-pool2</artifactId>-->
-        <!--        </dependency>-->
 
     </dependencies>
 

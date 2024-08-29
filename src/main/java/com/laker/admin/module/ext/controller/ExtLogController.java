@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.xiaoymin.knife4j.annotations.Ignore;
 import com.laker.admin.framework.aop.metrics.EasyMetrics;
 import com.laker.admin.framework.aop.repeatedsubmit.EasyRepeatSubmitLimit;
 import com.laker.admin.framework.aop.trace.EasyIgnoreTrace;
@@ -19,7 +18,7 @@ import com.laker.admin.module.ext.vo.LogStatisticsTop10Vo;
 import com.laker.admin.module.ext.vo.LogStatisticsVo;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.service.ISysUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,24 +30,24 @@ import java.util.List;
  * <p>
  * 日志 前端控制器
  * </p>
- *
- * @author laker
- * @since 2021-08-16
  */
-@Ignore
+@Tag(name = "△△△3.请求日志△△△")
 @RestController
 @RequestMapping("/ext/log")
 @EasyMetrics
 @EasyTrace
 public class ExtLogController {
-    @Autowired
-    IExtLogService extLogService;
+    final IExtLogService extLogService;
 
-    @Autowired
-    ExtLogMapper extLogMapper;
+    final ExtLogMapper extLogMapper;
 
-    @Autowired
-    ISysUserService sysUserService;
+    final ISysUserService sysUserService;
+
+    public ExtLogController(IExtLogService extLogService, ExtLogMapper extLogMapper, ISysUserService sysUserService) {
+        this.extLogService = extLogService;
+        this.extLogMapper = extLogMapper;
+        this.sysUserService = sysUserService;
+    }
 
     @GetMapping
     @SaCheckPermission("log.list")

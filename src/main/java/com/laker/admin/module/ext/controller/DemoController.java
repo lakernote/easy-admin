@@ -4,7 +4,6 @@ import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
 import com.laker.admin.framework.kafka.EasyKafkaConfig;
-import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
@@ -47,18 +46,32 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class DemoController {
 
-    @Autowired
-    IpifyClient ipifyClient;
+    final IpifyClient ipifyClient;
+    final KafkaTemplate<String, String> kafkaTemplate;
+    final EasyKafkaConfig easyKafkaConfig;
+    final CacheManager cacheManager;
+    final ObservationRegistry registry;
+
+    public DemoController(IpifyClient ipifyClient, ObservationRegistry registry,
+                          @Autowired(required = false) KafkaTemplate<String, String> kafkaTemplate,
+                          @Autowired(required = false) EasyKafkaConfig easyKafkaConfig,
+                          @Autowired(required = false) CacheManager cacheManager) {
+        this.ipifyClient = ipifyClient;
+        this.registry = registry;
+        this.kafkaTemplate = kafkaTemplate;
+        this.easyKafkaConfig = easyKafkaConfig;
+        this.cacheManager = cacheManager;
+    }
 
 
     @GetMapping(path = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "0.Param+Header+Path 参数数组 - querystring")
+    @Operation(summary = "0.pageList Param+Header+Path 参数数组 - querystring")
     @Parameters({
             @Parameter(name = "id", description = "文件id", in = ParameterIn.PATH),
             @Parameter(name = "token", description = "请求token", example = "xxxx", required = true, in = ParameterIn.HEADER),
             @Parameter(name = "page", description = "第几页", in = ParameterIn.QUERY),
-            @Parameter(name = "limit", description = "每页多少记录", required = false, in = ParameterIn.QUERY),
-            @Parameter(name = "types", description = "类型", required = false, in = ParameterIn.QUERY)
+            @Parameter(name = "limit", description = "每页多少记录", in = ParameterIn.QUERY),
+            @Parameter(name = "types", description = "类型", in = ParameterIn.QUERY)
     })
     public Response<SysUser> pageList(
             @PathVariable("id") Long id,
@@ -67,42 +80,39 @@ public class DemoController {
             @RequestParam(required = false, defaultValue = "10") long limit,
             @RequestParam(required = false) List<DemoTypeEnum> types) {
         log.info("id:{},token:{},page:{},limit:{},types:{}", id, token, page, limit, types);
-        return PageResponse.ok(new SysUser());
+        return Response.ok(new SysUser());
     }
 
-    @GetMapping("/1")
-    @Operation(summary = "枚举 - querystring")
-    public void pageAll2(Distance distance) {
+    @GetMapping("/enum")
+    @Operation(summary = "1.参数枚举 - querystring")
+    public void paramEnum(Distance distance) {
         log.info(distance.toString());
     }
 
-    @GetMapping("/2")
-    @Operation(summary = "实体 - querystring")
-    public void pageAll3(City city) {
+    @GetMapping("/Object")
+    @Operation(summary = "2.参数实体 - querystring")
+    public void paramObject(City city) {
         log.info(city.toString());
     }
 
-    @PostMapping("/3")
-    @Operation(summary = "实体 - json")
-    public City pageAll4(@RequestBody City city) {
+    @PostMapping("/Object-Json")
+    @Operation(summary = "3.参数实体 - json")
+    public City paramObjectJson(@RequestBody City city) {
         log.info(city.toString());
         return city;
     }
 
-    @PostMapping("/4")
-    @Operation(summary = "实体 - json")
-    public void pageAll5(@RequestBody City city, CurrentUser user) {
+    @PostMapping("/CurrentUser")
+    @Operation(summary = "4.实体+CurrentUser - json")
+    public void paramCurrentUser(@RequestBody City city, CurrentUser user) {
         log.info(user.toString());
     }
 
     @GetMapping("/5")
-    @Operation(summary = "get - PageRequest-")
-    public void pageAll6(PageRequest user) {
+    @Operation(summary = "5.参数 PageRequest")
+    public void paramPageRequest(PageRequest user) {
         log.info(user.toString());
     }
-
-    @Autowired
-    ObservationRegistry registry;
 
     @GetMapping("/remote-call")
     @Operation(summary = "6.远程调用-获取ip地址")
@@ -133,12 +143,6 @@ public class DemoController {
 
     }
 
-    @Autowired(required = false)
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    @Autowired(required = false)
-    private EasyKafkaConfig easyKafkaConfig;
-
     @GetMapping("/sendMessage")
     @Operation(summary = "7.使用kafka发送消息")
     public void sendMessage(String message) {
@@ -160,11 +164,8 @@ public class DemoController {
         });
     }
 
-    @Autowired(required = false)
-    CacheManager cacheManager;
-
     @GetMapping("/redis-get")
-    @Operation(summary = "get from redis")
+    @Operation(summary = "8.查询redis")
     public void getFromRedis() {
         final Cache myCache = cacheManager.getCache("myCache");
         assert myCache != null;

@@ -15,10 +15,13 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("com.laker.admin.**.mapper")
 public class EasyMybatisConfig {
 
+    /**
+     * mybatis-plus插件
+     */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        // 数据权限
+        // 数据权限插件
         EasyDataPermissionInterceptor dataPermissionInterceptor = new EasyDataPermissionInterceptor();
         interceptor.addInnerInterceptor(dataPermissionInterceptor);
         // 分页插件

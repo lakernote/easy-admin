@@ -46,12 +46,18 @@ public class EasyFeignConfig {
         };
     }
 
-
+    /**
+     * 配置超时时间
+     */
     @Bean
     Request.Options feignOptions() {
+        // 默认连接超时时间为10秒，读取超时时间为60秒
         return new Request.Options(5, TimeUnit.SECONDS, 10, TimeUnit.SECONDS, true);
     }
 
+    /**
+     * 配置日志级别
+     */
     @Bean
     Logger.Level feignLogger() {
         // 记录请求和响应的标题，正文和元数据
@@ -61,6 +67,8 @@ public class EasyFeignConfig {
     }
 
     /**
+     * 配置重试
+     * <p>
      * 在Feign重试行为中，它将自动重试IOException，将它们视为与网络临时相关的异常，
      * 以及从ErrorDecoder抛出的任何RetryableException。
      * 这里可以在ErrorDecoder自定义逻辑根据是否抛出 RetryableException异常来自定义重试逻辑，nice的一比。
@@ -71,6 +79,9 @@ public class EasyFeignConfig {
         return new Retryer.Default(100, 1000, 3);
     }
 
+    /**
+     * 配置错误解码器
+     */
     @Bean
     public ErrorDecoder feignError() {
         // ErrorDecoder的默认实现
@@ -95,7 +106,9 @@ public class EasyFeignConfig {
             }
 
             // 扩展的重试逻辑
+            // 5xx 服务器错误 重试
             if (HttpStatus.valueOf(response.status()).is5xxServerError()) {
+                // 重试
                 return new RetryableException(
                         response.status(),
                         defaultException.getMessage(),

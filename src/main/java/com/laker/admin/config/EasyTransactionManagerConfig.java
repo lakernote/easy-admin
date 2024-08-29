@@ -15,6 +15,9 @@ import javax.sql.DataSource;
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
 public class EasyTransactionManagerConfig {
 
+    /**
+     * 事务管理器
+     */
     @Bean
     TransactionManager transactionManager(DataSource dataSource,
                                           ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {

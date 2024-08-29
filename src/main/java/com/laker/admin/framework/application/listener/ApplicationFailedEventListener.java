@@ -13,7 +13,7 @@ public class ApplicationFailedEventListener implements ApplicationListener<Appli
     @Override
     public void onApplicationEvent(ApplicationFailedEvent event) {
         if (event.getException() != null) {
-            log.error("Spring Boot application启动异常!", event.getException());
+            log.error("[启动异常,退出]", event.getException());
             event.getApplicationContext().close();
             System.exit(-1);
         }
