@@ -306,7 +306,9 @@
     </build>
 
     <!--MAVEN打包选择运行环境-->
-    <!-- 1:local(默认) 本地 2:dev 开发环境 3:test 测试环境 4:uat 用户验收测试 5.pro:生产环境-->
+    <!-- 1:local(默认) 本地 2:dev 开发环境 3:test 测试环境 4:uat 用户验收测试 5.prod:生产环境-->
+    <!-- 通过maven命令行参数 -P 指定运行环境ID -->
+    <!-- mvn clean package -P prod -->
     <profiles>
         <profile>
             <id>local</id>
