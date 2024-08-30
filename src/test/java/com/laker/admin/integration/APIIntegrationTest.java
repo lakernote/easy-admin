@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @SpringBootTest用于加载完整的Spring上下文，进行端到端的集成测试。
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MyIntegrationTest {
+class APIIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
