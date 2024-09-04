@@ -10,26 +10,27 @@ import java.util.concurrent.*;
 
 /**
  * 按步长 定期存储到任意位置，例如db
+ *
  * @author laker
  */
 @Slf4j
-public class LakerMeterRegistry {
+public class EasyLogMeterRegistry {
     private final Object meterMapLock = new Object();
     private final Duration step;
     private ScheduledExecutorService scheduledExecutorService;
 
     private final ConcurrentMap<String, StepCounterTuple> meterMap = new ConcurrentHashMap<>();
 
-    public LakerMeterRegistry() {
+    public EasyLogMeterRegistry() {
         this(Duration.ofMillis(1));
     }
 
 
-    public LakerMeterRegistry(Duration step) {
+    public EasyLogMeterRegistry(Duration step) {
         this(step, new NamedThreadFactory("laker-metrics-publisher"));
     }
 
-    private LakerMeterRegistry(Duration step, ThreadFactory threadFactory) {
+    private EasyLogMeterRegistry(Duration step, ThreadFactory threadFactory) {
         this.step = step;
         start(threadFactory);
     }

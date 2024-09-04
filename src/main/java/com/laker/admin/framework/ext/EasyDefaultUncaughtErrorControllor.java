@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-public class DefaultUncaughtErrorControllor implements ErrorController {
+public class EasyDefaultUncaughtErrorControllor implements ErrorController {
 
     @RequestMapping("/error")
     public Response error(HttpServletRequest request, HttpServletResponse response) {

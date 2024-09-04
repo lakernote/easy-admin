@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * 且不支持别名
  */
 @Slf4j
-public class LakerDataPermissionHandler implements DataPermissionHandler {
+public class EasyDataPermissionHandler implements DataPermissionHandler {
 
     public static final String WHERE = " where {}";
 

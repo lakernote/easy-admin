@@ -20,6 +20,7 @@
 > - docker-compose
 
 ##### mysql
+
 ```shell
 docker run -p 3306:3306 --name mysql8 \
 -e MYSQL_ROOT_PASSWORD=123456 \
@@ -28,7 +29,9 @@ docker run -p 3306:3306 --name mysql8 \
 -e MYSQL_PASSWORD=123456 \
 -d mysql:8.3 --default-authentication-plugin=mysql_native_password
 ```
+
 ##### kafka
+
 ```shell
 docker run -d \
   --name kafka37 \
@@ -45,6 +48,7 @@ docker run -d \
 ```
 
 ##### Redis
+
 ```shell
 docker run -d \
   --name redis6 \
@@ -66,4 +70,28 @@ docker run -d \
   -p 6379:6379 \
   -v /path/to/redis.conf:/usr/local/etc/redis/redis.conf \
   redis:6-alpine redis-server /usr/local/etc/redis/redis.conf
+```
+
+##### InfluxDB
+
+```shell
+docker run -d \
+--name influxdb18 \
+-p 8086:8086 \
+-e INFLUXDB_ADMIN_USER=admin \
+-e INFLUXDB_ADMIN_PASSWORD=123456 \
+-e INFLUXDB_USER=easy-admin \
+-e INFLUXDB_USER_PASSWORD=123456 \
+-v /etc/localtime:/etc/localtime \
+influxdb:1.8
+``` 
+
+##### Grafana
+
+默认账号密码：admin/admin
+https://grafana.com/grafana/dashboards/ 所有模板
+16107
+
+```shell
+docker run -d -p 3000:3000 grafana/grafana
 ```

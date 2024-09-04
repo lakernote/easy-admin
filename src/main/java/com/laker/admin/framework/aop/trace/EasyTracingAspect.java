@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class EasyTracingAspect {
 
-    @Value("${tracing.time:1000}")
+    @Value("${easy.tracing.time:1000}")
     private long time;
 
     /**
@@ -37,7 +37,7 @@ public class EasyTracingAspect {
 
 
     /**
-     * 拦截【方法】上有@LakerTrace注解
+     * 拦截【方法】上有@EasyTrace注解
      */
     @Pointcut("@annotation(com.laker.admin.framework.aop.trace.EasyTrace)")
     public void annotationAspect() {
@@ -45,7 +45,7 @@ public class EasyTracingAspect {
     }
 
     /**
-     * 拦截【类】上有@LakerTrace注解
+     * 拦截【类】上有@EasyTrace注解
      */
     @Pointcut("@within(com.laker.admin.framework.aop.trace.EasyTrace)")
     public void withinAspect() {
@@ -53,27 +53,35 @@ public class EasyTracingAspect {
     }
 
     /**
-     * 拦截【方法】上有@LakerIgnoreTrace的注解
+     * 拦截【方法】上有@EasyIgnoreTrace的注解
      * 使用场景
-     * - @LakerTrace注解在类上，或者包扫描到了整个类，但是其中的某个方法不想拦截
-     * - 在方法上注解@LakerIgnoreTrace即可
+     * - @EasyTrace注解在类上，或者包扫描到了整个类，但是其中的某个方法不想拦截
+     * - 在方法上注解@EasyIgnoreTrace即可
      */
     @Pointcut("!@annotation(com.laker.admin.framework.aop.trace.EasyIgnoreTrace)")
     public void annotationIgnoreAspect() {
         // do nothing
     }
 
-
+    /**
+     * 拦截mapper包下的所有方法
+     */
     @Pointcut("execution(* com.laker..mapper.*.*(..))")
     public void mapperAspect() {
         // do nothing
     }
 
+    /**
+     * 拦截service包下的所有方法
+     */
     @Pointcut("execution(public * com.laker..service.*.*(..)) || execution(public * com.laker..*Service.*(..))")
     public void serviceAspect() {
         // do nothing
     }
 
+    /**
+     * 拦截controller包下的所有方法
+     */
     @Pointcut("execution(public * com.laker..controller.*.*(..)) || execution(public * com.laker..*Controller.*(..))")
     public void controllerAspect() {
         // do nothing

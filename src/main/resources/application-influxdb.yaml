@@ -1,0 +1,23 @@
+management:
+  influx:
+    metrics:
+      export:
+        enabled: true
+        uri: http://10.224.77.100:8086
+        user-name: admin
+        password: 123456
+        db: easy-admin
+        auto-create-db: true
+        api-version: v1
+        step: 1m
+        connect-timeout: 1s
+        read-timeout: 10s
+        batch-size: 10000
+        retention-policy: autogen
+        consistency: one
+        compressed: true
+server:
+  tomcat:
+    mbeanregistry:
+      # 是否开启tomcat的mbean注册,即监控tomcat的状态
+      enabled: true
