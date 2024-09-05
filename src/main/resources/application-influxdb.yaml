@@ -1,4 +1,9 @@
 management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      region: us-west
+      zone: primary
   influx:
     metrics:
       export:

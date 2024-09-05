@@ -91,6 +91,7 @@ influxdb:1.8
 默认账号密码：admin/admin
 https://grafana.com/grafana/dashboards/ 所有模板
 16107
+20668
 
 ```shell
 docker run -d -p 3000:3000 grafana/grafana

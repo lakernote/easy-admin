@@ -21,8 +21,10 @@ server:
   servlet:
     context-path: /
 spring:
+  application:
+    name: easy-admin
   autoconfigure:
-#    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
+  #    exclude: org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
   datasource:
     username: root
     password: 123456
