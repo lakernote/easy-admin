@@ -3,7 +3,7 @@ management:
     metrics:
       export:
         enabled: true
-        uri: http://10.224.77.100:8086
+        uri: http://10.2.4.100:8086
         user-name: admin
         password: 123456
         db: easy-admin
