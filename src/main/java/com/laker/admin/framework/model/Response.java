@@ -1,6 +1,6 @@
 package com.laker.admin.framework.model;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.laker.admin.framework.EasyAdminConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ public class Response<T> {
         this.code = code;
         this.msg = msg;
         this.data = data;
-        this.success = StrUtil.equals("0", code);
+        this.success = CharSequenceUtil.equals("0", code);
         this.traceId = MDC.get(EasyAdminConstants.TRACE_ID);
     }
 
@@ -39,12 +39,8 @@ public class Response<T> {
         return new Response<>("0", "操作成功", data);
     }
 
-    public static <Void> Response<Void> ok() {
-        return new Response<Void>("0", "操作成功", null);
-    }
-
-    public static <T> Response<T> error(T data) {
-        return new Response<>("400", "", data);
+    public static Response<Void> ok() {
+        return new Response<>("0", "操作成功", null);
     }
 
     public static <T> Response<T> error(String code, String msg, T data) {
@@ -55,7 +51,24 @@ public class Response<T> {
         return new Response<>(code, msg, null);
     }
 
+    public static <T> Response<T> error400(String msg) {
+        return new Response<>("400", msg, null);
+    }
+
+    public static <T> Response<T> error401() {
+        return new Response<>("401", "Not Login", null);
+    }
+
+
+    public static <T> Response<T> error403() {
+        return new Response<>("403", "Forbidden", null);
+    }
+
     public static <T> Response<T> error404() {
         return new Response<>("404", "Not Found", null);
+    }
+
+    public static <T> Response<T> error500(String msg) {
+        return new Response<>("500", msg, null);
     }
 }

@@ -1,6 +1,5 @@
 package com.laker.admin.config;
 
-import cn.hutool.core.util.RandomUtil;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -23,11 +22,11 @@ public class EasyKnife4jConfig {
     @Bean
     public GlobalOpenApiCustomizer orderGlobalOpenApiCustomizer() {
         return openApi -> {
-            if (openApi.getPaths() != null) {
-                openApi.addExtension("x-test123", "333");
-                openApi.getPaths().addExtension("x-abb", RandomUtil.randomInt(1, 100));
-            }
-
+            // 设置全局的信息
+//            if (openApi.getPaths() != null) {
+//                openApi.addExtension("x-test123", "333");
+//                openApi.getPaths().addExtension("x-abb", RandomUtil.randomInt(1, 100));
+//            }
         };
     }
 

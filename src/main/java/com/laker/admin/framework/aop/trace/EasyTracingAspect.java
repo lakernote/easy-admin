@@ -88,10 +88,11 @@ public class EasyTracingAspect {
     }
 
     /**
-     * @param pjp
-     * @return
-     * @throws Throwable
-     * @Around("controllerAspect() || serviceAspect() ||  mapperAspect() || remoteAspect()")
+     * 处理
+     *
+     * @param pjp 切入点
+     * @return Object
+     * @throws Throwable 异常
      */
 
     @Around("(withinAspect() || annotationAspect()) && annotationIgnoreAspect()")

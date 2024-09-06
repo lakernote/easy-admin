@@ -30,24 +30,25 @@ import java.lang.reflect.Method;
 @Aspect
 @Slf4j
 public class EasyLimitSubmitAspect {
-    private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 60 * 1000);
+    private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 60 * 1000L);
+    private static final ParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
+    private static final ExpressionParser PARSER = new SpelExpressionParser();
 
     /**
      * 获取 注解有2中方式
-     * 方式1： repeatSubmitLimitParam
-     * 方式2： method.getAnnotation(RepeatSubmitLimit.class)
+     * 方式1： easyRepeatSubmitLimitParam
+     * 方式2： method.getAnnotation(EasyRepeatSubmitLimit.class)
      *
-     * @param joinPoint
-     * @param easyRepeatSubmitLimitParam
-     * @return
-     * @throws Throwable
+     * @param joinPoint                  切点
+     * @param easyRepeatSubmitLimitParam 注解
+     * @return Object
+     * @throws Throwable 异常
      */
     @Around("@annotation(easyRepeatSubmitLimitParam)")
     public Object handleSubmit(ProceedingJoinPoint joinPoint, EasyRepeatSubmitLimit easyRepeatSubmitLimitParam) throws Throwable {
-
-
+        // 获取方法
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        //获取注解信息
+        // 获取注解
         EasyRepeatSubmitLimit easyRepeatSubmitLimit = method.getAnnotation(EasyRepeatSubmitLimit.class);
         int limitTime = easyRepeatSubmitLimit.time();
         String key = getLockKey(joinPoint, easyRepeatSubmitLimit);
@@ -67,10 +68,6 @@ public class EasyLimitSubmitAspect {
         }
     }
 
-    private static final ParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
-
-    private static final ExpressionParser PARSER = new SpelExpressionParser();
-
     private String getLockKey(ProceedingJoinPoint joinPoint, EasyRepeatSubmitLimit easyRepeatSubmitLimit) {
         String businessKey = easyRepeatSubmitLimit.businessKey();
         boolean userLimit = easyRepeatSubmitLimit.userLimit();
@@ -81,6 +78,7 @@ public class EasyLimitSubmitAspect {
 
         if (CharSequenceUtil.isNotBlank(businessParam)) {
             Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+            // 创建SpEL表达式解析器
             EvaluationContext context = new MethodBasedEvaluationContext(null, method, joinPoint.getArgs(), NAME_DISCOVERER);
             String key = PARSER.parseExpression(businessParam).getValue(context, String.class);
             businessKey = businessKey + ":" + key;

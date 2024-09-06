@@ -65,7 +65,7 @@ public class EasyJacksonCustomizer implements Jackson2ObjectMapperBuilderCustomi
         // 创建自定义模块并添加 Long 的序列化器
         SimpleModule customModule = new SimpleModule();
         // 防止Long类型返回前端精度丢失
-        customModule.addSerializer(Long.class, new LongToStringSerializer());
+        customModule.addSerializer(Long.class, new EasyLongToStringSerializer());
 
         /*
          * 1. java.util.Date yyyy-MM-dd HH:mm:ss

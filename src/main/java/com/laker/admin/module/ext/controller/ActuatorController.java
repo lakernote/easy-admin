@@ -36,25 +36,25 @@ public class ActuatorController {
      * @see EasyAdminHealthIndicator
      */
     @GetMapping("/health")
-    @Operation(summary = "查看当前SpringBoot运行的健康指标，由HealthIndicator的实现类提供")
+    @Operation(summary = "1.查看当前SpringBoot运行的健康指标，由HealthIndicator的实现类提供")
     public String health() {
         return "redirect:http://localhost:8080/actuator/health";
     }
 
     @GetMapping("/health/ping")
-    @Operation(summary = "http://localhost:8080/actuator/health/ping")
+    @Operation(summary = "2.http://localhost:8080/actuator/health/ping")
     public String healthPing() {
         return "redirect:http://localhost:8080/actuator/health/ping";
     }
 
     @GetMapping("/health/liveness")
-    @Operation(summary = "给k8s用的探针-存活接口")
+    @Operation(summary = "3.给k8s用的探针-存活接口")
     public String healthLiveness() {
         return "redirect:http://localhost:8080/actuator/health/liveness";
     }
 
     @GetMapping("/health/readiness")
-    @Operation(summary = "给k8s用的探针-就绪接口")
+    @Operation(summary = "4.给k8s用的探针-就绪接口")
     public String healthReadiness() {
         return "redirect:http://localhost:8080/actuator/health/readiness";
     }
@@ -63,15 +63,9 @@ public class ActuatorController {
      * 自定义类继承自 InfoContributor
      */
     @GetMapping("/info")
-    @Operation(summary = "查看服务版本,Git信息,properties中info开头的属性")
+    @Operation(summary = "5.查看服务版本,Git信息,properties中info开头的属性")
     public String info() {
         return "redirect:http://localhost:8080/actuator/info";
-    }
-
-    @GetMapping("/jar-version")
-    @Operation(summary = "拓展，新增项目中依赖jar包版本查看功能")
-    public String jarVersion() {
-        return "redirect:http://localhost:8080/actuator/jarVersion";
     }
 
 }

@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class LongToStringSerializer extends JsonSerializer<Long> {
+/**
+ * Long转String序列化
+ */
+public class EasyLongToStringSerializer extends JsonSerializer<Long> {
 
     @Override
     public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {

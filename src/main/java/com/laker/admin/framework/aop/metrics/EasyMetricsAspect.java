@@ -38,7 +38,8 @@ public class EasyMetricsAspect {
         this.extLogService = extLogService;
     }
 
-    @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.EasyMetrics) || @within(com.laker.admin.framework.aop.metrics.EasyMetrics)")
+    @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.EasyMetrics) " +
+            "|| @within(com.laker.admin.framework.aop.metrics.EasyMetrics)")
     public void withAnnotationMetrics() {
         // do nothing
     }
@@ -71,7 +72,6 @@ public class EasyMetricsAspect {
             extLogService.save(logBean);
             log.error(name, ex);
             throw ex;
-
         }
         String response = objectMapper.writeValueAsString(returnValue);
         log.debug("method:{},success,cost:{}ms,uri:{},param:{},return:{}", name, Duration.between(start, Instant.now()).toMillis(), EasyHttpServletRequestUtil.getRequestURI(), objectMapper.writeValueAsString(pjp.getArgs()), response);
