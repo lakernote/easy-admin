@@ -192,7 +192,8 @@ knife4j:
   # production: true
   setting:
     language: zh_cn
-# springdoc-openapi项目配置
+# springdoc-openapi 项目配置
+# 用于生成OpenAPI 3.0规范的库，适用于Spring Boot应用程序。它可以自动生成API文档，并提供Swagger UI以便于查看和测试API
 springdoc:
   # http://localhost:8080/swagger-ui/index.html
   # http://localhost:8080/doc.html#/home
@@ -206,7 +207,7 @@ springdoc:
     enabled: true
   group-configs:
     - group: 'ext'
-      display-name: '扩展模块'
+      display-name: '1.扩展模块'
       paths-to-match: '/**'
       packages-to-scan: com.laker.admin.module.ext
 logging:

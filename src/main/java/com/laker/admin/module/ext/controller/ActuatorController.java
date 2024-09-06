@@ -1,6 +1,5 @@
 package com.laker.admin.module.ext.controller;
 
-import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.actuator.EasyAdminHealthIndicator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author laker
  * @since 2024-04-03
  */
-@Tag(name = "△△△2.Spring boot actuator△△△")
-@ApiSupport(order = -1)
+@Tag(name = "△△△2.Spring boot actuator△△△", description = "Spring Boot Actuator是Spring Boot的一个子项目，它为Spring Boot应用程序添加了一组生产就绪功能，包括运行状况、指标和审计。")
 @Controller
 @RequestMapping("/ext/actuator")
 public class ActuatorController {
@@ -36,25 +34,25 @@ public class ActuatorController {
      * @see EasyAdminHealthIndicator
      */
     @GetMapping("/health")
-    @Operation(summary = "1.查看当前SpringBoot运行的健康指标，由HealthIndicator的实现类提供")
+    @Operation(summary = "1. 查看当前SpringBoot运行的健康指标，由HealthIndicator的实现类提供")
     public String health() {
         return "redirect:http://localhost:8080/actuator/health";
     }
 
     @GetMapping("/health/ping")
-    @Operation(summary = "2.http://localhost:8080/actuator/health/ping")
+    @Operation(summary = "2. http://localhost:8080/actuator/health/ping")
     public String healthPing() {
         return "redirect:http://localhost:8080/actuator/health/ping";
     }
 
     @GetMapping("/health/liveness")
-    @Operation(summary = "3.给k8s用的探针-存活接口")
+    @Operation(summary = "3. 给k8s用的探针-存活接口")
     public String healthLiveness() {
         return "redirect:http://localhost:8080/actuator/health/liveness";
     }
 
     @GetMapping("/health/readiness")
-    @Operation(summary = "4.给k8s用的探针-就绪接口")
+    @Operation(summary = "4. 给k8s用的探针-就绪接口")
     public String healthReadiness() {
         return "redirect:http://localhost:8080/actuator/health/readiness";
     }
@@ -63,7 +61,7 @@ public class ActuatorController {
      * 自定义类继承自 InfoContributor
      */
     @GetMapping("/info")
-    @Operation(summary = "5.查看服务版本,Git信息,properties中info开头的属性")
+    @Operation(summary = "5. 查看服务版本,Git信息,properties中info开头的属性", description = "自定义类继承自 InfoContributor")
     public String info() {
         return "redirect:http://localhost:8080/actuator/info";
     }
