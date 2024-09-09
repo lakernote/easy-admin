@@ -129,6 +129,9 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
 
         this.handleNoPermission = function (data) {
             if (!data.success && data.code === '403') {
+                // 关闭所有加载层
+                layer.closeAll('loading');
+                // 提示信息
                 layer.msg(data.msg, {
                     icon: 2,
                     area: ['260px', '65px'],
