@@ -64,6 +64,10 @@ public class Response<T> {
         return new Response<>("403", "Forbidden", null);
     }
 
+    public static <T> Response<T> error403(String msg) {
+        return new Response<>("403", msg, null);
+    }
+
     public static <T> Response<T> error404() {
         return new Response<>("404", "Not Found", null);
     }

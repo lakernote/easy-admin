@@ -142,7 +142,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SaTokenException.class)
     public Response<Void> handleMaxSizeException(SaTokenException e) {
         log.error("uri：{}, httpMethod:{}, errMsg:{}", EasyHttpServletRequestUtil.getRequestURI(), EasyHttpServletRequestUtil.getRequest().getMethod(), e.getMessage());
-        return Response.error403();
+        return Response.error403(e.getMessage());
     }
 
     /**

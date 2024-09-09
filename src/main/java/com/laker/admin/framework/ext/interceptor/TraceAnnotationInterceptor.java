@@ -15,6 +15,11 @@ import java.lang.reflect.Method;
  */
 public class TraceAnnotationInterceptor implements HandlerInterceptor {
 
+    private final long time;
+
+    public TraceAnnotationInterceptor(long time) {
+        this.time = time;
+    }
 
     /**
      * 每次请求之前触发的方法
@@ -38,6 +43,6 @@ public class TraceAnnotationInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) {
             return;
         }
-        TraceContext.stopSpan(1000);
+        TraceContext.stopSpan(time);
     }
 }

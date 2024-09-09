@@ -55,7 +55,7 @@ public class EasyWebMvcConfig implements WebMvcConfigurer {
                 }).isAnnotation(true)).addPathPatterns("/**")
                 .excludePathPatterns(exclude_path);
         // 配置自定义拦截器
-        registry.addInterceptor(new TraceAnnotationInterceptor()).addPathPatterns("/**")
+        registry.addInterceptor(new TraceAnnotationInterceptor(easyAdminConfig.getTrace().getHttpTime())).addPathPatterns("/**")
                 .excludePathPatterns(exclude_path);
     }
 

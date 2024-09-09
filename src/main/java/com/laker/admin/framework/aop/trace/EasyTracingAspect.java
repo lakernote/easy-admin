@@ -1,11 +1,11 @@
 package com.laker.admin.framework.aop.trace;
 
+import com.laker.admin.config.EasyAdminConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,8 +16,11 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class EasyTracingAspect {
 
-    @Value("${easy.tracing.time:1000}")
-    private long time;
+    private final EasyAdminConfig easyAdminConfig;
+
+    public EasyTracingAspect(EasyAdminConfig easyAdminConfig) {
+        this.easyAdminConfig = easyAdminConfig;
+    }
 
     /**
      * <p>
@@ -102,7 +105,7 @@ public class EasyTracingAspect {
         try {
             obj = pjp.proceed();
         } finally {
-            TraceContext.stopSpan(time);
+            TraceContext.stopSpan(easyAdminConfig.getTrace().getTime());
         }
         return obj;
     }

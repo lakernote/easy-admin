@@ -20,8 +20,10 @@ public class EasyTransactionManagerConfig {
      */
     @Bean
     TransactionManager transactionManager(DataSource dataSource,
-                                          ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-        TransactionManager transactionManager = new LakerDataSourceTransactionManager(dataSource, 100);
+                                          ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers,
+                                          EasyAdminConfig easyAdminConfig) {
+        TransactionManager transactionManager = new LakerDataSourceTransactionManager(
+                dataSource, easyAdminConfig.getTrace().getTransactionTime());
         transactionManagerCustomizers.ifAvailable((customizers) -> customizers.customize(transactionManager));
         return transactionManager;
     }

@@ -35,6 +35,8 @@ public class EasyAdminConfig {
 
     private OssFile ossFile = new OssFile();
 
+    private Trace trace = new Trace();
+
     @Data
     public static class Nginx {
         /**
@@ -61,4 +63,15 @@ public class EasyAdminConfig {
         private String domain = "http://localhost:8080";
     }
 
+    @Data
+    public static class Trace {
+        /**
+         * trace最小耗时
+         */
+        private long time = 1000L;
+
+        private long httpTime = 1000L;
+
+        private long transactionTime = 1000L;
+    }
 }

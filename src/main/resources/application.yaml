@@ -122,6 +122,8 @@ easy:
   oss-file:
     domain: http://localhost:8080
     path: storage
+  trace:
+    time: 1000
 # actuator
 management:
   tracing:
