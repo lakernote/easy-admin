@@ -79,9 +79,9 @@ public class EasyJacksonCustomizer implements Jackson2ObjectMapperBuilderCustomi
          */
         builder.simpleDateFormat(STANDARD_PATTERN)
                 .modules(javaTimeModule, customModule, new Jdk8Module())
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
-                .failOnEmptyBeans(false)
-                .failOnUnknownProperties(false)
+                .serializationInclusion(JsonInclude.Include.NON_NULL) // 序列化时包含所有字段 ALWAYS，NON_NULL不序列化null字段
+                .failOnEmptyBeans(false) // 在序列化一个空对象时时不抛出异常
+                .failOnUnknownProperties(false) // 忽略反序列化时在json字符串中存在, 但在java对象中不存在的属性
                 .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .featuresToEnable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
     }
