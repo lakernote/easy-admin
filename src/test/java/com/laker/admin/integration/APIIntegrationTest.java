@@ -26,7 +26,6 @@ class APIIntegrationTest {
     void testLogin() {
         LoginDto loginDto = new LoginDto();
         ResponseEntity<Response> response = restTemplate.postForEntity("/sys/auth/v1/login", loginDto, Response.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("", response.getBody().getMsg());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }

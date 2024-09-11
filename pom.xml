@@ -41,7 +41,7 @@
         <!--  maven 生成项目报告使用的编码  -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- 3.maven打包跳过测试 -->
+        <!-- 3.maven打包跳过测试  true/false -->
         <skipTests>true</skipTests>
         <!-- 其他依赖组件版本 -->
         <hutool.version>5.8.25</hutool.version>
@@ -262,6 +262,65 @@
                     <!--                    </includeOnlyProperties>-->
                 </configuration>
             </plugin>
+
+            <!-- 代码覆盖率报告 -->
+            <!-- mvn clean verify 生成的覆盖率报告可以在 target/site/jacoco/index.html 文件中查看-->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.8</version>
+                <executions>
+                    <!-- Prepare agent before tests run -->
+                    <!-- 在测试运行之前准备 JaCoCo 代理，用于收集覆盖率数据。 -->
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- Generate coverage report after tests run -->
+                    <!-- 在 verify 阶段生成覆盖率报告。 -->
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- Check coverage thresholds -->
+                    <!-- 在 verify 阶段检查覆盖率是否达到预期值。 -->
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <!-- 检查覆盖率的范围 BUNDLE 表示整个项目（或模块）。
+                                    其他可能的值包括 PACKAGE、CLASS 和 METHOD，分别表示包、类和方法级别的覆盖率检查-->
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <!-- INSTRUCTION 表示指令覆盖率，即代码中每个指令的覆盖情况。其他可能的值包括 LINE（行覆盖率）、BRANCH（分支覆盖率）、COMPLEXITY（复杂度覆盖率）等-->
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <!-- 覆盖率的最小值 指令覆盖率的最低阈值是 80%。如果实际覆盖率低于这个值，构建将失败。-->
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.70</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
