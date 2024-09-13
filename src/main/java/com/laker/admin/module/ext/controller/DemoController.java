@@ -1,5 +1,6 @@
 package com.laker.admin.module.ext.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
@@ -25,7 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.web.bind.annotation.*;
@@ -193,5 +196,18 @@ public class DemoController {
         myCache.put("key", "value");
         final String key1 = myCache.get("key", String.class);
         log.info("key1:{}", key1);
+    }
+
+    @GetMapping("/getResponseEntity")
+    @Operation(summary = "8.getResponseEntity")
+    public ResponseEntity getResponseEntity() {
+        if (RandomUtil.randomBoolean()) {
+            return ResponseEntity.ok(List.of(1, 2, 3));
+        }
+        final SysUser sysUser = new SysUser();
+        sysUser.setUserId(2334234234324324343L);
+        sysUser.setCreateTime(LocalDateTime.now());
+        sysUser.setPassword("123456");
+        return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(sysUser);
     }
 }
