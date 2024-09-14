@@ -12,12 +12,12 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * 集成测试
+ * 集成测试-API集成测试
  *
  * @SpringBootTest用于加载完整的Spring上下文，进行端到端的集成测试。
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class APIIntegrationTest {
+class APIIT {
 
     @Autowired
     private TestRestTemplate restTemplate;

@@ -1,0 +1,8 @@
+knife4j:
+  # 是否生产环境 屏蔽所有资源接口
+  production: false
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://10.224.77.186:3307/easy-admin?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true

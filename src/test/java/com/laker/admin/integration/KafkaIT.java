@@ -9,13 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+/**
+ * 集成测试-测试kafka
+ *
+ * @SpringBootTest用于加载完整的Spring上下文，进行端到端的集成测试。
+ */
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EmbeddedKafka(partitions = 1, topics = {EasyKafkaConfig.TOPIC_NAME})
 @Slf4j
-class KafkaIntegrationTest {
+@ActiveProfiles("test")
+class KafkaIT {
 
     @Autowired
     KafkaTemplate<String, String> kafkaTemplate;

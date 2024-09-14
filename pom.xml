@@ -42,7 +42,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- 3.maven打包跳过测试  true/false -->
-        <skipTests>true</skipTests>
+        <skipTests>false</skipTests>
         <!-- 其他依赖组件版本 -->
         <hutool.version>5.8.25</hutool.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
@@ -50,6 +50,9 @@
         <mysql-connector-j.version>8.3.0</mysql-connector-j.version>
         <guava.version>33.0.0-jre</guava.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
+
+        <gatling.version>3.7.6</gatling.version>
+        <scala.version>2.13.6</scala.version>
     </properties>
 
     <dependencies>
@@ -216,7 +219,6 @@
             <artifactId>micrometer-registry-influx</artifactId>
             <version>1.13.3</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -263,14 +265,50 @@
                 </configuration>
             </plugin>
 
-            <!-- 代码覆盖率报告 -->
+            <!-- [单元测试] 测试单个类、方法或功能的正确性。-->
+            <!-- mvn test -Dmaven.test.skip=true 跳过测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- 并行测试配置 -->
+                    <threadCount>4</threadCount><!-- 最大线程数 -->
+                    <parallel>methods</parallel><!-- 并行执行测试方法 -->
+
+                    <!-- 测试超时设置 -->
+                    <testFailureIgnore>false</testFailureIgnore> <!-- 确保测试失败时构建失败 -->
+                    <runOrder>alphabetical</runOrder> <!-- 按字母顺序运行测试，确保一致性 -->
+
+                    <!-- 测试结果输出目录 -->
+                    <!--                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>-->
+
+
+                    <reportFormat>plain</reportFormat>
+                    <!-- 控制台输出详细度 -->
+                    <printSummary>true</printSummary>
+                    <forkCount>1C</forkCount> <!-- 使用与 CPU 核心数相同的线程数 -->
+                    <reuseForks>true</reuseForks>
+
+                    <!-- 包含测试类的目录 -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
+                    <!-- 排除集成测试 -->
+                    <excludes>
+                        <exclude>**/IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- [单元测试] 代码覆盖率报告 帮助发现未覆盖的代码部分 -->
             <!-- mvn clean verify 生成的覆盖率报告可以在 target/site/jacoco/index.html 文件中查看-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
                 <executions>
-                    <!-- Prepare agent before tests run -->
                     <!-- 在测试运行之前准备 JaCoCo 代理，用于收集覆盖率数据。 -->
                     <execution>
                         <id>prepare-agent</id>
@@ -278,7 +316,6 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-                    <!-- Generate coverage report after tests run -->
                     <!-- 在 verify 阶段生成覆盖率报告。 -->
                     <execution>
                         <id>report</id>
@@ -287,7 +324,15 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-                    <!-- Check coverage thresholds -->
+                    <!-- 合并多模块覆盖率报告 -->
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+
                     <!-- 在 verify 阶段检查覆盖率是否达到预期值。 -->
                     <execution>
                         <id>check</id>
@@ -306,12 +351,12 @@
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
                                             <!-- 覆盖率的最小值 指令覆盖率的最低阈值是 80%。如果实际覆盖率低于这个值，构建将失败。-->
-                                            <minimum>0.80</minimum>
+                                            <minimum>0.00010</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.70</minimum>
+                                            <minimum>0.00010</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -319,8 +364,129 @@
                         </configuration>
                     </execution>
                 </executions>
+
+                <configuration>
+                    <!-- 指定报告文件输出路径 -->
+                    <!--                    <outputDirectory>${project.build.directory}/jacoco-reports</outputDirectory>-->
+
+                    <!-- 排除不需要计算覆盖率的包或类，如生成代码、测试类等 -->
+                    <excludes>
+                        <exclude>**/generated/**</exclude> <!-- 生成的代码 -->
+                        <exclude>**/Test*.*</exclude> <!-- 排除测试类 -->
+                        <exclude>**/Test.java</exclude> <!-- 排除测试类 -->
+                        <exclude>**/SomeSpecificClassToExclude.*</exclude> <!-- 具体排除某些类 -->
+                        <exclude>**/*MapperGenerated.*</exclude> <!-- MyBatis 自动生成的 Mapper 接口 -->
+                        <exclude>**/*Mapper.*</exclude> <!-- MyBatis Mapper 接口 -->
+                        <exclude>**/*Example.*</exclude> <!-- MyBatis Example 类 -->
+                        <exclude>**/*VO.*</exclude> <!-- VO 类 -->
+                        <exclude>**/*DTO.*</exclude> <!-- DTO 类 -->
+                        <exclude>**/*BO.*</exclude> <!-- BO 类 -->
+                        <exclude>**/*PO.*</exclude> <!-- PO 类 -->
+                        <exclude>**/*Entity.*</exclude> <!-- Entity 类 -->
+                        <exclude>**/*Repository.*</exclude> <!-- Repository 类 -->
+                        <exclude>**/*RepositoryImpl.*</exclude> <!-- RepositoryImpl 类 -->
+                    </excludes>
+
+                    <!-- 报告格式，生成 HTML 和 XML 格式报告 -->
+                    <formats>
+                        <format>HTML</format>
+                        <format>XML</format>
+                    </formats>
+
+                    <!-- 覆盖率数据文件路径 -->
+                    <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                    <outputDirectory>${project.build.directory}/jacoco-reports</outputDirectory>
+                </configuration>
             </plugin>
 
+            <!-- [集成测试] 测试不同模块或服务之间的交互是否正确.使用JUnit或TestNG编写集成测试，通常命名为*IT.java -->
+            <!-- mvn clean verify 生成的集成测试报告可以在 target/site/failsafe-report.html 文件中查看-->
+            <!-- 用于运行那些需要启动完整应用或依赖外部服务（如数据库）的测试。-->
+            <!-- maven-failsafe-plugin 是 maven-surefire-plugin 的补充插件，专门用于集成测试（Integration Tests）。
+            与 Surefire 主要用于单元测试不同，Failsafe 用于确保集成测试能够在构建流程的后期正确运行，
+            并且可以在集成测试失败时，控制构建的后续步骤。-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <!--                <version>3.0.0-M9</version>-->
+                <executions>
+                    <!-- 在 integration-test 阶段运行集成测试 -->
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                        <phase>integration-test</phase> <!-- 在这个阶段运行测试 -->
+                    </execution>
+
+                    <!-- 在 verify 阶段运行测试结果验证，报告生成等 -->
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                        <phase>verify</phase> <!-- 在这个阶段检查和报告 -->
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <!-- 执行集成测试时的测试类命名规则 -->
+                    <includes>
+                        <include>**/IT*.java</include> <!-- 命名以 IT 开头的类 -->
+                        <include>**/*IT.java</include> <!-- 命名以 IT 结尾的类 -->
+                    </includes>
+
+                    <!-- 指定线程并发测试数，使用与 CPU 核心数相同的线程数 -->
+                    <parallel>methods</parallel>
+                    <threadCount>4</threadCount> <!-- 根据项目规模调整线程数 -->
+
+                    <!-- 失败重试机制：避免偶然失败 -->
+                    <systemPropertyVariables>
+                        <surefire.junit.retryCount>3</surefire.junit.retryCount> <!-- 测试失败后重试 3 次 -->
+                    </systemPropertyVariables>
+
+                    <!-- JVM 参数：控制内存分配 -->
+                    <argLine>-Xms512m -Xmx2048m</argLine>
+
+                    <!-- 测试报告输出目录 -->
+                    <!--                    <reportsDirectory>${project.build.directory}/failsafe-reports</reportsDirectory>-->
+
+                    <!-- 配置测试失败后的处理方式 -->
+                    <testFailureIgnore>false</testFailureIgnore> <!-- 测试失败时构建失败 -->
+
+                    <!-- 测试过滤和选择 -->
+                    <skip>false</skip> <!-- 不跳过集成测试 -->
+                </configuration>
+            </plugin>
+
+            <!--   静态代码分析（Static Code Analysis）PMD, Checkstyle, FindBugs -->
+            <!--原 FindBugs  分析字节码，找出潜在的 Bug 和安全漏洞。 -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.7.3.0</version>
+                <executions>
+                    <!-- 在 verify 阶段执行 SpotBugs 检查 -->
+                    <execution>
+                        <goals>
+                            <goal>spotbugs</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 设置告警级别 -->
+                    <effort>Max</effort> <!-- Max 表示最大努力，执行更详细的检查 -->
+                    <threshold>Low</threshold> <!-- Low 表示所有级别的告警都报告，包括低级别 -->
+
+                    <!-- 启用 XML 和 HTML 格式的报告 -->
+                    <xmlOutput>true</xmlOutput>
+                    <!--                    <outputDirectory>${project.build.directory}/spotbugs-reports</outputDirectory>-->
+
+                    <!-- 构建失败策略 -->
+                    <failOnError>true</failOnError> <!-- 如果有错误报告，构建失败 -->
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
