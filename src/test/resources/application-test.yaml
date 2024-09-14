@@ -5,4 +5,4 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://10.224.77.186:3307/easy-admin?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://198.104.12.11:3306/easy-admin?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
