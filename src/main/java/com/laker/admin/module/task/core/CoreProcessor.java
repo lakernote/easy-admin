@@ -73,7 +73,7 @@ public class CoreProcessor implements CommandLineRunner {
                         .taskClassName(job.getClass().getName()).build();
                 taskStore.saveTask(taskDto);
                 TaskDto storeTask = taskStore.findByTaskCode(taskCode);
-                if (storeTask.getEnable() && storeTask.getTaskState().equals(TaskStateEnum.START)) {
+                if (Boolean.TRUE.equals(storeTask.getEnable()) && storeTask.getTaskState().equals(TaskStateEnum.START)) {
                     this.startJVMJob(storeTask, null);
                 }
             }

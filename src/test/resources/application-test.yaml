@@ -2,7 +2,18 @@ knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: false
 spring:
+  application:
+    name: easy-admin-test
   datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://198.104.12.11:3306/easy-admin?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: sa # 默认为 sa
+    password:  # 默认为空
+    driver-class-name: org.h2.Driver
+    # 配置 MODE=MySQL 模式
+    url: jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;
+  flyway:
+    enabled: true
+    # 历史表
+    baselineOnMigrate: true
+    validateOnMigrate: true
+    # flyway的sql脚本路径
+    locations: classpath:db/migration-h2
