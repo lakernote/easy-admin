@@ -84,7 +84,11 @@ public class EasyMetricsAspect {
             Boolean success = JSONUtil.parseObj(response).getBool("success", true);
             logBean.setStatus(success);
         }
-        extLogService.save(logBean);
+        try {
+            extLogService.save(logBean);
+        } catch (Exception e) {
+            log.error("保存日志失败", e);
+        }
         return returnValue;
     }
 }

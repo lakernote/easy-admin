@@ -2,8 +2,12 @@ knife4j:
   # 是否生产环境 屏蔽所有资源接口
   production: false
 spring:
+  # 影响测试环境的配置（Redis DB kafka等）都修为集成测试专用的环境
   application:
     name: easy-admin-test
+    # 涉及到数据库的集成测试一般都会对数据库进行增删改，可能会影响到测试环境的数据库，所以在测试中有一种方式是用 H2 内存数据库代替测试环境数据库进行测试，
+    # 但是 H2 数据库和我们实际使用的 MySQL 或 PostgreSQL 不同，所以它有些问题：
+    # 还是建议在测试环境中使用真实的数据库进行测试，这样可以更好的模拟真实环境。用docker启动一个数据库容器，然后在测试环境中连接这个数据库容器进行测试。
   datasource:
     username: sa # 默认为 sa
     password:  # 默认为空
