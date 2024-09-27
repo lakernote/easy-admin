@@ -50,6 +50,15 @@ public class EasyKnife4jConfig {
     }
 
     @Bean
+    public GroupedOpenApi extApi() {
+        return GroupedOpenApi.builder()
+                .group("0.ext")
+                .pathsToMatch("/**")
+                .packagesToScan("com.laker.admin.module.ext")
+                .build();
+    }
+
+    @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("1.public")
