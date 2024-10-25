@@ -4,7 +4,7 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.LFUCache;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.laker.admin.framework.utils.SpringUtils;
 import com.laker.admin.module.enums.TaskStateEnum;
@@ -48,7 +48,7 @@ public class CoreProcessor implements CommandLineRunner {
     /**
      * 启动后存储任务列表
      */
-    private final static LFUCache<String, ScheduledFuture> JVM_RUNNING_TASK = CacheUtil.newLFUCache(1000, TimeUnit.DAYS.toMillis(3));
+    private final LFUCache<String, ScheduledFuture<?>> JVM_RUNNING_TASK = CacheUtil.newLFUCache(1000, TimeUnit.DAYS.toMillis(3));
 
 
     @Override
@@ -82,36 +82,27 @@ public class CoreProcessor implements CommandLineRunner {
 
     /**
      * 将任务加入到JVM执行器中
-     *
-     * @return
      */
     private void startJVMJob(TaskDto task, Map param) {
         String taskCron = task.getTaskCron();
-        // TODO taskCron CHECK
-        if (StrUtil.isNotBlank(taskCron) && !StrUtil.equals(taskCron, "-")) {
+        if (CharSequenceUtil.isNotBlank(taskCron) && !CharSequenceUtil.equals(taskCron, "-")) {
             ScheduledFuture<?> future = threadPoolTaskScheduler
                     .schedule(() -> {
                                 try {
-                                    callBacks.forEach(iCallBack -> {
-                                        iCallBack.start(task);
-                                    });
+                                    callBacks.forEach(iCallBack -> iCallBack.start(task));
                                     String taskClassName = task.getTaskClassName();
                                     Map<String, IJob> beansOfType = SpringUtils.getBeansOfType(IJob.class);
                                     for (IJob iJob : beansOfType.values()) {
-                                        if (StrUtil.equals(taskClassName, iJob.getClass().getName())) {
+                                        if (CharSequenceUtil.equals(taskClassName, iJob.getClass().getName())) {
                                             iJob.execute(param);
                                             break;
                                         }
                                     }
 
                                 } catch (Exception e) {
-                                    callBacks.forEach(iCallBack -> {
-                                        iCallBack.exception(task, e);
-                                    });
+                                    callBacks.forEach(iCallBack -> iCallBack.exception(task, e));
                                 } finally {
-                                    callBacks.forEach(iCallBack -> {
-                                        iCallBack.end(task);
-                                    });
+                                    callBacks.forEach(iCallBack -> iCallBack.end(task));
                                 }
                             },
                             new CronTrigger(taskCron));
@@ -122,18 +113,18 @@ public class CoreProcessor implements CommandLineRunner {
     }
 
     private void removeJvmTask(String taskCode) {
-        ScheduledFuture scheduledFuture = JVM_RUNNING_TASK.get(taskCode, false);
+        ScheduledFuture<?> scheduledFuture = JVM_RUNNING_TASK.get(taskCode, false);
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
         }
         JVM_RUNNING_TASK.remove(taskCode);
     }
 
-    public List jvmTaskList() {
-        List res = new ArrayList();
-        Iterator<CacheObj<String, ScheduledFuture>> cacheObjIterator = JVM_RUNNING_TASK.cacheObjIterator();
+    public List<String> jvmTaskList() {
+        List<String> res = new ArrayList<>();
+        Iterator<CacheObj<String, ScheduledFuture<?>>> cacheObjIterator = JVM_RUNNING_TASK.cacheObjIterator();
         while (cacheObjIterator.hasNext()) {
-            CacheObj<String, ScheduledFuture> next = cacheObjIterator.next();
+            CacheObj<String, ScheduledFuture<?>> next = cacheObjIterator.next();
             String key = next.getKey();
             res.add(key);
         }

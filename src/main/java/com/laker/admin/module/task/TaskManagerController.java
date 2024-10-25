@@ -35,7 +35,6 @@ public class TaskManagerController {
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
-
     @PostMapping
     @SaCheckPermission("task.update")
     public Response update(@RequestBody SysTask sysTask) {
@@ -60,6 +59,5 @@ public class TaskManagerController {
         coreProcessor.stopJob(taskCode);
         return Response.ok();
     }
-
 
 }
