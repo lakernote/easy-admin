@@ -21,8 +21,8 @@ import java.util.List;
 @Slf4j
 public class LakerDataSourceTransactionManager extends DataSourceTransactionManager {
 
+    private final transient ThreadLocal<LinkedList<Transaction>> transactionThreadLocal = new ThreadLocal<>();
 
-    transient ThreadLocal<LinkedList<Transaction>> dateThreadLocal = new ThreadLocal<>();
     private final transient long costTime;
 
     public LakerDataSourceTransactionManager(DataSource dataSource, long costTime) {
@@ -34,12 +34,12 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
     protected void doBegin(Object transaction, TransactionDefinition definition) {
         String name = definition.getName();
         TraceContext.addSpan(name, SpanType.Transaction);
-        List<Transaction> transactionList = dateThreadLocal.get();
+        List<Transaction> transactionList = transactionThreadLocal.get();
         // init
         if (CollectionUtils.isEmpty(transactionList)) {
             LinkedList<Transaction> linkedList = new LinkedList<>();
             linkedList.add(new Transaction(System.currentTimeMillis(), name));
-            dateThreadLocal.set(linkedList);
+            transactionThreadLocal.set(linkedList);
         } else {
             transactionList.add(new Transaction(System.currentTimeMillis(), name));
         }
@@ -48,13 +48,13 @@ public class LakerDataSourceTransactionManager extends DataSourceTransactionMana
 
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
-        LinkedList<Transaction> transactions = dateThreadLocal.get();
+        LinkedList<Transaction> transactions = transactionThreadLocal.get();
         if (CollUtil.size(transactions) > 1) {
             transactions.removeLast();
         } else {
             Transaction transaction1 = transactions.get(0);
             long cost = System.currentTimeMillis() - transaction1.begin;
-            dateThreadLocal.remove();
+            transactionThreadLocal.remove();
             if (cost > costTime) {
                 log.error("事务耗时监控！transaction:{},time:{}ms", transaction1.name, cost);
             }
