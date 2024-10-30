@@ -20,27 +20,24 @@ public class EasyLockConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public ThreadPoolTaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(20);
-        threadPoolTaskScheduler.setThreadNamePrefix("easy-lock-");
-        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
-        threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
-        return threadPoolTaskScheduler;
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "mysql", matchIfMissing = true)
     public EasyLock mysqlLock(JdbcTemplate jdbcTemplate) {
-        return new MysqlEasyLock(jdbcTemplate, taskScheduler());
+        return new MysqlEasyLock(jdbcTemplate, easyLockTaskThreadPool());
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "redis")
     public EasyLock redisLock(StringRedisTemplate stringRedisTemplate) {
-        return new RedisEasyLock(stringRedisTemplate, taskScheduler());
+        return new RedisEasyLock(stringRedisTemplate, easyLockTaskThreadPool());
+    }
+
+    private ThreadPoolTaskScheduler easyLockTaskThreadPool() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(20);
+        threadPoolTaskScheduler.setThreadNamePrefix("easy-lock-");
+        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
+        threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
+        return threadPoolTaskScheduler;
     }
 }
