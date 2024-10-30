@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 
 /**
  * 自定义扩展jackson序列化和反序列化
@@ -66,6 +67,7 @@ public class EasyJacksonCustomizer implements Jackson2ObjectMapperBuilderCustomi
         SimpleModule customModule = new SimpleModule();
         // 防止Long类型返回前端精度丢失
         customModule.addSerializer(Long.class, new EasyLongToStringSerializer());
+        customModule.addSerializer(Collection.class, new EasyLongArrToStringArrSerializer());
 
         /*
          * 1. java.util.Date yyyy-MM-dd HH:mm:ss

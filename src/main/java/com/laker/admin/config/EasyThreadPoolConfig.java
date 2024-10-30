@@ -19,7 +19,7 @@ public class EasyThreadPoolConfig {
      * 定时任务线程池
      */
     @Bean
-    public ThreadPoolTaskScheduler taskScheduler() {
+    public ThreadPoolTaskScheduler easyTaskThreadPool() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(20);
         threadPoolTaskScheduler.setThreadNamePrefix("easy-");
@@ -32,7 +32,7 @@ public class EasyThreadPoolConfig {
      * 业务线程池
      */
     @Bean
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+    public ThreadPoolTaskExecutor easyThreadPool() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setCorePoolSize(20);
         threadPoolTaskExecutor.setMaxPoolSize(100);
@@ -58,9 +58,8 @@ public class EasyThreadPoolConfig {
      * 业务线程池
      */
     @Bean
-    public EasyAdminMDCThreadPoolExecutor easyAdminMDCThreadPoolExecutor() {
+    public EasyAdminMDCThreadPoolExecutor businessMDCThreadPool() {
         return new EasyAdminMDCThreadPoolExecutor(20, 100, "business");
     }
-
 
 }

@@ -50,9 +50,8 @@
         <mysql-connector-j.version>8.3.0</mysql-connector-j.version>
         <guava.version>33.0.0-jre</guava.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
+        <knife4j.version>4.3.0</knife4j.version>
 
-        <gatling.version>3.7.6</gatling.version>
-        <scala.version>2.13.6</scala.version>
     </properties>
 
     <dependencies>
@@ -96,7 +95,7 @@
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-            <version>4.3.0</version>
+            <version>${knife4j.version}</version>
         </dependency>
 
         <!-- 认证授权 -->

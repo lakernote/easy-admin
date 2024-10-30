@@ -24,9 +24,9 @@ import java.io.IOException;
 
 @Order(value = Ordered.HIGHEST_PRECEDENCE + 100)
 @Component
-@WebFilter(filterName = "MDCFilter", urlPatterns = "/*")
+@WebFilter(filterName = "MDCTraceIDFilter", urlPatterns = "/*")
 @Slf4j
-public class MDCFilter extends OncePerRequestFilter {
+public class MDCTraceIDFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         try {

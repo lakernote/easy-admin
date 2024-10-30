@@ -1,5 +1,6 @@
 package com.laker.admin.module.ext.controller;
 
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -204,10 +205,11 @@ public class DemoController {
         if (RandomUtil.randomBoolean()) {
             return ResponseEntity.ok(List.of(1, 2, 3));
         }
-        final SysUser sysUser = new SysUser();
-        sysUser.setUserId(2334234234324324343L);
-        sysUser.setCreateTime(LocalDateTime.now());
-        sysUser.setPassword("123456");
-        return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(sysUser);
+        Dict dict = Dict.create()
+                .set("name", "laker")
+                .set("createTime", LocalDateTime.now())
+                .set("longArr", List.of(1L, 2L, 3L))
+                .set("age", 18);
+        return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(dict);
     }
 }
