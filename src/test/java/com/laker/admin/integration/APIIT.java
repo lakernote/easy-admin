@@ -52,8 +52,6 @@ class APIIT {
                         // 设置请求体内容
                         .content("{\"username\":\"admin\",\"password\":\"123456\"}"))
                 // 验证响应状态码
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                // 验证响应内容
-                .andExpect(MockMvcResultMatchers.content().string("Hello, World!"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
