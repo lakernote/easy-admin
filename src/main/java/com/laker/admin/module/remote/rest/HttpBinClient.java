@@ -5,6 +5,7 @@ import org.springframework.boot.web.client.ClientHttpRequestFactories;
 import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -31,7 +32,7 @@ public class HttpBinClient {
                 .DEFAULTS
                 .withConnectTimeout(Duration.ofSeconds(5))
                 .withReadTimeout(Duration.ofSeconds(10));
-        ClientHttpRequestFactory requestFactory = ClientHttpRequestFactories.get(settings);
+        ClientHttpRequestFactory requestFactory = ClientHttpRequestFactories.get(JdkClientHttpRequestFactory.class, settings);
         this.restClient = restClientBuilder
                 .baseUrl("https://httpbin.org/")
                 .requestFactory(requestFactory)
