@@ -1,8 +1,8 @@
 package com.laker.admin.framework.handler;
 
-import com.laker.admin.module.remote.EasyTodoClient;
-import com.laker.admin.module.remote.IpifyClient;
-import com.laker.admin.module.remote.dto.IpifyVo;
+import com.laker.admin.module.remote.feign.EasyTodoClient;
+import com.laker.admin.module.remote.feign.IpifyClient;
+import com.laker.admin.module.remote.feign.dto.IpifyVo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

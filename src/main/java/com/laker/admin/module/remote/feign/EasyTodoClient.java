@@ -1,6 +1,6 @@
-package com.laker.admin.module.remote;
+package com.laker.admin.module.remote.feign;
 
-import com.laker.admin.module.remote.configration.EasyTodoFeignConfig;
+import com.laker.admin.module.remote.feign.configration.EasyTodoFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,4 +1,4 @@
-package com.laker.admin.module.remote.dto;
+package com.laker.admin.module.remote.feign.dto;
 
 import lombok.Data;
 

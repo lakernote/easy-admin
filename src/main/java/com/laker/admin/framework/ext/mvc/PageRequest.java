@@ -12,6 +12,7 @@ import lombok.ToString;
  * 用于映射查询请求参数 分页、排序和过滤功能
  * ?page=1&size=2&sort=rank|asc,zip_code|desc&filter=city|eq|beijing
  * 被 PageRequestArgumentResolver 解析
+ * // TODO 增加 or
  */
 @Builder
 @ToString

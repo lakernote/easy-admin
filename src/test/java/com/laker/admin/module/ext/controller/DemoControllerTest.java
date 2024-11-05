@@ -1,7 +1,7 @@
 package com.laker.admin.module.ext.controller;
 
 import com.laker.admin.config.EasyAdminConfig;
-import com.laker.admin.module.remote.IpifyClient;
+import com.laker.admin.module.remote.feign.IpifyClient;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

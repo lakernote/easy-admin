@@ -1,7 +1,7 @@
-package com.laker.admin.module.remote;
+package com.laker.admin.module.remote.feign;
 
-import com.laker.admin.module.remote.configration.IpifyFeignConfig;
-import com.laker.admin.module.remote.dto.IpifyVo;
+import com.laker.admin.module.remote.feign.configration.IpifyFeignConfig;
+import com.laker.admin.module.remote.feign.dto.IpifyVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 

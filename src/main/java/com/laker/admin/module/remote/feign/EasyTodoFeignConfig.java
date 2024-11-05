@@ -1,4 +1,4 @@
-package com.laker.admin.module.remote.configration;
+package com.laker.admin.module.remote.feign.configration;
 
 import cn.hutool.core.util.IdUtil;
 import feign.RequestInterceptor;
