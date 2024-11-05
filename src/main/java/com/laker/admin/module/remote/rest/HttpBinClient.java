@@ -32,6 +32,7 @@ public class HttpBinClient {
                 .DEFAULTS
                 .withConnectTimeout(Duration.ofSeconds(5))
                 .withReadTimeout(Duration.ofSeconds(10));
+        // 使用默认的 jdk 11 http 客户端 ,自带连接池
         ClientHttpRequestFactory requestFactory = ClientHttpRequestFactories.get(JdkClientHttpRequestFactory.class, settings);
         this.restClient = restClientBuilder
                 .baseUrl("https://httpbin.org/")
