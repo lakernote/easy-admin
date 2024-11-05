@@ -22,7 +22,7 @@ public class EasyThreadPoolConfig {
     public ThreadPoolTaskScheduler easyTaskThreadPool() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(20);
-        threadPoolTaskScheduler.setThreadNamePrefix("easy-");
+        threadPoolTaskScheduler.setThreadNamePrefix("easy-task-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
         return threadPoolTaskScheduler;
@@ -37,7 +37,7 @@ public class EasyThreadPoolConfig {
         threadPoolTaskExecutor.setCorePoolSize(20);
         threadPoolTaskExecutor.setMaxPoolSize(100);
         threadPoolTaskExecutor.setQueueCapacity(100);
-        threadPoolTaskExecutor.setThreadNamePrefix("easy-");
+        threadPoolTaskExecutor.setThreadNamePrefix("easy-executor-");
         threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskExecutor.setAwaitTerminationSeconds(60);
         threadPoolTaskExecutor.setTaskDecorator(runnable -> {

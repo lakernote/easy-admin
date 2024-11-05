@@ -40,7 +40,14 @@ spring:
       pool:
         max-size: 10
         queue-capacity: 1
-      thread-name-prefix: easy-
+        allow-core-thread-timeout: true
+        core-size: 5
+        keep-alive: 60s
+      thread-name-prefix: easy-config-
+    scheduling:
+      pool:
+        size: 10
+      thread-name-prefix: easy-schedule-
   freemarker:
     suffix: .ftl
   servlet:
