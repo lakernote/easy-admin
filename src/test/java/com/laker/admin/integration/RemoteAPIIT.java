@@ -25,9 +25,9 @@ class RemoteAPIIT {
     HttpBinClient httpBinClient;
 
     @Test
-    void tetHttpBinClient() throws InterruptedException {
-        String testMessage = "Hello Kafka";
+    void tetHttpBinClient() {
+        String testMessage = "Hello";
         final String s = httpBinClient.get(testMessage);
-        log.info("{}", s);
+        log.info("result: {}", s);
     }
 }

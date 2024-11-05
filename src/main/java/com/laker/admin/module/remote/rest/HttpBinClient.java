@@ -34,10 +34,8 @@ public class HttpBinClient {
                 .defaultHeader("User-Agent", "Spring 5 WebClient")
                 .defaultStatusHandler(HttpStatusCode::is4xxClientError,
                         (request, response) -> {
-                            log.error("Client Error Status " +
-                                    response.getStatusCode());
-                            log.error("Client Error Body " + new
-                                    String(response.getBody().readAllBytes()));
+                            log.error("Client Error Status {}", response.getStatusCode());
+                            log.error("Client Error Body {}", new String(response.getBody().readAllBytes()));
                         })
                 // add Authorization
                 // 在请求拦截器中增加 验证token
@@ -49,7 +47,7 @@ public class HttpBinClient {
     }
 
     public String get(String name) {
-        return this.restClient.get().uri("/get?name={name}&age={age}", name,30).retrieve().body(String.class);
+        return this.restClient.get().uri("/get?name={name}&age={age}", name, 30).retrieve().body(String.class);
     }
 
 }
