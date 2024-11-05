@@ -12,6 +12,7 @@ import java.time.Duration;
 
 /**
  * A simple client for the HttpBin API.
+ * - 同步 HTTP 客户端
  * https://httpbin.org/
  * https://jsonplaceholder.typicode.com/
  * https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-restclient
@@ -20,6 +21,9 @@ import java.time.Duration;
 @Service
 public class HttpBinClient {
 
+    /**
+     * 可以被多个线程安全地使用
+     */
     private final RestClient restClient;
 
     public HttpBinClient(RestClient.Builder restClientBuilder) {
