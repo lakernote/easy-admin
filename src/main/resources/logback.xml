@@ -66,6 +66,12 @@
     <logger name="com.test.demo" level="DEBUG">
         <appender-ref ref="DEFAULT"/>
     </logger>
+
+    <!-- 定义com.test.demo模块的包，只输出INFO级别的日志,additivity 属性为 false，这样就不会继承 <root> 的 Appender 了 -->
+    <logger name="com.test.demo" level="INFO" additivity="false">
+        <appender-ref ref="DEFAULT"/>
+    </logger>
+
     <!-- 定义org.snaker.engine模块的包，只输出ERROR级别的日志-->
     <logger name="org.snaker.engine" level="ERROR"/>
     <!-- 不支持通配符 com.laker.admin.module.**.mapper-->

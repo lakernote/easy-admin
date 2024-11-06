@@ -1,6 +1,7 @@
 package com.laker.admin.config;
 
 import com.laker.admin.framework.ext.thread.EasyAdminMDCThreadPoolExecutor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,12 @@ import java.util.Map;
 
 @EnableScheduling
 @Configuration
+@Slf4j
 public class EasyThreadPoolConfig {
 
+    static {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> log.error("Thread {} got exception", thread, throwable));
+    }
 
     /**
      * 定时任务线程池
