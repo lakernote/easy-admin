@@ -62,6 +62,19 @@
         </encoder>
     </appender>
 
+    <!-- 异步输出  异步日志输出之后，日志信息将暂存在 ArrayBlockingQueue 列表中，后台会有一个 Worker 线程不断地获取缓冲区内容，然后写入磁盘中。-->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 当 queueSize 快达到上限时，可以通过配置，丢弃一些级别比较低的日志，这个值默认是队列长度的 80%；但若你担心可能会丢失业务日志，则可以将这个值设置成 0，表示所有的日志都要打印。-->
+        <discardingThreshold>0</discardingThreshold>
+        <!--队列大小 代表了队列的大小，默认是256。如果这个值设置的太大，大日志量下突然断电，会丢掉缓冲区的内容；-->
+        <queueSize>512</queueSize>
+        <!--最大刷新时间，单位是毫秒，默认是 1000 毫秒，也就是 1 秒。-->
+        <!-- 关闭日志上下文后，继续执行写任务的时间，这是通过调用 Thread 类的 join 方法来实现的（worker.join(maxFlushTime)）-->
+        <maxFlushTime>1000</maxFlushTime>
+        <!--这里指定了一个已有的Appender-->
+        <appender-ref ref="DEFAULT"/>
+    </appender>
+
     <!-- 以下针对不同的模块需求，设置不同的日志级别去过滤打印-->
     <logger name="com.test.demo" level="DEBUG">
         <appender-ref ref="DEFAULT"/>
@@ -79,6 +92,7 @@
     <logger name="com.laker.admin.framework" level="INFO"/>
     <logger name="io.micrometer.core.instrument.logging" level="WARN"/>
     <logger name="org.apache.kafka.clients" level="WARN"/>
+
     <!-- 定义p6spy sql监控 -->
     <logger name="p6spy" level="INFO"/>
     <!-- 默认日志输出级别  WARN INFO-->
