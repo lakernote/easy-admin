@@ -134,8 +134,10 @@
             })
             return false;
         });
-
-
+        var laytpl = layui.laytpl;
+        // 避免先显示默认值再显示从服务端接口查询的数据
+        // 1.隐藏表单元素
+        $('.mainBox').hide();
         id = easyAdmin.getQueryString("id");
         easyAdmin.http({
             url: '/sys/user/' + id,
@@ -146,6 +148,7 @@
                 if (result.success) {
                     //表单数据回显
                     form.val("edit", result.data);
+                    // 2.获取数据并填充表单
                     easyAdmin.httpGet("/sys/dept/tree", function (treeData) {
                         dtree.renderSelect({
                             elem: "#selectParent",
@@ -160,36 +163,33 @@
                         });
                     })
 
+                    // 处理 菜单接口角色
+                    easyAdmin.httpGet("/sys/user/getRoles?roleType=1&userId=" + id, function (result) {
+                        var getTpl = roleTpl.innerHTML;
+                        var view = document.getElementById('menu-role');
+                        laytpl(getTpl).render(result, function (html) {
+                            view.innerHTML = html;
+                        });
+                        form.render();
+                    });
+
+                    // 处理 数据角色
+                    easyAdmin.httpGet("/sys/user/getRoles?roleType=2&userId=" + id, function (result) {
+                        var getTpl = dataroleTpl.innerHTML;
+                        var view = document.getElementById('data-role');
+                        laytpl(getTpl).render(result, function (html) {
+                            view.innerHTML = html;
+                        });
+                        form.render();
+                    });
+
+                    // 3.显示表单元素
+                    $('.mainBox').show();
                 } else {
                     layer.msg(result.msg, {icon: 2, time: 1000});
                 }
             }
         })
-
-        var laytpl = layui.laytpl;
-
-
-        // 处理 菜单接口角色
-        easyAdmin.httpGet("/sys/user/getRoles?roleType=1&userId=" + id, function (result) {
-            var getTpl = roleTpl.innerHTML;
-            var view = document.getElementById('menu-role');
-            laytpl(getTpl).render(result, function (html) {
-                view.innerHTML = html;
-            });
-            form.render();
-        });
-
-        // 处理 数据角色
-        easyAdmin.httpGet("/sys/user/getRoles?roleType=2&userId=" + id, function (result) {
-            var getTpl = dataroleTpl.innerHTML;
-            var view = document.getElementById('data-role');
-            laytpl(getTpl).render(result, function (html) {
-                view.innerHTML = html;
-            });
-            form.render();
-        });
-
-
     })
 </script>
 <script>
