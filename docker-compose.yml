@@ -53,6 +53,7 @@ services:
       - "6379:6379"
     volumes:
       - redisData:/data
+      - redisData:/usr/local
 
   # 定义kafka 从 3.3 版本后，Kafka 引入了 KRaft 来替代 ZooKeeper
   kafka:
@@ -80,11 +81,14 @@ services:
       # 有时候配置 localhost也行，但是有时候会报错，所以最好配置对外的IP
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    volumes:
+      - kafkaData:/bitnami/kafka # 持久化数据存储路径
 
 volumes:
   # 自定义的卷名,存储的路径不好找
   redisData:
   mysqlData:
+  kafkaData:
 
 networks:
   # 配置docker network
