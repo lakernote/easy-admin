@@ -45,7 +45,7 @@ services:
   # 定义了redis
   redis:
     container_name: redis6
-    image: redis:6-alpine
+    build: ./docker/redis
     restart: unless-stopped
     networks:
       - app_net
@@ -53,7 +53,6 @@ services:
       - "6379:6379"
     volumes:
       - redisData:/data
-      - redisData:/etc/redis/redis.conf
 
   # 定义kafka 从 3.3 版本后，Kafka 引入了 KRaft 来替代 ZooKeeper
   kafka:
