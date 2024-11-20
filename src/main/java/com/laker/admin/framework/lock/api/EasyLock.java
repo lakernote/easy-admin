@@ -3,6 +3,8 @@ package com.laker.admin.framework.lock.api;
 import java.time.Duration;
 
 /**
+ * 分布式锁
+ *
  * @author laker
  */
 public interface EasyLock {

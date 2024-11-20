@@ -21,7 +21,12 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 /**
- * 保证服务的幂等性和防止重复请求
+ * 仅用于防止重复提交/防并发，不保证幂等性
+ * <p>
+ * 1 、前端防抖，按钮点击后立即禁用，等接口返回后再视情况启用或跳转页面。
+ * 2 、后端限流，同一来源在一定时间间隔内只允许调用一次。这个方案的好处是通用，且可以顺便减轻接口被非法调用的压力。
+ * 3 、使用令牌，前端提交数据前先获取一个令牌，后端限制令牌只能使用一次。
+ * </p>
  * <a href="https://blog.csdn.net/abu935009066/article/details/117471885">...</a>
  *
  * @author laker

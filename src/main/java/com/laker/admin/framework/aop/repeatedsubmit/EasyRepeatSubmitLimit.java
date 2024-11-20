@@ -3,6 +3,8 @@ package com.laker.admin.framework.aop.repeatedsubmit;
 import java.lang.annotation.*;
 
 /**
+ * 仅用于防止重复提交，不保证幂等性
+ *
  * @author laker
  */
 @Target(ElementType.METHOD)

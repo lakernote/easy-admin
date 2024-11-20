@@ -10,6 +10,8 @@ import java.time.Duration;
 import java.util.concurrent.ScheduledFuture;
 
 /**
+ * 分布式锁
+ *
  * @author laker
  */
 public abstract class AbstractSimpleEasyLock implements EasyLock {

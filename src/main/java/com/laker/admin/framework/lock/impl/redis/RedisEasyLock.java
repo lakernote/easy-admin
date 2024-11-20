@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 也可以替换为redisson的分布式锁
+ *
  * @author laker
  */
 @Slf4j
