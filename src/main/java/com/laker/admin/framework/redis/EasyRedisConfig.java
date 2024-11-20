@@ -8,6 +8,7 @@ import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -15,7 +16,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Configuration
-@ImportAutoConfiguration(exclude = {RedissonAutoConfigurationV2.class}) // 排除RedissonAutoConfigurationV2自动配置类
+// 排除RedissonAutoConfigurationV2自动配置类 排除lettuce的自动配置类
+@ImportAutoConfiguration(exclude = {RedissonAutoConfigurationV2.class, RedisAutoConfiguration.class})
 @ConditionalOnBean(EasyRedisProperties.class)
 public class EasyRedisConfig {
 

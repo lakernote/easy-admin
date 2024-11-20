@@ -8,6 +8,7 @@ import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
 import com.laker.admin.framework.kafka.EasyKafkaConfig;
 import com.laker.admin.framework.model.Response;
+import com.laker.admin.framework.redis.EasyRedisCacheConfig;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
 import com.laker.admin.module.ext.entity.ExtLog;
@@ -190,7 +191,7 @@ public class DemoController {
     @GetMapping("/redis-get")
     @Operation(summary = "8.查询redis")
     public void getFromRedis() {
-        final Cache myCache = cacheManager.getCache("myCache");
+        final Cache myCache = cacheManager.getCache(EasyRedisCacheConfig.CACHE_NAME_1H);
         assert myCache != null;
         final String key = myCache.get("key", String.class);
         log.info("key:{}", key);

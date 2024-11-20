@@ -10,6 +10,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.Map;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @EnableScheduling
 @Configuration
@@ -30,6 +32,7 @@ public class EasyThreadPoolConfig {
         threadPoolTaskScheduler.setThreadNamePrefix("easy-task-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
+        threadPoolTaskScheduler.setRejectedExecutionHandler(new CustomRejectedExecutionHandler());
         return threadPoolTaskScheduler;
     }
 
@@ -45,6 +48,7 @@ public class EasyThreadPoolConfig {
         threadPoolTaskExecutor.setThreadNamePrefix("easy-executor-");
         threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskExecutor.setAwaitTerminationSeconds(60);
+        threadPoolTaskExecutor.setRejectedExecutionHandler(new CustomRejectedExecutionHandler());
         threadPoolTaskExecutor.setTaskDecorator(runnable -> {
             final Map<String, String> copyOfContextMap = MDC.getCopyOfContextMap();
             return () -> {
@@ -66,5 +70,15 @@ public class EasyThreadPoolConfig {
     public EasyAdminMDCThreadPoolExecutor businessMDCThreadPool() {
         return new EasyAdminMDCThreadPoolExecutor(20, 100, "business");
     }
+
+    // 自定义的拒绝执行处理器，以更好地处理任务被拒绝的情况
+    static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+            // 这里可以加入更详细的日志记录或发送警报等逻辑
+            log.warn("Task " + r.toString() + " rejected from " + executor.toString());
+        }
+    }
+
 
 }
