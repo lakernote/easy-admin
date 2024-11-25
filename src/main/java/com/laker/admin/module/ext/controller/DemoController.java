@@ -24,6 +24,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -33,6 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -53,6 +57,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping("/demo/v1")
 @Slf4j
+@Validated  // 启用请求参数和路径变量的参数校验
 public class DemoController {
 
     final IpifyClient ipifyClient;
@@ -212,5 +217,13 @@ public class DemoController {
                 .set("longArr", List.of(1L, 2L, 3L))
                 .set("age", 18);
         return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(dict);
+    }
+
+    @Operation(summary = "9.校验请求体")
+    @PostMapping("/createUser/{id}")
+    public Response<String> createUser(@Valid @RequestBody City city,
+                                       @RequestParam(required = false) @NotBlank(message = "姓名不能为空") String name,
+                                       @PathVariable @Min(value = 1, message = "ID 必须大于0") Long id) {
+        return Response.ok("创建成功");
     }
 }

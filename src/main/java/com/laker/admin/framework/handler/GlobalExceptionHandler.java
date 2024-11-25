@@ -161,21 +161,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 验证参数param类型
+     * 参数校验
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Response<Void> handleConstraintViolationException(ConstraintViolationException e) {
+    public Response<List<Dict>> handleConstraintViolationException(ConstraintViolationException e) {
         log.error(e.getMessage(), e);
-        List<Map> result = new ArrayList<>();
+        List<Dict> result = new ArrayList<>();
         e.getConstraintViolations().forEach((constraintViolation) -> {
             PathImpl path = (PathImpl) constraintViolation.getPropertyPath();
             NodeImpl leafNode = path.getLeafNode();
             String leafNodeName = leafNode.getName();
             result.add(Dict.create().set("field", leafNodeName).set("msg", constraintViolation.getMessage()));
         });
-        return Response.error400(JSONUtil.toJsonStr(result));
+        return Response.error400(result);
     }
-
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)

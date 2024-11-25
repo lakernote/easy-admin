@@ -55,6 +55,10 @@ public class Response<T> {
         return new Response<>("400", msg, null);
     }
 
+    public static <T> Response<T> error400(T data) {
+        return new Response<>("400", "", data);
+    }
+
     public static <T> Response<T> error401() {
         return new Response<>("401", "Not Login", null);
     }
