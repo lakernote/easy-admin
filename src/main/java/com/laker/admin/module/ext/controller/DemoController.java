@@ -104,8 +104,9 @@ public class DemoController {
 
     @GetMapping("/enum")
     @Operation(summary = "1.参数枚举 - querystring")
-    public void paramEnum(Distance distance) {
+    public Response paramEnum(Distance distance) {
         log.info(distance.toString());
+        return Response.ok(distance);
     }
 
     @GetMapping("/Object")

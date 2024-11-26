@@ -4,6 +4,7 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
+import com.laker.admin.framework.ext.mvc.LogResponseReturnValueHandler;
 import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
 import com.laker.admin.framework.ext.satoken.EasySaInterceptor;
@@ -15,6 +16,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -116,5 +118,11 @@ public class EasyWebMvcConfig implements WebMvcConfigurer {
                 return CurrentUser.builder().id(StpUtil.getLoginId().toString()).build();
             }
         });
+    }
+
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+        // 添加自定义返回值处理器
+        handlers.add(new LogResponseReturnValueHandler());
     }
 }
