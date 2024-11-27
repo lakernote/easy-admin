@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -68,10 +68,10 @@ public class SysUserController {
 
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(deptId != null, SysUser::getDeptId, deptId)
-                .and(StrUtil.isNotBlank(keyWord), i ->
-                        i.like(StrUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord)
+                .and(CharSequenceUtil.isNotBlank(keyWord), i ->
+                        i.like(CharSequenceUtil.isNotBlank(keyWord), SysUser::getUserName, keyWord)
                                 .or()
-                                .like(StrUtil.isNotBlank(keyWord), SysUser::getNickName, keyWord));
+                                .like(CharSequenceUtil.isNotBlank(keyWord), SysUser::getNickName, keyWord));
 
         Page<SysUser> pageList = sysUserService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
@@ -88,23 +88,22 @@ public class SysUserController {
 
     @GetMapping("/getAll")
     @ApiOperation(value = "获取所有用户")
-    public Response getAll() {
+    public Response<List<FlowAssigneVo>> getAll() {
         List<SysUser> list = sysUserService.list();
-        if (CollUtil.isNotEmpty(list)) {
-            List<FlowAssigneVo> collect = list.stream().map(sysUser -> FlowAssigneVo.builder()
-                    .name(sysUser.getNickName()).value(String.valueOf(sysUser.getUserId())).build()).collect(Collectors.toList());
-            collect.add(0, FlowAssigneVo.builder().name("请选择").value("").build());
-            collect.add(1, FlowAssigneVo.builder().name("当前用户").value("CurrentUser").build());
-            return Response.ok(collect);
+        if (CollUtil.isEmpty(list)) {
+            return Response.ok();
         }
-        return Response.ok();
+        List<FlowAssigneVo> collect = list.stream().map(sysUser -> FlowAssigneVo.builder()
+                .name(sysUser.getNickName()).value(String.valueOf(sysUser.getUserId())).build()).collect(Collectors.toList());
+        collect.add(0, FlowAssigneVo.builder().name("请选择").value("").build());
+        collect.add(1, FlowAssigneVo.builder().name("当前用户").value("CurrentUser").build());
+        return Response.ok(collect);
     }
 
     @PostMapping
     @ApiOperation(value = "新增或者更新")
     @Transactional
-    @SaCheckPermission("user.update")
-    public Response saveOrUpdate(@RequestBody SysUser param) {
+    public Response<Void> saveOrUpdate(@RequestBody SysUser param) {
 
         if (param.getUserId() == null && param.getDeptId() == null) {
             return Response.error500("请选择部门");
@@ -122,7 +121,7 @@ public class SysUserController {
         } else {
             sysUserService.saveOrUpdate(param);
         }
-        if (StrUtil.isNotBlank(param.getRoleIds())) {
+        if (CharSequenceUtil.isNotBlank(param.getRoleIds())) {
             ArrayList<String> list = CollUtil.newArrayList(param.getRoleIds().split(","));
             list.add(param.getDataRoleId());
             this.saveUserRole(param.getUserId(), list);
@@ -134,11 +133,11 @@ public class SysUserController {
     @PutMapping("/switch")
     @ApiOperation(value = "用户启用停用开关")
     @SaCheckPermission("user.switch")
-    public Response userSwitch(@RequestBody SysUser param) {
+    public Response<Boolean> userSwitch(@RequestBody SysUser param) {
         return Response.ok(sysUserService.updateById(param));
     }
 
-    private boolean saveUserRole(Long userId, List<String> roleIds) {
+    private void saveUserRole(Long userId, List<String> roleIds) {
         sysUserRoleService.remove(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
         List<SysUserRole> sysUserRoles = new ArrayList<>();
         roleIds.forEach(roleId -> {
@@ -147,16 +146,16 @@ public class SysUserController {
             sysUserRole.setUserId(userId);
             sysUserRoles.add(sysUserRole);
         });
-        return sysUserRoleService.saveBatch(sysUserRoles);
+        sysUserRoleService.saveBatch(sysUserRoles);
     }
 
 
     @PutMapping("/updatePwd")
     @ApiOperation(value = "更新用户密码")
     @SaCheckPermission("user.update.pwd")
-    public Response updatePwd(@RequestBody PwdQo param) {
+    public Response<Void> updatePwd(@RequestBody PwdQo param) {
 
-        if (!StrUtil.equals(param.getNewPassword(), param.getConfirmPassword())) {
+        if (!CharSequenceUtil.equals(param.getNewPassword(), param.getConfirmPassword())) {
             return Response.error("500", "两次输入密码不一致");
         }
         long userId = StpUtil.getLoginIdAsLong();
@@ -177,7 +176,7 @@ public class SysUserController {
     @ApiOperation(value = "重置用户密码")
     @SaCheckPermission("user.reset.pwd")
     @SaCheckRole("admin")
-    public Response resetPwd(@PathVariable Long userId) {
+    public Response<Void> resetPwd(@PathVariable Long userId) {
         SysUser user = new SysUser();
         user.setUserId(userId);
         user.setPassword(SecureUtil.sha256(easyConfig.getDefaultPwd()));
@@ -188,7 +187,7 @@ public class SysUserController {
     @PutMapping("/updateAvatar")
     @ApiOperation(value = "更新用户头像")
     @SaCheckPermission("user.updateAvatar")
-    public Response resetPwd(@RequestBody UserDto userDto) {
+    public Response<Void> resetPwd(@RequestBody UserDto userDto) {
         long userId = StpUtil.getLoginIdAsLong();
         SysUser user = new SysUser();
         user.setAvatar(userDto.getAvatar());
@@ -199,30 +198,28 @@ public class SysUserController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id查询")
-    public Response get(@PathVariable Long id) {
+    public Response<SysUser> get(@PathVariable Long id) {
         return Response.ok(sysUserService.getById(id));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除")
     @SaCheckPermission("user.delete")
-    public Response delete(@PathVariable Long id) {
+    public Response<Boolean> delete(@PathVariable Long id) {
         return Response.ok(sysUserService.removeById(id));
     }
 
     @GetMapping("/getRoles")
-    public Response edit(Long userId, Integer roleType) {
+    public Response<List<SysRole>> edit(Long userId, Integer roleType) {
         List<SysRole> allRole = sysRoleService.list(Wrappers.<SysRole>lambdaQuery().eq(SysRole::getRoleType, roleType));
         if (userId != null) {
             List<SysUserRole> myRole = sysUserRoleService.list(Wrappers.<SysUserRole>lambdaQuery()
                     .eq(SysUserRole::getUserId, userId));
-            allRole.forEach(sysRole -> {
-                myRole.forEach(sysUserRole -> {
-                    if (sysRole.getRoleId().equals(sysUserRole.getRoleId())) {
-                        sysRole.setChecked(true);
-                    }
-                });
-            });
+            allRole.forEach(sysRole -> myRole.forEach(sysUserRole -> {
+                if (sysRole.getRoleId().equals(sysUserRole.getRoleId())) {
+                    sysRole.setChecked(true);
+                }
+            }));
         } else {
             allRole.stream()
                     .filter(sysRole -> sysRole.getRoleType() == 1)
@@ -240,7 +237,7 @@ public class SysUserController {
     @DeleteMapping("/batch/{ids}")
     @ApiOperation(value = "根据批量删除ids删除")
     @SaCheckPermission("dict.delete")
-    public Response batchRemove(@PathVariable Long[] ids) {
+    public Response<Boolean> batchRemove(@PathVariable Long[] ids) {
         return Response.ok(sysUserService.removeByIds(CollUtil.toList(ids)));
     }
 

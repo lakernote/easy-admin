@@ -290,6 +290,7 @@
                 title: '提示'
             }, function (index) {
                 layer.close(index);
+                // 弹出loading加载层
                 let loading = layer.load();
                 easyAdmin.http({
                     url: "/sys/user/" + obj.data['userId'],
@@ -313,6 +314,9 @@
                                 area: ['260px', '80px']
                             });
                         }
+                    }, complete: function () {
+                        // 关闭loading加载层
+                        layer.close(loading);
                     }
                 })
             });
@@ -356,6 +360,9 @@
                                 time: 1000
                             });
                         }
+                    }, complete: function () {
+                        // 关闭loading加载层
+                        layer.close(loading);
                     }
                 })
             });

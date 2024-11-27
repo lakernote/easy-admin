@@ -1,7 +1,7 @@
 package com.laker.admin.framework.model;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,17 +43,17 @@ public class PageVO implements Serializable {
         Page page = new Page();
         page.setCurrent(current);
         page.setSize(size);
-        if (StrUtil.isNotBlank(orderBy)) {
+        if (CharSequenceUtil.isNotBlank(orderBy)) {
             List<OrderItem> orders = new ArrayList<>();
-            List<String> orderItems = StrUtil.split(orderBy, ",");
+            List<String> orderItems = CharSequenceUtil.split(orderBy, ",");
             for (String orderItemStr : orderItems) {
-                List<String> orderAndSort = StrUtil.split(orderItemStr, " ");
+                List<String> orderAndSort = CharSequenceUtil.split(orderItemStr, " ");
                 if (CollUtil.size(orderAndSort) != 2) {
                     continue;
                 }
                 String order = orderAndSort.get(0);
                 String sort = orderAndSort.get(1);
-                orders.add(new OrderItem(order, StrUtil.equalsIgnoreCase("ASC", sort)));
+                orders.add(new OrderItem(order, CharSequenceUtil.equalsIgnoreCase("ASC", sort)));
             }
             page.setOrders(orders);
         }
