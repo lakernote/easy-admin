@@ -74,16 +74,35 @@ services:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       # Listeners
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://:9093
+      # INTERNAL EXTERNAL自己定义的
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=INTERNAL://0.0.0.0:9091,EXTERNAL://0.0.0.0:9092,CONTROLLER://:9093
+
       # 支持外部客户端访问，这里配置的是外部访问的地址 必须是对外的IP，客户端连接时必须是IP 10.140.201.179，不能是0.0.0.0
       # 有时候配置 localhost也行，但是有时候会报错，所以最好配置对外的IP
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9091,EXTERNAL://localhost:9092
+      # Broker之间的连接用 INSIDE 监听器
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
     volumes:
       - kafkaData:/bitnami/kafka # 持久化数据存储路径
-
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry:7.8.0
+    hostname: kafka-schema-registry
+    ports:
+      - "8082:8081"
+    container_name: kafkaSchemaRegistry
+    restart: always
+    networks:
+      - app_net
+    environment:
+      # 连接到 Kafka Broker，而不是 Zookeeper
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:9091'  # 连接到 Kafka Broker
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    depends_on:
+      - kafka
 volumes:
   # 自定义的卷名,存储的路径不好找
   redisData:
