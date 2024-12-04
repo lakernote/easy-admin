@@ -87,6 +87,7 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
     volumes:
       - kafkaData:/bitnami/kafka # 持久化数据存储路径
+
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:7.8.0
     hostname: kafka-schema-registry
@@ -103,6 +104,16 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
     depends_on:
       - kafka
+
+  postgres:
+    container_name: postgres
+    image: postgres14
+    build: ./docker/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app_net
+
 volumes:
   # 自定义的卷名,存储的路径不好找
   redisData:
