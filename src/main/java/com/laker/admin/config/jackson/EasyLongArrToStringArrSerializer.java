@@ -9,6 +9,7 @@ import java.util.Collection;
 
 /**
  * Long集合转String序列化 防止Long类型精度丢失
+ * 好像没用，被EasyLongToStringSerializer处理了
  */
 public class EasyLongArrToStringArrSerializer extends JsonSerializer<Collection> {
 
