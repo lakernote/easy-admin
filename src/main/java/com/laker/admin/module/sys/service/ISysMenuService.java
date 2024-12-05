@@ -1,8 +1,8 @@
 package com.laker.admin.module.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.laker.admin.module.sys.dto.MenuVo;
 import com.laker.admin.module.sys.entity.SysPower;
-import com.laker.admin.module.sys.pojo.MenuVo;
 
 import java.util.List;
 

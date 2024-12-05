@@ -1,4 +1,4 @@
-package com.laker.admin.module.sys.pojo;
+package com.laker.admin.module.sys.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

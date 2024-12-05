@@ -1,6 +1,6 @@
 package com.laker.admin.utils;
 
-import com.laker.admin.module.sys.pojo.MenuVo;
+import com.laker.admin.module.sys.dto.MenuVo;
 
 import java.util.ArrayList;
 import java.util.List;

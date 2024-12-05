@@ -1,4 +1,4 @@
-package com.laker.admin.module.sys.pojo;
+package com.laker.admin.module.sys.dto;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;

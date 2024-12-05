@@ -51,6 +51,8 @@
         <guava.version>33.0.0-jre</guava.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <knife4j.version>4.3.0</knife4j.version>
+        <lombok.version>1.18.30</lombok.version>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
 
     </properties>
 
@@ -66,11 +68,7 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
+
         <!-- mybatis -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -224,6 +222,24 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- 使用 lombok 简化代码 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>${lombok.version}</version>
+        </dependency>
+
+        <!-- 使用 mapstruct 简化对象映射 -->
+        <!-- 安装mapstruct插件 https://mapstruct.org/documentation/stable/reference/html/#introduction -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -252,6 +268,35 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <!-- mapstruct 代码生成器 -->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <!-- lombok 代码生成器 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <!-- additional annotation processor required as of Lombok 1.18.16 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
 
             <!-- actuator/info 中 开启 构建期间 Git 提交的信息，mvn 构建后才会生成git.properties 文件 -->

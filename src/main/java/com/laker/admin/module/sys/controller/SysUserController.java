@@ -14,12 +14,15 @@ import com.laker.admin.framework.aop.metrics.EasyMetrics;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.PageVO;
 import com.laker.admin.framework.model.Response;
+import com.laker.admin.module.sys.dto.FlowAssigneVo;
+import com.laker.admin.module.sys.dto.PwdQo;
+import com.laker.admin.module.sys.dto.UserDto;
+import com.laker.admin.module.sys.dto.user.UserBO;
+import com.laker.admin.module.sys.dto.user.UserRequest;
 import com.laker.admin.module.sys.entity.SysRole;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.entity.SysUserRole;
-import com.laker.admin.module.sys.pojo.FlowAssigneVo;
-import com.laker.admin.module.sys.pojo.PwdQo;
-import com.laker.admin.module.sys.pojo.UserDto;
+import com.laker.admin.module.sys.mapstruct.UserBeanMap;
 import com.laker.admin.module.sys.service.ISysRoleService;
 import com.laker.admin.module.sys.service.ISysUserRoleService;
 import com.laker.admin.module.sys.service.ISysUserService;
@@ -27,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +55,8 @@ public class SysUserController {
     ISysUserRoleService sysUserRoleService;
     @Autowired
     EasyAdminConfig easyAdminConfig;
+    @Autowired
+    UserBeanMap userBeanMap;
 
     @GetMapping
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
@@ -92,32 +96,29 @@ public class SysUserController {
 
     @PostMapping
     @Transactional
-    @SaCheckPermission("user.update")
-    public Response saveOrUpdate(@RequestBody SysUser param) {
+//    @SaCheckPermission("user.update")
+    public Response saveOrUpdate(@RequestBody UserRequest userRequest) {
 
-        if (param.getUserId() == null && param.getDeptId() == null) {
+        if (userRequest.getUserId() == null && userRequest.getDeptId() == null) {
             return Response.error("500", "请选择部门");
         }
 
-        if (param.getUserId() == null) {
-            // 只有超级管理员才能创建用户
-            if (StpUtil.getLoginIdAsLong() != 1L) {
-                return Response.error("403", "只有超级管理员才能创建用户!");
-            }
-            String password = param.getPassword();
-            param.setPassword(SecureUtil.sha256(password));
-            param.setCreateTime(LocalDateTime.now());
-            sysUserService.save(param);
-            if (StrUtil.isNotBlank(param.getRoleIds())) {
-                this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+        if (userRequest.getUserId() == null) {
+            String password = userRequest.getPassword();
+            userRequest.setPassword(SecureUtil.sha256(password));
+            final UserBO userBO = userBeanMap.requestToBo(userRequest);
+
+            sysUserService.save(userBO);
+            if (StrUtil.isNotBlank(userRequest.getRoleIds())) {
+                this.saveUserRole(userRequest.getUserId(), Arrays.asList(userRequest.getRoleIds().split(",")));
             }
         } else {
-            sysUserService.saveOrUpdate(param);
-            if (StrUtil.isNotBlank(param.getRoleIds())) {
-                this.saveUserRole(param.getUserId(), Arrays.asList(param.getRoleIds().split(",")));
+            sysUserService.saveOrUpdate(userBeanMap.requestToEntity(userRequest));
+            if (StrUtil.isNotBlank(userRequest.getRoleIds())) {
+                this.saveUserRole(userRequest.getUserId(), Arrays.asList(userRequest.getRoleIds().split(",")));
             }
         }
-        return Response.ok(sysUserService.saveOrUpdate(param));
+        return Response.ok();
     }
 
 

@@ -1,7 +1,7 @@
 package com.laker.admin.integration;
 
 import com.laker.admin.framework.model.Response;
-import com.laker.admin.module.sys.pojo.LoginDto;
+import com.laker.admin.module.sys.dto.LoginDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

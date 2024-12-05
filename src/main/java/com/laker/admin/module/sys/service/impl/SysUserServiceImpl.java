@@ -5,9 +5,11 @@ import com.laker.admin.framework.aop.trace.EasyTrace;
 import com.laker.admin.framework.aop.trace.SpanType;
 import com.laker.admin.framework.aop.trace.TraceCodeBlock;
 import com.laker.admin.framework.ext.mybatis.UserDataPower;
+import com.laker.admin.module.sys.dto.user.UserBO;
 import com.laker.admin.module.sys.entity.SysUser;
 import com.laker.admin.module.sys.mapper.SysDeptMapper;
 import com.laker.admin.module.sys.mapper.SysUserMapper;
+import com.laker.admin.module.sys.mapstruct.UserBeanMap;
 import com.laker.admin.module.sys.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ import java.util.List;
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
     @Autowired
     SysDeptMapper deptMapper;
+    @Autowired
+    UserBeanMap userBeanMap;
 
     @EasyTrace(spanType = SpanType.Service)
     @Override
@@ -42,5 +46,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public List<UserDataPower> getUserDataPowers(Long userId) {
         return TraceCodeBlock.trace("sysUserMapper.getUserDataPowers", () -> this.getBaseMapper().getUserDataPowers(userId));
+    }
+
+    @Override
+    public boolean save(UserBO userBO) {
+        final SysUser sysUser = userBeanMap.boToEntity(userBO);
+        return this.save(sysUser) ;
     }
 }
