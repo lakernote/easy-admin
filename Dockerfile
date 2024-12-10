@@ -1,5 +1,6 @@
 # 该镜像需要依赖的基础镜像
-FROM openjdk:17-jdk-alpine
+# 使用体积更小的基础镜像
+FROM openjdk:17-jdk-slim
 # 指定维护者的名字
 MAINTAINER laker "935009066@qq.com"
 # 创建目录
@@ -11,7 +12,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 # 将指定目录下的jar包复制到docker容器的/目录下
 COPY target/*.jar app.jar
 # 复制前端web到容器内的 /laker/easy-admin-client
-COPY /easy-admin-client /laker/web
+COPY /easy-admin-client /laker/easy-admin-client
 # 暴露8080端口
 EXPOSE 8080
 # 指定docker容器启动时运行jar包
