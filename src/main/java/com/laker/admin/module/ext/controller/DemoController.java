@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.laker.admin.framework.aop.ratelimit.EasyRateLimit;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
 import com.laker.admin.framework.kafka.EasyKafkaConfig;
@@ -89,6 +90,7 @@ public class DemoController {
             @Parameter(name = "limit", description = "每页多少记录", in = ParameterIn.QUERY),
             @Parameter(name = "types", description = "类型", in = ParameterIn.QUERY)
     })
+    @EasyRateLimit(key = "pageList", timeout = 1, limit = 1, message = "请求过于频繁，请稍后再试")
     public Response<SysUser> pageList(
             @PathVariable("id") Long id,
             @RequestHeader("token") String token,
