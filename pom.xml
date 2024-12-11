@@ -103,6 +103,14 @@
             <version>${sa-token-spring-boot3-starter.version}</version>
         </dependency>
 
+        <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+            <version>${sa-token-spring-boot3-starter.version}</version>
+        </dependency>
+
+
         <!-- 应用监控 -->
         <dependency>
             <groupId>net.bull.javamelody</groupId>
