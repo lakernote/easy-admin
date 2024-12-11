@@ -1,8 +1,6 @@
 package com.laker.admin.framework.aop.repeatedsubmit;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.LFUCache;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.laker.admin.framework.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +33,13 @@ import java.lang.reflect.Method;
 @Aspect
 @Slf4j
 public class EasyLimitSubmitAspect {
-    private static final LFUCache<Object, Object> cache = CacheUtil.newLFUCache(100, 60 * 1000L);
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
     private static final ExpressionParser PARSER = new SpelExpressionParser();
+    final EasyRepeatSubmiter easyRepeatSubmiter;
+
+    public EasyLimitSubmitAspect(EasyRepeatSubmiter easyRepeatSubmiter) {
+        this.easyRepeatSubmiter = easyRepeatSubmiter;
+    }
 
     /**
      * 获取 注解有2中方式
@@ -55,22 +57,12 @@ public class EasyLimitSubmitAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         // 获取注解
         EasyRepeatSubmitLimit easyRepeatSubmitLimit = method.getAnnotation(EasyRepeatSubmitLimit.class);
-        int limitTime = easyRepeatSubmitLimit.time();
+        int timeout = easyRepeatSubmitLimit.timeout();
         String key = getLockKey(joinPoint, easyRepeatSubmitLimit);
-        Object result = cache.get(key, false);
-        if (result != null) {
+        if (!easyRepeatSubmiter.tryAcquire(key, timeout)) {
             throw new BusinessException("请勿重复访问！");
         }
-        cache.put(key, StpUtil.getLoginId(), limitTime * 1000L);
-        try {
-            return joinPoint.proceed();
-        } catch (Throwable e) {
-            log.error("Exception in {}.{}() with cause = '{}' and exception = '{}'", joinPoint.getSignature().getDeclaringTypeName(),
-                    joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL", e.getMessage(), e);
-            throw e;
-        } finally {
-            cache.remove(key);
-        }
+        return joinPoint.proceed();
     }
 
     private String getLockKey(ProceedingJoinPoint joinPoint, EasyRepeatSubmitLimit easyRepeatSubmitLimit) {

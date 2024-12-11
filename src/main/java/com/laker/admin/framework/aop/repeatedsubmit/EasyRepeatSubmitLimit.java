@@ -28,7 +28,7 @@ public @interface EasyRepeatSubmitLimit {
     boolean userLimit() default true;
 
     /**
-     * 锁时间 默认10s
+     * 防重复提交的超时时间，单位为秒
      */
-    int time() default 10;
+    int timeout() default 2;
 }
