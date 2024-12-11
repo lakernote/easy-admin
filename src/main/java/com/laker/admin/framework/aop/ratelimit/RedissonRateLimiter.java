@@ -14,9 +14,9 @@ public class RedissonRateLimiter implements EasyRateLimiter {
     }
 
     @Override
-    public boolean tryAcquire(String key, int limit, long timeout) {
+    public boolean tryAcquire(String key, int limit, long time) {
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(key);
-        rateLimiter.trySetRate(RateType.OVERALL, limit, timeout, RateIntervalUnit.MINUTES);
+        rateLimiter.trySetRate(RateType.OVERALL, limit, time, RateIntervalUnit.SECONDS);
         return rateLimiter.tryAcquire();
     }
 }

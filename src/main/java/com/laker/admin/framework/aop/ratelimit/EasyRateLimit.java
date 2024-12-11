@@ -4,15 +4,18 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface EasyRateLimit {
     int limit() default 3; // 默认限流次数
 
-    long timeout() default 1; // 时间窗口（分钟）
+    long time() default 1; // 时间窗口
 
-    String key(); // 限流维度：user, ip, system
+    TimeUnit timeUnit() default TimeUnit.SECONDS;     // 时间单位
+
+    String key(); // 限流业务标识
 
     String message() default "Rate limit exceeded"; // 自定义异常描述
 

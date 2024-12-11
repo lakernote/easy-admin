@@ -44,6 +44,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -90,7 +91,7 @@ public class DemoController {
             @Parameter(name = "limit", description = "每页多少记录", in = ParameterIn.QUERY),
             @Parameter(name = "types", description = "类型", in = ParameterIn.QUERY)
     })
-    @EasyRateLimit(key = "pageList", timeout = 1, limit = 1, message = "请求过于频繁，请稍后再试")
+    @EasyRateLimit(key = "pageList", time = 1, limit = 2, message = "请求过于频繁，请稍后再试")
     public Response<SysUser> pageList(
             @PathVariable("id") Long id,
             @RequestHeader("token") String token,
@@ -106,6 +107,7 @@ public class DemoController {
 
     @GetMapping("/enum")
     @Operation(summary = "1.参数枚举 - querystring")
+    @EasyRateLimit(key = "paramEnum", time = 1, timeUnit = TimeUnit.DAYS, limit = 2, message = "一天只能请求两次")
     public Response paramEnum(Distance distance) {
         log.info(distance.toString());
         return Response.ok(distance);

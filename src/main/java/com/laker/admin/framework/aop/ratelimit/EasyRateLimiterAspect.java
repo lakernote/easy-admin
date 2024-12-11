@@ -21,8 +21,7 @@ public class EasyRateLimiterAspect {
     public Object handleRateLimit(ProceedingJoinPoint joinPoint, EasyRateLimit rateLimit) throws Throwable {
         String key = generateKey(rateLimit); // 动态生成 key
         EasyRateLimiter rateLimiter = easyRateLimiterFactory.getRateLimiter(); // 可切换策略
-
-        if (!rateLimiter.tryAcquire(key, rateLimit.limit(), rateLimit.timeout())) {
+        if (!rateLimiter.tryAcquire(key, rateLimit.limit(), rateLimit.timeUnit().toSeconds(rateLimit.time()))) {
             throw new RateLimitException(rateLimit.message()); // 使用注解中的自定义消息
         }
         return joinPoint.proceed();
