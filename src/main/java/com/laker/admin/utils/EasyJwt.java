@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
@@ -16,12 +17,18 @@ public class EasyJwt {
         this.jwtProperties = jwtProperties;
     }
 
-    public String generateToken(String userId, String role) {
+    public static void main(String[] args) {
+            SecretKey key =Jwts.SIG.HS256.key().build(); // 适用于 HS512
+            System.out.println(java.util.Base64.getEncoder().encodeToString(key.getEncoded()));
+    }
+
+    public String generateToken(String userId) {
         return Jwts.builder()
                 .subject(userId)
-                .claim("role", role)
+                .claim("userId", userId)
+                .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration() * 1000))
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()))
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), Jwts.SIG.HS256)
                 .compact();
     }
 

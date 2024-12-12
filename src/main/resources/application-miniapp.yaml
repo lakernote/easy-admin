@@ -4,5 +4,5 @@ wx:
     secret: 12345678901234567890123456789012
     msg-data-format: JSON
 jwt:
-  secret-key: "your-very-secure-secret-key"
+  secret-key: I6XBzMxqZXstyzNTE40l6CfRIMlaj4uLp/SQw69uF/o=
   expiration: 86400 # Token有效期：1天，单位秒
