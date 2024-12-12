@@ -33,7 +33,10 @@ public class EasyAdminConfig {
      */
     private Nginx nginx = new Nginx();
 
-    private OssFile ossFile = new OssFile();
+    /**
+     * 文件存储
+     */
+    private Storage storage = new Storage();
 
     private Trace trace = new Trace();
 
@@ -57,10 +60,26 @@ public class EasyAdminConfig {
     }
 
     @Data
-    public static class OssFile {
-        private String type = "native";
-        private String path = "oss-file";
-        private String domain = "http://localhost:8080";
+    public static class Storage {
+        private Local local = new Local();
+        private Aliyun aliyun = new Aliyun();
+    }
+
+    @Data
+    public static class Local {
+        private boolean enable = true;
+        private String address = "http://localhost:8080";
+        private String storagePath = "storage";
+
+    }
+
+    @Data
+    public static class Aliyun {
+        private boolean enable;
+        private String endpoint;
+        private String accessKeyId;
+        private String accessKeySecret;
+        private String bucketName;
     }
 
     @Data
