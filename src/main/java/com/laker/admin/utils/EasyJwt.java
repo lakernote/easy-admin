@@ -1,5 +1,6 @@
 package com.laker.admin.utils;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.laker.admin.module.wx.miniapp.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,9 +18,10 @@ public class EasyJwt {
         this.jwtProperties = jwtProperties;
     }
 
+    @VisibleForTesting
     public static void main(String[] args) {
-            SecretKey key =Jwts.SIG.HS256.key().build(); // 适用于 HS512
-            System.out.println(java.util.Base64.getEncoder().encodeToString(key.getEncoded()));
+        SecretKey key = Jwts.SIG.HS256.key().build(); // 适用于 HS512
+        System.out.println(java.util.Base64.getEncoder().encodeToString(key.getEncoded()));
     }
 
     public String generateToken(String userId) {
