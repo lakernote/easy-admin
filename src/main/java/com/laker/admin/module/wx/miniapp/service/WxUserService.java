@@ -54,7 +54,7 @@ public class WxUserService {
 
 
         // 生成 JWT Token
-        String token = easyJwt.generateToken(wxUser.getId().toString());
+        String token = easyJwt.generateToken(wxUser.getId());
 
         // 返回用户信息和 token
         Map<String, Object> result = new HashMap<>();

@@ -1,6 +1,7 @@
 package com.laker.admin.utils;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.module.wx.miniapp.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,10 +25,10 @@ public class EasyJwt {
         System.out.println(java.util.Base64.getEncoder().encodeToString(key.getEncoded()));
     }
 
-    public String generateToken(String userId) {
+    public String generateToken(Long userId) {
         return Jwts.builder()
-                .subject(userId)
-                .claim("userId", userId)
+                .subject("easy-admin")
+                .claim(EasyAdminConstants.USER_ID, userId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration() * 1000))
                 .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), Jwts.SIG.HS256)

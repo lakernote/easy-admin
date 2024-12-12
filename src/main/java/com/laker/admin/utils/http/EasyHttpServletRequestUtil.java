@@ -4,6 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
+import com.laker.admin.framework.EasyAdminConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StreamUtils;
@@ -141,5 +142,9 @@ public class EasyHttpServletRequestUtil {
         List<String> parametersList = new ArrayList<>();
         parameters.forEach((name, value) -> parametersList.add(name + "=" + value));
         return parametersList;
+    }
+
+    public static Long getWxUserId() {
+        return (Long) getRequest().getAttribute(EasyAdminConstants.USER_ID);
     }
 }

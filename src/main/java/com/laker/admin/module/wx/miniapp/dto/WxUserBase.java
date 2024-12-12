@@ -6,8 +6,6 @@ import lombok.Data;
 @Data
 public abstract class WxUserBase {
 
-    private String openId;
-
     private String nickName;
 
     private WxUserTypeEnum roleType;

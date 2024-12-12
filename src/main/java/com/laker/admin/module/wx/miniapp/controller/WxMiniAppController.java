@@ -3,6 +3,7 @@ package com.laker.admin.module.wx.miniapp.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.wx.miniapp.service.WxUserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +42,16 @@ public class WxMiniAppController {
      *
      * @param code 前端wx.login获取的code
      */
+    @Operation(summary = "0.登录接口", description = "登录接口")
     @GetMapping("/login")
     public Response<Map> login(@NotBlank(message = "登录凭证不能为空") String code,
                                @RequestParam(required = false, defaultValue = "false") Boolean test) {
         return Response.ok(wxUserService.login(code, test));
+    }
+
+    @Operation(summary = "1.获取用户设置", description = "获取用户设置")
+    @GetMapping("/setting")
+    public Response<Void> login() {
+        return Response.ok();
     }
 }

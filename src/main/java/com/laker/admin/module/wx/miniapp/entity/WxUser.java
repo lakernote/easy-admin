@@ -14,6 +14,8 @@ public class WxUser extends WxUserBase {
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    private String openId;
+
     private String unionId;
 
     private String sessionKey;
