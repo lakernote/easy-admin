@@ -48,12 +48,13 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <sa-token-spring-boot3-starter.version>1.37.0</sa-token-spring-boot3-starter.version>
         <mysql-connector-j.version>8.3.0</mysql-connector-j.version>
-        <guava.version>33.0.0-jre</guava.version>
+        <guava.version>32.1.2-jre</guava.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <knife4j.version>4.3.0</knife4j.version>
         <lombok.version>1.18.30</lombok.version>
         <org.mapstruct.version>1.6.2</org.mapstruct.version>
-
+        <wx-java-miniapp-spring-boot-starter.version>4.6.8.B</wx-java-miniapp-spring-boot-starter.version>
+        <jjwt-jackson.version>0.12.6</jjwt-jackson.version>
     </properties>
 
     <dependencies>
@@ -247,6 +248,29 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
 
+        <!-- https://github.com/Wechat-Group/WxJava/tree/develop/spring-boot-starters -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
+            <version>${wx-java-miniapp-spring-boot-starter.version}</version>
+        </dependency>
+
+        <!-- https://github.com/jwtk/jjwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt-jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt-jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+            <version>${jjwt-jackson.version}</version>
+        </dependency>
 
     </dependencies>
 

@@ -74,4 +74,12 @@ public class EasyKnife4jConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi wxMiniAppApi() {
+        return GroupedOpenApi.builder()
+                .group("3.wxMiniApp")
+                .pathsToMatch("/wx/miniapp/**")
+                .build();
+    }
+
 }

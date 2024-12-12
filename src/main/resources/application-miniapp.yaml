@@ -1,0 +1,8 @@
+wx:
+  miniapp:
+    appid: wx123456789
+    secret: 12345678901234567890123456789012
+    msg-data-format: JSON
+jwt:
+  secret-key: "your-very-secure-secret-key"
+  expiration: 86400 # Token有效期：1天，单位秒

@@ -1,5 +1,6 @@
 package com.laker.admin.config;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
@@ -8,6 +9,8 @@ import com.laker.admin.framework.ext.mvc.LogResponseReturnValueHandler;
 import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
 import com.laker.admin.framework.ext.mvc.StringToEnumConvertFactory;
 import com.laker.admin.framework.ext.satoken.EasySaInterceptor;
+import com.laker.admin.utils.EasyJwt;
+import com.laker.admin.utils.http.EasyHttpServletRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -32,16 +35,20 @@ import java.util.List;
 @Configuration
 @Slf4j
 public class EasyWebMvcConfig implements WebMvcConfigurer {
-    private static final String[] exclude_path = {"/admin/**",
+    private static final String[] exclude_path = {
+            "/admin/**",
             "/admin/login.html",
             "/error",
             "/favicon.ico",
             "/sys/auth/v1/login",
-            "/swagger-resources/**"};
+            "/swagger-resources/**",
+            "/wx/miniapp/user/login",};
     final EasyAdminConfig easyAdminConfig;
+    final EasyJwt easyJwt;
 
-    public EasyWebMvcConfig(EasyAdminConfig easyAdminConfig) {
+    public EasyWebMvcConfig(EasyAdminConfig easyAdminConfig, EasyJwt easyJwt) {
         this.easyAdminConfig = easyAdminConfig;
+        this.easyJwt = easyJwt;
     }
 
     /**
@@ -52,6 +59,21 @@ public class EasyWebMvcConfig implements WebMvcConfigurer {
         // 注册注解拦截器，并排除不需要注解鉴权的接口地址
         registry.addInterceptor(new EasySaInterceptor(handler -> {
                     SaRouter.match("/**", r -> StpUtil.checkLogin());
+                    SaRouter.match("/wx/**", r -> {
+                        // check jwt
+                        final HttpServletRequest request = EasyHttpServletRequestUtil.getRequest();
+                        String header = request.getHeader("Authorization");
+                        if (header == null || !header.startsWith("Bearer ")) {
+                            throw new NotLoginException("未登录", null, null);
+                        }
+
+                        String token = header.substring(7); // 去掉 "Bearer "
+                        try {
+                            easyJwt.parseToken(token);
+                        } catch (Exception e) {
+                            throw new NotLoginException("未登录", null, null);
+                        }
+                    });
                     // 角色认证 -- 拦截以 admin 开头的路由，必须具备 admin 角色或者 super-admin 角色才可以通过认证
                     SaRouter.match("/admin/**", r -> StpUtil.checkRoleOr("admin", "super-admin"));
                 }).isAnnotation(true)).addPathPatterns("/**")

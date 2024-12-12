@@ -166,7 +166,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public Response<List<Dict>> handleConstraintViolationException(ConstraintViolationException e) {
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         List<Dict> result = new ArrayList<>();
         e.getConstraintViolations().forEach((constraintViolation) -> {
             PathImpl path = (PathImpl) constraintViolation.getPropertyPath();
