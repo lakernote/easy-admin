@@ -190,10 +190,16 @@
             <version>${guava.version}</version>
         </dependency>
 
-        <!-- openfeign -->
+        <!-- openfeign https://spring.io/projects/spring-cloud-openfeign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- https://spring.io/projects/spring-cloud-circuitbreaker -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
 
         <!-- feign-micrometer trace and metrics-->

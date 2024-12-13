@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,17 +69,19 @@ public class DemoController {
     final CacheManager cacheManager;
     final ObservationRegistry registry;
     final IExtLogService extLogService;
+    private final CircuitBreakerFactory cbFactory;
 
     public DemoController(IpifyClient ipifyClient, ObservationRegistry registry,
                           @Autowired(required = false) KafkaTemplate<String, String> kafkaTemplate,
                           @Autowired(required = false) EasyKafkaConfig easyKafkaConfig,
-                          @Autowired(required = false) CacheManager cacheManager, IExtLogService extLogService) {
+                          @Autowired(required = false) CacheManager cacheManager, IExtLogService extLogService, CircuitBreakerFactory cbFactory) {
         this.ipifyClient = ipifyClient;
         this.registry = registry;
         this.kafkaTemplate = kafkaTemplate;
         this.easyKafkaConfig = easyKafkaConfig;
         this.cacheManager = cacheManager;
         this.extLogService = extLogService;
+        this.cbFactory = cbFactory;
     }
 
 
@@ -229,6 +232,19 @@ public class DemoController {
     public Response<String> createUser(@Valid @RequestBody City city,
                                        @RequestParam(required = false) @NotBlank(message = "姓名不能为空") String name,
                                        @PathVariable @Min(value = 1, message = "ID 必须大于0") Long id) {
-        return Response.ok("创建成功");
+
+        String result = cbFactory.create("slow").run(() -> {
+            log.info("slow");
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            return "成功";
+        }, throwable -> {
+            log.error("slow", throwable);
+            return "fallback";
+        });
+        return Response.ok(result);
     }
 }
