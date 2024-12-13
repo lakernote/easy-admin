@@ -1,4 +1,4 @@
-package com.laker.admin.framework.lock.api;
+package com.laker.admin.framework.lock;
 
 import java.time.Duration;
 

@@ -1,7 +1,7 @@
-package com.laker.admin.framework.lock.impl.redis;
+package com.laker.admin.framework.lock.redis;
 
-import com.laker.admin.framework.lock.api.LLock;
-import com.laker.admin.framework.lock.core.AbstractSimpleEasyLock;
+import com.laker.admin.framework.lock.AbstractSimpleEasyLock;
+import com.laker.admin.framework.lock.LLock;
 import io.lettuce.core.RedisCommandInterruptedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisSystemException;

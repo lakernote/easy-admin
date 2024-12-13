@@ -1,7 +1,7 @@
-package com.laker.admin.framework.lock.impl.jdbc;
+package com.laker.admin.framework.lock.jdbc;
 
-import com.laker.admin.framework.lock.api.LLock;
-import com.laker.admin.framework.lock.core.AbstractSimpleEasyLock;
+import com.laker.admin.framework.lock.AbstractSimpleEasyLock;
+import com.laker.admin.framework.lock.LLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;

@@ -1,9 +1,7 @@
-package com.laker.admin.framework.lock.core;
+package com.laker.admin.framework.lock;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
-import com.laker.admin.framework.lock.api.EasyLock;
-import com.laker.admin.framework.lock.api.LLock;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.time.Duration;

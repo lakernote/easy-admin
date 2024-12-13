@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.framework.lock.api.EasyLock;
+import com.laker.admin.framework.lock.EasyLock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.redis.EasyRedisCacheConfig;
@@ -46,7 +46,6 @@ public class SysDictController {
 
     @PostMapping
     @Operation(summary = "新增或者更新")
-//    @SaCheckPermission("dict.update")
     public Response saveOrUpdate(@RequestBody SysDict param) {
         return Response.ok(sysDictService.saveOrUpdate(param));
     }

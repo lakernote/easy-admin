@@ -1,8 +1,7 @@
 package com.laker.admin.framework.lock;
 
-import com.laker.admin.framework.lock.api.EasyLock;
-import com.laker.admin.framework.lock.impl.jdbc.MysqlEasyLock;
-import com.laker.admin.framework.lock.impl.redis.RedisEasyLock;
+import com.laker.admin.framework.lock.jdbc.MysqlEasyLock;
+import com.laker.admin.framework.lock.redis.RedisEasyLock;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +33,7 @@ public class EasyLockConfig {
 
     private ThreadPoolTaskScheduler easyLockTaskThreadPool() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(20);
+        threadPoolTaskScheduler.setPoolSize(5);
         threadPoolTaskScheduler.setThreadNamePrefix("easy-lock-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
