@@ -33,7 +33,9 @@ import java.util.List;
 @Slf4j
 public class EasyCorsFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws IOException, ServletException {
         boolean isValid = this.processRequest(request, response);
         if (!isValid || CorsUtils.isPreFlightRequest(request)) {
             return;
@@ -67,7 +69,9 @@ public class EasyCorsFilter extends OncePerRequestFilter {
 
         boolean preFlightRequest = CorsUtils.isPreFlightRequest(request);
 
-        return handleInternal(new ServletServerHttpRequest(request), new ServletServerHttpResponse(response), preFlightRequest);
+        return handleInternal(new ServletServerHttpRequest(request),
+                new ServletServerHttpResponse(response),
+                preFlightRequest);
     }
 
     protected boolean handleInternal(ServerHttpRequest request, ServerHttpResponse response

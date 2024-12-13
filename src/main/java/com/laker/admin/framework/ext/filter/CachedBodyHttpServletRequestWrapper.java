@@ -1,13 +1,15 @@
 package com.laker.admin.framework.ext.filter;
 
-import org.springframework.util.StreamUtils;
-
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StreamUtils;
+
 import java.io.*;
 
+@Slf4j
 public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private final byte[] cachedBody;
@@ -29,7 +31,7 @@ public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapp
         return new BufferedReader(new InputStreamReader(byteArrayInputStream));
     }
 
-    public class CachedBodyServletInputStream extends ServletInputStream {
+    public static class CachedBodyServletInputStream extends ServletInputStream {
 
         private final InputStream cachedBodyInputStream;
 
@@ -42,8 +44,7 @@ public class CachedBodyHttpServletRequestWrapper extends HttpServletRequestWrapp
             try {
                 return cachedBodyInputStream.available() == 0;
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("CachedBodyServletInputStream error", e);
             }
             return false;
         }
