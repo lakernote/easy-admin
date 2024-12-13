@@ -79,6 +79,10 @@ spring:
             retryer: feign.Retryer.Default
       circuitbreaker:
         enabled: true
+        group: # 使用 feign的注解的name找配置。默认是类名方法名 建议开启
+          enabled: true
+      httpclient:
+        enabled: true
     discovery:
       enabled: false
 mybatis-plus:
@@ -227,4 +231,42 @@ springdoc:
       packages-to-scan: com.laker.admin.module.ext
 logging:
   level:
+    #feign日志以什么级别监控哪个接口：即对哪个Feign接口进行日志检查
     com.laker.admin.module.remote: error
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 10
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 60
+      eventConsumerBufferSize: 10
+      registerHealthIndicator: true
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+      ignoreExceptions:
+        - java.lang.RuntimeException
+    someShared:
+      slidingWindowSize: 50
+      permittedNumberOfCallsInHalfOpenState: 10
+    ipifyClient:
+      slidingWindowSize: 222
+      permittedNumberOfCallsInHalfOpenState: 111
+  instances:
+    backendA:
+      baseConfig: default
+      waitDurationInOpenState: 5000
+      slidingWindowSize: 123
+
+resilience4j.timelimiter:
+  configs:
+    default:
+      cancelRunningFuture: false
+      timeoutDuration: 2s
+    ipifyClient:
+      cancelRunningFuture: false
+      timeoutDuration: 2s
+  instances:
+    backendA:
+      baseConfig: default

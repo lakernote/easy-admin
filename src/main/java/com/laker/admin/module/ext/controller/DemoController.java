@@ -18,6 +18,7 @@ import com.laker.admin.module.ext.vo.qo.City;
 import com.laker.admin.module.remote.feign.IpifyClient;
 import com.laker.admin.module.remote.feign.dto.IpifyVo;
 import com.laker.admin.module.sys.entity.SysUser;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import io.swagger.v3.oas.annotations.Operation;
@@ -215,6 +216,8 @@ public class DemoController {
 
     @GetMapping("/getResponseEntity")
     @Operation(summary = "8.getResponseEntity")
+    // 这种只支持yaml配置的   https://resilience4j.readme.io/docs/getting-started-3
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback") // CircuitBreakerAspect
     public ResponseEntity getResponseEntity() {
         if (RandomUtil.randomBoolean()) {
             return ResponseEntity.ok(List.of(1, 2, 3));
@@ -227,12 +230,18 @@ public class DemoController {
         return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(dict);
     }
 
+    public ResponseEntity fallback(Throwable throwable) {
+        log.error("fallback", throwable);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fallback");
+    }
+
     @Operation(summary = "9.校验请求体")
     @PostMapping("/createUser/{id}")
     public Response<String> createUser(@Valid @RequestBody City city,
                                        @RequestParam(required = false) @NotBlank(message = "姓名不能为空") String name,
                                        @PathVariable @Min(value = 1, message = "ID 必须大于0") Long id) {
 
+        // 这种支持的是 EasyCircuitBreakerConfig 中的配置
         String result = cbFactory.create("slow").run(() -> {
             log.info("slow");
             try {
