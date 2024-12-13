@@ -233,40 +233,45 @@ logging:
   level:
     #feign日志以什么级别监控哪个接口：即对哪个Feign接口进行日志检查
     com.laker.admin.module.remote: error
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      slidingWindowSize: 100
-      permittedNumberOfCallsInHalfOpenState: 10
-      waitDurationInOpenState: 10000
-      failureRateThreshold: 60
-      eventConsumerBufferSize: 10
-      registerHealthIndicator: true
-      recordExceptions:
-        - org.springframework.web.client.HttpServerErrorException
-        - java.io.IOException
-      ignoreExceptions:
-        - java.lang.RuntimeException
-    someShared:
-      slidingWindowSize: 50
-      permittedNumberOfCallsInHalfOpenState: 10
-    ipifyClient:
-      slidingWindowSize: 222
-      permittedNumberOfCallsInHalfOpenState: 111
-  instances:
-    backendA:
-      baseConfig: default
-      waitDurationInOpenState: 5000
-      slidingWindowSize: 123
-
-resilience4j.timelimiter:
-  configs:
-    default:
-      cancelRunningFuture: false
-      timeoutDuration: 2s
-    ipifyClient:
-      cancelRunningFuture: false
-      timeoutDuration: 2s
-  instances:
-    backendA:
-      baseConfig: default
+    org.springframework.web.client.RestTemplate: error
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        waitDurationInOpenState: 10000
+        failureRateThreshold: 60
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+        recordExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.io.IOException
+        ignoreExceptions:
+          - java.lang.RuntimeException
+      someShared:
+        slidingWindowSize: 50
+        permittedNumberOfCallsInHalfOpenState: 10
+      ipifyClient:
+        slidingWindowSize: 222
+        permittedNumberOfCallsInHalfOpenState: 111
+    instances:
+      backendA:
+        baseConfig: default
+        waitDurationInOpenState: 5000
+        slidingWindowSize: 123
+      ipifyClient_getIpAddress:
+        slidingWindowSize: 333
+  timelimiter:
+    configs:
+      default:
+        cancelRunningFuture: false
+        timeoutDuration: 2s
+      ipifyClient:
+        cancelRunningFuture: false
+        timeoutDuration: 2s
+    instances:
+      backendA:
+        baseConfig: default
+      ipifyClient_getIpAddress:
+        timeoutDuration: 33s

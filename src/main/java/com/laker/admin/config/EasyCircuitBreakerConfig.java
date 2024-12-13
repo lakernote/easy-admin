@@ -53,8 +53,7 @@ public class EasyCircuitBreakerConfig {
                                             .waitDurationInOpenState(Duration.ofSeconds(10))
                                             .build())
                             .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(1)).build()),
-                    "slow","ipifyClient");
-
+                    "slow", "ipifyClient_getIpAddress2"); // 方法级别
             // 添加事件处理
             factory.addCircuitBreakerCustomizer(circuitBreaker -> circuitBreaker.getEventPublisher()
                             .onError(event -> log.error("circuit error", event.getThrowable()))

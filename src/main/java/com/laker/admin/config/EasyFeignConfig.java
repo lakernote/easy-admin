@@ -6,12 +6,14 @@ import feign.*;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.cloud.openfeign.CircuitBreakerNameResolver;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -123,4 +125,11 @@ public class EasyFeignConfig {
         };
     }
 
+    /**
+     * 配置熔断器名称解析器
+     */
+    @Bean
+    public CircuitBreakerNameResolver circuitBreakerNameResolver() {
+        return (String feignClientName, Target<?> target, Method method) -> feignClientName + "_" + method.getName();
+    }
 }
