@@ -1,7 +1,7 @@
 package com.laker.admin.framework.aop.ratelimit;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.laker.admin.utils.http.EasyHttpServletRequestUtil;
+import com.laker.admin.utils.http.EasyRequestUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -39,7 +39,7 @@ public class EasyRateLimiterAspect {
 
     // 获取客户端 IP 地址
     private String getClientIp() {
-        return EasyHttpServletRequestUtil.getRemoteIP();
+        return EasyRequestUtil.getRemoteIP();
     }
 
     private String getUserId() {

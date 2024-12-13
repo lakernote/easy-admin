@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysFile;
-import com.laker.admin.module.sys.service.storage.StorageFacade;
+import com.laker.admin.module.sys.service.storage.EasyStorageFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +23,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys/file")
 public class SysFileController {
-    final StorageFacade storageFacade;
+    final EasyStorageFacade easyStorageFacade;
 
-    public SysFileController(StorageFacade storageFacade) {
-        this.storageFacade = storageFacade;
+    public SysFileController(EasyStorageFacade easyStorageFacade) {
+        this.easyStorageFacade = easyStorageFacade;
     }
 
     @GetMapping
@@ -35,14 +35,14 @@ public class SysFileController {
                                                @RequestParam(required = false, defaultValue = "10") long limit,
                                                String keyWord) {
         Page<SysFile> query = new Page<>(page, limit);
-        Page<SysFile> pageList = storageFacade.page(query, keyWord);
+        Page<SysFile> pageList = easyStorageFacade.page(query, keyWord);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
 
     @SneakyThrows
     @PostMapping("/upload")
     public Response<String> upload(@RequestParam("file") MultipartFile file) {
-        SysFile store = storageFacade.store(file.getInputStream(), file.getSize(),
+        SysFile store = easyStorageFacade.store(file.getInputStream(), file.getSize(),
                 file.getContentType(), file.getOriginalFilename());
         return Response.ok(store.getFilePath());
     }
@@ -51,14 +51,14 @@ public class SysFileController {
     @DeleteMapping("/{id}")
     @Operation(summary = "根据id删除")
     public Response<Void> delete(@PathVariable Long id) {
-        storageFacade.delete(id);
+        easyStorageFacade.delete(id);
         return Response.ok();
     }
 
     @DeleteMapping("/batch/{ids}")
     @Operation(summary = "根据批量删除ids删除")
     public Response<Void> batchRemove(@PathVariable Long[] ids) {
-        storageFacade.delete(ids);
+        easyStorageFacade.delete(ids);
         return Response.ok();
     }
 }

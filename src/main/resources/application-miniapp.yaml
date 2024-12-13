@@ -1,5 +1,6 @@
 wx:
   miniapp:
+    debug: true
     appid: wx123456789
     secret: 12345678901234567890123456789012
     msg-data-format: JSON

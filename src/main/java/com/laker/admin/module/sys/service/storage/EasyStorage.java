@@ -2,7 +2,7 @@ package com.laker.admin.module.sys.service.storage;
 
 import java.io.InputStream;
 
-public interface Storage {
+public interface EasyStorage {
 
     String store(InputStream inputStream, long contentLength, String contentType, String fileName);
 

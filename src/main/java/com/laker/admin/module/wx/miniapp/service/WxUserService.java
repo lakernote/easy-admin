@@ -5,19 +5,26 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.laker.admin.framework.exception.BusinessException;
+import com.laker.admin.module.wx.miniapp.dto.WxUserVo;
 import com.laker.admin.module.wx.miniapp.entity.WxUser;
 import com.laker.admin.module.wx.miniapp.enums.WxUserTypeEnum;
 import com.laker.admin.module.wx.miniapp.mapper.WxUserMapper;
 import com.laker.admin.module.wx.miniapp.mapstruct.WxUserBeanMap;
 import com.laker.admin.utils.EasyJwt;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class WxUserService {
+    @Value("${wx.miniapp.debug:false}")
+    private boolean debug;
 
     private final WxMaService wxMaService;
     private final WxUserMapper wxUserMapper;
@@ -31,8 +38,8 @@ public class WxUserService {
         this.wxUserBeanMap = wxUserBeanMap;
     }
 
-    public Map<String, Object> login(String code, boolean test) {
-        final WxMaJscode2SessionResult session = getSession(code, test);
+    public Map<String, Object> login(String code) {
+        final WxMaJscode2SessionResult session = getSession(code);
         String openId = session.getOpenid();
         String sessionKey = session.getSessionKey();
         String unionid = session.getUnionid();
@@ -46,10 +53,14 @@ public class WxUserService {
             wxUser.setRoleType(WxUserTypeEnum.GUEST);
             wxUser.setAvatar("https://cdn.laker.com.cn/2021/08/04/1628050131.png");
             wxUser.setNickName("游客" + RandomUtil.randomString(6));
+            wxUser.setCreateTime(LocalDateTime.now());
             wxUserMapper.insert(wxUser);
         } else {
-            wxUser.setSessionKey(sessionKey);
-            wxUserMapper.updateById(wxUser);
+            // 如果是老用户，更新 sessionKey
+            wxUserMapper.update(Wrappers.<WxUser>lambdaUpdate()
+                    .set(WxUser::getSessionKey, sessionKey)
+                    .set(WxUser::getUpdateTime, LocalDateTime.now())
+                    .eq(WxUser::getId, wxUser.getId()));
         }
 
 
@@ -63,11 +74,11 @@ public class WxUserService {
         return result;
     }
 
-    private WxMaJscode2SessionResult getSession(String code, boolean test) {
-        if (test) {
+    private WxMaJscode2SessionResult getSession(String code) {
+        if (debug) {
             WxMaJscode2SessionResult session = new WxMaJscode2SessionResult();
-            session.setOpenid(RandomUtil.randomString(16));
-            session.setSessionKey("test");
+            session.setOpenid("debug_openid");
+            session.setSessionKey("debug_session_key");
             return session;
         }
         WxMaJscode2SessionResult session = null;
@@ -77,5 +88,13 @@ public class WxUserService {
             throw new NotLoginException("登录失败", "登录失败", "");
         }
         return session;
+    }
+
+    public WxUserVo getByUserId(Long userId) {
+        final WxUser wxUser = wxUserMapper.selectById(userId);
+        if (wxUser == null) {
+            throw new BusinessException("用户不存在");
+        }
+        return wxUserBeanMap.entityToVo(wxUser);
     }
 }

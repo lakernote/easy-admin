@@ -14,14 +14,14 @@ import java.io.InputStream;
 @Slf4j
 @Service
 @ConditionalOnProperty(name = "laker.storage.aliyun.enable", havingValue = "true")
-public class AliyunStorage implements Storage {
+public class AliyunEasyStorage implements EasyStorage {
 
     private final String endpoint;
     private final String accessKeyId;
     private final String accessKeySecret;
     private final String bucketName;
 
-    public AliyunStorage(EasyAdminConfig easyConfig) {
+    public AliyunEasyStorage(EasyAdminConfig easyConfig) {
         EasyAdminConfig.Aliyun aliyun = easyConfig.getStorage().getAliyun();
         endpoint = aliyun.getEndpoint();
         accessKeyId = aliyun.getAccessKeyId();

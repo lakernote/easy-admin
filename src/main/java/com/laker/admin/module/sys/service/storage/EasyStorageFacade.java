@@ -9,7 +9,6 @@ import com.laker.admin.framework.ext.mybatis.UserInfoAndPowers;
 import com.laker.admin.framework.utils.EasyAdminSecurityUtils;
 import com.laker.admin.module.sys.entity.SysFile;
 import com.laker.admin.module.sys.service.ISysFileService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +17,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class StorageFacade {
+public class EasyStorageFacade {
 
-    @Autowired
-    ISysFileService sysFileService;
-    @Autowired
-    Storage storage;
+    final ISysFileService sysFileService;
+    final EasyStorage easyStorage;
+
+    public EasyStorageFacade(ISysFileService sysFileService, EasyStorage easyStorage) {
+        this.sysFileService = sysFileService;
+        this.easyStorage = easyStorage;
+    }
 
     public SysFile store(InputStream inputStream, long contentLength, String contentType, String originalFilename) {
         // png/jpg
         String suffix = FileUtil.getSuffix(originalFilename);
         String fileName = IdUtil.fastSimpleUUID() + "." + suffix;
-        String filePath = storage.store(inputStream, contentLength, contentType, fileName);
+        String filePath = easyStorage.store(inputStream, contentLength, contentType, fileName);
         SysFile sysFile = new SysFile();
         UserInfoAndPowers currentUserInfo = EasyAdminSecurityUtils.getCurrentUserInfo();
         sysFile.setUserId(currentUserInfo.getUserId());
@@ -49,7 +51,7 @@ public class StorageFacade {
         Page<SysFile> pageList = sysFileService.page(page, queryWrapper);
         List<SysFile> records = page.getRecords();
         records.forEach(sysFile -> {
-            sysFile.setFilePath(storage.getUrl(sysFile.getFilePath()));
+            sysFile.setFilePath(easyStorage.getUrl(sysFile.getFilePath()));
         });
         return pageList;
     }
@@ -58,7 +60,7 @@ public class StorageFacade {
     public void delete(Long id) {
         SysFile sysFile = sysFileService.getById(id);
         sysFileService.removeById(id);
-        storage.delete(sysFile.getFilePath());
+        easyStorage.delete(sysFile.getFilePath());
     }
 
     @Transactional

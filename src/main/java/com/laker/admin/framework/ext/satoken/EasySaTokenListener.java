@@ -7,7 +7,7 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.http.useragent.UserAgent;
 import com.laker.admin.module.sys.service.ISysUserService;
-import com.laker.admin.utils.http.EasyHttpServletRequestUtil;
+import com.laker.admin.utils.http.EasyRequestUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +39,12 @@ public class EasySaTokenListener implements SaTokenListener {
      */
     @Override
     public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginModel loginModel) {
-        UserAgent requestUserAgent = EasyHttpServletRequestUtil.getRequestUserAgent();
+        UserAgent requestUserAgent = EasyRequestUtil.getRequestUserAgent();
         if (requestUserAgent == null) {
             return;
         }
         ONLINE_USERS.add(OnlineUser.builder()
-                .ip(EasyHttpServletRequestUtil.getRemoteIP())
+                .ip(EasyRequestUtil.getRemoteIP())
                 .loginTime(new Date())
                 .os(requestUserAgent.getOs().getName())
                 .userId((Long) loginId)

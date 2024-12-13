@@ -13,12 +13,12 @@ import java.io.InputStream;
 @Slf4j
 @Service
 @ConditionalOnProperty(name = "laker.storage.local.enable", havingValue = "true", matchIfMissing = true)
-public class LocalStorage implements Storage {
+public class LocalEasyStorage implements EasyStorage {
 
     private final String storagePath;
     private final String address;
 
-    public LocalStorage(EasyAdminConfig easyConfig) {
+    public LocalEasyStorage(EasyAdminConfig easyConfig) {
         EasyAdminConfig.Local local = easyConfig.getStorage().getLocal();
         storagePath = local.getStoragePath();
         address = local.getAddress();
