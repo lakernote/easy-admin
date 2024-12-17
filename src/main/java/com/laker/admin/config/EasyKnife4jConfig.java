@@ -1,6 +1,8 @@
 package com.laker.admin.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -8,6 +10,9 @@ import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 接口文档描述，访问地址：http://ip:port/doc.html
@@ -21,19 +26,32 @@ public class EasyKnife4jConfig {
      */
     @Bean
     public GlobalOpenApiCustomizer orderGlobalOpenApiCustomizer() {
-
         return openApi -> {
-            // 设置全局的信息
-//            if (openApi.getPaths() != null) {
-//                openApi.addExtension("x-test123", "333");
-//                openApi.getPaths().addExtension("x-abb", RandomUtil.randomInt(1, 100));
-//            }
+            // 获取所有 Paths 并按自定义规则排序
+            Paths sortedPaths = sortPathsByCustomRule(openApi.getPaths());
+            openApi.setPaths(sortedPaths);
         };
     }
 
+    private Paths sortPathsByCustomRule(Paths originalPaths) {
+        // 使用 LinkedHashMap 保持顺序
+        Map<String, PathItem> sortedPathItems = originalPaths.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey()) // 自定义排序规则
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, // 显式指定泛型
+                        Map.Entry::getValue,
+                        (existing, replacement) -> existing,
+                        Paths::new
+                ));
+
+        // 创建新的 Paths 对象
+        Paths sortedPaths = new Paths();
+        sortedPathItems.forEach(sortedPaths::addPathItem);
+        return sortedPaths;
+    }
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("EasyAdminAPI")

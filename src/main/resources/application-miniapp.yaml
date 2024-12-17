@@ -1,9 +1,10 @@
 wx:
   miniapp:
-    debug: true
+    debug: true # 是否开启调试模式, 默认为false
     appid: wx123456789
     secret: 12345678901234567890123456789012
     msg-data-format: JSON
 jwt:
   secret-key: I6XBzMxqZXstyzNTE40l6CfRIMlaj4uLp/SQw69uF/o=
-  expiration: 86400 # Token有效期：1天，单位秒
+  expiration: 30m  # 30分钟
+  refresh-expiration: 7d  # 7天

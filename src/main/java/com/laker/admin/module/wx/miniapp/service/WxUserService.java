@@ -6,13 +6,16 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.laker.admin.framework.EasyAdminConstants;
 import com.laker.admin.framework.exception.BusinessException;
+import com.laker.admin.module.wx.miniapp.config.JwtProperties;
 import com.laker.admin.module.wx.miniapp.dto.WxUserVo;
 import com.laker.admin.module.wx.miniapp.entity.WxUser;
 import com.laker.admin.module.wx.miniapp.enums.WxUserTypeEnum;
 import com.laker.admin.module.wx.miniapp.mapper.WxUserMapper;
 import com.laker.admin.module.wx.miniapp.mapstruct.WxUserBeanMap;
 import com.laker.admin.utils.EasyJwt;
+import io.jsonwebtoken.Claims;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.util.Map;
 
 @Service
 public class WxUserService {
+
     @Value("${wx.miniapp.debug:false}")
     private boolean debug;
 
@@ -30,12 +34,14 @@ public class WxUserService {
     private final WxUserMapper wxUserMapper;
     private final EasyJwt easyJwt;
     private final WxUserBeanMap wxUserBeanMap;
+    private final JwtProperties jwtProperties;
 
-    public WxUserService(WxMaService wxMaService, WxUserMapper wxUserMapper, EasyJwt easyJwt, WxUserBeanMap wxUserBeanMap) {
+    public WxUserService(WxMaService wxMaService, WxUserMapper wxUserMapper, EasyJwt easyJwt, WxUserBeanMap wxUserBeanMap, JwtProperties jwtProperties) {
         this.wxMaService = wxMaService;
         this.wxUserMapper = wxUserMapper;
         this.easyJwt = easyJwt;
         this.wxUserBeanMap = wxUserBeanMap;
+        this.jwtProperties = jwtProperties;
     }
 
     public Map<String, Object> login(String code) {
@@ -63,13 +69,10 @@ public class WxUserService {
                     .eq(WxUser::getId, wxUser.getId()));
         }
 
-
-        // 生成 JWT Token
-        String token = easyJwt.generateToken(wxUser.getId());
-
         // 返回用户信息和 token
         Map<String, Object> result = new HashMap<>();
-        result.put("token", token);
+        result.put("accessToken", easyJwt.generateToken(wxUser.getId(), jwtProperties.getExpiration()));
+        result.put("refreshToken", easyJwt.generateToken(wxUser.getId(), jwtProperties.getRefreshExpiration()));
         result.put("user", wxUserBeanMap.entityToVo(wxUser));
         return result;
     }
@@ -96,5 +99,24 @@ public class WxUserService {
             throw new BusinessException("用户不存在");
         }
         return wxUserBeanMap.entityToVo(wxUser);
+    }
+
+    public Map<String, Object> renew(String oldRefreshToken) {
+        // 验证 refreshToken 的有效性
+        Claims claims = easyJwt.parseToken(oldRefreshToken);
+        Long userId = claims.get(EasyAdminConstants.USER_ID, Long.class);
+        if (userId == null) {
+            throw new NotLoginException("登录失败", "登录失败", "");
+        }
+
+        // 生成新的 accessToken 和 refreshToken
+        String newAccessToken = easyJwt.generateToken(userId, jwtProperties.getExpiration());
+        String newRefreshToken = easyJwt.generateToken(userId, jwtProperties.getRefreshExpiration());
+
+        // 返回结果
+        Map<String, Object> result = new HashMap<>();
+        result.put("accessToken", newAccessToken);
+        result.put("refreshToken", newRefreshToken);
+        return result;
     }
 }

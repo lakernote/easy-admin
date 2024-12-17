@@ -47,7 +47,7 @@ public class WxMiniAppController {
 
     @Operation(summary = "1.获取用户设置", description = "获取用户设置")
     @GetMapping("/setting")
-    public Response<Void> login() {
+    public Response<Void> getSetting() {
         final Long userId = EasyRequestUtil.getWxUserId();
         log.info("userId:{}", userId);
         return Response.ok();
@@ -55,8 +55,32 @@ public class WxMiniAppController {
 
     @Operation(summary = "2.获取用户信息")
     @GetMapping("/info")
-    public Response<WxUserVo> info() {
+    public Response<WxUserVo> getInfo() {
         final Long userId = EasyRequestUtil.getWxUserId();
         return Response.ok(wxUserService.getByUserId(userId));
+    }
+
+    /**
+     * 续约接口
+     *
+     * @param refreshToken 请求体中的 refreshToken
+     * @return 续约后的 token
+     */
+    @PostMapping("/renew")
+    @Operation(summary = "3.续约接口")
+    public Response<Map> renewToken(@RequestBody Map<String, String> request) {
+        String oldRefreshToken = request.get("refreshToken");
+
+        // 检查 refreshToken 是否为空
+        if (oldRefreshToken == null || oldRefreshToken.isEmpty()) {
+            return Response.error400("Refresh token is required");
+        }
+
+        try {
+            return Response.ok(wxUserService.renew(oldRefreshToken));
+        } catch (Exception e) {
+            log.warn("renew token failed, msg:{}", e.getMessage());
+            return Response.error401();
+        }
     }
 }

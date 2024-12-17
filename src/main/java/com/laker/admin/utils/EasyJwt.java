@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Date;
 
 @Component
@@ -30,7 +31,17 @@ public class EasyJwt {
                 .subject("easy-admin")
                 .claim(EasyAdminConstants.USER_ID, userId)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration() * 1000))
+                .expiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration().toMillis()))
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public String generateToken(Long userId, Duration duration) {
+        return Jwts.builder()
+                .subject("easy-admin")
+                .claim(EasyAdminConstants.USER_ID, userId)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + duration.toMillis()))
                 .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), Jwts.SIG.HS256)
                 .compact();
     }

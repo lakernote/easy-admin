@@ -40,7 +40,8 @@ public class EasyWebMvcConfig implements WebMvcConfigurer {
             "/favicon.ico",
             "/sys/auth/v1/login",
             "/swagger-resources/**",
-            "/wx/miniapp/user/login",};
+            "/wx/miniapp/user/login",
+            "/wx/miniapp/user/renew"};
     final EasyAdminConfig easyAdminConfig;
     final EasyJwt easyJwt;
 
