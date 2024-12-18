@@ -71,8 +71,8 @@ public class WxUserService {
 
         // 返回用户信息和 token
         Map<String, Object> result = new HashMap<>();
-        result.put("accessToken", easyJwt.generateToken(wxUser.getId(), jwtProperties.getExpiration()));
-        result.put("refreshToken", easyJwt.generateToken(wxUser.getId(), jwtProperties.getRefreshExpiration()));
+        result.put("accessToken", easyJwt.generateToken(wxUser.getId(), jwtProperties.getExpiration(), EasyAdminConstants.TokenType.ACCESS_TOKEN));
+        result.put("refreshToken", easyJwt.generateToken(wxUser.getId(), jwtProperties.getRefreshExpiration(), EasyAdminConstants.TokenType.REFRESH_TOKEN));
         result.put("user", wxUserBeanMap.entityToVo(wxUser));
         return result;
     }
@@ -110,8 +110,8 @@ public class WxUserService {
         }
 
         // 生成新的 accessToken 和 refreshToken
-        String newAccessToken = easyJwt.generateToken(userId, jwtProperties.getExpiration());
-        String newRefreshToken = easyJwt.generateToken(userId, jwtProperties.getRefreshExpiration());
+        String newAccessToken = easyJwt.generateToken(userId, jwtProperties.getExpiration(), EasyAdminConstants.TokenType.ACCESS_TOKEN);
+        String newRefreshToken = easyJwt.generateToken(userId, jwtProperties.getRefreshExpiration(), EasyAdminConstants.TokenType.REFRESH_TOKEN);
 
         // 返回结果
         Map<String, Object> result = new HashMap<>();

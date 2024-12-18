@@ -1,6 +1,8 @@
 package com.laker.admin.framework.ext.satoken;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.SaTokenException;
 import cn.dev33.satoken.fun.SaParamFunction;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
@@ -48,8 +50,19 @@ public class EasySaInterceptor extends SaInterceptor {
             String token = header.substring(7); // 去掉 "Bearer "
             try {
                 final Claims claims = easyJwt.parseToken(token);
+                final String tokenType = claims.get(EasyAdminConstants.TOKEN_TYPE, String.class);
+                if (CharSequenceUtil.isBlank(tokenType)) {
+                    throw new NotLoginException("未登录", null, null);
+                }
+                EasyAdminConstants.TokenType tokenTypeEnum = EasyAdminConstants.TokenType.valueOf(tokenType);
+                if (tokenTypeEnum != EasyAdminConstants.TokenType.ACCESS_TOKEN) {
+                    throw new NotPermissionException("无权限");
+                }
                 final Long userId = claims.get(EasyAdminConstants.USER_ID, Long.class);
                 request.setAttribute(EasyAdminConstants.USER_ID, userId);
+                // 异常 instanceof SaTokenException 时，会被 SaToken 内部捕获并处理
+            } catch (SaTokenException saEx) {
+                throw saEx;
             } catch (Exception e) {
                 log.error("jwt parse error", e);
                 throw new NotLoginException("未登录", null, null);

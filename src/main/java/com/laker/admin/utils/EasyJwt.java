@@ -26,20 +26,11 @@ public class EasyJwt {
         System.out.println(java.util.Base64.getEncoder().encodeToString(key.getEncoded()));
     }
 
-    public String generateToken(Long userId) {
+    public String generateToken(Long userId, Duration duration, EasyAdminConstants.TokenType tokenType) {
         return Jwts.builder()
-                .subject("easy-admin")
+                .subject(EasyAdminConstants.APPLICATION_NAME)
                 .claim(EasyAdminConstants.USER_ID, userId)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration().toMillis()))
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), Jwts.SIG.HS256)
-                .compact();
-    }
-
-    public String generateToken(Long userId, Duration duration) {
-        return Jwts.builder()
-                .subject("easy-admin")
-                .claim(EasyAdminConstants.USER_ID, userId)
+                .claim(EasyAdminConstants.TOKEN_TYPE, tokenType) // 添加 token 类型
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + duration.toMillis()))
                 .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), Jwts.SIG.HS256)
