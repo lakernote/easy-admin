@@ -175,7 +175,7 @@ public class DemoController {
                     log.info("Will send a request to the server"); // Since we're in an observation scope - this log line will contain tracing MDC entries ...
                     IpifyVo ipAddress = ipifyClient.getIpAddress();
                     log.info("Got response [{}]", ipAddress); // ... so will this line
-                    return Response.ok(ipifyClient.getIpAddress());
+                    return Response.ok(ipAddress);
                 });
 
 

@@ -66,7 +66,7 @@ spring:
     locations: classpath:db/migration
   cloud:
     openfeign:
-      micrometer:
+      micrometer: # 开启监控
         enabled: true
       client:
         config:
@@ -232,8 +232,10 @@ springdoc:
 logging:
   level:
     #feign日志以什么级别监控哪个接口：即对哪个Feign接口进行日志检查
-    com.laker.admin.module.remote: error
+    com.laker.admin.module.remote: debug
     org.springframework.web.client.RestTemplate: error
+
+# 配置 Resilience4j CircuitBreaker
 resilience4j:
   circuitbreaker:
     configs:
@@ -262,14 +264,15 @@ resilience4j:
         slidingWindowSize: 123
       ipifyClient_getIpAddress:
         slidingWindowSize: 333
+  # 配置 Resilience4j RateLimiter
   timelimiter:
     configs:
       default:
         cancelRunningFuture: false
-        timeoutDuration: 2s
+        timeoutDuration: 5s
       ipifyClient:
         cancelRunningFuture: false
-        timeoutDuration: 2s
+        timeoutDuration: 5s
     instances:
       backendA:
         baseConfig: default

@@ -1,5 +1,6 @@
 package com.laker.admin.config;
 
+import com.laker.admin.framework.ext.thread.EasyAdminMDCThreadPoolExecutor;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,8 @@ public class EasyCircuitBreakerConfig {
         return factory -> {
             // 默认断路器配置
             factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                    .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(4)).build())
+                    // 10秒超时
+                    .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(10)).build())
                     .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
                     .build());
 
@@ -52,13 +54,19 @@ public class EasyCircuitBreakerConfig {
                                             // 从OPEN到HALF_OPEN状态需要等待的时间 断路器打开后等待时间,会在指定的等待时间内拒绝所有请求。等待时间结束后，断路器会进入半开状态，允许部分请求通过以测试服务是否恢复正常。
                                             .waitDurationInOpenState(Duration.ofSeconds(10))
                                             .build())
-                            .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(1)).build()),
+                            // 10秒超时
+                            .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(10)).build()),
                     "slow", "ipifyClient_getIpAddress2"); // 方法级别
             // 添加事件处理
             factory.addCircuitBreakerCustomizer(circuitBreaker -> circuitBreaker.getEventPublisher()
                             .onError(event -> log.error("circuit error", event.getThrowable()))
                             .onSuccess(event -> log.info("normalflux success")),
                     "slow");
+
+            // 配置group模式线程池
+            factory.configureGroupExecutorService(group -> new EasyAdminMDCThreadPoolExecutor(3, 3, group));
+            // 配置线程池
+            factory.configureExecutorService(new EasyAdminMDCThreadPoolExecutor(3, 3, "easy-feign"));
 
         };
     }
