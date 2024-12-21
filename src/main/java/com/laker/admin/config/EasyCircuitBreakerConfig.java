@@ -63,7 +63,9 @@ public class EasyCircuitBreakerConfig {
                             .onSuccess(event -> log.info("normalflux success")),
                     "slow");
 
-            // 配置group模式线程池
+            // 配置分组级别group模式线程池
+            // group 参数表示一个熔断器组，通常是逻辑上的服务分组。例如，为一组 API 调用分配同一个线程池。
+            // 可以实现线程隔离的效果，避免不同服务之间的线程池资源互相影响。
             factory.configureGroupExecutorService(group -> new EasyAdminMDCThreadPoolExecutor(3, 3, group));
             // 配置线程池
             factory.configureExecutorService(new EasyAdminMDCThreadPoolExecutor(3, 3, "easy-feign"));
@@ -71,6 +73,8 @@ public class EasyCircuitBreakerConfig {
         };
     }
 
+    // 重点在于限制并发或资源隔离的场景
+    // 如果为了限制并发，可以使用Bulkhead 建议直接使用 Resilience4j-Bulkhead 的信号量模式，因为它比线程池隔离更轻量级。
 //    @Bean
 //    public Customizer<Resilience4jBulkheadProvider> defaultBulkheadCustomizer() {
 //        return provider -> provider.configureDefault(id -> new Resilience4jBulkheadConfigurationBuilder()
