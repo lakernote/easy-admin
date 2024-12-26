@@ -41,4 +41,9 @@ public class EasySimpleTracingConfiguration {
             return "LogSpanHandler{name=" + logger.getName() + "}";
         }
     }
+
+    // PropagatingSenderTracingObservationHandler
+
+    // CurrentTraceContext.decorateScope 中在MDC设置traceId / spanId
+    // - CorrelationScopeDecorator MDCScopeDecorator
 }

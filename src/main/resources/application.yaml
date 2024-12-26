@@ -82,7 +82,12 @@ spring:
         group: # 使用 feign的注解的name找配置。默认是类名方法名 建议开启
           enabled: true
       httpclient:
-        enabled: true
+        hc5:
+          enabled: true
+          connection-request-timeout: 3
+          socket-timeout: 5
+        max-connections: 200
+        max-connections-per-route: 50
     discovery:
       enabled: false
 mybatis-plus:
@@ -233,7 +238,7 @@ springdoc:
 logging:
   level:
     #feign日志以什么级别监控哪个接口：即对哪个Feign接口进行日志检查
-    com.laker.admin.module.remote: error
+    com.laker.admin.module.remote: debug
     org.springframework.web.client.RestTemplate: error
 
 # 配置 Resilience4j CircuitBreaker
