@@ -208,16 +208,16 @@
             <artifactId>feign-micrometer</artifactId>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>io.micrometer</groupId>-->
-        <!--            <artifactId>micrometer-tracing</artifactId>-->
-        <!--        </dependency>-->
+        <!-- https://docs.spring.io/spring-boot/3.3/reference/actuator/tracing.html -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing</artifactId>
+        </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.loki4j</groupId>-->
-        <!--            <artifactId>loki-logback-appender</artifactId>-->
-        <!--            <version>1.5.1</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>

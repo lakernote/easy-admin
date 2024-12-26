@@ -22,7 +22,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Order(value = Ordered.HIGHEST_PRECEDENCE + 100)
+// 要在所有的filter之前执行 例如 ServerHttpObservationFilter
+@Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
 @WebFilter(filterName = "MDCTraceIDFilter", urlPatterns = "/*")
 @Slf4j

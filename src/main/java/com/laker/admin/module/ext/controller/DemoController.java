@@ -162,7 +162,9 @@ public class DemoController {
         // 它将包含对 log 关联的内置支持，W3C上下文传递将是默认传播类型，我们将支持自动传播元数据，以供 tracing 基础设施(称为“远程包裹”)使用，帮助标记观察结果。
         // 最重要的变化是我们引入了一个新的API：Observation API。
         // 它创建理念是，希望用户使用单一 API 就能检测代码，并从中获得多种信息（例如 metrics, tracing, logging）。
-        // classpath 添加了 Micrometer Tracing
+        // DefaultMeterObservationHandler 内部有Timer 和longTaskTimer
+        // 如果 classpath 添加了 Micrometer Tracing DefaultTracingObservationHandler
+        // TracingAwareMeterObservationHandler
         return Observation.createNotStarted("my.observation", registry)
                 // Low cardinality means that the number of potential values won't be big. Low cardinality entries will end up in e.g. Metrics
                 .lowCardinalityKeyValue("userType", "userType1")

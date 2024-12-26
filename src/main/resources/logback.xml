@@ -37,7 +37,7 @@
 
     <!-- 彩色格式 -->
     <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]) [%X{userId}|%X{traceId}] %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx"/>
+              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]) [%X{userId:-},%X{traceID:-},%X{traceId:-},%X{spanId:-}] %clr(%-60.60logger{59}){cyan} %clr(:%line){cyan} %m%n%wEx"/>
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex"
                     converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>

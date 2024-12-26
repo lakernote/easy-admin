@@ -143,9 +143,10 @@ easy:
     time: 1000
 # actuator
 management:
-  tracing:
+  tracing: # 开启链路追踪
     enabled: true
     sampling:
+      # 默认情况下，Spring Boot 仅对 10% 的请求进行采样，以防止跟踪后端不堪重负。此属性将其切换为 100%，以便每个请求都发送到跟踪后端。
       probability: 1.0
   endpoint:
     info:
@@ -232,7 +233,7 @@ springdoc:
 logging:
   level:
     #feign日志以什么级别监控哪个接口：即对哪个Feign接口进行日志检查
-    com.laker.admin.module.remote: debug
+    com.laker.admin.module.remote: error
     org.springframework.web.client.RestTemplate: error
 
 # 配置 Resilience4j CircuitBreaker
