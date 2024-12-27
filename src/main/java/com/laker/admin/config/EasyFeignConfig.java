@@ -47,8 +47,12 @@ public class EasyFeignConfig {
             if (Optional.ofNullable(MDC.get(EasyAdminConstants.TRACE_ID)).isEmpty()) {
                 MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
             }
+
             log.info("traceIdRequestInterceptor:{}", MDC.get(EasyAdminConstants.TRACE_ID));
             requestTemplate.header(EasyAdminConstants.TRACE_ID, MDC.get(EasyAdminConstants.TRACE_ID));
+            // 可以获取micrometer中的traceId spanId
+            requestTemplate.header("traceId", MDC.get("traceId"));
+            requestTemplate.header("spanId", MDC.get("spanId"));
         };
     }
 

@@ -18,6 +18,26 @@ import java.time.Duration;
 @Configuration
 @Slf4j
 public class EasyCircuitBreakerConfig {
+    // 还有个retry
+    // 重试策略
+    // 重试策略是在调用失败时，重新调用的策略。默认情况下，Feign的重试在CircuitBreaker之后，即CircuitBreaker统计不到
+    // ```yaml
+    // resilience4j.retry:
+    //    instances:
+    //        backendA:
+    //            maxAttempts: 3
+    //            waitDuration: 10s
+    //            enableExponentialBackoff: true
+    //            exponentialBackoffMultiplier: 2
+    //            retryExceptions:
+    //                - org.springframework.web.client.HttpServerErrorException
+    //                - java.io.IOException
+    //            ignoreExceptions:
+    //                - io.github.robwin.exception.BusinessException
+    // ```
+    // @Retry(name = "backendA")
+    // 原本的 resilience4j springboot starter 会自动配置 顺序如下
+    // Retry ( CircuitBreaker ( RateLimiter ( TimeLimiter ( Bulkhead ( Function ) ) ) ) )
 
     /**
      * 为所有【工厂编码形式】的断路器提供默认配置
