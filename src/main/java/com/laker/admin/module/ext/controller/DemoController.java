@@ -152,11 +152,19 @@ public class DemoController {
         return Response.ok(pages);
     }
 
+    // b3 : 4e89b13f2fcb4a2fa1bc8d6b9c923dcf-4e89b13f2fcb4a2f-1-5f6e7d8c9b1234ab
+    // {TraceId}-{SpanId}-{SamplingDecision}-{ParentSpanId}
+    // Trace ID: 必须是 1-32 个小写十六进制字符。
+    // Span ID: 必须是 16 个小写十六进制字符。
+    // Sampling Decision (可选):
+    //   1 表示采样。
+    //   0 表示不采样。
+    // Parent Span ID (可选): 必须是 16 个小写十六进制字符。
     @GetMapping("/remote-call")
     @Operation(summary = "6.远程调用-获取ip地址")
     public Response<IpifyVo> remoteCall(
-            @Parameter(description = "traceId,用于链路追踪", example = "67614c197f54471795cc84a3a073dd25", required = true, in = ParameterIn.HEADER)
-            @RequestHeader String traceId) {
+            @Parameter(description = "b3 X-B3-TraceId traceId,b3,traceparent 用于链路追踪", example = "67614c197f54471795cc84a3a073dd25", required = false, in = ParameterIn.HEADER)
+            @RequestHeader String b3) {
         List<String> lowCardinalityValues = Arrays.asList("userType1", "userType2", "userType3"); // Simulates low number of values
         // 用 Micrometer 改进 metrics，并通过 Micrometer tracing （以前称为 Spring Cloud Sleuth）提供新的分布式 tracing 支持。最值得注意的变化是，
         // 它将包含对 log 关联的内置支持，W3C上下文传递将是默认传播类型，我们将支持自动传播元数据，以供 tracing 基础设施(称为“远程包裹”)使用，帮助标记观察结果。

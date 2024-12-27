@@ -27,11 +27,15 @@ public class EasyFeignConfig {
     //  Feign
     // FeignAutoConfiguration FeignClientsConfiguration
     //  FeignClientFactoryBean
-    // Feign FeignCircuitBreakerInvocationHandler 动态代理
+
+    // 实际执行 FeignCircuitBreakerInvocationHandler 动态代理
     // -ObservedCircuitBreaker
     // --Resilience4JCircuitBreaker
-    // SynchronousMethodHandler.executeAndDecode client 调用
-    // client 默认是 jdk HttpURLConnection
+    //   SynchronousMethodHandler.invoke    client 调用
+    //      retryer
+    //      client 默认是 jdk HttpURLConnection IOException会包装为 RetryableException
+    //      errorDecoder
+    //
 
     /**
      * 拦截器可以有多个
