@@ -66,7 +66,7 @@ public class IndexController {
         log.info("当前uid:{},验证码：{}", uid, verCode);
         // 前后端分离，这时还未有会话信息，用于确定uid和验证码的一一映射关系，防止多人串码
         // 把uuid和图片码一起给前端，验证的时候再一起回来
-        iEasyCache.put(uid, verCode, 3 * 60);
+        iEasyCache.put(uid, verCode, 3 * 60L);
         return Response.ok(Dict.create().set("uid", uid).set("image", captcha.toBase64()));
     }
 
