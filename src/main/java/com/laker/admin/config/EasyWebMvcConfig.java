@@ -2,7 +2,7 @@ package com.laker.admin.config;
 
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
-import com.laker.admin.framework.ext.interceptor.TraceAnnotationInterceptor;
+import com.laker.admin.framework.ext.interceptor.EasyTraceAnnotationInterceptor;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.LogResponseReturnValueHandler;
 import com.laker.admin.framework.ext.mvc.PageRequestArgumentResolver;
@@ -63,7 +63,7 @@ public class EasyWebMvcConfig implements WebMvcConfigurer {
                 }, easyJwt).isAnnotation(true)).addPathPatterns("/**")
                 .excludePathPatterns(exclude_path);
         // 配置自定义拦截器
-        registry.addInterceptor(new TraceAnnotationInterceptor(easyAdminConfig.getTrace().getHttpTime())).addPathPatterns("/**")
+        registry.addInterceptor(new EasyTraceAnnotationInterceptor(easyAdminConfig.getTrace().getHttpTime())).addPathPatterns("/**")
                 .excludePathPatterns(exclude_path);
     }
 

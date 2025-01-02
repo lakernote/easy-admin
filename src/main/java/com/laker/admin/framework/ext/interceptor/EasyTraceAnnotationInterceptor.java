@@ -13,11 +13,11 @@ import java.lang.reflect.Method;
 /**
  * @author laker
  */
-public class TraceAnnotationInterceptor implements HandlerInterceptor {
+public class EasyTraceAnnotationInterceptor implements HandlerInterceptor {
 
     private final long time;
 
-    public TraceAnnotationInterceptor(long time) {
+    public EasyTraceAnnotationInterceptor(long time) {
         this.time = time;
     }
 

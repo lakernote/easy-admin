@@ -25,16 +25,16 @@ import java.io.IOException;
 // 要在所有的filter之前执行 例如 ServerHttpObservationFilter
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
-@WebFilter(filterName = "MDCTraceIDFilter", urlPatterns = "/*")
+@WebFilter(filterName = "EasyMDCTraceIDFilter", urlPatterns = "/*")
 @Slf4j
-public class MDCTraceIDFilter extends OncePerRequestFilter {
+public class EasyMDCTraceIDFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             // 当前端没有传递 traceId 时，由后台生成
-            // 获取traceId 会忽略大小写
+            // 获取traceId 会自动忽略大小写，其内部实现是通过遍历header的key
             String traceId = httpServletRequest.getHeader(EasyAdminConstants.TRACE_ID);
             if (CharSequenceUtil.isBlank(traceId)) {
                 traceId = IdUtil.simpleUUID();
