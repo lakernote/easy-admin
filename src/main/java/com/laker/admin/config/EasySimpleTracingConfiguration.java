@@ -10,6 +10,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 public class EasySimpleTracingConfiguration {
+    // 关键组件 BraveAutoConfiguration.java MicrometerTracingAutoConfiguration.java
+    // - Tracer  Brave / OpenTracing 实现
+    // - Propagator Brave / OpenTracing 实现
+    // - SpanHandler 输出Span信息
+
+    // - MicrometerObservationCapability feign
+    // - ObservationGrpcClientCall grpc
+    // - ObservationExecChainHandler httpclient
+    // - OkHttpObservationInterceptor okhttp
+    // - MicrometerTracingAdapter redis
+    // - KafkaTemplateObservation kafka
+    // - TrackingSubscriber scheduler
+    // - ClientHttpObservationDocumentation restclient
+    // - ServerHttpObservationFilter server
+    // - AspectJ 方面用于拦截用 @Observed 注释的类型或方法。
+
     // 默认是Tracer.NOOP，添加了Brave到classpath后，默认是BraveTracer
     // trace协议/追踪实现 + 存储 Zipkin / Jaeger / Console Logging 等追踪后端
     // SpanHandler LogSpanHandler 会将Span信息输出到日志
