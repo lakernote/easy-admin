@@ -32,7 +32,7 @@
             <li class="layui-nav-item layui-hide-xs message"></li>
             <li class="layui-nav-item user">
                 <!-- 头 像 -->
-                <a href="javascript:;">
+                <a href="javascript:">
                     <img src="admin/images/avatar.jpg" class="layui-nav-img">
                 </a>
                 <!-- 功 能 菜 单 -->
@@ -106,14 +106,14 @@
             dataType: 'json',
             success: function (data) {
                 admin.setAvatar(data.data.avatar, data.data.nickName);
+            },
+            error: function () {
+                // 用于验证前端信息 对应到不对的会话情况
+                // 清空本地存储
+                console.log("当前浏览器存储中没有用户信息,清空本地存储,讲跳转到login.html")
+                layui.data('user', null);
+                location.href = "login.html";
             }
-            // error: function () {
-            //     // 用于验证前端信息 对应到不对的会话情况
-            //     // 清空本地存储
-            //     console.log("当前浏览器存储中没有用户信息,清空本地存储,讲跳转到login.html")
-            //     layui.data('user', null);
-            //     location.href = "login.html";
-            // }
         });
 
         // 读取配置文件yml、json2种方式

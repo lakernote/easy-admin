@@ -85,6 +85,16 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
                     } else if (res.status === 403) {
                         easyAdmin.handleNoPermission(data);
                     } else {
+                        // 处理 net::ERR_CONNECTION_REFUSED 异常
+                        if (res.status === 0) {
+                            layer.msg("服务器连接失败", {
+                                icon: 2,
+                                area: ['260px', '65px'],
+                                time: 1500 // 自动关闭所需毫秒
+                            });
+                            return;
+                        }
+
                         // 如果没有特殊处理的情况，则执行 o.error 或默认的 handleError 函数
                         if (o.error) {
                             o.error(res);
@@ -141,7 +151,8 @@ layui.define(['jquery', 'element', 'form', 'table', 'yaml', 'common'], function 
         }
 
         this.handleError = function (data) {
-            if (!data.success) {
+            // 如果data为undefined，则不处理
+            if (data !== undefined && !data.success) {
                 layer.msg(data.msg, {
                     icon: 2,
                     area: ['260px', '65px'],
