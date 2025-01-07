@@ -33,6 +33,7 @@ public class EasySimpleTracingConfiguration {
     // BraveAutoConfiguration
     // from Tracing LogSpanHandler
 
+    // JDBC trace https://github.com/jdbc-observations/datasource-micrometer
 
     @Bean
     //  开启会把所有的span信息输出到日志
