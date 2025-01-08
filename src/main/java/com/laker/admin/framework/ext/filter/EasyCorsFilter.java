@@ -78,11 +78,11 @@ public class EasyCorsFilter extends OncePerRequestFilter {
         List<String> requestHeaders = getHeadersToUse(request, preFlightRequest);
         HttpMethod requestMethod = getMethodToUse(request, preFlightRequest);
         responseHeaders.setAccessControlAllowOrigin(requestOrigin);
+        responseHeaders.setAccessControlAllowCredentials(true);
         if (preFlightRequest) {
             responseHeaders.setAccessControlAllowMethods(Collections.singletonList(requestMethod));
             responseHeaders.setAccessControlAllowHeaders(requestHeaders);
 //            responseHeaders.setAccessControlExposeHeaders(config.getExposedHeaders());
-            responseHeaders.setAccessControlAllowCredentials(true);
             responseHeaders.setAccessControlMaxAge(3600);
         }
         response.flush();
