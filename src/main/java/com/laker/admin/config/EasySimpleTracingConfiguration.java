@@ -4,7 +4,6 @@ import brave.handler.MutableSpan;
 import brave.handler.SpanHandler;
 import brave.propagation.TraceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -35,7 +34,7 @@ public class EasySimpleTracingConfiguration {
 
     // JDBC trace https://github.com/jdbc-observations/datasource-micrometer
 
-    @Bean
+//    @Bean
     //  开启会把所有的span信息输出到日志
     public SpanHandler logSpanHandler() {
         return new LogSpanHandler();
