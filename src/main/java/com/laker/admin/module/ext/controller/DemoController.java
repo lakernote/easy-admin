@@ -266,4 +266,14 @@ public class DemoController {
         });
         return Response.ok(result);
     }
+
+    /**
+     * @param token 大小写都可以，会自动转换
+     */
+    @PostMapping("/header")
+    @Operation(summary = "10.测试header")
+    public void header(@RequestHeader(value = "test-token", required = false) String token) {
+        log.info(token);
+    }
+
 }
