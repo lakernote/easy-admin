@@ -51,7 +51,7 @@ public class DynamicTaskTestController {
         return "changeCron10";
     }
 
-    private class MyRunnable implements Runnable {
+    private static class MyRunnable implements Runnable {
 
         @Override
         public void run() {
