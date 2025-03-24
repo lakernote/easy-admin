@@ -1,4 +1,6 @@
 # Easyadmin
+- **Gitee**：[https://gitee.com/lakernote/easy-admin](https://gitee.com/lakernote/easy-admin)
+- **Github**：[https://github.com/lakernote/easy-admin](https://github.com/lakernote/easy-admin)
 
 > **有用的话请鼓励❤️下作者，右上角☝️watch、star、fork三连点🙏🙏🙏一波**
 
