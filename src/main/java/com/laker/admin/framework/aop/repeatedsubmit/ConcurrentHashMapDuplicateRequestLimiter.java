@@ -8,6 +8,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 基于 ConcurrentHashMap 实现的重复请求限制器
+ * <pre>
+ *    1.支持自动过期时间设置、缓存淘汰
+ *    2.支持并发请求，线程安全 (ConcurrentHashMap) uuid 保证唯一性
+ *    3.支持内存淘汰策略 TODO 用弱引用 / 增加缓存大小限制
+ *    4.高效的并发访问，提供原子操作（compute）
+ * </pre>
+ */
 @Slf4j
 public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateRequestLimiter {
 

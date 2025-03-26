@@ -11,7 +11,7 @@ public class EasyRepatSubitConfig {
     @Bean
     public DuplicateRequestLimiter repeatSubmiter(@Autowired(required = false) StringRedisTemplate redisTemplate) {
         if (redisTemplate != null) {
-            return new RedisRepeatSubmiter(redisTemplate);
+            return new RedisDuplicateRequestLimiter(redisTemplate);
         } else {
             return new ConcurrentHashMapDuplicateRequestLimiter();
         }

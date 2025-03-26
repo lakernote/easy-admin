@@ -4,10 +4,10 @@ import cn.hutool.core.util.RandomUtil;
 import com.laker.admin.framework.aop.repeatedsubmit.ConcurrentHashMapDuplicateRequestLimiter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -71,8 +71,6 @@ public class LockStringTest {
 
         // 验证结果
         log.info("Allowed request count: {}", allowedCount.get());
-        assert allowedCount.get() == 2 : "Only 2 request should be allowed";
-
-        TimeUnit.MINUTES.sleep(3);
+        Assertions.assertThat(allowedCount.get()).isEqualTo(2);
     }
 }

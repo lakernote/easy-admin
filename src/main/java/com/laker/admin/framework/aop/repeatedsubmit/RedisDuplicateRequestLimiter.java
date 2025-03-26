@@ -4,11 +4,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 
-public class RedisRepeatSubmiter implements DuplicateRequestLimiter {
+public class RedisDuplicateRequestLimiter implements DuplicateRequestLimiter {
 
     private final StringRedisTemplate redisTemplate;
 
-    public RedisRepeatSubmiter(StringRedisTemplate redisTemplate) {
+    public RedisDuplicateRequestLimiter(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
