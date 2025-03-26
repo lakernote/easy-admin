@@ -9,11 +9,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 public class EasyRepatSubitConfig {
 
     @Bean
-    public EasyRepeatSubmiter repeatSubmiter(@Autowired(required = false) StringRedisTemplate redisTemplate) {
+    public DuplicateRequestLimiter repeatSubmiter(@Autowired(required = false) StringRedisTemplate redisTemplate) {
         if (redisTemplate != null) {
             return new RedisRepeatSubmiter(redisTemplate);
         } else {
-            return new MemoryRepeatSubmiter();
+            return new ConcurrentHashMapDuplicateRequestLimiter();
         }
     }
 }

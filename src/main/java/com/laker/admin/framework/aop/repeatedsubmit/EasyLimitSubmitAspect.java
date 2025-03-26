@@ -35,10 +35,10 @@ import java.lang.reflect.Method;
 public class EasyLimitSubmitAspect {
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
     private static final ExpressionParser PARSER = new SpelExpressionParser();
-    final EasyRepeatSubmiter easyRepeatSubmiter;
+    final DuplicateRequestLimiter duplicateRequestLimiter;
 
-    public EasyLimitSubmitAspect(EasyRepeatSubmiter easyRepeatSubmiter) {
-        this.easyRepeatSubmiter = easyRepeatSubmiter;
+    public EasyLimitSubmitAspect(DuplicateRequestLimiter duplicateRequestLimiter) {
+        this.duplicateRequestLimiter = duplicateRequestLimiter;
     }
 
     /**
@@ -59,7 +59,7 @@ public class EasyLimitSubmitAspect {
         EasyRepeatSubmitLimit easyRepeatSubmitLimit = method.getAnnotation(EasyRepeatSubmitLimit.class);
         int timeout = easyRepeatSubmitLimit.timeout();
         String key = getLockKey(joinPoint, easyRepeatSubmitLimit);
-        if (!easyRepeatSubmiter.tryAcquire(key, timeout)) {
+        if (!duplicateRequestLimiter.tryRequest(key, timeout)) {
             throw new BusinessException("请勿重复访问！");
         }
         return joinPoint.proceed();
