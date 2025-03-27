@@ -72,26 +72,30 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
      * 按 key 的超时时间清理过期 key
      */
     private void cleanUp() {
-        // 使用 nanoTime() 获取更高精度的时间戳
-        long now = System.nanoTime(); // 返回纳秒级别的时间戳
-        log.info("Cleaning up expired entries.");
-        // 记录清理前的 map 大小
-        int beforeSize = requestMap.size();
-        log.info("Request map size before cleanup: {}", beforeSize);
+        try {
+            // 使用 nanoTime() 获取更高精度的时间戳
+            long now = System.nanoTime(); // 返回纳秒级别的时间戳
+            log.info("Cleaning up expired entries.");
+            // 记录清理前的 map 大小
+            int beforeSize = requestMap.size();
+            log.info("Request map size before cleanup: {}", beforeSize);
 
-        // 遍历 requestMap 中的每一个条目，并检查它们的过期时间
-        requestMap.entrySet().removeIf(entry -> {
-            ExpiringEntry value = entry.getValue();
-            if (isExpired(value, now)) {
-                log.info("Entry for key: {} has expired and will be removed.", entry.getKey());
-                return true; // 删除过期条目
-            }
-            return false; // 保留未过期的条目
-        });
-        // 记录清理后的 map 大小
-        int afterSize = requestMap.size();
-        log.info("Request map size after cleanup: {}", afterSize);
-        log.info("Cleanup completed.");
+            // 遍历 requestMap 中的每一个条目，并检查它们的过期时间
+            requestMap.entrySet().removeIf(entry -> {
+                ExpiringEntry value = entry.getValue();
+                if (isExpired(value, now)) {
+                    log.info("Entry for key: {} has expired and will be removed.", entry.getKey());
+                    return true; // 删除过期条目
+                }
+                return false; // 保留未过期的条目
+            });
+            // 记录清理后的 map 大小
+            int afterSize = requestMap.size();
+            log.info("Request map size after cleanup: {}", afterSize);
+            log.info("Cleanup completed.");
+        } catch (Exception e) {
+            log.error("Error occurred during cleanup.", e);
+        }
     }
 
     /**
