@@ -1,4 +1,4 @@
-package com.laker.admin.framework.aop.repeatedsubmit;
+package com.laker.admin.framework.aop.duplicate;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 

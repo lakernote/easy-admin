@@ -23,7 +23,21 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
+ * <pre>
  * Bean的优先级设置为最高
+ *  1.用于监控方法执行时间
+ *  2.记录日志
+ *  3.记录请求参数
+ *  4.记录返回值
+ *  5.记录请求ip
+ *  6.记录请求uri
+ *  7.记录请求客户端
+ *  8.记录请求用户
+ *  9.记录请求时间
+ *  10.记录请求状态
+ *  11.记录请求耗时
+ *  12.记录请求方法
+ * </pre>
  */
 @Aspect
 @Component
@@ -38,6 +52,13 @@ public class EasyMetricsAspect {
         this.extLogService = extLogService;
     }
 
+    /**
+     * <pre>
+     * 定义切点
+     *  "@annotation"用于匹配那些带有指定注解的方法。也就是说，当 某个方法被指定的注解标记时，该方法就会成为切入点的一部分。
+     *  "@within"用于匹配那些所在类带有指定注解的所有方法。只要 类被指定的注解标记，该类中的所有方法都会成为切入点的一部分。
+     *  </pre>
+     */
     @Pointcut("@annotation(com.laker.admin.framework.aop.metrics.EasyMetrics) " +
             "|| @within(com.laker.admin.framework.aop.metrics.EasyMetrics)")
     public void withAnnotationMetrics() {

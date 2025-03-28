@@ -6,12 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 限流注解
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface EasyRateLimit {
     int limit() default 3; // 默认限流次数
 
-    long time() default 1; // 时间窗口
+    long timeWindow() default 1; // 时间窗口, 默认 1 秒
 
     TimeUnit timeUnit() default TimeUnit.SECONDS;     // 时间单位
 

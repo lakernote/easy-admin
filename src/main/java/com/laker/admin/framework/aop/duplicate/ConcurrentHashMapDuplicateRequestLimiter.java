@@ -1,4 +1,4 @@
-package com.laker.admin.framework.aop.repeatedsubmit;
+package com.laker.admin.framework.aop.duplicate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -114,10 +114,10 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
 
         @Override
         public String toString() {
-            return "ExpiringEntry{" +
+            return "{" +
                     "timestamp=" + timestamp +
-                    ", timeout=" + timeout +
-                    ", uuid='" + uuid +
+                    ", timeout=" + timeout / 1000000000 +
+                    "s, uuid=" + uuid +
                     '}';
         }
     }

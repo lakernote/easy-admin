@@ -1,7 +1,7 @@
 package com.laker.admin.example;
 
 import cn.hutool.core.util.RandomUtil;
-import com.laker.admin.framework.aop.repeatedsubmit.ConcurrentHashMapDuplicateRequestLimiter;
+import com.laker.admin.framework.aop.duplicate.ConcurrentHashMapDuplicateRequestLimiter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;

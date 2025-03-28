@@ -1,5 +1,8 @@
-package com.laker.admin.framework.aop.repeatedsubmit;
+package com.laker.admin.framework.aop.duplicate;
 
+/**
+ * 重复请求限制器
+ */
 public interface DuplicateRequestLimiter {
     /**
      * 尝试提交请求，若返回 true 则表示可以执行，false 表示被拦截

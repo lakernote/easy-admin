@@ -4,7 +4,9 @@ package com.laker.admin.framework.aop.metrics;
 import java.lang.annotation.*;
 
 /**
- * 自定义注解
+ * <pre>
+ *     用于监控方法执行时间
+ * </pre>
  *
  * @author laker
  */

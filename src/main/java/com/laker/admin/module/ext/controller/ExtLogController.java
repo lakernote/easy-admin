@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.laker.admin.framework.aop.duplicate.EasyDuplicateRequestLimiter;
 import com.laker.admin.framework.aop.metrics.EasyMetrics;
-import com.laker.admin.framework.aop.repeatedsubmit.EasyRepeatSubmitLimit;
 import com.laker.admin.framework.aop.trace.EasyIgnoreTrace;
 import com.laker.admin.framework.aop.trace.EasyTrace;
 import com.laker.admin.framework.model.PageResponse;
@@ -52,7 +52,7 @@ public class ExtLogController {
     @GetMapping
     @SaCheckPermission("log.list")
     @EasyIgnoreTrace
-    @EasyRepeatSubmitLimit(businessKey = "log.list", businessParam = "#keyWord")
+    @EasyDuplicateRequestLimiter(businessKey = "log.list", businessParam = "#keyWord")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
                                 @RequestParam(required = false, defaultValue = "10") long limit,
                                 String keyWord) {
