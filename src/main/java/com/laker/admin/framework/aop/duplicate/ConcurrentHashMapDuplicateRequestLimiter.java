@@ -1,5 +1,6 @@
 package com.laker.admin.framework.aop.duplicate;
 
+import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
@@ -7,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 基于 ConcurrentHashMap 实现的重复请求限制器
@@ -22,6 +25,8 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
 
     // 存储 key 及其最近请求时间和超时时间
     private final ConcurrentHashMap<String, ExpiringEntry> requestMap = new ConcurrentHashMap<>();
+    // 读写锁，用于保证并发requestMap.compute 和 requestMap.entrySet().removeIf 的线程安全
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public ConcurrentHashMapDuplicateRequestLimiter() {
         // 初始化定时任务清理过期key
@@ -32,21 +37,30 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
 
     @Override
     public boolean tryRequest(String key, long timeout) {
-        // 使用 nanoTime() 获取更高精度的时间戳
-        long now = System.nanoTime(); // 返回纳秒级别的时间戳
-        String uuid = UUID.randomUUID().toString(); // 生成唯一标识符
-        log.info("Attempting request for key: {} with timeout: {}s", key, timeout);
-        // 计算并更新 key 对应的 ExpiringEntry
-        //compute(key, (k, v) -> newValue)用于在并发环境下安全地更新 key 对应的值。
-        ExpiringEntry entry = requestMap.compute(key, (k, v) -> handleEntry(k, v, now, timeout, uuid));
-        // 如果返回的Entry uuid 与当前请求的 uuid 相同，则允许请求
-        boolean isRequestAllowed = entry.uuid.equals(uuid);
-        if (isRequestAllowed) {
-            log.info("Request for key: {} is allowed. entry:{}", key, entry);
+        // 读锁，读读不互斥，读写互斥
+        lock.readLock().lock();
+        try {
+            // 使用 nanoTime() 获取更高精度的时间戳
+            long now = System.nanoTime(); // 返回纳秒级别的时间戳
+            String uuid = UUID.randomUUID().toString(); // 生成唯一标识符
+            log.info("Attempting request for key: {} with timeout: {}s", key, timeout);
+            // 计算并更新 key 对应的 ExpiringEntry
+            //compute(key, (k, v) -> newValue)用于在并发环境下安全地更新 key 对应的值。
+            ExpiringEntry entry = requestMap.compute(key, (k, v) -> handleEntry(k, v, now, timeout, uuid));
+            // 如果返回的Entry uuid 与当前请求的 uuid 相同，则允许请求
+            boolean isRequestAllowed = entry.uuid.equals(uuid);
+            if (isRequestAllowed) {
+                log.info("Request for key: {} is allowed. entry:{}", key, entry);
+            }
+            log.info("Request for key: {} is {}", key, isRequestAllowed ? "allowed" : "blocked");
+            // 返回是否允许请求
+            return isRequestAllowed;
+        } catch (Exception e) {
+            log.error("Error occurred during request processing.", e);
+            return false;
+        } finally {
+            lock.readLock().unlock();
         }
-        log.info("Request for key: {} is {}", key, isRequestAllowed ? "allowed" : "blocked");
-        // 返回是否允许请求
-        return isRequestAllowed;
     }
 
     /**
@@ -71,7 +85,10 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
     /**
      * 按 key 的超时时间清理过期 key
      */
-    private void cleanUp() {
+    @VisibleForTesting
+    protected void cleanUp() {
+        // 写锁，读写互斥
+        lock.writeLock().lock();
         try {
             // 使用 nanoTime() 获取更高精度的时间戳
             long now = System.nanoTime(); // 返回纳秒级别的时间戳
@@ -95,6 +112,8 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
             log.info("Cleanup completed.");
         } catch (Exception e) {
             log.error("Error occurred during cleanup.", e);
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -104,7 +123,7 @@ public class ConcurrentHashMapDuplicateRequestLimiter implements DuplicateReques
     private static class ExpiringEntry {
         long timestamp; // 上次访问时间 (纳秒)
         long timeout; // 该 key 的超时时间（纳秒）
-        String uuid;  // 请求的唯一标识符
+        String uuid;  // 请求的唯一标识符, 用于区分并发请求,只有uuid相同请求才会被允许
 
         ExpiringEntry(long timestamp, long timeout, String uuid) {
             this.timestamp = timestamp;
