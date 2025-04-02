@@ -95,6 +95,7 @@
             skin: 'line',
             toolbar: '#role-toolbar',
             defaultToolbar: [{
+                title: '刷新',
                 layEvent: 'refresh',
                 icon: 'layui-icon-refresh',
             }, 'filter', 'print', 'exports']
@@ -230,7 +231,7 @@
 
         window.batchRemove = function (obj) {
             let ids = common.checkField(obj, 'roleId');
-            if (common.isEmpty(ids)) {
+            if (ids === "") {
                 popup.warning("未选中数据");
                 return false;
             }
@@ -238,7 +239,7 @@
                 layer.close(index);
                 let loading = layer.load();
                 $.ajax({
-                    url: MODULE_PATH + "batchRemove/" + ids,
+                    url: "/sys/role/" + "batch/" + ids,
                     dataType: 'json',
                     type: 'delete',
                     success: function (result) {

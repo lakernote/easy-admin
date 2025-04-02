@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -85,5 +86,12 @@ public class SysMenuController {
     @SaCheckPermission("menu.delete")
     public Response<Boolean> delete(@PathVariable Long id) {
         return Response.ok(sysMenuService.removeById(id));
+    }
+
+    @DeleteMapping("/batch/{ids}")
+    @ApiOperation(value = "批量删除系统菜单表")
+    @SaCheckPermission("menu.delete")
+    public Response<Boolean> deleteBatch(@PathVariable Long[] ids) {
+        return Response.ok(sysMenuService.removeByIds(CollUtil.toList(ids)));
     }
 }

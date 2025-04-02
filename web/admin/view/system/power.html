@@ -51,7 +51,8 @@
 </script>
 
 <script type="text/html" id="power-enable">
-    <input type="checkbox" name="enable" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="power-enable"
+    <input type="checkbox" name="enable" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用"
+           lay-filter="power-enable"
            {{ d.enable== true ? 'checked' : '' }}>
 </script>
 
@@ -62,12 +63,14 @@
 <script src="../../component/layui/layui.js"></script>
 <script src="../../component/pear/pear.js"></script>
 <script>
-    layui.use(['table', 'form', 'jquery', 'treetable', 'easyAdmin'], function () {
+    layui.use(['table', 'form', 'jquery', 'popup', 'common', 'treetable', 'easyAdmin'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let treetable = layui.treetable;
         let easyAdmin = layui.easyAdmin;
+        let common = layui.common;
+        let popup = layui.popup;
 
         let MODULE_PATH = "power/";
 
@@ -83,7 +86,11 @@
                     toolbar: '#power-toolbar',
                     elem: '#power-table',
                     data: result.data,
-                    defaultToolbar: [{layEvent: 'refresh', icon: 'layui-icon-refresh'}, 'filter', 'print', 'exports'],
+                    defaultToolbar: [{
+                        title: '刷新',
+                        layEvent: 'refresh',
+                        icon: 'layui-icon-refresh'
+                    }, 'filter', 'print', 'exports'],
                     page: false,
                     cols: [
                         [
@@ -202,6 +209,33 @@
                             });
                         } else {
                             layer.msg(result.msg, {icon: 2, time: 1000, area: ['260px', '65px']});
+                        }
+                    }
+                })
+            });
+        }
+
+        window.batchRemove = function (obj) {
+            let ids = common.checkField(obj, 'menuId');
+            if (ids === "") {
+                popup.warning("未选中数据");
+                return false;
+            }
+            layer.confirm('确定要删除选中角色', {icon: 3, title: '提示'}, function (index) {
+                layer.close(index);
+                let loading = layer.load();
+                $.ajax({
+                    url: "/sys/menu/" + "batch/" + ids,
+                    dataType: 'json',
+                    type: 'delete',
+                    success: function (result) {
+                        layer.close(loading);
+                        if (result.success) {
+                            popup.success(result.msg, function () {
+                                treetable.reload("#power-table");
+                            });
+                        } else {
+                            popup.failure(result.msg);
                         }
                     }
                 })

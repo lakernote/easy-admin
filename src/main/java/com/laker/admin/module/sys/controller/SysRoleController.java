@@ -1,6 +1,7 @@
 package com.laker.admin.module.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -63,7 +64,7 @@ public class SysRoleController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id查询")
-    public Response get(@PathVariable Long id) {
+    public Response<SysRole> get(@PathVariable Long id) {
         return Response.ok(sysRoleService.getById(id));
     }
 
@@ -108,7 +109,7 @@ public class SysRoleController {
     @PutMapping("/saveRolePower")
     @ApiOperation(value = "保存角色权限数据")
     @SaCheckPermission("role.update.power")
-    public Response saveRolePower(Long roleId, String powerIds) {
+    public Response<Boolean> saveRolePower(Long roleId, String powerIds) {
         return Response.ok(sysRolePowerService.saveRolePower(roleId, powerIds));
     }
 
@@ -116,7 +117,14 @@ public class SysRoleController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据id删除")
     @SaCheckPermission("role.delete")
-    public Response delete(@PathVariable Long id) {
+    public Response<Boolean> delete(@PathVariable Long id) {
         return Response.ok(sysRoleService.removeById(id));
+    }
+
+    @DeleteMapping("/batch/{ids}")
+    @ApiOperation(value = "根据批量删除ids删除")
+    @SaCheckPermission("role.delete")
+    public Response<Boolean> batchRemove(@PathVariable Long[] ids) {
+        return Response.ok(sysRoleService.removeByIds(CollUtil.toList(ids)));
     }
 }
