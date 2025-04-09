@@ -11,8 +11,9 @@ import java.lang.annotation.*;
  * 用于标记任务类，支持分布式任务调度
  * 任务分类：
  *  1.简单周期性任务 支持cron表达式、固定速率、固定延迟(参考@Scheduled) 比如定时清理系统日志、定时生成报表等。
- *  2.分片任务 支持按照数据范围、类型、时间等进行分片，每个节点执行一部分数据，从而提高任务的执行效率
+ *  2.分片任务 支持按照数据范围、类型、时间等进行分片，每个节点执行一部分数据，从而提高任务的执行效率。比如大数据量的定时任务，可以将数据分片到不同的节点上进行处理。
  *  3.子任务 支持任务之间的依赖关系，可以定义子任务。当父任务执行成功后，会自动触发子任务的执行，适合处理具有先后顺序的业务流程。
+ *  4.事件驱动任务 支持基于事件的任务调度，比如用户注册成功后，发送欢迎邮件等。确保任务的执行成功。
  * </pre>
  *
  * @author laker
@@ -39,8 +40,7 @@ public @interface EasyJob {
      */
     long timeout() default 60;
 
-    @AliasFor(annotation = Component.class)
-    String value() default "";
+    @AliasFor(annotation = Component.class) String value() default "";
 
     /**
      * cron表达式，默认""，代表不使用 cron 表达式进行任务调度
