@@ -67,7 +67,7 @@ public class EasyJobScheduler implements SchedulingConfigurer {
                 job.execute(null);
                 triggerSubTasks(easyJob.taskCode());
             } catch (Exception e) {
-                log.error("任务执行失败", e);
+                log.error("定时任务执行失败: {} {}", easyJob.taskCode(), easyJob.taskName(), e);
             }
         };
         if (!"".equals(easyJob.cron())) {
