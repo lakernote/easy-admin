@@ -54,14 +54,14 @@ public class CoreProcessor implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 获取所有实现了IJob接口的类
-        Map<String, IJob> beansOfType = applicationContext.getBeansOfType(IJob.class);
+        Map<String, IEasyJob> beansOfType = applicationContext.getBeansOfType(IEasyJob.class);
         if (MapUtil.isEmpty(beansOfType)) {
             log.warn("未查询到IJob实现类");
             return;
         }
         // 遍历加入到任务执行器中
         beansOfType.forEach((s, job) -> {
-            Job annotation = AnnotationUtils.findAnnotation(job.getClass(), Job.class);
+            EasyJob annotation = AnnotationUtils.findAnnotation(job.getClass(), EasyJob.class);
             if (annotation != null) {
                 String cron = annotation.cron();
                 String taskName = annotation.taskName();
@@ -91,8 +91,8 @@ public class CoreProcessor implements CommandLineRunner {
                                 try {
                                     callBacks.forEach(iCallBack -> iCallBack.start(task));
                                     String taskClassName = task.getTaskClassName();
-                                    Map<String, IJob> beansOfType = SpringUtils.getBeansOfType(IJob.class);
-                                    for (IJob iJob : beansOfType.values()) {
+                                    Map<String, IEasyJob> beansOfType = SpringUtils.getBeansOfType(IEasyJob.class);
+                                    for (IEasyJob iJob : beansOfType.values()) {
                                         if (CharSequenceUtil.equals(taskClassName, iJob.getClass().getName())) {
                                             iJob.execute(param);
                                             break;

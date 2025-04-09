@@ -12,10 +12,10 @@ import java.util.concurrent.ScheduledFuture;
  *
  * @author laker
  */
-public abstract class AbstractSimpleEasyLock implements EasyLock {
+public abstract class AbstractSimpleIEasyLock implements IEasyLock {
     private final TaskScheduler taskScheduler;
 
-    protected AbstractSimpleEasyLock(TaskScheduler taskScheduler) {
+    protected AbstractSimpleIEasyLock(TaskScheduler taskScheduler) {
         this.taskScheduler = taskScheduler;
     }
 

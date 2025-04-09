@@ -1,6 +1,6 @@
 package com.laker.admin.framework.lock.jdbc;
 
-import com.laker.admin.framework.lock.AbstractSimpleEasyLock;
+import com.laker.admin.framework.lock.AbstractSimpleIEasyLock;
 import com.laker.admin.framework.lock.LLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +15,7 @@ import java.time.Duration;
  * @author laker
  */
 @Slf4j
-public class MysqlEasyLock extends AbstractSimpleEasyLock {
+public class MysqlIEasyLock extends AbstractSimpleIEasyLock {
 
     /**
      * 原始sql 需要配合DuplicateKeyException使用，不优雅：INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);
@@ -26,7 +26,7 @@ public class MysqlEasyLock extends AbstractSimpleEasyLock {
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
     private final JdbcTemplate jdbcTemplate;
 
-    public MysqlEasyLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
+    public MysqlIEasyLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.jdbcTemplate = jdbcTemplate;
     }

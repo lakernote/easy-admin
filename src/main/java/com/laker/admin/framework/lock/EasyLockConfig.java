@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock;
 
-import com.laker.admin.framework.lock.jdbc.MysqlEasyLock;
-import com.laker.admin.framework.lock.redis.RedisEasyLock;
+import com.laker.admin.framework.lock.jdbc.MysqlIEasyLock;
+import com.laker.admin.framework.lock.redis.RedisIEasyLock;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -20,15 +20,15 @@ public class EasyLockConfig {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "mysql", matchIfMissing = true)
-    public EasyLock mysqlLock(JdbcTemplate jdbcTemplate) {
-        return new MysqlEasyLock(jdbcTemplate, easyLockTaskThreadPool());
+    public IEasyLock mysqlLock(JdbcTemplate jdbcTemplate) {
+        return new MysqlIEasyLock(jdbcTemplate, easyLockTaskThreadPool());
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "redis")
-    public EasyLock redisLock(StringRedisTemplate stringRedisTemplate) {
-        return new RedisEasyLock(stringRedisTemplate, easyLockTaskThreadPool());
+    public IEasyLock redisLock(StringRedisTemplate stringRedisTemplate) {
+        return new RedisIEasyLock(stringRedisTemplate, easyLockTaskThreadPool());
     }
 
     private ThreadPoolTaskScheduler easyLockTaskThreadPool() {

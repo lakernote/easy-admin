@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.laker.admin.framework.lock.EasyLock;
+import com.laker.admin.framework.lock.IEasyLock;
 import com.laker.admin.framework.model.PageResponse;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.framework.redis.EasyRedisCacheConfig;
@@ -32,7 +32,7 @@ public class SysDictController {
     ISysDictService sysDictService;
 
     @Autowired
-    EasyLock easyLock;
+    IEasyLock IEasyLock;
 
     @GetMapping
     @Operation(summary = "分页查询")

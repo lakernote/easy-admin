@@ -1,6 +1,6 @@
 package com.laker.admin.framework.lock.redis;
 
-import com.laker.admin.framework.lock.AbstractSimpleEasyLock;
+import com.laker.admin.framework.lock.AbstractSimpleIEasyLock;
 import com.laker.admin.framework.lock.LLock;
 import io.lettuce.core.RedisCommandInterruptedException;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author laker
  */
 @Slf4j
-public class RedisEasyLock extends AbstractSimpleEasyLock {
+public class RedisIEasyLock extends AbstractSimpleIEasyLock {
 
     private static final String LOCK_SCRIPT = "return redis.call('SET', KEYS[1], ARGV[1], 'PX', tonumber(ARGV[2]), 'NX') and true or false";
 
@@ -38,7 +38,7 @@ public class RedisEasyLock extends AbstractSimpleEasyLock {
     private final RedisScript<Boolean> lockRefreshScript = new DefaultRedisScript<>(LOCK_REFRESH_SCRIPT, Boolean.class);
     private final StringRedisTemplate stringRedisTemplate;
 
-    public RedisEasyLock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
+    public RedisIEasyLock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.stringRedisTemplate = stringRedisTemplate;
     }
