@@ -4,8 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.lock.EasyLocker;
+import com.laker.admin.framework.lock.IEasyLocker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -40,6 +43,9 @@ public class EasyJobScheduler implements SchedulingConfigurer {
     private ScheduledTaskRegistrar taskRegistrar;
     private final Map<String, IEasyJob> taskMap = new HashMap<>();
     private final Map<String, List<String>> parentTaskMap = new HashMap<>();
+
+    @Autowired
+    private IEasyLocker easyLock;
 
     public EasyJobScheduler(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -80,13 +86,18 @@ public class EasyJobScheduler implements SchedulingConfigurer {
         log.info("注册定时任务: {} {}", easyJob.taskCode(), easyJob.taskName());
         Runnable task = () -> {
             // TODO 分布式场景下，只能有一个节点执行或者多个节点执行，执行不同的任务
+            MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
+            EasyLocker lock = null;
             try {
-                MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
+                lock = easyLock.tryAcquire(easyJob.taskCode(), Duration.ofSeconds(easyJob.timeout()));
                 job.execute(null);
                 triggerSubTasks(easyJob.taskCode());
             } catch (Exception e) {
                 log.error("定时任务执行失败: {} {}", easyJob.taskCode(), easyJob.taskName(), e);
             } finally {
+                if (lock != null) {
+                    easyLock.release(lock);
+                }
                 MDC.remove(EasyAdminConstants.TRACE_ID);
             }
         };

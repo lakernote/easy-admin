@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock.redis;
 
-import com.laker.admin.framework.lock.AbstractSimpleIEasyLock;
-import com.laker.admin.framework.lock.LLock;
+import com.laker.admin.framework.lock.AbstractSimpleIEasyLocker;
+import com.laker.admin.framework.lock.EasyLocker;
 import io.lettuce.core.RedisCommandInterruptedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisSystemException;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author laker
  */
 @Slf4j
-public class RedisIEasyLock extends AbstractSimpleIEasyLock {
+public class RedisIEasyLocker extends AbstractSimpleIEasyLocker {
 
     private static final String LOCK_SCRIPT = "return redis.call('SET', KEYS[1], ARGV[1], 'PX', tonumber(ARGV[2]), 'NX') and true or false";
 
@@ -38,7 +38,7 @@ public class RedisIEasyLock extends AbstractSimpleIEasyLock {
     private final RedisScript<Boolean> lockRefreshScript = new DefaultRedisScript<>(LOCK_REFRESH_SCRIPT, Boolean.class);
     private final StringRedisTemplate stringRedisTemplate;
 
-    public RedisIEasyLock(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
+    public RedisIEasyLocker(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.stringRedisTemplate = stringRedisTemplate;
     }
@@ -60,7 +60,7 @@ public class RedisIEasyLock extends AbstractSimpleIEasyLock {
     }
 
     @Override
-    protected boolean release0(LLock lock) {
+    protected boolean release0(EasyLocker lock) {
         String key = lock.getKey();
         String token = lock.getToken();
         final List<String> singletonKeyList = Collections.singletonList(key(key));

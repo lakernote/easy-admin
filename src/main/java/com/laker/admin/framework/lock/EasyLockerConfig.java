@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock;
 
-import com.laker.admin.framework.lock.jdbc.MysqlIEasyLock;
-import com.laker.admin.framework.lock.redis.RedisIEasyLock;
+import com.laker.admin.framework.lock.jdbc.MysqlIEasyLocker;
+import com.laker.admin.framework.lock.redis.RedisIEasyLocker;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -15,20 +15,20 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  * @date: 2022/11/1
  **/
 @Configuration
-public class EasyLockConfig {
+public class EasyLockerConfig {
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "mysql", matchIfMissing = true)
-    public IEasyLock mysqlLock(JdbcTemplate jdbcTemplate) {
-        return new MysqlIEasyLock(jdbcTemplate, easyLockTaskThreadPool());
+    public IEasyLocker mysqlLock(JdbcTemplate jdbcTemplate) {
+        return new MysqlIEasyLocker(jdbcTemplate, easyLockTaskThreadPool());
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "redis")
-    public IEasyLock redisLock(StringRedisTemplate stringRedisTemplate) {
-        return new RedisIEasyLock(stringRedisTemplate, easyLockTaskThreadPool());
+    public IEasyLocker redisLock(StringRedisTemplate stringRedisTemplate) {
+        return new RedisIEasyLocker(stringRedisTemplate, easyLockTaskThreadPool());
     }
 
     private ThreadPoolTaskScheduler easyLockTaskThreadPool() {
@@ -37,6 +37,7 @@ public class EasyLockConfig {
         threadPoolTaskScheduler.setThreadNamePrefix("easy-lock-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
+        threadPoolTaskScheduler.initialize();
         return threadPoolTaskScheduler;
     }
 }

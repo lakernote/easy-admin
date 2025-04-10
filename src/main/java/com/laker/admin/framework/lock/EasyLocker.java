@@ -11,7 +11,7 @@ import java.util.concurrent.ScheduledFuture;
  **/
 @Data
 @Builder
-public class LLock {
+public class EasyLocker {
     private String key;
     private String token;
     private ScheduledFuture<?> scheduledFuture;

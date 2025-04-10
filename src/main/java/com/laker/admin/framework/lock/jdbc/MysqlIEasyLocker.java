@@ -1,7 +1,7 @@
 package com.laker.admin.framework.lock.jdbc;
 
-import com.laker.admin.framework.lock.AbstractSimpleIEasyLock;
-import com.laker.admin.framework.lock.LLock;
+import com.laker.admin.framework.lock.AbstractSimpleIEasyLocker;
+import com.laker.admin.framework.lock.EasyLocker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;
@@ -15,7 +15,7 @@ import java.time.Duration;
  * @author laker
  */
 @Slf4j
-public class MysqlIEasyLock extends AbstractSimpleIEasyLock {
+public class MysqlIEasyLocker extends AbstractSimpleIEasyLocker {
 
     /**
      * 原始sql 需要配合DuplicateKeyException使用，不优雅：INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);
@@ -26,7 +26,7 @@ public class MysqlIEasyLock extends AbstractSimpleIEasyLock {
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
     private final JdbcTemplate jdbcTemplate;
 
-    public MysqlIEasyLock(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
+    public MysqlIEasyLocker(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -45,7 +45,7 @@ public class MysqlIEasyLock extends AbstractSimpleIEasyLock {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    public boolean release0(LLock lock) {
+    public boolean release0(EasyLocker lock) {
         String key = lock.getKey();
         String token = lock.getToken();
         final int deleted = jdbcTemplate.update(RELEASE_FORMATTED_QUERY, key, token);
@@ -65,17 +65,22 @@ public class MysqlIEasyLock extends AbstractSimpleIEasyLock {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public boolean refresh(final String key, final String token, final Duration expiration) {
+        // 计算新的过期时间
         final long now = System.currentTimeMillis();
         final long expireAt = expiration.toMillis() + now;
-
+        // 更新锁的过期时间为新的过期时间
         final int updated = jdbcTemplate.update(REFRESH_FORMATTED_QUERY, expireAt, key, token);
+        // 判断更新是否成功
         final boolean refreshed = updated == 1;
-        if (refreshed) {
+        // 如果更新了 1 条记录，说明锁的过期时间成功刷新，记录日志并返回 true
+        if (updated == 1) {
             log.info("Refresh query successfully affected 1 record for key {} with token {}", key, token);
-        } else if (updated > 0) {
-            log.error("Unexpected result from refresh for key {} with token {}, refreshed {}", key, token, updated);
+            // 如果更新了多条记录
+        } else if (updated > 1) {
+            log.warn("Unexpected result from refresh for key {} with token {}, refreshed {}", key, token, updated);
         } else {
-            log.error("Refresh query did not affect any records for key {} with token {}", key, token);
+            // 如果没有更新任何记录，说明锁已经过期
+            log.warn("Refresh query did not affect any records for key {} with token {}", key, token);
         }
         return refreshed;
     }
