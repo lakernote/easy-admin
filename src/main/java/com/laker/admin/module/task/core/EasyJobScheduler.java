@@ -1,10 +1,15 @@
 package com.laker.admin.module.task.core;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
+import com.laker.admin.framework.EasyAdminConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.FixedDelayTask;
@@ -12,6 +17,8 @@ import org.springframework.scheduling.config.FixedRateTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +29,7 @@ import java.util.Map;
  * SchedulingConfigurer 对定时任务的调度进行定制
  * SchedulingConfigurer 接口可以用来配置定时任务的调度器
  * 需要开启@EnableScheduling
+ * ScheduledTaskRegistrar 用于注册定时任务，支持多种定时任务的配置方式
  */
 @Slf4j
 @Component
@@ -38,6 +46,15 @@ public class EasyJobScheduler implements SchedulingConfigurer {
     }
 
     public void init() {
+        final List<Method> annotationMethods = findAnnotationMethods(Scheduled.class);
+        if (CollUtil.isNotEmpty(annotationMethods)) {
+            log.warn("定时任务使用了@Scheduled注解，请使用@EasyJob注解替换");
+            for (Method method : annotationMethods) {
+                Scheduled scheduled = method.getAnnotation(Scheduled.class);
+                log.warn("定时任务方法: {} {} {}", method.getDeclaringClass().getName(), method.getName(), scheduled);
+            }
+            throw new RuntimeException("定时任务使用了@Scheduled注解，请使用@EasyJob注解替换");
+        }
         Map<String, IEasyJob> beansOfType = applicationContext.getBeansOfType(IEasyJob.class);
         if (MapUtil.isEmpty(beansOfType)) {
             log.warn("未查询到IJob实现类");
@@ -64,10 +81,13 @@ public class EasyJobScheduler implements SchedulingConfigurer {
         Runnable task = () -> {
             // TODO 分布式场景下，只能有一个节点执行或者多个节点执行，执行不同的任务
             try {
+                MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
                 job.execute(null);
                 triggerSubTasks(easyJob.taskCode());
             } catch (Exception e) {
                 log.error("定时任务执行失败: {} {}", easyJob.taskCode(), easyJob.taskName(), e);
+            } finally {
+                MDC.remove(EasyAdminConstants.TRACE_ID);
             }
         };
         if (!"".equals(easyJob.cron())) {
@@ -77,6 +97,16 @@ public class EasyJobScheduler implements SchedulingConfigurer {
         } else if (easyJob.fixedDelay() > 0) {
             taskRegistrar.addFixedDelayTask(new FixedDelayTask(task, Duration.ofSeconds(easyJob.fixedDelay()), Duration.ZERO));
         } else {
+//            taskRegistrar.addTriggerTask(task, triggerContext -> {
+//                // 这里可以根据需要自定义触发器
+//                Instant lastExecution = triggerContext.lastScheduledExecution();
+//                Instant lastCompletion = triggerContext.lastCompletion();
+//                if (lastExecution == null || lastCompletion == null) {
+//                    Instant instant = triggerContext.getClock().instant();
+//                    return instant;
+//                }
+//                return lastCompletion.plus(Duration.ofSeconds(easyJob.fixedDelay()));
+//            });
             log.warn("任务 {} 没有配置定时策略", easyJob.taskCode());
         }
     }
@@ -91,6 +121,22 @@ public class EasyJobScheduler implements SchedulingConfigurer {
                 }
             }
         }
+    }
+
+    private List<Method> findAnnotationMethods(Class<? extends Annotation> annotationClass) {
+        List<Method> scheduledMethods = new ArrayList<>();
+        String[] beanNames = applicationContext.getBeanDefinitionNames();
+        for (String beanName : beanNames) {
+            Object bean = applicationContext.getBean(beanName);
+            Class<?> beanClass = bean.getClass();
+            Method[] methods = beanClass.getMethods();
+            for (Method method : methods) {
+                if (method.isAnnotationPresent(annotationClass)) {
+                    scheduledMethods.add(method);
+                }
+            }
+        }
+        return scheduledMethods;
     }
 
     /**
