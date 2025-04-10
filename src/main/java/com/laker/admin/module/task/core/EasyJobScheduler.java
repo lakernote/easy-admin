@@ -11,15 +11,15 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.FixedDelayTask;
-import org.springframework.scheduling.config.FixedRateTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,9 +91,29 @@ public class EasyJobScheduler implements SchedulingConfigurer {
             }
         };
         if (!"".equals(easyJob.cron())) {
-            taskRegistrar.addCronTask(new CronTask(task, easyJob.cron()));
+//            taskRegistrar.addCronTask(new CronTask(task, easyJob.cron()));
+//            taskRegistrar.addTriggerTask(task, new CronTrigger(easyJob.cron()));
+            taskRegistrar.addTriggerTask(task, triggerContext -> {
+                // TODO 实现个分布式令牌 例如针对一个key，多少时间内能获取到指定数量的令牌
+                Instant instant = new CronTrigger(easyJob.cron()).nextExecution(triggerContext);
+                if (instant == null) {
+                    log.warn("定时任务 {} 的执行时间为 null, 即不会执行", easyJob.taskCode());
+                }
+                return instant;
+            });
         } else if (easyJob.fixedRate() > 0) {
-            taskRegistrar.addFixedRateTask(new FixedRateTask(task, Duration.ofSeconds(easyJob.fixedRate()), Duration.ZERO));
+//            taskRegistrar.addFixedRateTask(new FixedRateTask(task, Duration.ofSeconds(easyJob.fixedRate()), Duration.ZERO));
+            taskRegistrar.addTriggerTask(task, triggerContext -> {
+                // 这里可以根据需要自定义触发器
+                // 任务的最后安排的执行时间，如果之前没有安排则返回 null。
+                Instant lastExecution = triggerContext.lastScheduledExecution();
+                // 任务的最后完成时间，如果之前没有安排，则返回 null。
+                Instant lastCompletion = triggerContext.lastCompletion();
+                if (lastExecution == null || lastCompletion == null) {
+                    return triggerContext.getClock().instant();
+                }
+                return lastExecution.plus(Duration.ofSeconds(easyJob.fixedDelay()));
+            });
         } else if (easyJob.fixedDelay() > 0) {
             taskRegistrar.addFixedDelayTask(new FixedDelayTask(task, Duration.ofSeconds(easyJob.fixedDelay()), Duration.ZERO));
         } else {
