@@ -20,7 +20,7 @@ import java.util.List;
  * @author laker
  */
 @Slf4j
-public class RedisIEasyLocker extends AbstractSimpleIEasyLocker {
+public class RedisEasyLocker extends AbstractSimpleIEasyLocker {
 
     private static final String LOCK_SCRIPT = "return redis.call('SET', KEYS[1], ARGV[1], 'PX', tonumber(ARGV[2]), 'NX') and true or false";
 
@@ -38,13 +38,13 @@ public class RedisIEasyLocker extends AbstractSimpleIEasyLocker {
     private final RedisScript<Boolean> lockRefreshScript = new DefaultRedisScript<>(LOCK_REFRESH_SCRIPT, Boolean.class);
     private final StringRedisTemplate stringRedisTemplate;
 
-    public RedisIEasyLocker(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
+    public RedisEasyLocker(final StringRedisTemplate stringRedisTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
-    protected String acquire(final String key, final String token, final Duration expiration) {
+    protected boolean acquire(final String key, final String token, final Duration expiration) {
 
 //        final List<String> singletonKeyList = Collections.singletonList(key(key));
         // 使用这个也行
@@ -52,7 +52,7 @@ public class RedisIEasyLocker extends AbstractSimpleIEasyLocker {
         // 这个等价于 SET key token NX PX 5000
         Boolean locked = stringRedisTemplate.opsForValue().setIfAbsent(key(key), token, expiration);
         log.info("Tried to acquire lock for key {} with token {}. Locked: {}", key, token, locked);
-        return Boolean.TRUE.equals(locked) ? token : null;
+        return Boolean.TRUE.equals(locked);
     }
 
     private String key(String key) {

@@ -1,6 +1,5 @@
 package com.laker.admin.framework.lock;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +26,14 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
     @Override
     public EasyLocker tryAcquire(final String key, final Duration expiration) {
         final String token = IdUtil.fastSimpleUUID();
-        String acquire = acquire(key, token, expiration);
-        if (CharSequenceUtil.isBlank(acquire)) {
+        boolean acquire = acquire(key, token, expiration);
+        if (!acquire) {
             // 获取锁失败
             log.info("Failed to acquire lock for key {} with token {}", key, token);
             return null;
         }
         // 后台线程定时续租 一个锁一个后台线程续约
-        ScheduledFuture<?> scheduledFuture = scheduleLockRefresh(key, acquire, expiration);
+        ScheduledFuture<?> scheduledFuture = scheduleLockRefresh(key, token, expiration);
         return EasyLocker.builder()
                 .key(key)
                 .token(token)
@@ -100,7 +99,7 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
      * @param expiration 锁过期时间
      * @return 锁定失败返回null
      */
-    protected abstract String acquire(String key, String token, Duration expiration);
+    protected abstract boolean acquire(String key, String token, Duration expiration);
 
     /**
      * 释放锁

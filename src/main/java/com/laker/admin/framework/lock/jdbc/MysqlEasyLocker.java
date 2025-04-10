@@ -15,7 +15,7 @@ import java.time.Duration;
  * @author laker
  */
 @Slf4j
-public class MysqlIEasyLocker extends AbstractSimpleIEasyLocker {
+public class MysqlEasyLocker extends AbstractSimpleIEasyLocker {
 
     /**
      * 原始sql 需要配合DuplicateKeyException使用，不优雅：INSERT INTO distribute_lock (lock_key, token, expire, thread_id) VALUES (?, ?, ?, ?);
@@ -26,21 +26,23 @@ public class MysqlIEasyLocker extends AbstractSimpleIEasyLocker {
     public static final String REFRESH_FORMATTED_QUERY = "UPDATE distribute_lock SET expire = ? WHERE lock_key = ? AND token = ?;";
     private final JdbcTemplate jdbcTemplate;
 
-    public MysqlIEasyLocker(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
+    public MysqlEasyLocker(JdbcTemplate jdbcTemplate, TaskScheduler taskScheduler) {
         super(taskScheduler);
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    public String acquire(final String key, final String token, final Duration expiration) {
+    public boolean acquire(final String key, final String token, final Duration expiration) {
         final long now = System.currentTimeMillis();
         // 这里是为了删除由于一些异常导致的锁,因为db 没有ttl
         final int expired = jdbcTemplate.update(DELETE_EXPIRED_FORMATTED_QUERY, now);
-        log.info("Expired {} locks", expired);
+        if (expired > 0) {
+            log.warn("Deleted {} expired locks", expired);
+        }
         final long expireAt = expiration.toMillis() + System.currentTimeMillis();
         final int created = jdbcTemplate.update(ACQUIRE_FORMATTED_QUERY, key, token, expireAt, Thread.currentThread().getName());
-        return created == 1 ? token : null;
+        return created == 1;
     }
 
     @Override
