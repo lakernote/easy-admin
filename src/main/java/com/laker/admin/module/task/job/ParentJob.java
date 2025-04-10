@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
-@EasyJob(taskCode = "parentJob", taskName = "父任务", fixedDelay = 3)
+@EasyJob(taskCode = "parentJob", taskName = "父任务", fixedDelay = 30)
 @Slf4j
 public class ParentJob implements IEasyJob {
 

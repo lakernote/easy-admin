@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
-@EasyJob(taskCode = "simplePeriodicJob", taskName = "简单周期性任务", fixedRate = 1)
+@EasyJob(taskCode = "simplePeriodicJob", taskName = "简单周期性任务", fixedRate = 10)
 @Slf4j
 public class SimplePeriodicJob implements IEasyJob {
     @Override
