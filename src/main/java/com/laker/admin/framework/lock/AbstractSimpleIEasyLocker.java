@@ -6,6 +6,7 @@ import com.laker.admin.framework.EasyAdminConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.support.PeriodicTrigger;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledFuture;
@@ -56,7 +57,10 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
     private ScheduledFuture<?> scheduleLockRefresh(final String key, final String token, final Duration expiration) {
         // 获取当前线程的traceId
         final String traceId = MDC.get(EasyAdminConstants.TRACE_ID);
-        return taskScheduler.scheduleAtFixedRate(() ->
+        final Duration duration = Duration.ofMillis(expiration.toMillis() / 3);
+        final PeriodicTrigger periodicTrigger = new PeriodicTrigger(duration);
+        periodicTrigger.setInitialDelay(duration);
+        return taskScheduler.schedule(() ->
         {
             // 设置线程的traceId，来自锁的traceId
             MDC.put(EasyAdminConstants.TRACE_ID, traceId);
@@ -69,7 +73,7 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
                 // 清除线程的traceId
                 MDC.remove(EasyAdminConstants.TRACE_ID);
             }
-        }, Duration.ofMillis(expiration.toMillis() / 3));     // 续租时间为锁的三分之一
+        }, periodicTrigger);     // 续租时间为锁的三分之一
 
     }
 
@@ -81,6 +85,9 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
     private void cancelSchedule(EasyLocker lock) {
         final ScheduledFuture<?> scheduledFuture = lock.getScheduledFuture();
         if (scheduledFuture != null && !scheduledFuture.isCancelled() && !scheduledFuture.isDone()) {
+            // 取消续租
+            // 这里需要注意，cancel(true)会中断正在执行的任务
+            log.info("Cancel schedule for lock {} with token {}", lock.getKey(), lock.getToken());
             scheduledFuture.cancel(true);
         }
     }
