@@ -45,7 +45,7 @@ public class EasyJobScheduler implements SchedulingConfigurer {
     private final Map<String, List<String>> parentTaskMap = new HashMap<>();
 
     @Autowired
-    private IEasyLocker easyLock;
+    private IEasyLocker easyLocker;
 
     public EasyJobScheduler(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -89,14 +89,27 @@ public class EasyJobScheduler implements SchedulingConfigurer {
             MDC.put(EasyAdminConstants.TRACE_ID, IdUtil.simpleUUID());
             EasyLocker lock = null;
             try {
-                lock = easyLock.tryAcquire(easyJob.taskCode(), Duration.ofSeconds(easyJob.timeout()));
+                lock = easyLocker.tryAcquire(easyJob.taskCode(), Duration.ofSeconds(easyJob.timeout()));
+                if (lock == null) {
+                    log.warn("定时任务 {} 被锁定，跳过本次执行", easyJob.taskCode());
+                    return;
+                }
+                // 统计任务执行时间，如果超过了超时时间，则记录日志
+                long startTime = System.nanoTime();
                 job.execute(null);
                 triggerSubTasks(easyJob.taskCode());
+                long endTime = System.nanoTime();
+                long duration = Duration.ofNanos(endTime - startTime).toSeconds();
+                if (duration > easyJob.timeout()) {
+                    log.warn("定时任务 {} 执行超时，耗时 {} 秒", easyJob.taskCode(), duration);
+                } else {
+                    log.info("定时任务 {} 执行完成，耗时 {} 秒", easyJob.taskCode(), duration);
+                }
             } catch (Exception e) {
                 log.error("定时任务执行失败: {} {}", easyJob.taskCode(), easyJob.taskName(), e);
             } finally {
                 if (lock != null) {
-                    easyLock.release(lock);
+                    easyLocker.release(lock);
                 }
                 MDC.remove(EasyAdminConstants.TRACE_ID);
             }
