@@ -103,6 +103,9 @@ public class EasyJobScheduler implements SchedulingConfigurer {
             });
         } else if (easyJob.fixedRate() > 0) {
 //            taskRegistrar.addFixedRateTask(new FixedRateTask(task, Duration.ofSeconds(easyJob.fixedRate()), Duration.ZERO));
+//            taskRegistrar.addTriggerTask(task, triggerContext -> {
+//                return new PeriodicTrigger(Duration.ofSeconds(easyJob.fixedRate())).nextExecution(triggerContext);
+//            });
             taskRegistrar.addTriggerTask(task, triggerContext -> {
                 // 这里可以根据需要自定义触发器
                 // 任务的最后安排的执行时间，如果之前没有安排则返回 null。
@@ -112,7 +115,8 @@ public class EasyJobScheduler implements SchedulingConfigurer {
                 if (lastExecution == null || lastCompletion == null) {
                     return triggerContext.getClock().instant();
                 }
-                return lastExecution.plus(Duration.ofSeconds(easyJob.fixedDelay()));
+                final Instant instant = lastExecution.plus(Duration.ofSeconds(easyJob.fixedRate()));
+                return instant;
             });
         } else if (easyJob.fixedDelay() > 0) {
             taskRegistrar.addFixedDelayTask(new FixedDelayTask(task, Duration.ofSeconds(easyJob.fixedDelay()), Duration.ZERO));
