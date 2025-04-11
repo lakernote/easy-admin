@@ -1,29 +1,74 @@
-package com.laker.admin.framework.redis;
+package com.laker.admin.config;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.laker.admin.framework.redis.EasyRedisProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonCacheMeterBinderProvider;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author laker
+ * CacheInterceptor 是Spring提供的缓存拦截器，它会在方法执行前检查缓存中是否存在对应的值，
+ * 建议只使用 @Cacheable 和 @CacheEvict 注解来实现Cache Aside的功能。
+ * 实现implements CachingConfigurer 接口，里面有一些方法可以重写，例如 cacheManager()、keyGenerator()、errorHandler()等。
+ * 不同的cache名称例如 CACHE_NAME_1H、CACHE_NAME_12H、CACHE_NAME_24H 其实对应不同的Map，
+ */
 @Configuration
-@EnableCaching // 开启缓存功能
-@ConditionalOnBean(EasyRedisProperties.class)
-public class EasyRedisCacheConfig {
+@EnableCaching // 启用缓存
+@Slf4j
+public class EasyCacheConfig {
+
     public static final String CACHE_NAME_1H = "CACHE_NAME_1H";
     public static final String CACHE_NAME_12H = "CACHE_NAME_12H";
     public static final String CACHE_NAME_24H = "CACHE_NAME_24H";
 
     @Bean
-    public RedissonSpringCacheManager cacheManager(RedissonClient redissonClient) {
+    public CacheManager cacheManager(@Autowired(required = false) RedissonClient redissonClient) {
+        if (redissonClient == null) {
+            log.info("Using Caffeine cache manager");
+            return getCaffeineCacheManager();
+        }
+        log.info("Using Redisson cache manager");
+        return getRedissonSpringCacheManager(redissonClient);
+    }
+
+//    @Bean
+//    public KeyGenerator keyGenerator() {
+//
+//    }
+
+//@Bean
+//public CacheErrorHandler cacheErrorHandler() {
+//
+//}
+
+    private CaffeineCacheManager getCaffeineCacheManager() {
+        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
+        caffeineCacheManager.setCacheNames(List.of(CACHE_NAME_1H, CACHE_NAME_12H, CACHE_NAME_24H));
+        caffeineCacheManager.setAllowNullValues(false);
+        caffeineCacheManager.setCaffeine(Caffeine.newBuilder()
+                .expireAfterWrite(1, TimeUnit.HOURS)
+                .maximumSize(100000));
+        return caffeineCacheManager;
+    }
+
+    // ----- redisson-spring-cache -----
+    private RedissonSpringCacheManager getRedissonSpringCacheManager(RedissonClient redissonClient) {
         Map<String, CacheConfig> cacheConfigMap = new HashMap<>();
         // 参数ttl表示缓存条目的存活时间（以毫秒为单位），如果设为0，则缓存条目不会因为时间到期而被移除。
         // 参数maxIdleTime表示缓存条目的最大空闲时间（以毫秒为单位）。如果maxIdleTime和ttl参数都设置为0，则表示缓存条目永久存储。
@@ -36,11 +81,12 @@ public class EasyRedisCacheConfig {
     }
 
     @Bean
+    @ConditionalOnBean(EasyRedisProperties.class)
     public RedissonCacheMeterBinderProvider redissonCacheMeterBinderProvider() {
         return new RedissonCacheMeterBinderProvider();
     }
 
-    private static RedissonSpringCacheManager getRedissonSpringCacheManager(RedissonClient redissonClient, Map<String, CacheConfig> cacheConfigMap) {
+    private RedissonSpringCacheManager getRedissonSpringCacheManager(RedissonClient redissonClient, Map<String, CacheConfig> cacheConfigMap) {
         RedissonSpringCacheManager redissonSpringCacheManager = new RedissonSpringCacheManager(redissonClient);
         // 设置是否允许缓存的值为null。默认值为false，即缓存的值不允许为null。
         redissonSpringCacheManager.setAllowNullValues(false);
@@ -55,4 +101,5 @@ public class EasyRedisCacheConfig {
         redissonSpringCacheManager.setCodec(new JsonJacksonCodec());
         return redissonSpringCacheManager;
     }
+
 }

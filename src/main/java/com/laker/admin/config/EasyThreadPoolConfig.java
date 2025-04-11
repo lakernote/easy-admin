@@ -70,7 +70,7 @@ public class EasyThreadPoolConfig {
     }
 
     // 自定义的拒绝执行处理器，以更好地处理任务被拒绝的情况
-    static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
+    public static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
             // 这里可以加入更详细的日志记录或发送警报等逻辑

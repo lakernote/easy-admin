@@ -1,7 +1,8 @@
 package com.laker.admin.framework.lock;
 
-import com.laker.admin.framework.lock.jdbc.MysqlEasyLocker;
-import com.laker.admin.framework.lock.redis.RedisEasyLocker;
+import com.laker.admin.config.EasyThreadPoolConfig;
+import com.laker.admin.framework.lock.impl.MysqlEasyLocker;
+import com.laker.admin.framework.lock.impl.RedisEasyLocker;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -20,24 +21,25 @@ public class EasyLockerConfig {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "mysql", matchIfMissing = true)
-    public IEasyLocker mysqlLock(JdbcTemplate jdbcTemplate) {
-        return new MysqlEasyLocker(jdbcTemplate, easyLockTaskThreadPool());
+    public IEasyLocker mysqlLock(JdbcTemplate jdbcTemplate, ThreadPoolTaskScheduler easyLockTaskThreadPool) {
+        return new MysqlEasyLocker(jdbcTemplate, easyLockTaskThreadPool);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "lock.type", havingValue = "redis")
-    public IEasyLocker redisLock(StringRedisTemplate stringRedisTemplate) {
-        return new RedisEasyLocker(stringRedisTemplate, easyLockTaskThreadPool());
+    public IEasyLocker redisLock(StringRedisTemplate stringRedisTemplate, ThreadPoolTaskScheduler easyLockTaskThreadPool) {
+        return new RedisEasyLocker(stringRedisTemplate, easyLockTaskThreadPool);
     }
 
-    private ThreadPoolTaskScheduler easyLockTaskThreadPool() {
+    @Bean
+    public ThreadPoolTaskScheduler easyLockTaskThreadPool() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(5);
         threadPoolTaskScheduler.setThreadNamePrefix("easy-lock-");
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
-        threadPoolTaskScheduler.initialize();
+        threadPoolTaskScheduler.setRejectedExecutionHandler(new EasyThreadPoolConfig.CustomRejectedExecutionHandler());
         return threadPoolTaskScheduler;
     }
 }

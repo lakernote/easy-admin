@@ -1,4 +1,4 @@
-package com.laker.admin.framework.lock.jdbc;
+package com.laker.admin.framework.lock.impl;
 
 import com.laker.admin.framework.lock.base.AbstractSimpleIEasyLocker;
 import com.laker.admin.framework.lock.base.EasyLocker;

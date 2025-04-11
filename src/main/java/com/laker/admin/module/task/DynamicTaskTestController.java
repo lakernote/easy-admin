@@ -19,7 +19,7 @@ import java.util.concurrent.ScheduledFuture;
 public class DynamicTaskTestController {
 
     @Autowired
-    private TaskScheduler taskScheduler;
+    private TaskScheduler easyTaskThreadPool;
 
     private ScheduledFuture<?> future;
 
@@ -27,7 +27,7 @@ public class DynamicTaskTestController {
     @GetMapping("/startCron")
     public String startCron() {
 
-        future = taskScheduler.schedule(new MyRunnable(), new CronTrigger("0/5 * * * * *"));
+        future = easyTaskThreadPool.schedule(new MyRunnable(), new CronTrigger("0/5 * * * * *"));
         log.info("DynamicTask.startCron()");
         return "startCron";
     }
@@ -46,7 +46,7 @@ public class DynamicTaskTestController {
     public String startCron10() {
 
         stopCron();// 先停止，在开启.
-        future = taskScheduler.schedule(new MyRunnable(), new CronTrigger("*/10 * * * * *"));
+        future = easyTaskThreadPool.schedule(new MyRunnable(), new CronTrigger("*/10 * * * * *"));
         log.info("DynamicTask.startCron10()");
         return "changeCron10";
     }

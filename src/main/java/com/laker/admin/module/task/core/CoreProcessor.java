@@ -34,7 +34,7 @@ public class CoreProcessor implements CommandLineRunner {
     ApplicationContext applicationContext;
 
     @Autowired
-    private ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private ThreadPoolTaskScheduler easyTaskThreadPool;
 
     @Autowired
     private ITaskStore taskStore;
@@ -86,7 +86,7 @@ public class CoreProcessor implements CommandLineRunner {
     private void startJVMJob(TaskDto task, Map param) {
         String taskCron = task.getTaskCron();
         if (CharSequenceUtil.isNotBlank(taskCron) && !CharSequenceUtil.equals(taskCron, "-")) {
-            ScheduledFuture<?> future = threadPoolTaskScheduler
+            ScheduledFuture<?> future = easyTaskThreadPool
                     .schedule(() -> {
                                 try {
                                     callBacks.forEach(iCallBack -> iCallBack.start(task));
@@ -128,7 +128,7 @@ public class CoreProcessor implements CommandLineRunner {
             String key = next.getKey();
             res.add(key);
         }
-        log.info(threadPoolTaskScheduler.getScheduledThreadPoolExecutor().toString());
+        log.info(easyTaskThreadPool.getScheduledThreadPoolExecutor().toString());
         return res;
     }
 
