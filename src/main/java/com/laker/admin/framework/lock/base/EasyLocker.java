@@ -1,4 +1,4 @@
-package com.laker.admin.framework.lock;
+package com.laker.admin.framework.lock.base;
 
 import lombok.Builder;
 import lombok.Data;

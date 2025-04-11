@@ -1,5 +1,7 @@
 package com.laker.admin.framework.lock;
 
+import com.laker.admin.framework.lock.base.EasyLocker;
+
 import java.time.Duration;
 
 /**

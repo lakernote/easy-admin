@@ -1,7 +1,8 @@
-package com.laker.admin.framework.lock;
+package com.laker.admin.framework.lock.base;
 
 import cn.hutool.core.util.IdUtil;
 import com.laker.admin.framework.EasyAdminConstants;
+import com.laker.admin.framework.lock.IEasyLocker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.scheduling.TaskScheduler;

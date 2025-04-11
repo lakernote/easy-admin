@@ -43,7 +43,7 @@ public class EasyRedisCacheConfig {
     private static RedissonSpringCacheManager getRedissonSpringCacheManager(RedissonClient redissonClient, Map<String, CacheConfig> cacheConfigMap) {
         RedissonSpringCacheManager redissonSpringCacheManager = new RedissonSpringCacheManager(redissonClient);
         // 设置是否允许缓存的值为null。默认值为false，即缓存的值不允许为null。
-        redissonSpringCacheManager.setAllowNullValues(true);
+        redissonSpringCacheManager.setAllowNullValues(false);
         // 设置缓存是否感知Spring管理的事务。如果设置为true，则缓存操作只会在事务成功提交后的after-commit阶段执行，
         // 即在事务成功完成后才会执行put/evict操作。默认值为false，即缓存不感知Spring管理的事务。
         redissonSpringCacheManager.setTransactionAware(false);
