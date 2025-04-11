@@ -31,6 +31,10 @@ public class MysqlEasyLocker extends AbstractSimpleIEasyLocker {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // isolation = Isolation.READ_COMMITTED：指定事务的隔离级别为 READ_COMMITTED。这意味着在一个事务中，只能读取到其他事务已经提交的数据，避免了脏读问题，但可能存在不可重复读和幻读问题。
+    // 当在 Spring 中通过@Transactional指定了isolation = Isolation.READ_COMMITTED，而数据库设置的是可重复读（REPEATABLE READ）时，事务的隔离级别会以 Spring 中@Transactional注解指定的为准，即使用读已提交（READ_COMMITTED）隔离级别。
+    // propagation = Propagation.REQUIRES_NEW：指定事务的传播行为为 REQUIRES_NEW。这表示无论当前是否存在事务，该方法都会开启一个新的事务，并挂起当前可能存在的事务，直到新事务执行完毕。
+    // rollbackFor = Exception.class：指定在发生 Exception 及其子类异常时，事务会进行回滚。
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public boolean acquire(final String key, final String token, final Duration expiration) {

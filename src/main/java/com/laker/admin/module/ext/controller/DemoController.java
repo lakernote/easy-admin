@@ -9,6 +9,7 @@ import com.laker.admin.framework.aop.ratelimit.EasyRateLimit;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
 import com.laker.admin.framework.kafka.EasyKafkaConfig;
+import com.laker.admin.framework.localmessage.ExampleILocalMessageOperation;
 import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.enums.DemoTypeEnum;
 import com.laker.admin.module.enums.Distance;
@@ -277,7 +278,8 @@ public class DemoController {
         log.info(token);
     }
 
-
+    @Autowired
+    ExampleILocalMessageOperation exampleILocalMessageOperation;
     // 定义一个默认值
     private static final int DEFAULT_VALUE = -1;
 
@@ -292,6 +294,8 @@ public class DemoController {
     @Cacheable(cacheNames = EasyCacheConfig.CACHE_NAME_1H, key = "'laker:' + #num", unless = "#result < 0")
     public Integer cache(@RequestParam int num) {
         log.info(String.valueOf(num));
+        exampleILocalMessageOperation.test("param");
+
         // 如果传入的参数为负数，返回默认值
         if (num < 0) {
             return DEFAULT_VALUE;

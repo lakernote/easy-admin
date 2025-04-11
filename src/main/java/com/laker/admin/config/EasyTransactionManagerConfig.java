@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.transaction.TransactionManagerCust
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionManager;
 
 import javax.sql.DataSource;
@@ -19,13 +20,13 @@ public class EasyTransactionManagerConfig {
      * 事务管理器
      */
     @Bean
-    TransactionManager transactionManager(DataSource dataSource,
-                                          ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers,
-                                          EasyAdminConfig easyAdminConfig) {
+    PlatformTransactionManager transactionManager(DataSource dataSource,
+                                                  ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers,
+                                                  EasyAdminConfig easyAdminConfig) {
         TransactionManager transactionManager = new LakerDataSourceTransactionManager(
                 dataSource, easyAdminConfig.getTrace().getTransactionTime());
         transactionManagerCustomizers.ifAvailable((customizers) -> customizers.customize(transactionManager));
-        return transactionManager;
+        return (PlatformTransactionManager) transactionManager;
     }
 
 }
