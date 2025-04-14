@@ -8,6 +8,7 @@ import com.laker.admin.module.task.core.EasyJob;
 import com.laker.admin.module.task.core.IEasyJob;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -63,16 +64,27 @@ public class LocalMessageRetryJob implements IEasyJob {
                 log.error("No bean found for name: {}", localMessage.getName());
                 continue;
             }
-            // 获取最大重试次数
-            final EasyLocalMessageOperation annotation = AnnotationUtils.getAnnotation(bean.getClass(), EasyLocalMessageOperation.class);
-            if (annotation == null) {
+            // 获取注解
+            // 获取目标类
+            Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+            // 从目标类获取注解
+            EasyLocalMessageOperation easyLocalMessageOperation = AnnotationUtils.findAnnotation(targetClass, EasyLocalMessageOperation.class);
+
+            if (easyLocalMessageOperation == null) {
                 log.error("No EasyLocalMessageOperation annotation found for bean: {}", bean.getClass().getName());
                 continue;
             }
-            if (localMessage.getRetryCount() < annotation.maxRetryCount()) {
+            if (localMessage.getRetryCount() < easyLocalMessageOperation.maxRetryCount()) {
                 try {
-                    bean.remoteOperation(JSONUtil.parseObj(localMessage.getParam()));
-                    localMessage.setStatus("SENT");
+                    final boolean remoteOperation = bean.remoteOperation(JSONUtil.parseObj(localMessage.getParam()));
+                    if (remoteOperation) {
+                        // 远程操作成功，更新本地消息状态
+                        localMessage.setStatus("SENT");
+                    } else {
+                        // 远程操作失败，更新本地消息状态
+                        localMessage.setStatus("FAILED");
+                        localMessage.setRetryCount(localMessage.getRetryCount() + 1);
+                    }
                     localMessage.setUpdateTime(new Date());
                     localMessageMapper.updateById(localMessage);
                     log.info("Message sent successfully: {}", localMessage.getName());

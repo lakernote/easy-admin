@@ -3,7 +3,9 @@ package com.laker.admin.framework.localmessage;
 import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.localmessage.entity.LocalMessage;
 import com.laker.admin.framework.localmessage.mapper.LocalMessageMapper;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -106,8 +108,15 @@ public class EasyLocalMessageTemplate {
             localMessage.setCreateTime(new Date());
             localMessage.setUpdateTime(new Date());
             localMessage.setRetryCount(0);
-            // 获取localMessageOperation上注解
-            EasyLocalMessageOperation easyLocalMessageOperation = localMessageOperation.getClass().getAnnotation(EasyLocalMessageOperation.class);
+
+            // 获取注解
+            // 获取目标类
+            Class<?> targetClass = AopProxyUtils.ultimateTargetClass(localMessageOperation);
+            // 从目标类获取注解
+            EasyLocalMessageOperation easyLocalMessageOperation = AnnotationUtils.findAnnotation(targetClass, EasyLocalMessageOperation.class);
+            if (easyLocalMessageOperation == null) {
+                throw new RuntimeException("No EasyLocalMessageOperation annotation found for bean: " + localMessageOperation.getClass().getName());
+            }
             localMessage.setName(easyLocalMessageOperation.name());
             localMessage.setParam(JSONUtil.toJsonStr(params));
             localMessageMapper.insert(localMessage);
