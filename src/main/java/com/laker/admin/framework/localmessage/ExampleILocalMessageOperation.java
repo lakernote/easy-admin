@@ -25,7 +25,7 @@ public class ExampleILocalMessageOperation implements ILocalMessageOperation {
 
     // 这个方法使用本地消息表实现消息的最终一致性
     public void test(String param) {
-        Map<String, Object> paramMap = Map.of("param", "param");
+        Map<String, Object> paramMap = Map.of("param", param);
         easyLocalMessageTemplate.execute(this, paramMap);
     }
 

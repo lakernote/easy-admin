@@ -1,7 +1,7 @@
 package com.laker.admin.framework.localmessage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.laker.admin.framework.localmessage.LocalMessage;
+import com.laker.admin.framework.localmessage.entity.LocalMessage;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

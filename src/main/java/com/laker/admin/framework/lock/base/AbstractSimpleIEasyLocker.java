@@ -33,6 +33,7 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
             log.info("Failed to acquire lock for key {} with token {}", key, token);
             return null;
         }
+        log.info("Acquired lock for key {} with token {}", key, token);
         // 后台线程定时续租 一个锁一个后台线程续约
         ScheduledFuture<?> scheduledFuture = scheduleLockRefresh(key, token, expiration);
         return EasyLocker.builder()
@@ -43,7 +44,13 @@ public abstract class AbstractSimpleIEasyLocker implements IEasyLocker {
 
     @Override
     public boolean release(EasyLocker lock) {
+        if (lock == null) {
+            log.warn("Lock is null");
+            return false;
+        }
         cancelSchedule(lock);
+        // 释放锁
+        log.info("Releasing lock for key {} with token {}", lock.getKey(), lock.getToken());
         return release0(lock);
     }
 

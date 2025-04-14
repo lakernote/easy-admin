@@ -13,8 +13,17 @@ public @interface EasyLocalMessageOperation {
 
     /**
      * 业务名称
-     *
-     * @return 业务名称
      */
     String name();
+
+    /**
+     * 业务描述
+     */
+    String description() default "";
+
+    /**
+     * 最大重试次数
+     */
+    int maxRetryCount() default 3;
+
 }
