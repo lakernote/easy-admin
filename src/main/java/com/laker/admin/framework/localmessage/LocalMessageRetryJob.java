@@ -8,7 +8,7 @@ import com.laker.admin.module.task.core.EasyJob;
 import com.laker.admin.module.task.core.IEasyJob;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -66,7 +66,7 @@ public class LocalMessageRetryJob implements IEasyJob {
             }
             // 获取注解
             // 获取目标类
-            Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+            Class<?> targetClass = AopUtils.getTargetClass(bean);
             // 从目标类获取注解
             EasyLocalMessageOperation easyLocalMessageOperation = AnnotationUtils.findAnnotation(targetClass, EasyLocalMessageOperation.class);
 

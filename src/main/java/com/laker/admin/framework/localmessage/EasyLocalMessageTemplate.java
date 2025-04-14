@@ -3,7 +3,7 @@ package com.laker.admin.framework.localmessage;
 import cn.hutool.json.JSONUtil;
 import com.laker.admin.framework.localmessage.entity.LocalMessage;
 import com.laker.admin.framework.localmessage.mapper.LocalMessageMapper;
-import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
@@ -111,7 +111,7 @@ public class EasyLocalMessageTemplate {
 
             // 获取注解
             // 获取目标类
-            Class<?> targetClass = AopProxyUtils.ultimateTargetClass(localMessageOperation);
+            Class<?> targetClass = AopUtils.getTargetClass(localMessageOperation);
             // 从目标类获取注解
             EasyLocalMessageOperation easyLocalMessageOperation = AnnotationUtils.findAnnotation(targetClass, EasyLocalMessageOperation.class);
             if (easyLocalMessageOperation == null) {
