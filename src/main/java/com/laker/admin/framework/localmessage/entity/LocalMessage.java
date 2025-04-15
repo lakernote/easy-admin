@@ -6,6 +6,12 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * `event_type` VARCHAR(100) NOT NULL,
+ * `next_retry_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+ * `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+ * `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+ */
 @Data
 public class LocalMessage {
     @TableId(type = IdType.AUTO)
