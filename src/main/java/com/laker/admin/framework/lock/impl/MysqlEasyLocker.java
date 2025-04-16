@@ -40,6 +40,7 @@ public class MysqlEasyLocker extends AbstractSimpleIEasyLocker {
     public boolean acquire(final String key, final String token, final Duration expiration) {
         final long now = System.currentTimeMillis();
         // 这里是为了删除由于一些异常导致的锁,因为db 没有ttl
+        // 这里可以在定时任务中执行 谷时执行
         final int expired = jdbcTemplate.update(DELETE_EXPIRED_FORMATTED_QUERY, now);
         if (expired > 0) {
             log.warn("Deleted {} expired locks", expired);

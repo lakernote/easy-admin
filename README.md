@@ -2,12 +2,46 @@
 
 > **有用的话请鼓励❤️下作者，右上角☝️watch、star、fork三连点🙏🙏🙏一波**
 
-#### 🌵介绍
+## 🌵介绍
 
 这个分支大量精力放在**企业级解决方案**上，A tool not a toy.
-> 正在迭代中，里面的组件后面我尽量选用**企业级别**的，**剔除一些国产组件**。
->
+
+正在迭代中，里面的组件后面我尽量选用**企业级别**的，**剔除一些国产组件**。
+
 > 重点是服务端，前端仅作为一个展示窗口
+
+### 前端组件
+
+当前是layui，计划改成vue3
+
+### 后端组件
+
+- 缓存 EasyCacheConfig
+- 断路器 EasyCircuitBreakerConfig
+- 远程调用
+    - Feign EasyFeignConfig
+    - RestClient
+- 链路追踪 EasySimpleTracingConfiguration EasyTracingAspect
+- 防火墙 EasyWafConfig
+- 重复请求限制 EasyDuplicateRequestLimiterConfig
+- 监控请求记录 EasyMetricsAspect
+- 限流器 EasyRateLimiterAspect
+- 健康检查 EasyAdminHealthIndicator
+- metrics WebsocketMetrics
+- CORS EasyCorsFilter
+- HandlerMethodReturnValueHandler LogResponseReturnValueHandler
+- HandlerMethodArgumentResolver PageRequestArgumentResolver
+- RequestBodyAdviceAdapter EasyRequestBodyAdvice
+- ResponseBodyAdvice EasyResponseBodyAdvice
+- 数据权限 EasyDataPermissionInterceptor
+- 本地消息表 EasyLocalMessageTemplate
+- 分布式锁 EasyLockerConfig
+- 分布式定时任务 EasyJobScheduler
+- 微信小程序 WxMiniAppController
+- 幂等器 todo
+
+### 中间件
+
 > - redis
 > - kafka
 > - elasticsearch
@@ -18,6 +52,8 @@
 > - elk
 > - docker
 > - docker-compose
+> - mysql8
+> - postgresql
 
 ##### mysql
 
@@ -84,7 +120,7 @@ docker run -d \
 -e INFLUXDB_USER_PASSWORD=123456 \
 -v /etc/localtime:/etc/localtime \
 influxdb:1.8
-``` 
+```
 
 ##### Grafana
 
@@ -96,3 +132,4 @@ https://grafana.com/grafana/dashboards/ 所有模板
 ```shell
 docker run -d -p 3000:3000 grafana/grafana
 ```
+
