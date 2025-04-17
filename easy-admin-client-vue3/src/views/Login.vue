@@ -98,9 +98,9 @@ const handleLogin = () => {
   margin: 0 auto;
   margin-top: 100px;
   padding: 20px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid #5bd0c4;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #ebf0f8;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 </style>
