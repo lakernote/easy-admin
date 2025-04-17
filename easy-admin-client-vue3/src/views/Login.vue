@@ -10,7 +10,7 @@
           width="120"
           height="120"
       />
-      <h3 class="brand-name">星耀企业管理平台</h3>
+      <h3 class="brand-name">laker企业管理平台</h3>
       <p class="slogan">专业·高效·安全</p>
     </div>
 
