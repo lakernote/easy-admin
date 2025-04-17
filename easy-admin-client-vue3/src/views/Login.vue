@@ -2,19 +2,32 @@
   <!-- 登录页面容器 -->
   <div class="login-container">
     <!-- 登录表单，绑定登录表单数据，提交时调用 handleLogin 方法 -->
-    <el-form :model="loginForm" ref="formRef" label-width="80px" @submit.prevent="handleLogin">
+    <el-form
+        :model="loginForm"
+        :rules="rules"
+        ref="formRef"
+        label-width="70px"
+        @submit.prevent="handleLogin">
       <!-- 用户名输入项 -->
       <el-form-item label="用户名" prop="username">
         <!-- 用户名输入框，绑定登录表单的用户名数据 -->
-        <el-input v-model="loginForm.username" placeholder="请输入用户名"/>
+        <el-input v-model="loginForm.username"
+                  placeholder="请输入用户名"
+                  clearable/>
       </el-form-item>
       <!-- 密码输入项 -->
       <el-form-item label="密码" prop="password">
-        <el-input v-model="loginForm.password" type="password" placeholder="请输入密码"/>
+        <el-input v-model="loginForm.password"
+                  type="password"
+                  placeholder="请输入密码"
+                  show-password/>
       </el-form-item>
       <!-- 登录按钮 -->
       <el-form-item>
-        <el-button type="primary" @click="handleLogin">登录</el-button>
+        <el-button type="primary"
+                   @click="handleLogin"
+                   :loading="loading">登录
+        </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -28,6 +41,7 @@ import axios from 'axios';
 
 // 引用表单实例，用于表单验证
 const formRef = ref<InstanceType<typeof import('element-plus')['ElForm']>>();
+const loading = ref(false);
 // 登录表单数据，包含用户名和密码
 // ref函数用于创建响应式数据
 const loginForm = ref({
@@ -35,6 +49,17 @@ const loginForm = ref({
   username: 'laker',
   password: 'lakernote'
 });
+
+const rules = {
+  username: [
+    {required: true, message: "用户名不能为空", trigger: "blur"},
+    {min: 3, max: 20, message: "用户名长度应在3到20个字符之间", trigger: "blur"},
+  ],
+  password: [
+    {required: true, message: "密码不能为空", trigger: "blur"},
+    {min: 6, message: "密码长度不能少于6个字符", trigger: "blur"},
+  ],
+};
 
 // 获取路由实例，用于页面跳转
 const router = useRouter();
@@ -44,6 +69,7 @@ const handleLogin = () => {
   // 对表单进行验证
   formRef.value?.validate((valid) => {
     if (valid) {
+      loading.value = true;
       // 如果表单验证通过，发送登录请求
       axios.post('/sys/auth/v1/login', loginForm.value)
           .then(response => {
@@ -58,12 +84,9 @@ const handleLogin = () => {
             }
           })
           .catch(error => {
-            // 登录失败，显示错误消息
-            ElMessage.error('登录失败，请检查用户名和密码');
+            ElMessage.error("网络错误，请稍后再试");
           });
-    } else {
-      // 表单验证不通过，显示错误消息
-      ElMessage.error('请填写完整的登录信息');
+      loading.value = false;
     }
   });
 };
@@ -74,5 +97,10 @@ const handleLogin = () => {
   width: 300px;
   margin: 0 auto;
   margin-top: 100px;
+  padding: 20px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 </style>

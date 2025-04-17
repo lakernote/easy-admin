@@ -18,7 +18,7 @@ app.config.globalProperties.$axios = axios;
 // 设置 axios 的基础 URL
 axios.defaults.baseURL = 'http://localhost:8080';
 // 设置 请求超时时间
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 5000;
 // 设置请求拦截器
 axios.interceptors.request.use(
     config => {
