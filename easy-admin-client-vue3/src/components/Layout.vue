@@ -5,7 +5,8 @@
       <!-- 1.顶部导航栏 -->
       <el-header>顶部导航栏</el-header>
       <!-- 2.顶部下面区域 -->
-      <el-container>
+      <!-- 减去的固定值，可按需调整 撑满下部区域 -->
+      <el-container style="min-height: calc(100vh - 50px);">
         <!-- 2.1 左侧边栏 -->
         <el-aside width="200px">
           <!-- row和col用于布局，col支持24列 -->
@@ -141,17 +142,13 @@ const handleSelect = (key, keyPath) => {
 
 <style scoped>
 
-.el-container {
-  /* 确保容器填满整个视口 */
-  min-height: 91vh;
-}
-
 /* 顶部导航栏样式 */
 .el-header {
   background-color: #b3c0d1;
   color: #333;
   text-align: center;
-  line-height: 60px;
+  line-height: 50px;
+  height: 50px;
 }
 
 /* 侧边栏样式 */
@@ -167,7 +164,8 @@ const handleSelect = (key, keyPath) => {
   background-color: #b3c0d1;
   color: #333;
   text-align: center;
-  line-height: 60px;
+  line-height: 40px;
+  height: 40px;
   flex-shrink: 0; /* 防止页脚收缩 */
 }
 </style>
