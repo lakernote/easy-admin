@@ -15,10 +15,12 @@ app.use(router);
 
 // 可以将 axios 挂载到全局，方便在组件中使用
 app.config.globalProperties.$axios = axios;
-// 设置 axios 的基础 URL
-axios.defaults.baseURL = 'http://localhost:8080';
-// 设置 请求超时时间
-axios.defaults.timeout = 5000;
+
+// 使用环境变量设置 axios 的基础 URL
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+// 使用环境变量设置 请求超时时间
+axios.defaults.timeout = parseInt(import.meta.env.VITE_TIMEOUT);
+
 // 设置请求拦截器
 axios.interceptors.request.use(
     config => {

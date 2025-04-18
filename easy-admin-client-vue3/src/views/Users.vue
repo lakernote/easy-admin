@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar/>
     <h1>用户管理</h1>
     <!-- 新增用户按钮，点击打开新增用户对话框 -->
     <el-button type="primary" @click="openCreateDialog">新增用户</el-button>
@@ -63,7 +62,6 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import Navbar from '../components/Nav.vue';
 
 // 用户数据列表，初始包含两个示例用户
 const users = ref([

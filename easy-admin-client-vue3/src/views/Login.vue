@@ -110,7 +110,7 @@ const handleLogin = () => {
               // 这里可以存储 token 等信息
               localStorage.setItem('tokenName', response.data.tokenName);
               localStorage.setItem('tokenValue', response.data.tokenValue);
-              router.push('/users');
+              router.push('/');
             } else {
               ElMessage.error(response.data.message);
             }

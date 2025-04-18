@@ -46,7 +46,8 @@ npm run dev
 npm create vue@latest
 ```
 
-这一指令将会安装并执行 [create-vue](https://github.com/vuejs/create-vue)，它是 Vue 官方的项目脚手架工具。你将会看到一些诸如 TypeScript 和测试支持之类的可选功能提示
+这一指令将会安装并执行 [create-vue](https://github.com/vuejs/create-vue)，它是 Vue 官方的项目脚手架工具。你将会看到一些诸如
+TypeScript 和测试支持之类的可选功能提示
 
 如果不确定是否要开启某个功能，你可以**直接按下回车键选择** `No`。
 
@@ -91,7 +92,8 @@ my-vue3-project/
 
 #### Element  Plus
 
-ElementPlus 是基于 Vue 3 开发的一套高质量、美观且功能丰富的 UI 组件库。它提供了众多常用的界面组件，例如按钮、输入框、表格、弹窗等，这些组件具有统一的设计风格，能够帮助开发者快速搭建出专业、美观且易用的用户界面。
+ElementPlus 是基于 Vue 3 开发的一套高质量、美观且功能丰富的 UI
+组件库。它提供了众多常用的界面组件，例如按钮、输入框、表格、弹窗等，这些组件具有统一的设计风格，能够帮助开发者快速搭建出专业、美观且易用的用户界面。
 
 1.安装element-plus
 
@@ -136,7 +138,8 @@ export default {
 
 #### Vue Router
 
-Vue Router 是 Vue 官方的客户端路由解决方案，用于实现单页面应用（SPA）的路由功能。它允许开发者通过定义路由规则，将不同的 URL 路径映射到对应的 Vue 组件，从而实现页面的切换和导航。
+Vue Router 是 Vue 官方的客户端路由解决方案，用于实现单页面应用（SPA）的路由功能。它允许开发者通过定义路由规则，将不同的 URL
+路径映射到对应的 Vue 组件，从而实现页面的切换和导航。
 
 1.安装
 
@@ -149,26 +152,26 @@ npm install vue-router@4
 在 `src` 目录下创建 `router` 文件夹，并在其中创建 `index.js` 文件，示例代码如下：
 
 ```javascript
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About
-  }
+    {
+        path: '/',
+        name: 'Home',
+        component: Home
+    },
+    {
+        path: '/about',
+        name: 'About',
+        component: About
+    }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+    history: createWebHistory(),
+    routes
 })
 
 export default router
@@ -180,7 +183,7 @@ export default router
 在 `src/main.js` 中引入并使用路由：
 
 ```javascript
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 
@@ -190,6 +193,7 @@ app.mount('#app')
 ```
 
 ### 调试
+
 1.代码中添加debugger;
 > 1.在代码中需要调试的地方添加 `debugger;` 语句。
 > 2.在浏览器中打开开发者工具，切换到 Sources 面板。
@@ -197,3 +201,53 @@ app.mount('#app')
 2.使用浏览器调试：sourcemap需启用
 3.vs code 调试：先开启node服务，后启用vs code的调试模式
 
+### 本地开发和生产环境配置
+
+在项目根目录下创建不同的环境变量文件：
+.env.development：用于开发环境。
+.env.production：用于生产环境。
+
+在 .env.development 文件中添加如下内容：
+
+```plaintext
+VITE_BASE_URL = 'http://localhost:8080'
+VITE_TIMEOUT = 5000
+```
+
+在 .env.production 文件中添加如下内容，假设生产环境的基础 URL 为 http://example.com：
+
+```plaintext
+VITE_BASE_URL = 'http://example.com'
+VITE_TIMEOUT = 5000
+```
+
+修改 main.js 文件，使用环境变量来设置 axios 的基础 URL 和超时时间。
+
+```javascript
+// 使用环境变量设置 axios 的基础 URL
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+// 使用环境变量设置 请求超时时间
+axios.defaults.timeout = parseInt(import.meta.env.VITE_TIMEOUT);
+```
+
+运行 vite / npm run dev 启动开发服务器，Vite 会自动加载 .env.development 文件中的环境变量。可以在package.json找到
+
+运行 vite build / npm run build 构建生产环境，Vite 会自动加载 .env.production 文件中的环境变量。可以在package.json找到
+
+### 部署nginx
+
+将 dist 文件夹中的所有文件上传到 Nginx 服务器的指定目录，例如 /var/www/html
+
+```nginx
+server {
+    listen 80;
+    server_name your_domain_or_ip;
+
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```

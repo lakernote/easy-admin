@@ -1,9 +1,6 @@
 <template>
-  <!-- 定义根组件模板，显示路由对应的视图 -->
-  <div id="app">
-    <!-- 路由视图，用于显示当前路由对应的组件 -->
-    <router-view/>
-  </div>
+  <!-- 路由视图，用于显示当前路由对应的组件 -->
+  <router-view/>
 </template>
 
 <script setup>
@@ -23,12 +20,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body{
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 </style>
