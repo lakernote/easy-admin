@@ -14,29 +14,30 @@ const routes = [
                 path: '',
                 // 该子路由的名称为 'Home'，可用于路由导航时通过名称跳转
                 name: 'Home',
-                meta: { title: '首页', icon: 'House' },
+                // meta中的属性是自己扩展的，用于存储路由的元信息，showInMenu 用于控制是否在菜单中显示该路由仅一级菜单需要配置
+                meta: {title: '首页', icon: 'House', showInMenu: true},
                 // 使用懒加载的方式引入 Home 组件，只有在访问该路由时才会加载对应的组件，提高应用性能
                 // '@' 是项目中配置的别名，通常指向 src 目录
                 component: () => import('@/views/Home.vue')
             },
             {
                 // 用户管理页面的路由路径，当访问该路径时会显示对应的组件
-                path: 'users1',
-                meta: { title: '用户管理', icon: 'User' },
+                path: 'users',
+                meta: {title: '用户管理', icon: 'User', showInMenu: true},
+                name: 'Users',
                 // 该路由对应的组件为 Users，该组件负责展示用户管理相关的内容
-                component: Users,
                 children: [
                     {
-                        path: 'users',
-                        name: 'users',
-                        meta: { title: '用户列表', icon: 'List' },
-                        component: () => import('@/views/Users.vue')
+                        path: 'list', // 用户列表的子路由路径,实际上是 /users/list
+                        name: 'UserList',
+                        meta: {title: '用户列表', icon: 'List'},
+                        component: Users
                     },
                     {
-                        path: 'add',
+                        path: 'add', // 用户列表的子路由路径,实际上是 /users/list
                         name: 'UserAdd',
-                        meta: { title: '添加用户', icon: 'Plus' },
-                        component: () => import('@/views/Users.vue')
+                        meta: {title: '增加用户', icon: 'Plus'},
+                        component: Users
                     }
                 ]
             }

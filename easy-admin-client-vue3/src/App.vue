@@ -20,9 +20,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-body{
-  height: 100%;
+html, body, #app {
+  height: 100%; /* 确保根容器高度为 100% */
   margin: 0;
-  padding: 0;
 }
 </style>
