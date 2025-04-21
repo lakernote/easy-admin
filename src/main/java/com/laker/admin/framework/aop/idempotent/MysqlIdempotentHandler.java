@@ -25,8 +25,9 @@ public class MysqlIdempotentHandler implements IdempotentHandler {
         if (count != null && count > 0) {
             return false;
         }
+        cleanExpiredRecords();
         Timestamp expire = Timestamp.from(Instant.now().plusSeconds(expireTime));
-        sql = "INSERT INTO idempotent_record (`key`, expireTime) VALUES (?, ?) ";
+        sql = "INSERT ignore INTO idempotent_record (`key`, expireTime) VALUES (?, ?) ";
         int rowsAffected = jdbcTemplate.update(sql, key, expire);
         return rowsAffected == 1;
     }

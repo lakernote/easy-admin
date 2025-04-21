@@ -1,5 +1,6 @@
 package com.laker.admin.framework.localmessage;
 
+import com.laker.admin.framework.aop.idempotent.Idempotent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ public class ExampleILocalMessageOperation implements ILocalMessageOperation {
     private EasyLocalMessageTemplate easyLocalMessageTemplate;
 
     @Transactional
+    @Idempotent(key = "#param")
     public void exampleMethod1(String param) {
         // 模拟本地数据操作
         System.out.println("Performing local operation with param: " + param);

@@ -5,7 +5,6 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.laker.admin.config.EasyCacheConfig;
-import com.laker.admin.framework.aop.idempotent.Idempotent;
 import com.laker.admin.framework.aop.ratelimit.EasyRateLimit;
 import com.laker.admin.framework.ext.mvc.CurrentUser;
 import com.laker.admin.framework.ext.mvc.PageRequest;
@@ -35,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -285,14 +285,13 @@ public class DemoController {
 
     @GetMapping("/cache")
     @Operation(summary = "11.测试cache")
-    @Idempotent(key = "#num")
     // condition 作用于缓存结果，只有当返回值为true时才会缓存
     // unless 作用于缓存结果，只有当返回值为false时才会缓存，当结果为负数时不进行缓存
     // 与 condition 的区别：unless 表达式是在方法调用之后进行计算的，所以它可以引用方法的返回结果 #result
     // 例如：如果传入的参数为负数，返回默认值
     // key 是缓存的key key = "#num",
     // sync 表示是否使用同步锁，默认值为false 当多个线程尝试为同一个键加载值时，这个属性用于同步底层方法的调用。
-//    @Cacheable(cacheNames = EasyCacheConfig.CACHE_NAME_1H, key = "'laker:' + #num", unless = "#result < 0")
+    @Cacheable(cacheNames = EasyCacheConfig.CACHE_NAME_1H, key = "'laker:' + #num", unless = "#result < 0")
     public Integer cache(@RequestParam int num) {
         log.info(String.valueOf(num));
         exampleILocalMessageOperation.test("param");
@@ -301,6 +300,13 @@ public class DemoController {
         if (num < 0) {
             return DEFAULT_VALUE;
         }
+        return num;
+    }
+
+    @GetMapping("/idempotent")
+    @Operation(summary = "12.测试idempotent")
+    public Integer idempotent(@RequestParam int num) {
+        exampleILocalMessageOperation.exampleMethod1("param");
         return num;
     }
 }
