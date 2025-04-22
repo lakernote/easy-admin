@@ -251,3 +251,89 @@ server {
     }
 }
 ```
+
+### FQA
+0.布局
+大的使用el-container布局，小的使用el-row和el-col布局
+https://element-plus.org/zh-CN/component/container.html
+https://element-plus.org/zh-CN/component/layout.html
+1.路由懒加载：除了Home组件，其他组件也可以使用懒加载，减少初始加载时间
+component: () => import('@/views/NotFound.vue')
+2.路由元信息扩展：扩展meta信息，增加权限控制
+```json
+{
+    path: 'users',
+    meta: {
+        title: '用户管理', 
+        icon: 'User', 
+        showInMenu: true,
+        requiresAuth: true,  // 需要认证
+        permissions: ['admin', 'manager']  // 所需权限
+    },
+    // ...
+}
+```
+3.路由错误处理增强：添加错误处理中间件：
+```javascript
+// 添加全局错误处理
+router.onError((error) => {
+  console.error('路由错误:', error);
+  // 可以添加错误报告或重定向到错误页面
+});
+```
+4.路由守卫优化：细化路由守卫逻辑，添加权限控制
+```javascript
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const userRole = localStorage.getItem('userRole');
+  
+  // 处理需要登录的页面
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isLoggedIn) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath } // 保存原目标路径
+      });
+      return;
+    }
+    
+    // 权限检查
+    if (to.meta.permissions && !to.meta.permissions.includes(userRole)) {
+      next({ path: '/403' }); // 权限不足页面
+      return;
+    }
+  }
+  
+  next();
+});
+```
+5.添加403权限不足页面：
+6.缓存路由组件：使用keep-alive优化性能：
+```vue
+<!-- 在Layout.vue中 -->
+<router-view v-slot="{ Component }">
+<keep-alive :include="['Home', 'UserList']">
+<component :is="Component" />
+</keep-alive>
+</router-view>
+```
+7.路由过渡动画：添加页面切换动画：
+```vue
+<!-- 在Layout.vue中 -->
+<router-view v-slot="{ Component }">
+  <transition name="fade" mode="out-in">
+    <component :is="Component" />
+  </transition>
+</router-view>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
+```

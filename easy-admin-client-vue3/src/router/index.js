@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import Login from '../views/Login.vue';
 import Layout from '../components/Layout.vue';
 import Users from "@/views/Users.vue";
+import {ElMessage} from "element-plus";
 // 定义路由配置数组
 const routes = [
     {
@@ -52,6 +53,12 @@ const routes = [
         // 登录页面路由
         path: '/login',
         component: Login
+    },
+    // 404 路由，必须放在最后一个
+    {
+        path: '/:pathMatch(.*)*',  // 匹配所有未定义的路由 通配符路由必须放在路由配置数组的最后，以确保它只在其他路由都不匹配时才生效
+        name: 'NotFound',
+        component: () => import('@/views/NotFound.vue'),  // 懒加载 NotFound 组件 减少初始加载时间
     }
 ];
 
@@ -74,6 +81,13 @@ router.beforeEach((to, from, next) => {
         // 允许正常跳转
         next();
     }
+});
+
+// 路由错误处理
+router.onError((error) => {
+    // 处理路由错误，例如打印错误信息
+    console.error('Router Error:', error);
+    ElMessage.error('页面加载失败，请稍后再试');
 });
 
 export default router;
