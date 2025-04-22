@@ -283,7 +283,7 @@ const handleLogout = () => {
 
 /* 通知徽章样式 */
 .notification-badge {
-  margin-right: 20px;
+  margin-right: 20px; /* 设置右侧外边距为20px */
   cursor: pointer;
 }
 
@@ -334,30 +334,29 @@ const handleLogout = () => {
 
 /* 主内容区域样式 */
 .right-container {
-  background-color: #f0f2f5;
-  display: flex;
-  flex-direction: column;
+  background-color: #f0f2f5; /* 设置背景色 */
+  display: flex; /* 使用flex布局 */
+  flex-direction: column; /* 垂直排列子元素 */
 }
 
 .business-main {
-  padding: 20px;
-  flex: 1;
-  overflow-y: auto;
+  padding: 20px; /* 设置内边距为20px */
+  flex: 1; /* 使主内容区域占满剩余空间 */
+  overflow-y: auto; /* 允许垂直滚动 */
 }
 
 /* 面包屑容器样式 */
 .breadcrumb-container {
-  margin-bottom: 16px;
-  padding: 8px 0;
+  margin-bottom: 16px; /* 设置底部外边距为16px */
+  padding: 8px 0; /* 上下内边距为8px */
 }
 
 /* 路由内容卡片样式 */
 .content-card {
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  padding: 24px;
-  min-height: 85%;
+  background-color: #ffffff; /* 设置背景色 */
+  border-radius: 4px; /* 设置圆角为4px */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); /* 添加阴影效果 */
+  padding: 24px; /* 设置内边距为24px */
 }
 
 /* 页脚样式 - 商务风格 */

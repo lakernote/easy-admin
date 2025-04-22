@@ -26,6 +26,7 @@ const routes = [
                 path: 'users',
                 meta: {title: '用户管理', icon: 'User', showInMenu: true},
                 name: 'Users',
+                component: () => import('@/views/Users.vue'), // 使用懒加载的方式引入 Users 组件
                 // 该路由对应的组件为 Users，该组件负责展示用户管理相关的内容
                 children: [
                     {
