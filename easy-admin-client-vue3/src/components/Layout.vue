@@ -1,36 +1,57 @@
 <template>
-  <div>
+  <div class="layout-container">
     <!-- 使用 Element Plus 的Container 布局容器 组件 https://element-plus.org/zh-CN/component/container.html -->
     <el-container>
       <!-- 1.顶部导航栏 -->
-      <el-header>
+      <el-header class="business-header">
         <!-- 使用 el-row 和 el-col 进行布局 -->
         <el-row :gutter="0" class="header-row">
-          <!-- 1.1 左侧标题 span12 是占用一半 满是24-->
+          <!-- 1.1 左侧标题和logo span12 是占用一半 满是24-->
           <el-col :span="12" class="header-left">
-            <span>顶部导航栏</span>
+            <div class="logo-container">
+              <!-- 可以替换成你的实际logo -->
+              <el-icon :size="24" class="logo-icon">
+                <Monitor/>
+              </el-icon>
+              <span class="logo-text">企业管理系统</span>
+            </div>
           </el-col>
 
           <!-- 1.2 右侧用户信息 -->
           <el-col :span="12" class="header-right">
-            <!-- 使用Element Plus的下拉菜单组件 -->
+            <!-- 1.2.1 通知图标 -->
+            <el-badge :value="3" class="notification-badge">
+              <el-icon :size="18">
+                <Bell/>
+              </el-icon>
+            </el-badge>
+            <!-- 1.2.2 使用Element Plus的下拉菜单组件 -->
             <el-dropdown trigger="click">
               <!-- 用户信息显示区域 - 包含昵称和头像 -->
               <div class="user-info">
-                <span class="user-name">用户昵称</span>
+                <span class="user-name">管理员</span>
                 <!-- 用户头像组件 -->
-                <el-avatar :size="32" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
+                <el-avatar :size="32" class="business-avatar">A</el-avatar>
               </div>
 
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>个人中心</el-dropdown-item>
-                  <el-dropdown-item>修改密码</el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-icon>
+                      <User/>
+                    </el-icon>
+                    <span>个人中心</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-icon>
+                      <Key/>
+                    </el-icon>
+                    <span>修改密码</span>
+                  </el-dropdown-item>
                   <!-- 退出登录选项 - 带分隔线和点击事件 -->
                   <el-dropdown-item divided @click="handleLogout">
                     <el-icon>
-                      <!-- 退出图标 -->
-                      <Switch/>
+                      <SwitchButton/>
                     </el-icon>
                     退出登录
                   </el-dropdown-item>
@@ -42,19 +63,22 @@
       </el-header>
       <!-- 2.顶部下面区域 -->
       <!-- 减去的固定值，可按需调整 撑满下部区域 -->
-      <el-container style="min-height: calc(100vh - 50px);">
+      <el-container style="min-height: calc(100vh - 60px);">
         <!-- 2.1 左侧边栏 -->
-        <el-aside width="200px">
+        <el-aside width="220px" class="business-aside">
           <!-- row和col用于布局，col支持24列 -->
           <el-row>
             <el-col :span="24">
               <el-menu
                   default-active="Home"
-                  class="el-menu-vertical-demo"
+                  class="business-menu"
                   @open="handleOpen"
                   @close="handleClose"
                   @select="handleSelect"
                   router
+                  background-color="#001529"
+                  text-color="#b3b3b3"
+                  active-text-color="#ffffff"
               >
                 <!-- 循环遍历路由配置 -->
                 <template v-for="route in routes" :key="route.name">
@@ -96,21 +120,29 @@
           </el-row>
         </el-aside>
         <!-- 2.2 右侧内容区域 -->
-        <el-container>
+        <el-container class="right-container">
           <!-- 2.2.1 主体内容区域 -->
-          <el-main>
+          <el-main class="business-main">
             <!-- 2.2.1.1 面包屑导航 -->
-            <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{ name: 'Home' }">首页</el-breadcrumb-item>
-              <template v-for="(crumb, index) in breadcrumbList" :key="index">
-                <el-breadcrumb-item :to="{ name: crumb.name }">{{ crumb.meta.title }}</el-breadcrumb-item>
-              </template>
-            </el-breadcrumb>
+            <div class="breadcrumb-container">
+              <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="{ name: 'Home' }">首页</el-breadcrumb-item>
+                <template v-for="(crumb, index) in breadcrumbList" :key="index">
+                  <el-breadcrumb-item :to="{ name: crumb.name }">{{ crumb.meta.title }}</el-breadcrumb-item>
+                </template>
+              </el-breadcrumb>
+            </div>
             <!-- 2.2.1.2 路由视图 -->
-            <router-view/>
+            <div class="content-card">
+              <router-view/>
+            </div>
           </el-main>
           <!-- 2.2.2 底部区域 -->
-          <el-footer>底部导航栏</el-footer>
+          <el-footer class="business-footer">
+            <div class="footer-content">
+              © 2025 企业管理系统 版权所有
+            </div>
+          </el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -120,7 +152,7 @@
 <script setup>
 import {ref, watch} from 'vue';
 import {useRoute} from 'vue-router';
-import {House, List, Plus, Switch, User} from '@element-plus/icons-vue';
+import {Bell, House, Key, List, Monitor, Plus, SwitchButton, User} from '@element-plus/icons-vue';
 import router from '../router';
 import {ElMessageBox} from "element-plus";
 
@@ -194,13 +226,22 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-/* 顶部导航栏样式 */
-.el-header {
-  background-color: #b3c0d1; /* 设置背景色 */
-  color: #333; /* 设置文字颜色 */
-  line-height: 50px; /* 设置行高为50px，使文字垂直居中 */
-  height: 50px; /* 设置导航栏高度为50px */
-  padding: 0 15px; /* 设置左右内边距为15px，上下为0 */
+/* 整体容器样式 */
+.layout-container {
+  height: 100vh; /* 设置高度为100vh，确保占满整个视口 */
+  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+/* 顶部导航栏样式 - 商务风格 */
+.business-header {
+  background-color: #ffffff; /* 设置背景色 */
+  color: #333333; /* 设置文字颜色 */
+  line-height: 60px; /* 设置行高为60px，使文字垂直居中 */
+  height: 60px; /* 设置导航栏高度为60px */
+  padding: 0 20px; /* 设置左右内边距为20px，上下为0 */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+  position: relative; /* 设置相对定位 */
+  z-index: 10; /* 设置z-index，确保在其他元素之上 */
 }
 
 /* 顶部行布局 */
@@ -215,6 +256,24 @@ const handleLogout = () => {
   font-weight: bold; /* 文字加粗显示 */
 }
 
+/* Logo容器样式 */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  color: #1890ff;
+  margin-right: 8px;
+}
+
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #001529;
+}
+
 /* 右侧用户信息样式 */
 .header-right {
   display: flex; /* 使用flex布局 */
@@ -222,32 +281,97 @@ const handleLogout = () => {
   align-items: center; /* 子元素垂直居中对齐 */
 }
 
+/* 通知徽章样式 */
+.notification-badge {
+  margin-right: 20px;
+  cursor: pointer;
+}
+
 /* 用户信息样式 */
 .user-info {
   display: flex; /* 使用flex布局，使头像和昵称并排显示 */
   align-items: center; /* 垂直居中对齐 */
   cursor: pointer; /* 鼠标悬停时显示指针样式，提示可点击 */
+  padding: 0 4px;
 }
 
 .user-name {
   margin-right: 8px; /* 在昵称右侧添加8px的间距，与头像分开 */
+  font-size: 14px;
 }
 
-/* 侧边栏样式 */
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
+/* 头像样式 */
+.business-avatar {
+  background-color: #1890ff;
+  color: #ffffff;
 }
 
-/* 页脚样式 */
-.el-footer {
-  background-color: #b3c0d1;
-  color: #333;
-  text-align: center;
-  line-height: 40px;
-  height: 40px;
-  flex-shrink: 0; /* 防止页脚收缩 */
+/* 左侧边栏样式 */
+.business-aside {
+  background-color: #001529;
+  box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+  position: relative;
+  z-index: 9;
+  transition: width 0.3s;
+  overflow: hidden;
+}
+
+/* 菜单样式 */
+.business-menu {
+  border-right: none;
+}
+
+.business-menu :deep(.el-sub-menu__title) {
+  height: 50px;
+  line-height: 50px;
+}
+
+.business-menu :deep(.el-menu-item) {
+  height: 50px;
+  line-height: 50px;
+}
+
+
+/* 主内容区域样式 */
+.right-container {
+  background-color: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+}
+
+.business-main {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 面包屑容器样式 */
+.breadcrumb-container {
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+/* 路由内容卡片样式 */
+.content-card {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  padding: 24px;
+  min-height: 85%;
+}
+
+/* 页脚样式 - 商务风格 */
+.business-footer {
+  background-color: #ffffff; /* 设置背景色 */
+  color: #666666; /* 设置文字颜色 */
+  height: 48px; /* 设置高度为48px */
+  line-height: 48px; /* 设置行高为48px，使文字垂直居中 */
+  text-align: center; /* 居中对齐 */
+  padding: 0; /* 上下内边距为0 */
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.03); /* 添加阴影效果 */
+}
+
+.footer-content {
+  font-size: 12px; /* 设置字体大小为12px */
 }
 </style>
