@@ -22,24 +22,23 @@ const routes = [
                 component: () => import('@/views/Home.vue')
             },
             {
-                // 用户管理页面的路由路径，当访问该路径时会显示对应的组件
-                path: 'users',
-                meta: {title: '用户管理', icon: 'User', showInMenu: true},
-                name: 'Users',
-                component: () => import('@/views/Users.vue'), // 使用懒加载的方式引入 Users 组件
+                // 系统管理页面的路由路径，当访问该路径时会显示对应的组件
+                path: 'system', // 系统管理的子路由路径,实际上是 /system
+                meta: {title: '系统管理', icon: 'Setting', showInMenu: true},
+                name: 'System',
                 // 该路由对应的组件为 Users，该组件负责展示用户管理相关的内容
                 children: [
                     {
-                        path: 'list', // 用户列表的子路由路径,实际上是 /users/list
-                        name: 'UserList',
-                        meta: {title: '用户列表', icon: 'List'},
+                        path: 'users', // 实际上是 /system/users
+                        name: 'Users',
+                        meta: {title: '用户管理', icon: 'User'},
                         component: Users
                     },
                     {
-                        path: 'add', // 用户列表的子路由路径,实际上是 /users/list
-                        name: 'UserAdd',
-                        meta: {title: '增加用户', icon: 'Plus'},
-                        component: Users
+                        path: 'dicts', // 实际上是 /system/dicts
+                        name: 'Dicts',
+                        meta: {title: '字典管理', icon: 'Plus'},
+                        component: () => import('@/views/Dicts.vue') // 使用懒加载的方式引入 Dicts 组件
                     }
                 ]
             }

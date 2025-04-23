@@ -58,7 +58,7 @@
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import {ElMessage} from "element-plus";
-import axios from 'axios';
+import request from '@/utils/axios'
 
 // 引用表单实例，用于表单验证
 const formRef = ref<InstanceType<typeof import('element-plus')['ElForm']>>();
@@ -103,13 +103,13 @@ const handleLogin = () => {
     if (valid) {
       loading.value = true;
       // 如果表单验证通过，发送登录请求
-      axios.post('/sys/auth/v1/login', loginForm.value)
+      request.post('/sys/auth/v1/login', loginForm.value)
           .then(response => {
-            if (response.success) {
+            if (response.data.success) {
               localStorage.setItem('isLoggedIn', 'true');
               // 这里可以存储 token 等信息
-              localStorage.setItem('tokenName', response.data.tokenName);
-              localStorage.setItem('tokenValue', response.data.tokenValue);
+              localStorage.setItem('tokenName', response.data.data.tokenName);
+              localStorage.setItem('tokenValue', response.data.data.tokenValue);
               router.push('/');
             } else {
               ElMessage.error(response.data.message);

@@ -128,7 +128,7 @@
               <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{ name: 'Home' }">首页</el-breadcrumb-item>
                 <template v-for="(crumb, index) in breadcrumbList" :key="index">
-                  <el-breadcrumb-item :to="{ name: crumb.name }">{{ crumb.meta.title }}</el-breadcrumb-item>
+                  <el-breadcrumb-item>{{ crumb.meta.title }}</el-breadcrumb-item>
                 </template>
               </el-breadcrumb>
             </div>
@@ -152,7 +152,7 @@
 <script setup>
 import {ref, watch} from 'vue';
 import {useRoute} from 'vue-router';
-import {Bell, House, Key, List, Monitor, Plus, SwitchButton, User} from '@element-plus/icons-vue';
+import {Bell, House, Key, List, Monitor, Plus, Setting, SwitchButton, User} from '@element-plus/icons-vue';
 import router from '../router';
 import {ElMessageBox} from "element-plus";
 
@@ -165,7 +165,8 @@ const icons = {
   House,
   User,
   List,
-  Plus
+  Plus,
+  Setting
 };
 
 const breadcrumbList = ref([]);
@@ -217,6 +218,8 @@ const handleLogout = () => {
   }).then(() => {
     // 清除登录状态
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('tokenName');
+    localStorage.removeItem('tokenValue');
     // 跳转到登录页
     router.push('/login');
   }).catch(() => {

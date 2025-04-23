@@ -12,6 +12,7 @@ import com.laker.admin.framework.model.Response;
 import com.laker.admin.module.sys.entity.SysDict;
 import com.laker.admin.module.sys.service.ISysDictService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,9 +38,14 @@ public class SysDictController {
     @GetMapping
     @Operation(summary = "分页查询")
     public PageResponse pageAll(@RequestParam(required = false, defaultValue = "1") long page,
-                                @RequestParam(required = false, defaultValue = "10") long limit) {
+                                @RequestParam(required = false, defaultValue = "10") long limit,
+                                @RequestParam(required = false) String dictCode,
+                                @RequestParam(required = false) String dictName) {
         Page roadPage = new Page<>(page, limit);
         LambdaQueryWrapper<SysDict> queryWrapper = new QueryWrapper().lambda();
+        // 根据字典代码和名称进行模糊查询
+        queryWrapper.like(StringUtils.isNotBlank(dictCode), SysDict::getDictCode, dictCode);
+        queryWrapper.like(StringUtils.isNotBlank(dictName), SysDict::getDictName, dictName);
         Page pageList = sysDictService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }
