@@ -285,6 +285,9 @@ const handleLogout = () => {
 .notification-badge {
   margin-right: 20px; /* 设置右侧外边距为20px */
   cursor: pointer;
+  display: inline-flex; /* 这行，使用flex布局 */
+  align-items: center; /* 垂直居中对齐 */
+  vertical-align: middle; /* 这行，使图标和头像在同一水平线上 */
 }
 
 /* 用户信息样式 */
@@ -292,7 +295,7 @@ const handleLogout = () => {
   display: flex; /* 使用flex布局，使头像和昵称并排显示 */
   align-items: center; /* 垂直居中对齐 */
   cursor: pointer; /* 鼠标悬停时显示指针样式，提示可点击 */
-  padding: 0 4px;
+  padding: 0 4px; /* 设置左右内边距为4px */
 }
 
 .user-name {
