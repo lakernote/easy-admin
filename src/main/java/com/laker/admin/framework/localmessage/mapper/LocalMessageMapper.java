@@ -21,8 +21,8 @@ public interface LocalMessageMapper extends BaseMapper<LocalMessage> {
     // SELECT id FROM ... LIMIT 10 是 非锁定操作，意味着多个线程可能在执行 UPDATE 之前都读到了一样的10条数据。
     //然后两个线程都进入 UPDATE，虽然加了 locked_by IS NULL 条件，能部分避免冲突，但不能保证并发线程严格每个都能抢到10条任务。
     @Update("UPDATE local_message SET process_tag = #{processTag} " +
-            "WHERE id IN (SELECT id FROM (SELECT id FROM local_message WHERE status = #{status} " +
-            "   AND process_tag IS NULL ORDER BY create_time DESC LIMIT 10) tmp) " + // 这里加个for update 感觉更稳，测试为准吧。
+            "WHERE id IN (SELECT id FROM (SELECT id FROM local_message WHERE status = #{status} " +          // for update skip locked
+            "   AND process_tag IS NULL ORDER BY create_time DESC LIMIT 10 for update skip locked ) tmp) " + //  查询返回查询结果，但忽略有行锁的记录
             "   AND status = #{status} AND process_tag IS NULL")
     int updateProcessTagByStatus(@Param("status") String status, @Param("processTag") String processTag);
 
