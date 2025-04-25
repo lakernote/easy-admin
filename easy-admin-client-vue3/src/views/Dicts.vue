@@ -71,7 +71,7 @@
 
 <script setup>
 import {reactive, ref} from 'vue'
-import request from '@/utils/axios.js'
+import request from '@/utils/request.js'
 import {ElMessage, ElMessageBox} from 'element-plus'
 
 const dictList = ref([])
@@ -141,7 +141,7 @@ const saveDict = () => {
       await request.post('/sys/dict', {...form})
       ElMessage.success(form.dictId ? '更新成功' : '新增成功')
       dialogVisible.value = false
-      getDicts()
+      await getDicts()
     } catch (err) {
       ElMessage.error('保存失败')
     }

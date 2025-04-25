@@ -58,7 +58,7 @@
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import {ElMessage} from "element-plus";
-import request from '@/utils/axios'
+import {login} from '@/api/login';
 
 // 引用表单实例，用于表单验证
 const formRef = ref<InstanceType<typeof import('element-plus')['ElForm']>>();
@@ -103,7 +103,7 @@ const handleLogin = () => {
     if (valid) {
       loading.value = true;
       // 如果表单验证通过，发送登录请求
-      request.post('/sys/auth/v1/login', loginForm.value)
+      login(loginForm.value.username, loginForm.value.password)
           .then(response => {
             if (response.data.success) {
               localStorage.setItem('isLoggedIn', 'true');
