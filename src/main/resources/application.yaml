@@ -1,11 +1,15 @@
 server:
+  # 端口号
   port: 8080
+  # 开启 HTTP 压缩可以减少网络传输的数据量，提高性能
   compression:
     enabled: true
     min-response-size: 1KB
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
   # tomcat配置
   tomcat:
+    # 嵌入式 Tomcat 服务器运行时各类文件的存储根目录。Tomcat 服务器在运行期间会产生一些临时文件、日志文件等，basedir 就为这些文件提供了存储位置。
+    basedir: ./
     # 允许最大连接数,默认8192,当达到临界值时,系统会基于accept-count继续接受连接 参数是客户感知型参数。
     max-connections: 8192
     # 当所有线程都在使用时,建立连接的请求的等待队列长度,默认100 请求的backlog值 如果超过max-connections和accept-count总和，新的连接会被拒绝，即直接拒绝服务（直接返回connection refused）
@@ -15,9 +19,10 @@ server:
     uri-encoding: UTF-8
     threads:
       # 线程池的最小工作线程数,默认10
-      min-spare: 50
+      min-spare: 10
       # 线程池的最大线程数,默认200
-      max: 1000
+      max: 200
+      # 线程池的最大空闲时间,默认60s
   servlet:
     context-path: /
 spring:
