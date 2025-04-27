@@ -1,5 +1,8 @@
+// Jenkinsfile (声明式 Pipeline)
 pipeline {
+    // 在任何可用的代理上执行该管道或其任何阶段
     agent any
+    // 定义环境变量
     environment {
         // 环境变量，可以方便管理
         imageName = "laker-test:latest"
