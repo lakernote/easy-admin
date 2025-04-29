@@ -119,8 +119,6 @@ const handleLogin = () => {
               ElMessage.error(response.data.message);
             }
           })
-          .catch(error => {
-          });
       loading.value = false;
     }
   });

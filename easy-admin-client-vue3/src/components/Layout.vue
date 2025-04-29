@@ -65,10 +65,11 @@
       <!-- 减去的固定值，可按需调整 撑满下部区域 -->
       <el-container style="min-height: calc(100vh - 60px);">
         <!-- 2.1 左侧边栏 -->
-        <el-aside width="220px" class="business-aside">
+        <el-aside :width="collapsed ? '64px' : '200px'" class="business-aside">
           <!-- row和col用于布局，col支持24列 -->
           <el-row>
             <el-col :span="24">
+              <!-- 菜单部分增加 collapse 属性 -->
               <el-menu
                   default-active="Home"
                   class="business-menu"
@@ -79,6 +80,7 @@
                   background-color="#001529"
                   text-color="#b3b3b3"
                   active-text-color="#ffffff"
+                  :collapse="collapsed"
               >
                 <!-- 循环遍历路由配置 -->
                 <template v-for="route in routes" :key="route.name">
@@ -118,6 +120,14 @@
               </el-menu>
             </el-col>
           </el-row>
+
+          <!-- 折叠按钮 -->
+          <div class="collapse-btn" @click="toggleCollapse">
+            <el-icon :size="18">
+              <component :is="collapsed ? ArrowRight : ArrowLeft"/>
+            </el-icon>
+          </div>
+
         </el-aside>
         <!-- 2.2 右侧内容区域 -->
         <el-container class="right-container">
@@ -152,7 +162,19 @@
 <script setup>
 import {ref, watch} from 'vue';
 import {useRoute} from 'vue-router';
-import {Bell, House, Key, List, Monitor, Plus, Setting, SwitchButton, User} from '@element-plus/icons-vue';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bell,
+  House,
+  Key,
+  List,
+  Monitor,
+  Plus,
+  Setting,
+  SwitchButton,
+  User
+} from '@element-plus/icons-vue';
 import router from '../router';
 import {ElMessageBox} from "element-plus";
 
@@ -192,6 +214,14 @@ watch(
     },
     {immediate: true} // 立即执行一次
 );
+
+// 新增折叠状态
+const collapsed = ref(false)
+
+// 切换折叠方法
+const toggleCollapse = () => {
+  collapsed.value = !collapsed.value
+}
 
 // 处理菜单项的打开事件
 const handleOpen = (key, keyPath) => {
@@ -320,6 +350,24 @@ const handleLogout = () => {
   z-index: 9;
   transition: width 0.3s;
   overflow: hidden;
+}
+
+/* 侧边栏折叠按钮样式 */
+.collapse-btn {
+  position: absolute;
+  bottom: 16px; /* 离底部16px */
+  right: 12px; /* 靠右，距离菜单右侧12px */
+  z-index: 999;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 /* 菜单样式 */

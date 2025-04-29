@@ -16,10 +16,18 @@ const routes = [
                 // 该子路由的名称为 'Home'，可用于路由导航时通过名称跳转
                 name: 'Home',
                 // meta中的属性是自己扩展的，用于存储路由的元信息，showInMenu 用于控制是否在菜单中显示该路由仅一级菜单需要配置
-                meta: {title: '首页', icon: 'House', showInMenu: true},
+                meta: {title: '工作空间', icon: 'House', showInMenu: true},
                 // 使用懒加载的方式引入 Home 组件，只有在访问该路由时才会加载对应的组件，提高应用性能
                 // '@' 是项目中配置的别名，通常指向 src 目录
-                component: () => import('@/views/Home.vue')
+                component: () => import('@/views/Home.vue'),
+                children: [
+                    {
+                        path: 'users', // 实际上是 /system/users
+                        name: 'Users',
+                        meta: {title: '用户管理', icon: 'User'},
+                        component: Users
+                    }
+                ]
             },
             {
                 // 系统管理页面的路由路径，当访问该路径时会显示对应的组件
