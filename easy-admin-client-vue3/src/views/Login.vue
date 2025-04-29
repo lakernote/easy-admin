@@ -1,52 +1,56 @@
 <template>
   <!-- 登录页面容器 -->
+  <!-- 1.根容器：flex 布局竖直水平居中，占满整个视口高度 -->
   <div class="login-container">
-    <!-- 品牌区域 -->
-    <div class="brand-area">
-      <img
-          :src="logoSvg"
-          alt="企业Logo"
-          class="logo"
-          width="120"
-          height="120"
-      />
-      <h3 class="brand-name">laker企业管理平台</h3>
-      <p class="slogan">专业·高效·安全</p>
-    </div>
+    <div class="login-card">
+      <!-- 品牌区域 -->
+      <div class="brand-area">
+        <img
+            :src="logoSvg"
+            alt="企业Logo"
+            class="logo"
+            width="120"
+            height="120"
+        />
+        <h3 class="brand-name">laker企业管理平台</h3>
+        <p class="slogan">专业·高效·安全</p>
+      </div>
 
-    <!-- 登录表单，绑定登录表单数据，提交时调用 handleLogin 方法 -->
-    <el-form
-        :model="loginForm"
-        :rules="rules"
-        ref="formRef"
-        label-width="80px"
-        class="login-form"
-        @submit.prevent="handleLogin">
-      <!-- 用户名输入项 -->
-      <el-form-item label="用户名" prop="username">
-        <!-- 用户名输入框，绑定登录表单的用户名数据 -->
-        <el-input v-model="loginForm.username"
-                  placeholder="请输入用户名"
-                  class="input-with-border"
-                  clearable/>
-      </el-form-item>
-      <!-- 密码输入项 -->
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="loginForm.password"
-                  type="password"
-                  placeholder="请输入密码"
-                  class="input-with-border"
-                  show-password/>
-      </el-form-item>
-      <!-- 登录按钮 -->
-      <el-form-item class="button-container">
-        <el-button type="primary"
-                   @click="handleLogin"
-                   class="login-button"
-                   :loading="loading">登录
-        </el-button>
-      </el-form-item>
-    </el-form>
+      <!-- 登录表单，绑定登录表单数据，提交时调用 handleLogin 方法 -->
+      <el-form
+          :model="loginForm"
+          :rules="rules"
+          ref="formRef"
+          label-width="80px"
+          class="login-form"
+          @submit.prevent="handleLogin">
+        <!-- 用户名输入项 -->
+        <el-form-item label="用户名" prop="username">
+          <!-- 用户名输入框，绑定登录表单的用户名数据 -->
+          <el-input v-model="loginForm.username"
+                    placeholder="请输入用户名"
+                    class="input-with-border"
+                    clearable/>
+        </el-form-item>
+        <!-- 密码输入项 -->
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="loginForm.password"
+                    type="password"
+                    placeholder="请输入密码"
+                    class="input-with-border"
+                    show-password/>
+        </el-form-item>
+        <!-- 登录按钮 -->
+        <el-form-item class="button-container">
+          <el-button type="primary"
+                     @click="handleLogin"
+                     class="login-button"
+                     :loading="loading">登录
+          </el-button>
+        </el-form-item>
+      </el-form>
+
+    </div>
     <!-- 版权信息 -->
     <div class="copyright">
       © 2025 laker科技有限公司 保留所有权利
@@ -116,7 +120,6 @@ const handleLogin = () => {
             }
           })
           .catch(error => {
-            ElMessage.error("网络错误，请稍后再试");
           });
       loading.value = false;
     }
@@ -126,14 +129,25 @@ const handleLogin = () => {
 
 <style scoped>
 .login-container {
-  max-width: 420px;
-  margin: 0 auto;
-  margin-top: 80px;
+  display: flex; /* 使用 flex 布局，让内容垂直水平居中 */
+  flex-direction: column; /* 子元素纵向排列 */
+  justify-content: center; /* 垂直居中 */
+  align-items: center; /* 水平居中 */
+  height: 100vh; /* 占满整个屏幕高度 */
+  padding: 20px; /* 内边距防止贴边 */
+  box-sizing: border-box;
+  background-color: #f5f7fa;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
   padding: 40px 50px;
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 12px 36px rgba(26, 71, 142, 0.12);
   font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  box-sizing: border-box;
 }
 
 .brand-area {
