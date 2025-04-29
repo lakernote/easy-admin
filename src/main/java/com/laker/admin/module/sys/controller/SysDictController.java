@@ -46,6 +46,7 @@ public class SysDictController {
         // 根据字典代码和名称进行模糊查询
         queryWrapper.like(StringUtils.isNotBlank(dictCode), SysDict::getDictCode, dictCode);
         queryWrapper.like(StringUtils.isNotBlank(dictName), SysDict::getDictName, dictName);
+        queryWrapper.orderByDesc(SysDict::getCreateTime);
         Page pageList = sysDictService.page(roadPage, queryWrapper);
         return PageResponse.ok(pageList.getRecords(), pageList.getTotal());
     }

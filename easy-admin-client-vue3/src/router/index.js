@@ -7,12 +7,13 @@ import {ElMessage} from "element-plus";
 const routes = [
     {
         path: '/',  // 根路径对应的路由配置
+        redirect: '/workspace', // 显式重定向到 /workspace
         component: Layout,      // 该路由对应的组件为 Layout，通常 Layout 组件作为应用的整体布局，包含侧边栏、导航栏等
         // 子路由配置数组，这些子路由会在 Layout 组件的 <router-view> 中渲染
         children: [
             {
                 // 子路由的路径为空字符串，表示当访问根路径时默认显示该子路由对应的组件
-                path: '',
+                path: 'workspace',
                 // 该子路由的名称为 'Home'，可用于路由导航时通过名称跳转
                 name: 'Home',
                 // meta中的属性是自己扩展的，用于存储路由的元信息，showInMenu 用于控制是否在菜单中显示该路由仅一级菜单需要配置
