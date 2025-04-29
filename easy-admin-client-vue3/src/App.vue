@@ -4,19 +4,6 @@
 </template>
 
 <script setup>
-import {onMounted} from 'vue';
-import {useRouter} from 'vue-router';
-
-const router = useRouter();
-// 在组件挂载时检查登录状态
-onMounted(() => {
-  // 获取本地存储中的登录状态
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  // 如果没有登录状态，则跳转到登录页面
-  if (!isLoggedIn) {
-    router.push('/login');
-  }
-});
 </script>
 
 <style scoped>

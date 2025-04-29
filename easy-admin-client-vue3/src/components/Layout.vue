@@ -181,7 +181,7 @@ import {ElMessageBox} from "element-plus";
 const route = useRoute();
 // 获取路由信息，过滤出需要的路由供应菜单使用
 const routes = router.getRoutes().filter(route => {
-  return route.meta && route.meta.title && route.meta.icon && route.meta.showInMenu;
+  return route.meta && route.meta.showInMenu;
 });
 const icons = {
   House,
@@ -427,4 +427,12 @@ const handleLogout = () => {
 .footer-content {
   font-size: 12px; /* 设置字体大小为12px */
 }
+
+/* 外层容器禁止滚动 */
+.layout-container,
+.el-container {
+  height: 100vh;
+  overflow: hidden; /* 禁止整体滚动 */
+}
+
 </style>
