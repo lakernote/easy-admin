@@ -36,13 +36,13 @@
 
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>
+                  <el-dropdown-item @click="router.push({ name: 'Profile' })">
                     <el-icon>
                       <User/>
                     </el-icon>
                     <span>个人中心</span>
                   </el-dropdown-item>
-                  <el-dropdown-item>
+                  <el-dropdown-item @click="router.push({ name: 'ChangePassword' })">
                     <el-icon>
                       <Key/>
                     </el-icon>

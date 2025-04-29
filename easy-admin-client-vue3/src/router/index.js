@@ -3,6 +3,8 @@ import Login from '../views/Login.vue';
 import Layout from '../components/Layout.vue';
 import Users from "@/views/Users.vue";
 import {ElMessage} from "element-plus";
+import Profile from "@/components/Profile.vue";
+import ChangePassword from "@/components/ChangePassword.vue";
 // 定义路由配置数组
 const routes = [
     {
@@ -55,6 +57,18 @@ const routes = [
                         component: () => import('@/views/Dicts.vue') // 使用懒加载的方式引入 Dicts 组件
                     }
                 ]
+            },
+            {
+                path: 'profile',
+                name: 'Profile',
+                meta: {title: '个人中心', icon: 'User', showInMenu: false},
+                component: Profile
+            },
+            {
+                path: 'settings/change-password',
+                name: 'ChangePassword',
+                meta: {title: '修改密码', icon: 'Key', showInMenu: false},
+                component: ChangePassword
             }
         ]
     },
