@@ -15,9 +15,12 @@
     </el-form>
 
     <el-button type="primary" @click="openDialog()">新增字典</el-button>
+    <el-button type="danger" @click="batchDelete">批量删除</el-button>
 
     <!-- 表格 -->
-    <el-table :data="dictList" class="mt-4" border>
+    <el-table :data="dictList" class="mt-4" border @selection-change="handleSelectionChange">
+      <!-- 多选列 -->
+      <el-table-column type="selection" width="50"/>
       <el-table-column prop="dictId" label="ID" width="80"/>
       <el-table-column prop="dictCode" label="代码"/>
       <el-table-column prop="dictName" label="名称"/>
@@ -71,10 +74,11 @@
 
 <script setup>
 import {reactive, ref} from 'vue'
-import request from '@/utils/request.js'
 import {ElMessage, ElMessageBox} from 'element-plus'
+import dictApi from '@/api/sys/dict'
 
 const dictList = ref([])
+const selectedIds = ref([]) // 存储选中的 dictId 列表
 const page = ref(1)
 const limit = ref(5)
 const total = ref(0)
@@ -102,14 +106,12 @@ const rules = {
 // 查询分页
 const getDicts = async () => {
   try {
-    const res = await request.get('/sys/dict', {
-      params: {
-        page: page.value,
-        limit: limit.value,
-        dictCode: searchForm.value.dictCode,
-        dictName: searchForm.value.dictName
-      }
-    })
+    const res = await dictApi.getDicts(
+        page.value,
+        limit.value,
+        searchForm.value.dictCode,
+        searchForm.value.dictName
+    )
     dictList.value = res.data.data
     total.value = Number(res.data.count || 0) // ← 确保是数字
   } catch (err) {
@@ -138,7 +140,11 @@ const saveDict = () => {
   formRef.value.validate(async (valid) => {
     if (!valid) return
     try {
-      await request.post('/sys/dict', {...form})
+      if (form.dictId) {
+        await dictApi.updateDict({...form}) // 编辑
+      } else {
+        await dictApi.addDict({...form}) // 新增
+      }
       ElMessage.success(form.dictId ? '更新成功' : '新增成功')
       dialogVisible.value = false
       await getDicts()
@@ -152,7 +158,7 @@ const saveDict = () => {
 const deleteDict = (id) => {
   ElMessageBox.confirm('确定删除该字典？', '提示', {type: 'warning'})
       .then(async () => {
-        await request.delete(`/sys/dict/${id}`)
+        await dictApi.deleteDict(id)
         ElMessage.success('删除成功')
         getDicts()
       })
@@ -173,6 +179,29 @@ const handlePageChange = (val) => {
   getDicts()
 }
 
+// 处理多选
+const handleSelectionChange = (selection) => {
+  selectedIds.value = selection.map(item => item.dictId)
+}
+const batchDelete = () => {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning('请至少选择一条记录')
+    return
+  }
+
+  ElMessageBox.confirm('确定删除选中的字典？', '提示', {type: 'warning'})
+      .then(async () => {
+        try {
+          await dictApi.batchDelete(selectedIds.value)
+          ElMessage.success('批量删除成功')
+          getDicts() // 刷新列表
+          selectedIds.value = [] // 清空选中
+        } catch (err) {
+          ElMessage.error('删除失败')
+        }
+      })
+      .catch(() => ElMessage.info('取消删除'))
+}
 // 页面初始化
 getDicts()
 </script>

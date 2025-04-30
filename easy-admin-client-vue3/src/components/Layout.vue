@@ -177,6 +177,7 @@ import {
 } from '@element-plus/icons-vue';
 import router from '../router';
 import {ElMessageBox} from "element-plus";
+import {useAuthStore} from "@/stores/useAuthStore.js";
 
 const route = useRoute();
 // 获取路由信息，过滤出需要的路由供应菜单使用
@@ -247,9 +248,7 @@ const handleLogout = () => {
     type: 'warning'
   }).then(() => {
     // 清除登录状态
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('tokenName');
-    localStorage.removeItem('tokenValue');
+    useAuthStore().logout();
     // 跳转到登录页
     router.push('/login');
   }).catch(() => {

@@ -63,7 +63,9 @@ import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import {ElMessage} from "element-plus";
 import {login} from '@/api/login';
+import {useAuthStore} from '@/stores/useAuthStore'; // 引入 Pinia 的 auth store
 
+const authStore = useAuthStore();
 // 引用表单实例，用于表单验证
 const formRef = ref<InstanceType<typeof import('element-plus')['ElForm']>>();
 const loading = ref(false);
@@ -110,10 +112,9 @@ const handleLogin = () => {
       login(loginForm.value.username, loginForm.value.password)
           .then(response => {
             if (response.data.success) {
-              localStorage.setItem('isLoggedIn', 'true');
-              // 这里可以存储 token 等信息
-              localStorage.setItem('tokenName', response.data.data.tokenName);
-              localStorage.setItem('tokenValue', response.data.data.tokenValue);
+              // Pinia 用于集中管理和共享组件之间的状态（如登录用户信息、权限、全局配置等）。
+              // 使用 Pinia 更新登录状态
+              authStore.login(response.data.data.tokenName, response.data.data.tokenValue)
               router.push('/');
             } else {
               ElMessage.error(response.data.message);

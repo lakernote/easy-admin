@@ -1,18 +1,20 @@
 import axios from 'axios'
 import {ElMessage} from 'element-plus'
 import router from '@/router' // 引入 vue-router
+import {useAuthStore} from '@/stores/useAuthStore'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8' // 设置默认请求头为 JSON 格式
 // 创建实例
 const request = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL, // 代理时前缀，或你后端API根地址 // 使用环境变量设置 axios 的基础 URL
-    timeout: parseInt(import.meta.env.VITE_TIMEOUT) // 使用环境变量设置 请求超时时间
+    timeout: parseInt(import.meta.env.VITE_TIMEOUT) || 5000 // 使用环境变量设置 请求超时时间
 })
 
 // 请求拦截器：自动带 token
 request.interceptors.request.use(config => {
-    const tokenName = localStorage.getItem('tokenName')
-    const tokenValue = localStorage.getItem('tokenValue')
+    const authStore = useAuthStore()
+    const tokenName = authStore.tokenName
+    const tokenValue = authStore.tokenValue
 
     if (tokenName && tokenValue) {
         config.headers[tokenName] = tokenValue
@@ -41,7 +43,7 @@ request.interceptors.response.use(
         } else {
             let {message} = error;
             if (message === "Network Error") {
-                message = "系统接口连接异常";
+                message = "网络异常，请检查您的网络连接";
             } else if (message.includes("timeout")) {
                 message = "系统接口请求超时";
             } else if (message.includes("Request failed with status code")) {

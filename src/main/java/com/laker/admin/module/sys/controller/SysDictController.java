@@ -1,6 +1,5 @@
 package com.laker.admin.module.sys.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -54,6 +55,7 @@ public class SysDictController {
     @PostMapping
     @Operation(summary = "新增或者更新")
     public Response saveOrUpdate(@RequestBody SysDict param) {
+        param.setCreateTime(LocalDateTime.now());
         return Response.ok(sysDictService.saveOrUpdate(param));
     }
 
@@ -73,7 +75,7 @@ public class SysDictController {
 
     @DeleteMapping("/batch/{ids}")
     @Operation(summary = "根据批量删除ids删除")
-    @SaCheckPermission("dict.delete")
+//    @SaCheckPermission("dict.delete")
     public Response batchRemove(@PathVariable Long[] ids) {
         return Response.ok(sysDictService.removeByIds(CollUtil.toList(ids)));
     }

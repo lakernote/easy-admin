@@ -15,12 +15,12 @@ const routes = [
                 // 该子路由的名称为 'Home'，可用于路由导航时通过名称跳转
                 name: 'Workspace',
                 // meta中的属性是自己扩展的，用于存储路由的元信息，showInMenu 用于控制是否在菜单中显示该路由仅一级菜单需要配置
-                meta: {title: '工作空间', icon: 'House', showInMenu: true},
+                meta: {title: '工作空间', icon: 'House', requiresAuth: true, showInMenu: true},
                 children: [
                     {
                         path: 'home', // 实际上是 /home
                         name: 'Home',
-                        meta: {title: 'DashBoard', icon: 'House'},
+                        meta: {title: 'DashBoard', icon: 'House', requiresAuth: true},
                         // 使用懒加载的方式引入 Home 组件，只有在访问该路由时才会加载对应的组件，提高应用性能
                         // '@' 是项目中配置的别名，通常指向 src 目录
                         // 懒加载每个页面都会被单独打包成一个 chunk，防止打包后index.js过大
@@ -44,13 +44,13 @@ const routes = [
                     {
                         path: 'users', // 实际上是 /system/users
                         name: 'SystemUsers',
-                        meta: {title: '用户管理', icon: 'User'},
+                        meta: {title: '用户管理', icon: 'User', requiresAuth: true},
                         component: () => import('@/views/Users.vue') // 使用懒加载的方式引入 Users 组件
                     },
                     {
                         path: 'dicts', // 实际上是 /system/dicts
                         name: 'SystemDicts',
-                        meta: {title: '字典管理', icon: 'Plus'},
+                        meta: {title: '字典管理', icon: 'Plus', requiresAuth: true},
                         component: () => import('@/views/Dicts.vue') // 使用懒加载的方式引入 Dicts 组件
                     }
                 ]
@@ -92,20 +92,6 @@ const router = createRouter({
     // 使用 HTML5 History 模式
     history: createWebHistory(),
     routes
-});
-
-// 全局前置路由守卫，在每次路由跳转前执行 用于权限控制
-router.beforeEach((to, from, next) => {
-    // 从本地存储中获取登录状态
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    // 如果用户试图访问非登录页面且未登录
-    if (to.path !== '/login' && !isLoggedIn) {
-        // 强制跳转到登录页面
-        next('/login');
-    } else {
-        // 允许正常跳转
-        next();
-    }
 });
 
 // 路由错误处理
