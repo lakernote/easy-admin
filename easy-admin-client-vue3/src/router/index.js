@@ -1,10 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import Login from '../views/Login.vue';
 import Layout from '../components/Layout.vue';
-import Users from "@/views/Users.vue";
 import {ElMessage} from "element-plus";
-import Profile from "@/components/Profile.vue";
-import ChangePassword from "@/components/ChangePassword.vue";
 // 定义路由配置数组
 const routes = [
     {
@@ -27,6 +23,7 @@ const routes = [
                         meta: {title: 'DashBoard', icon: 'House'},
                         // 使用懒加载的方式引入 Home 组件，只有在访问该路由时才会加载对应的组件，提高应用性能
                         // '@' 是项目中配置的别名，通常指向 src 目录
+                        // 懒加载每个页面都会被单独打包成一个 chunk，防止打包后index.js过大
                         component: () => import('@/views/Home.vue'),
                     },
                     {
@@ -48,7 +45,7 @@ const routes = [
                         path: 'users', // 实际上是 /system/users
                         name: 'SystemUsers',
                         meta: {title: '用户管理', icon: 'User'},
-                        component: Users
+                        component: () => import('@/views/Users.vue') // 使用懒加载的方式引入 Users 组件
                     },
                     {
                         path: 'dicts', // 实际上是 /system/dicts
@@ -62,13 +59,13 @@ const routes = [
                 path: 'profile',
                 name: 'Profile',
                 meta: {title: '个人中心', icon: 'User', showInMenu: false},
-                component: Profile
+                component: () => import('@/components/Profile.vue') // 使用懒加载的方式引入 Profile 组件
             },
             {
                 path: 'settings/change-password',
                 name: 'ChangePassword',
                 meta: {title: '修改密码', icon: 'Key', showInMenu: false},
-                component: ChangePassword
+                component: () => import('@/components/ChangePassword.vue') // 使用懒加载的方式引入 ChangePassword 组件
             }
         ]
     },
@@ -80,7 +77,7 @@ const routes = [
     {
         // 登录页面路由
         path: '/login',
-        component: Login
+        component: () => import('../views/Login.vue'), // 使用懒加载的方式引入 Login 组件
     },
     // 404 路由，必须放在最后一个
     {
