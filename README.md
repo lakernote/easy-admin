@@ -2,6 +2,11 @@
 - **Gitee**：[https://gitee.com/lakernote/easy-admin](https://gitee.com/lakernote/easy-admin)
 - **Github**：[https://github.com/lakernote/easy-admin](https://github.com/lakernote/easy-admin)
 
+ **推荐我的另一个开源项目** 
+> 🚀 一款高仿 Postman + 简易版 JMeter 的开源接口调试与压测工具，专为开发者优化，界面简洁、功能强大。
+
+> [https://gitee.com/lakernote/easy-postman](https://gitee.com/lakernote/easy-postman)
+
 > **有用的话请鼓励❤️下作者，右上角☝️watch、star、fork三连点🙏🙏🙏一波**
 
 | SpringBoot版本 | JDK版本 | Mysql  | Tomcat | 分支                                                         |
