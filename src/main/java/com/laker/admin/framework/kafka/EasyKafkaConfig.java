@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "easy.spring.kafka", name = "enabled", havingValue = "true")
 public class EasyKafkaConfig {
 
-    public static final String TOPIC_NAME = "lakernote";
+    public static final String TOPIC_NAME = "easy-admin-topic";
     private boolean enabled = false;
     private String bootstrapServers = "localhost:9092";
     private String topic = TOPIC_NAME;

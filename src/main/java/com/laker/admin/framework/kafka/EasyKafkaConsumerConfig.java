@@ -31,8 +31,8 @@ public class EasyKafkaConsumerConfig {
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, easyKafkaConfig.getBootstrapServers()); // kafka地址
-        props.put(ConsumerConfig.CLIENT_ID_CONFIG, "laker_clientId"); // 客户端id
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "laker_groupId"); // 消费者组
+        props.put(ConsumerConfig.CLIENT_ID_CONFIG, "easy-admin-clientId"); // 客户端id
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "easy-admin-groupId"); // 消费者组
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // key序列化
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // value序列化
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // latest（从最新的消息开始消费）,earliest（从最老的消息开始消费）,none（如果无offset就抛出异常）
