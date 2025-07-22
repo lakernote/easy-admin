@@ -6,7 +6,7 @@
 
     <appender name="DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文件的路径及文件名 -->
-        <file>${LOG_HOME}/laker.log</file>
+        <file>${LOG_HOME}/easyadmin.log</file>
         <!-- 将日志事件追加到已存在的日志文件中 -->
         <Append>true</Append>
         <!-- 谨慎模式 默认关闭-->
@@ -20,7 +20,7 @@
         <!-- 按天回滚 daily -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 每天日志归档路径以及格式 -->
-            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/laker-%i.log</FileNamePattern>
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/easyadmin-%i.log</FileNamePattern>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
             <!--日志量最大20GB-->

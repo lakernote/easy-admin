@@ -16,7 +16,7 @@ public class EasyAdminConfig {
     /**
      * log配置
      */
-    private String logFilePath = "logs/laker.log";
+    private String logFilePath = "logs/easyadmin.log";
 
     /**
      * 用户初始密码
