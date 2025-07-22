@@ -39,7 +39,7 @@ public class MysqlIdempotentHandler implements IdempotentHandler {
     }
 
     /**
-     * 清理过期的记录 TODO
+     * 清理过期的记录
      */
     public void cleanExpiredRecords() {
         String sql = "DELETE FROM idempotent_record WHERE expireTime < ?";
