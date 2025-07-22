@@ -17,7 +17,10 @@
 ### 后端组件
 
 - 缓存 EasyCacheConfig
+    - Caffeine
+    - Redisson
 - 断路器 EasyCircuitBreakerConfig
+    - Resilience4J
 - 远程调用
     - Feign EasyFeignConfig
     - RestClient
@@ -39,6 +42,57 @@
 - 分布式定时任务 EasyJobScheduler
 - 微信小程序 WxMiniAppController
 - 幂等器 IdempotentConfig
+- 消息队列
+    - EasyKafkaConsumerConfig
+    - EasyKafkaProducerConfig
+- 文件存储
+    - 本地
+    - OSS
+    - MinIO
+- 邮件服务
+- 短信服务
+- 数据加密
+- 数据脱敏
+- 审计日志
+- 安全相关
+    - CSRF
+    - XSS
+    - SQL注入
+    - 文件上传漏洞
+    - 目录遍历漏洞
+    - 敏感信息泄露
+    - 敏感数据加密
+    - 敏感数据脱敏
+    - 敏感数据审计
+    - 敏感数据访问控制
+    - 敏感数据访问日志
+    - 敏感数据访问监控
+    - 敏感数据访问告警
+    - LDAP/ActiveDirectory 集成
+    - 密码策略管理
+    - 多因素认证
+    - 单点登录
+    - 验证码服务
+- 数据处理
+    - 多数据源管理
+    - 动态数据源切换
+- 运维支持
+    - 灰度发布支持
+    - 在线诊断支持
+    - 系统自动化运维脚本
+    - 容器化部署支持
+- 全局ID生成器
+    - 雪花算法 (Snowflake) 实现
+    - UUID 生成策略
+    - 序列号生成器
+    - 分布式ID生成服务
+- 统一异常处理
+    - 全局异常处理器
+    - 自定义异常类
+    - 异常日志记录
+    - 业务异常定义
+    - 异常响应格式化
+    - 错误码体系
 
 ### 中间件
 
