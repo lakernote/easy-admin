@@ -27,7 +27,7 @@ public class LocalMessageRetryJob implements IEasyJob {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private Map<String, ILocalMessageOperation> beansWithName = MapUtil.newHashMap();
+    private final Map<String, ILocalMessageOperation> beansWithName = MapUtil.newHashMap();
 
     @PostConstruct
     public void init() {

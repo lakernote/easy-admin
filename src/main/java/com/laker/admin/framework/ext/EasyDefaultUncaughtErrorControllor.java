@@ -34,4 +34,3 @@ public class EasyDefaultUncaughtErrorControllor implements ErrorController {
         }
     }
 }
-

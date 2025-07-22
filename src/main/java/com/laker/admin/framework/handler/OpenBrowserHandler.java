@@ -1,11 +1,19 @@
 package com.laker.admin.framework.handler;
 
 import cn.hutool.system.SystemUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * 启动时自动打开浏览器
+ * <p>
+ * 注意：如果是Linux或MacOS系统，可能需要手动打开浏览器访问地址。
+ * </p>
+ */
 @Component
+@Slf4j
 public class OpenBrowserHandler implements CommandLineRunner {
     @Value("${server.port}")
     private int serverPort;
@@ -23,7 +31,7 @@ public class OpenBrowserHandler implements CommandLineRunner {
                 System.out.println("==================================================注意====================================================");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage(), ex);
         }
     }
 }

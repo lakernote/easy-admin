@@ -38,7 +38,7 @@
 - 分布式锁 EasyLockerConfig
 - 分布式定时任务 EasyJobScheduler
 - 微信小程序 WxMiniAppController
-- 幂等器 todo
+- 幂等器 IdempotentConfig
 
 ### 中间件
 

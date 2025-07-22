@@ -22,7 +22,7 @@ public class MysqlIdempotentHandler implements IdempotentHandler {
         String sql = "SELECT COUNT(*) FROM idempotent_record WHERE `key` = ? AND expireTime > ?";
         Timestamp now = Timestamp.from(Instant.now());
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, key, now);
-        if (count != null && count > 0) {
+        if (count > 0) {
             return false;
         }
         cleanExpiredRecords();

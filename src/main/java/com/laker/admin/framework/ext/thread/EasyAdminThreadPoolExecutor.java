@@ -109,7 +109,7 @@ public class EasyAdminThreadPoolExecutor extends ThreadPoolExecutor {
         if (t != null) {
             log.error("线程池中的任务执行异常！！！", t);
         }
-        log.debug("afterExecute-任务：{}，异常：{}", r, t);
+        log.debug("afterExecute-任务：{}", r);
     }
 
     /**
