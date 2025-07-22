@@ -39,10 +39,10 @@ public class EasyKafkaProducerConfig {
         configProps.put(ProducerConfig.LINGER_MS_CONFIG, 100); // 发送时间间隔
         configProps.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1); // 保证消息的顺序性
         configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); // 保证消息的幂等性
-        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 10485760); // 最大请求大小
+        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 10485760); // 最大请求大小 默认10MB
         configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432); // 缓冲区大小 默认32MB
         configProps.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000); // 重试间隔 默认100ms
-        configProps.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 60000); // 最大阻塞时间
+        configProps.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 60000); // 最大阻塞时间 默认60s
         configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip"); // 压缩类型
         configProps.put(ProducerConfig.CLIENT_ID_CONFIG, "easy-kafka-producer"); // 客户端id
         return new DefaultKafkaProducerFactory<>(configProps);

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class EasyKafkaConsumer {
 
 
-    @KafkaListener(topics = EasyKafkaConfig.TOPIC_NAME, concurrency = "1", groupId = "laker")
+    @KafkaListener(topics = EasyKafkaConfig.TOPIC_NAME, concurrency = "1", groupId = "easy-admin-group")
     public void listen(ConsumerRecord<String, String> consumerRecord, Acknowledgment ack) {
         final String format = """
                 receive message topic:{}, partition:{}, offset:{}
