@@ -2,6 +2,13 @@
 - **Gitee**：[https://gitee.com/lakernote/easy-admin](https://gitee.com/lakernote/easy-admin)
 - **Github**：[https://github.com/lakernote/easy-admin](https://github.com/lakernote/easy-admin)
 
+## 🚀 新版本推荐：EasyNextAdmin
+
+> EasyNextAdmin 是 EasyAdmin 的新一代前后端分离版本，采用 Spring Boot 3 + Vue 3，面向 AI Vibe Coding 和企业后台二次开发做了更清晰的模块边界、权限契约和文档入口。
+>
+> - **Gitee**：[https://gitee.com/lakernote/easy-next-admin](https://gitee.com/lakernote/easy-next-admin)
+> - **Github**：[lakernote/easy-next-admin](https://github.com/lakernote/easy-next-admin)
+
  **推荐我的另一个开源项目** 
 > 🚀 一款高仿 Postman + 简易版 JMeter 的开源接口调试与压测工具，专为开发者优化，界面简洁、功能强大。
 
